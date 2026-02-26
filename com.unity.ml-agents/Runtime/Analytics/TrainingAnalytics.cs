@@ -52,6 +52,7 @@ namespace Unity.MLAgents.Analytics
             s_TrainerPackageVersion = "";
             s_TrainerCommunicationVersion = "";
         }
+
 #endif
 
         internal static bool EnableAnalytics()

@@ -1,5 +1,8 @@
 import atexit
-from distutils.version import StrictVersion
+try:
+    from distutils.version import StrictVersion
+except ModuleNotFoundError:  # Python 3.12+
+    from packaging.version import Version as StrictVersion
 
 import numpy as np
 import os
@@ -93,14 +96,27 @@ class UnityEnvironment(BaseEnv):
     ) -> bool:
         unity_communicator_version = StrictVersion(unity_com_ver)
         api_version = StrictVersion(python_api_version)
-        if unity_communicator_version.version[0] == 0:
+        unity_ver = getattr(
+            unity_communicator_version,
+            "version",
+            getattr(unity_communicator_version, "release", ()),
+        )
+        api_ver = getattr(api_version, "version", getattr(api_version, "release", ()))
+
+        if not unity_ver or not api_ver:
+            logger.warning(
+                "Unable to inspect communication version tuple format; skipping strict compatibility checks."
+            )
+            return True
+
+        if unity_ver[0] == 0:
             if (
-                unity_communicator_version.version[0] != api_version.version[0]
-                or unity_communicator_version.version[1] != api_version.version[1]
+                unity_ver[0] != api_ver[0]
+                or unity_ver[1] != api_ver[1]
             ):
                 # Minor beta versions differ.
                 return False
-        elif unity_communicator_version.version[0] != api_version.version[0]:
+        elif unity_ver[0] != api_ver[0]:
             # Major versions mismatch.
             return False
         else:
@@ -434,9 +450,14 @@ class UnityEnvironment(BaseEnv):
             force-killing it.  Defaults to `self.timeout_wait`.
         """
         if timeout is None:
-            timeout = self._timeout_wait
+            timeout = getattr(self, "_timeout_wait", 30)
         self._loaded = False
-        self._communicator.close()
+
+        communicator = getattr(self, "_communicator", None)
+        if communicator is None:
+            return
+
+        communicator.close()
         if self._process is not None:
             # Wait a bit for the process to shutdown, but kill it if it takes too long
             try:

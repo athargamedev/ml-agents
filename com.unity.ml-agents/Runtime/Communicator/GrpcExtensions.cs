@@ -26,8 +26,9 @@ namespace Unity.MLAgents
         {
             s_HaveWarnedTrainerCapabilitiesAgentGroup = false;
             s_HaveWarnedTrainerCapabilitiesMultiPng = false;
-            s_HaveWarnedTrainerCapabilitiesMapping= false;
+            s_HaveWarnedTrainerCapabilitiesMapping = false;
         }
+
 #endif
         #region AgentInfo
         /// <summary>

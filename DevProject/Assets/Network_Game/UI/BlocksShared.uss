@@ -1,0 +1,74 @@
+@import url("project://database/Assets/Network_Game/UI/Theme/Content/stylesheets/core.uss?fileID=7433441132597879392&guid=d7bddde4697f1a74fa1ca9a1768b0055&type=3#core");
+@import url("project://database/Assets/Network_Game/UI/Theme/Content/stylesheets/modals.uss?fileID=7433441132597879392&guid=5b2306782236b614aa63385c7543b619&type=3#modals");
+@import url("project://database/Assets/Network_Game/UI/Theme/Content/stylesheets/labels.uss?fileID=7433441132597879392&guid=6cea9dd8adeaa2449bf354784717702d&type=3#labels");
+@import url("project://database/Assets/Network_Game/UI/Theme/Content/stylesheets/buttons.uss?fileID=7433441132597879392&guid=2e6ef25338a42934dae446146b5a03fb&type=3#buttons");
+@import url("project://database/Assets/Network_Game/UI/Theme/Content/stylesheets/inputs.uss?fileID=7433441132597879392&guid=8d71bcc130774c148ae79dea8c47afa0&type=3#inputs");
+@import url("project://database/Assets/Network_Game/UI/Theme/Content/stylesheets/utilities.uss?fileID=7433441132597879392&guid=f5c73ca4d849eee4694d04d28a9f87b0&type=3#utilities");
+
+.blocks-login-container {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+}
+
+.blocks-login-modal {
+    width: 500px;
+    padding: var(--padding-xl);
+}
+
+.blocks-login-input-group {
+    width: 100%;
+    margin-bottom: var(--margin-md);
+}
+
+.blocks-login-label {
+    margin-bottom: var(--margin-xs);
+    color: var(--color-neutral);
+    font-size: var(--text-sm);
+}
+
+.blocks-login-button {
+    margin-top: var(--margin-md);
+    width: 100%;
+}
+
+.blocks-profile-card {
+    position: absolute;
+    top: var(--margin-sm);
+    right: var(--margin-sm);
+    width: 320px;
+    background-color: var(--color-modal-background);
+    border-radius: var(--radius-sm);
+    border-width: var(--width-border-md);
+    border-color: var(--color-border);
+    padding: var(--padding-md);
+    transition: height 0.3s ease-in-out;
+}
+
+.blocks-profile-card__header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom-width: var(--width-border-md);
+    border-bottom-color: var(--color-border);
+    padding-bottom: var(--padding-sm);
+    margin-bottom: var(--padding-sm);
+}
+
+.blocks-profile-card__content {
+    overflow: hidden;
+}
+
+.blocks-profile-card--minimized {
+    height: 60px;
+}
+
+.blocks-profile-card--minimized .blocks-profile-card__content {
+    display: none;
+}
+
+.blocks-header {
+}

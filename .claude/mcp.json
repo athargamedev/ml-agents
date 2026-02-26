@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "unityMCP": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "uvx",
+        "--no-cache",
+        "--refresh",
+        "--from",
+        "D:\\GithubRepos\\unity-mcp-beta\\Server",
+        "mcp-for-unity",
+        "--transport",
+        "stdio"
+      ]
+    }
+  }
+}

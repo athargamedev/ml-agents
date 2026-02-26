@@ -1,0 +1,21 @@
+// This file is generated. Do not modify by hand.
+// XML documentation file not found. To check if public methods have XML comments,
+// make sure the XML doc file is present and located next to the scraped dll
+namespace Unity.Multiplayer.Tools.Common
+{
+    public interface IRuntimeUpdater
+    {
+        public event System.Action OnAwake;
+        public event System.Action OnDestroyed;
+        public event System.Action OnFixedUpdate;
+        public event System.Action OnLateUpdate;
+        public event System.Action OnStart;
+        public event System.Action OnUpdate;
+    }
+
+    [System.Obsolete(@"Types with embedded references are not supported in this version of your compiler.", true)] [System.Runtime.CompilerServices.IsByRefLike] public struct ProfilerScope
+    {
+        public static ProfilerScope BeginSample(string name);
+        public void Dispose();
+    }
+}

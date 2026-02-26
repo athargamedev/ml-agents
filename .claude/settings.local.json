@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__serena-mcp__read_memory",
+      "mcp__unityMCP__manage_scene",
+      "mcp__unityMCP__read_console",
+      "mcp__serena-mcp__list_dir"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "filesystem",
+    "qdrant",
+    "serena-mcp",
+    "sequentialthinking",
+    "unityMCP"
+  ]
+}

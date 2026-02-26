@@ -23,6 +23,7 @@ namespace Unity.MLAgents
             s_Settings = null;
             OnSettingsChange = null;
         }
+
 #endif
 
         // setter will trigger callback for refreshing editor UI if using editor

@@ -28,6 +28,7 @@ namespace Unity.MLAgents.SideChannels
         {
             s_RegisteredChannels = new Dictionary<Guid, SideChannel>();
         }
+
 #endif
         /// <summary>
         /// Register a side channel to begin sending and receiving messages. This method is

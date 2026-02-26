@@ -31,6 +31,7 @@ namespace Unity.MLAgents
             s_Creator = null;
             s_Enabled = true;
         }
+
 #endif
         /// <summary>
         /// Check if a communicator has been registered.

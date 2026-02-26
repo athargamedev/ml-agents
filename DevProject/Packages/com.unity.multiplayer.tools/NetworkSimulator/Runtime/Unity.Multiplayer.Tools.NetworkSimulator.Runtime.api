@@ -1,0 +1,157 @@
+// This file is generated. Do not modify by hand.
+// XML documentation file not found. To check if public methods have XML comments,
+// make sure the XML doc file is present and located next to the scraped dll
+namespace Unity.Multiplayer.Tools.NetworkSimulator.Runtime
+{
+    public interface INetworkEventsApi
+    {
+        public INetworkSimulatorPreset CurrentPreset { get; }
+        public bool IsAvailable { get; }
+        public bool IsConnected { get; }
+        public void ChangeConnectionPreset(INetworkSimulatorPreset preset);
+        public void Disconnect();
+        public void Reconnect();
+        public void TriggerLagSpike(System.TimeSpan duration);
+        public System.Threading.Tasks.Task TriggerLagSpikeAsync(System.TimeSpan duration);
+    }
+
+    public interface INetworkSimulatorPreset
+    {
+        public string Description { get; set; }
+        public string Name { get; set; }
+        public int PacketDelayMs { get; set; }
+        public int PacketJitterMs { get; set; }
+        public int PacketLossInterval { get; set; }
+        public int PacketLossPercent { get; set; }
+    }
+
+    public class MinMaxRangeAttribute : UnityEngine.PropertyAttribute
+    {
+        public readonly float Max;
+        public readonly float Min;
+        public readonly bool RoundToInt;
+        public MinMaxRangeAttribute(float min, float max, bool roundToInt = false) {}
+    }
+
+    public abstract class NetworkScenario
+    {
+        public bool IsPaused { get; set; }
+        protected NetworkScenario() {}
+        public virtual void Dispose();
+        protected virtual void OnPause();
+        protected virtual void OnResume();
+        public abstract void Start(INetworkEventsApi networkEventsApi);
+    }
+
+    public abstract class NetworkScenarioBehaviour : NetworkScenario
+    {
+        protected NetworkScenarioBehaviour() {}
+        protected abstract void Update(float deltaTime);
+    }
+
+    public abstract class NetworkScenarioTask : NetworkScenario
+    {
+        protected NetworkScenarioTask() {}
+        public override void Dispose();
+        protected abstract System.Threading.Tasks.Task Run(INetworkEventsApi networkEventsApi, System.Threading.CancellationToken cancellationToken);
+        public override void Start(INetworkEventsApi networkEventsApi);
+    }
+
+    [UnityEngine.AddComponentMenu(@"Netcode/Network Simulator")] [UnityEngine.HelpURL(@"https://docs.unity3d.com/Packages/com.unity.multiplayer.tools@latest/?subfolder=/manual/network-simulator.html")] public class NetworkSimulator : UnityEngine.MonoBehaviour, INetworkEventsApi, System.ComponentModel.INotifyPropertyChanged
+    {
+        [UnityEngine.SerializeField] public bool AutoRunScenario;
+        public INetworkSimulatorPreset ConnectionPreset { get; set; }
+        public INetworkSimulatorPreset CurrentPreset { get; }
+        public bool IsAvailable { get; }
+        public bool IsConnected { get; }
+        public NetworkScenario Scenario { get; set; }
+        public NetworkSimulator() {}
+        public void ChangeConnectionPreset(INetworkSimulatorPreset preset);
+        public void Disconnect();
+        public void Reconnect();
+        public void TriggerLagSpike(System.TimeSpan duration);
+        public System.Threading.Tasks.Task TriggerLagSpikeAsync(System.TimeSpan duration);
+    }
+
+    public class NetworkSimulatorPreset : INetworkSimulatorPreset, System.IEquatable<NetworkSimulatorPreset>
+    {
+        public string Description { get; set; }
+        public string Name { get; set; }
+        public int PacketDelayMs { get; set; }
+        public int PacketJitterMs { get; set; }
+        public int PacketLossInterval { get; set; }
+        public int PacketLossPercent { get; set; }
+        public NetworkSimulatorPreset() {}
+        public static NetworkSimulatorPreset Create(string name, string description = @"", int packetDelayMs = 0, int packetJitterMs = 0, int packetLossInterval = 0, int packetLossPercent = 0);
+        public override bool Equals(object obj);
+        public bool Equals(NetworkSimulatorPreset other);
+        public override int GetHashCode();
+        public override string ToString();
+    }
+
+    [UnityEngine.CreateAssetMenu(fileName = @"NetworkSimulatorPresetAsset", menuName = @"Multiplayer/NetworkSimulatorPresetAsset")] public class NetworkSimulatorPresetAsset : UnityEngine.ScriptableObject, INetworkSimulatorPreset
+    {
+        public string Description { get; set; }
+        public string Name { get; set; }
+        public int PacketDelayMs { get; set; }
+        public int PacketJitterMs { get; set; }
+        public int PacketLossInterval { get; set; }
+        public int PacketLossPercent { get; set; }
+        public NetworkSimulatorPresetAsset() {}
+        public static NetworkSimulatorPresetAsset Create(string name, string description = @"", int packetDelayMs = 0, int packetJitterMs = 0, int packetLossInterval = 0, int packetLossPercent = 0);
+    }
+
+    public static class NetworkSimulatorPresets
+    {
+        public static readonly NetworkSimulatorPreset HomeBroadband;
+        public static readonly NetworkSimulatorPreset HomeCable;
+        public static readonly NetworkSimulatorPreset HomeCongestedNetwork;
+        public static readonly NetworkSimulatorPreset HomeDSL;
+        public static readonly NetworkSimulatorPreset HomeOptical;
+        public static readonly NetworkSimulatorPreset HomeSatellite;
+        public static readonly NetworkSimulatorPreset Mobile2_5G;
+        public static readonly NetworkSimulatorPreset Mobile2_75G;
+        public static readonly NetworkSimulatorPreset Mobile2G;
+        public static readonly NetworkSimulatorPreset Mobile3_5G;
+        public static readonly NetworkSimulatorPreset Mobile3_75G;
+        public static readonly NetworkSimulatorPreset Mobile3G;
+        public static readonly NetworkSimulatorPreset Mobile4_5G;
+        public static readonly NetworkSimulatorPreset Mobile4G;
+        public static readonly NetworkSimulatorPreset Mobile5G;
+        public static readonly NetworkSimulatorPreset None;
+        public static readonly NetworkSimulatorPreset[] Values;
+    }
+}
+
+namespace Unity.Multiplayer.Tools.NetworkSimulator.Runtime.BuiltInScenarios
+{
+    [JetBrains.Annotations.UsedImplicitly] public sealed class ConnectionsCycle : NetworkScenarioTask
+    {
+        public System.Collections.Generic.ICollection<ConnectionsCycle.Configuration> Configurations { get; }
+        public ConnectionsCycle() {}
+        protected override async System.Threading.Tasks.Task Run(INetworkEventsApi networkEventsApi, System.Threading.CancellationToken cancellationToken);
+        public sealed class Configuration : PresetConfiguration
+        {
+            [UnityEngine.SerializeField] public int ChangeIntervalMilliseconds = 5000;
+            public Configuration() {}
+        }
+    }
+
+    public class PresetConfiguration
+    {
+        public INetworkSimulatorPreset ConnectionPreset { get; set; }
+        public PresetConfiguration() {}
+    }
+
+    [JetBrains.Annotations.UsedImplicitly] public sealed class RandomConnectionsSwap : NetworkScenarioTask
+    {
+        [UnityEngine.SerializeField] public int ChangeIntervalMilliseconds = 5000;
+        public System.Collections.Generic.ICollection<RandomConnectionsSwap.Configuration> Configurations { get; }
+        public RandomConnectionsSwap() {}
+        protected override async System.Threading.Tasks.Task Run(INetworkEventsApi networkEventsApi, System.Threading.CancellationToken cancellationToken);
+        public sealed class Configuration : PresetConfiguration
+        {
+            public Configuration() {}
+        }
+    }
+}

@@ -1,0 +1,21 @@
+{
+    "name": "Network_Game.Dialogue.Editor",
+    "rootNamespace": "Network_Game.Dialogue.Editor",
+    "references": [
+        "Network_Game",
+        "undream.llmunity.Runtime",
+        "Unity.Netcode.Runtime",
+        "MCPForUnity.Editor"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

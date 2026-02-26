@@ -1,0 +1,840 @@
+// This file is generated. Do not modify by hand.
+// XML documentation file not found. To check if public methods have XML comments,
+// make sure the XML doc file is present and located next to the scraped dll
+namespace Unity.Networking.Transport
+{
+    [System.Obsolete(@"BaselibNetworkInterface has been deprecated. Use UDPNetworkInterface instead (UnityUpgradable) -> UDPNetworkInterface")] public struct BaselibNetworkInterface : INetworkInterface, System.IDisposable
+    {
+        public NetworkEndpoint LocalEndpoint { get; }
+        public int Bind(NetworkEndpoint endpoint);
+        public void Dispose();
+        public int Initialize(ref NetworkSettings settings, ref int packetPadding);
+        public int Listen();
+        public Unity.Jobs.JobHandle ScheduleReceive(ref ReceiveJobArguments arguments, Unity.Jobs.JobHandle dep);
+        public Unity.Jobs.JobHandle ScheduleSend(ref SendJobArguments arguments, Unity.Jobs.JobHandle dep);
+    }
+
+    [System.Obsolete(@"To set receiveQueueCapacity and sendQueueCapacity parameters use NetworkConfigParameter", false)] public struct BaselibNetworkParameter : INetworkParameter
+    {
+        public uint maximumPayloadSize;
+        public int receiveQueueCapacity;
+        public int sendQueueCapacity;
+        public bool Validate();
+    }
+
+    public static class BaselibNetworkParameterExtensions
+    {
+        [System.Obsolete(@"To set receiveQueueCapacity and sendQueueCapacity parameters use WithNetworkConfigParameters()", false)] public static ref NetworkSettings WithBaselibNetworkInterfaceParameters(this ref NetworkSettings settings, int receiveQueueCapacity = 0, int sendQueueCapacity = 0, uint maximumPayloadSize = 0);
+    }
+
+    public static class CommonNetworkParametersExtensions
+    {
+        public static NetworkConfigParameter GetNetworkConfigParameters(this ref NetworkSettings settings);
+        public static ref NetworkSettings WithNetworkConfigParameters(this ref NetworkSettings settings, int connectTimeoutMS, int maxConnectAttempts, int disconnectTimeoutMS, int heartbeatTimeoutMS, int reconnectionTimeoutMS, int maxFrameTimeMS, int fixedFrameTimeMS, int receiveQueueCapacity, int sendQueueCapacity, bool performPathMtuDiscovery);
+        public static ref NetworkSettings WithNetworkConfigParameters(this ref NetworkSettings settings, int connectTimeoutMS = 1000, int maxConnectAttempts = 60, int disconnectTimeoutMS = 30000, int heartbeatTimeoutMS = 500, int reconnectionTimeoutMS = 2000, int maxFrameTimeMS = 0, int fixedFrameTimeMS = 0, int receiveQueueCapacity = 512, int sendQueueCapacity = 512, int maxMessageSize = 1400, bool performPathMtuDiscovery = false);
+    }
+
+    [Unity.Burst.BurstCompile] public struct FragmentationPipelineStage : INetworkPipelineStage
+    {
+        public int StaticSize { get; }
+        public NetworkPipelineStage StaticInitialize(byte* staticInstanceBuffer, int staticInstanceBufferLength, NetworkSettings settings);
+    }
+
+    public struct InboundRecvBuffer
+    {
+        public byte* buffer;
+        public int bufferLength;
+        public InboundRecvBuffer Slice(int offset);
+    }
+
+    public struct InboundSendBuffer
+    {
+        public byte* buffer;
+        public int bufferLength;
+        public byte* bufferWithHeaders;
+        public int bufferWithHeadersLength;
+        public int headerPadding;
+        public void SetBufferFromBufferWithHeaders();
+    }
+
+    public interface INetworkInterface : System.IDisposable
+    {
+        public NetworkEndpoint LocalEndpoint { get; }
+        public int Bind(NetworkEndpoint endpoint);
+        public int Initialize(ref NetworkSettings settings, ref int packetPadding);
+        public int Listen();
+        public Unity.Jobs.JobHandle ScheduleReceive(ref ReceiveJobArguments arguments, Unity.Jobs.JobHandle dep);
+        public Unity.Jobs.JobHandle ScheduleSend(ref SendJobArguments arguments, Unity.Jobs.JobHandle dep);
+    }
+
+    public interface INetworkParameter
+    {
+        public bool Validate();
+    }
+
+    public interface INetworkPipelineStage
+    {
+        public int StaticSize { get; }
+        public NetworkPipelineStage StaticInitialize(byte* staticInstanceBuffer, int staticInstanceBufferLength, NetworkSettings settings);
+    }
+
+    [Unity.Burst.BurstCompile] public struct IPCNetworkInterface : INetworkInterface, System.IDisposable
+    {
+        public NetworkEndpoint LocalEndpoint { get; }
+        public int Bind(NetworkEndpoint endpoint);
+        public void Dispose();
+        public int Initialize(ref NetworkSettings settings, ref int packetPadding);
+        public int Listen();
+        public Unity.Jobs.JobHandle ScheduleReceive(ref ReceiveJobArguments arguments, Unity.Jobs.JobHandle dep);
+        public Unity.Jobs.JobHandle ScheduleSend(ref SendJobArguments arguments, Unity.Jobs.JobHandle dep);
+    }
+
+    public static class ManagedNetworkInterfaceExtensions
+    {
+        public static Unity.Networking.Transport.NetworkInterfaceUnmanagedWrapper<T> WrapToUnmanaged<T>(this T networkInterface) where T : INetworkInterface;
+    }
+
+    public struct MultiNetworkDriver : System.IDisposable
+    {
+        public const int MaxDriverCount = 4;
+        public int DriverCount { get; }
+        public bool IsCreated { get; }
+        public void AbortSend(Unity.Collections.DataStreamWriter writer);
+        public NetworkConnection Accept();
+        public NetworkConnection Accept(out Unity.Collections.NativeArray<byte> payload);
+        public int AddDriver(NetworkDriver driver);
+        public int BeginSend(NetworkConnection connection, out Unity.Collections.DataStreamWriter writer, int requiredPayloadSize = 0);
+        public int BeginSend(NetworkPipeline pipe, NetworkConnection connection, out Unity.Collections.DataStreamWriter writer, int requiredPayloadSize = 0);
+        public NetworkConnection Connect(int driverId, NetworkEndpoint endpoint);
+        public NetworkConnection Connect(int driverId, Unity.Collections.FixedString512Bytes address, ushort port);
+        public NetworkConnection Connect(int driverId, NetworkEndpoint endpoint, Unity.Collections.NativeArray<byte> payload);
+        public NetworkConnection Connect(int driverId, Unity.Collections.FixedString512Bytes address, ushort port, Unity.Collections.NativeArray<byte> payload);
+        public static MultiNetworkDriver Create();
+        public NetworkPipeline CreatePipeline(params System.Type[] stages);
+        public NetworkPipeline CreatePipeline(Unity.Collections.NativeArray<NetworkPipelineStageId> stages);
+        public void Disconnect(NetworkConnection connection);
+        public void Dispose();
+        public int EndSend(Unity.Collections.DataStreamWriter writer);
+        public NetworkConnection.State GetConnectionState(NetworkConnection connection);
+        public NetworkDriver GetDriver(int id);
+        public NetworkDriver GetDriverForConnection(NetworkConnection connection);
+        public NetworkEndpoint GetRemoteEndpoint(NetworkConnection connection);
+        public NetworkEvent.Type PopEvent(out NetworkConnection connection, out Unity.Collections.DataStreamReader reader);
+        public NetworkEvent.Type PopEvent(out NetworkConnection connection, out Unity.Collections.DataStreamReader reader, out NetworkPipeline pipe);
+        public NetworkEvent.Type PopEventForConnection(NetworkConnection connection, out Unity.Collections.DataStreamReader reader);
+        public NetworkEvent.Type PopEventForConnection(NetworkConnection connection, out Unity.Collections.DataStreamReader reader, out NetworkPipeline pipe);
+        public void RegisterPipelineStage<T>(T stage) where T : struct, unmanaged, INetworkPipelineStage, new();
+        public Unity.Jobs.JobHandle ScheduleFlushSend(Unity.Jobs.JobHandle dependency = default(Unity.Jobs.JobHandle));
+        public Unity.Jobs.JobHandle ScheduleUpdate(Unity.Jobs.JobHandle dependency = default(Unity.Jobs.JobHandle));
+        public MultiNetworkDriver.Concurrent ToConcurrent();
+        public struct Concurrent
+        {
+            public void AbortSend(Unity.Collections.DataStreamWriter writer);
+            public int BeginSend(NetworkConnection connection, out Unity.Collections.DataStreamWriter writer, int requiredPayloadSize = 0);
+            public int BeginSend(NetworkPipeline pipe, NetworkConnection connection, out Unity.Collections.DataStreamWriter writer, int requiredPayloadSize = 0);
+            public int EndSend(Unity.Collections.DataStreamWriter writer);
+            public NetworkConnection.State GetConnectionState(NetworkConnection connection);
+            public NetworkEvent.Type PopEventForConnection(NetworkConnection connection, out Unity.Collections.DataStreamReader reader);
+            public NetworkEvent.Type PopEventForConnection(NetworkConnection connection, out Unity.Collections.DataStreamReader reader, out NetworkPipeline pipe);
+        }
+    }
+
+    public struct NetworkConfigParameter : INetworkParameter
+    {
+        public int connectTimeoutMS;
+        public int disconnectTimeoutMS;
+        public int fixedFrameTimeMS;
+        public int heartbeatTimeoutMS;
+        public int maxConnectAttempts;
+        public int maxFrameTimeMS;
+        public int maxMessageSize;
+        public bool performPathMtuDiscovery;
+        public int receiveQueueCapacity;
+        public int reconnectionTimeoutMS;
+        public int sendQueueCapacity;
+        public bool Validate();
+    }
+
+    public struct NetworkConnection : System.IEquatable<NetworkConnection>
+    {
+        public bool IsCreated { get; }
+        public int Close(NetworkDriver driver);
+        public int Disconnect(NetworkDriver driver);
+        public override bool Equals(object o);
+        public bool Equals(NetworkConnection o);
+        public override int GetHashCode();
+        public NetworkConnection.State GetState(NetworkDriver driver);
+        public static bool operator ==(NetworkConnection lhs, NetworkConnection rhs);
+        public static bool operator !=(NetworkConnection lhs, NetworkConnection rhs);
+        public NetworkEvent.Type PopEvent(NetworkDriver driver, out Unity.Collections.DataStreamReader stream);
+        public NetworkEvent.Type PopEvent(NetworkDriver driver, out Unity.Collections.DataStreamReader stream, out NetworkPipeline pipeline);
+        public Unity.Collections.FixedString128Bytes ToFixedString();
+        public override string ToString();
+        public enum State
+        {
+            Disconnected = 0,
+            Disconnecting = 1,
+            Connecting = 2,
+            Connected = 3,
+        }
+    }
+
+    public struct NetworkDriver : System.IDisposable
+    {
+        public bool Bound { get; }
+        public NetworkSettings CurrentSettings { get; }
+        public bool IsCreated { get; }
+        public bool Listening { get; }
+        public int ReceiveErrorCode { get; }
+        [System.Obsolete(@"Use NetworkDriver.Create(INetworkInterface networkInterface) instead.", true)] public NetworkDriver(INetworkInterface netIf) {}
+        [System.Obsolete(@"Use NetworkDriver.Create(INetworkInterface networkInterface, NetworkSettings settings) instead.", true)] public NetworkDriver(INetworkInterface netIf, NetworkSettings settings) {}
+        public void AbortSend(Unity.Collections.DataStreamWriter writer);
+        public NetworkConnection Accept();
+        public NetworkConnection Accept(out Unity.Collections.NativeArray<byte> payload);
+        public int BeginSend(NetworkConnection connection, out Unity.Collections.DataStreamWriter writer, int requiredPayloadSize = 0);
+        public int BeginSend(NetworkPipeline pipe, NetworkConnection connection, out Unity.Collections.DataStreamWriter writer, int requiredPayloadSize = 0);
+        public int Bind(NetworkEndpoint endpoint);
+        public bool CheckHostnameLookupStatus(NetworkConnection connection);
+        public NetworkConnection Connect(NetworkEndpoint endpoint);
+        public NetworkConnection Connect(Unity.Collections.FixedString512Bytes address, ushort port);
+        public NetworkConnection Connect(NetworkEndpoint endpoint, Unity.Collections.NativeArray<byte> payload);
+        public NetworkConnection Connect(Unity.Collections.FixedString512Bytes address, ushort port, Unity.Collections.NativeArray<byte> payload);
+        public static NetworkDriver Create();
+        public static NetworkDriver Create<N>(ref N networkInterface) where N : struct, unmanaged, INetworkInterface, new();
+        public static NetworkDriver Create<N>(N networkInterface) where N : struct, unmanaged, INetworkInterface, new();
+        public static NetworkDriver Create(NetworkSettings settings);
+        public static NetworkDriver Create<N>(ref N networkInterface, NetworkSettings settings) where N : struct, unmanaged, INetworkInterface, new();
+        public static NetworkDriver Create<N>(N networkInterface, NetworkSettings settings) where N : struct, unmanaged, INetworkInterface, new();
+        public NetworkPipeline CreatePipeline(params System.Type[] stages);
+        public NetworkPipeline CreatePipeline(Unity.Collections.NativeArray<NetworkPipelineStageId> stages);
+        public int Disconnect(NetworkConnection connection);
+        public void Dispose();
+        public int EndSend(Unity.Collections.DataStreamWriter writer);
+        public NetworkConnection.State GetConnectionState(NetworkConnection connection);
+        public int GetEventQueueSizeForConnection(NetworkConnection connection);
+        public NetworkEndpoint GetLocalEndpoint();
+        public int GetMaxSupportedMessageSize(NetworkConnection connection);
+        public int GetMaxSupportedPayloadSize(NetworkConnection connection, NetworkPipeline pipe);
+        public void GetPipelineBuffers(NetworkPipeline pipeline, NetworkPipelineStageId stageId, NetworkConnection connection, out Unity.Collections.NativeArray<byte> readProcessingBuffer, out Unity.Collections.NativeArray<byte> writeProcessingBuffer, out Unity.Collections.NativeArray<byte> sharedBuffer);
+        public NetworkEndpoint GetRemoteEndpoint(NetworkConnection connection);
+        public int Listen();
+        [System.Obsolete(@"LocalEndPoint has been renamed to GetLocalEndpoint. (UnityUpgradable) -> GetLocalEndpoint()", false)] public NetworkEndpoint LocalEndPoint();
+        public int MaxHeaderSize(NetworkPipeline pipe);
+        public NetworkEvent.Type PopEvent(out NetworkConnection connection, out Unity.Collections.DataStreamReader reader);
+        public NetworkEvent.Type PopEvent(out NetworkConnection connection, out Unity.Collections.DataStreamReader reader, out NetworkPipeline pipe);
+        public NetworkEvent.Type PopEventForConnection(NetworkConnection connection, out Unity.Collections.DataStreamReader reader);
+        public NetworkEvent.Type PopEventForConnection(NetworkConnection connection, out Unity.Collections.DataStreamReader reader, out NetworkPipeline pipe);
+        public void RegisterPipelineStage<T>(T stage) where T : struct, unmanaged, INetworkPipelineStage, new();
+        [System.Obsolete(@"RemoteEndPoint has been renamed to GetRemoteEndpoint. (UnityUpgradable) -> GetRemoteEndpoint(*)", false)] public NetworkEndpoint RemoteEndPoint(NetworkConnection id);
+        public Unity.Jobs.JobHandle ScheduleFlushSend(Unity.Jobs.JobHandle dependency = default(Unity.Jobs.JobHandle));
+        public Unity.Jobs.JobHandle ScheduleUpdate(Unity.Jobs.JobHandle dependency = default(Unity.Jobs.JobHandle));
+        public NetworkDriver.Concurrent ToConcurrent();
+        public struct Concurrent
+        {
+            public void AbortSend(Unity.Collections.DataStreamWriter writer);
+            public int BeginSend(NetworkConnection connection, out Unity.Collections.DataStreamWriter writer, int requiredPayloadSize = 0);
+            public int BeginSend(NetworkPipeline pipe, NetworkConnection connection, out Unity.Collections.DataStreamWriter writer, int requiredPayloadSize = 0);
+            public int EndSend(Unity.Collections.DataStreamWriter writer);
+            public NetworkConnection.State GetConnectionState(NetworkConnection id);
+            public int GetMaxSupportedMessageSize(NetworkConnection connection);
+            public int GetMaxSupportedPayloadSize(NetworkConnection connection, NetworkPipeline pipe);
+            public int MaxHeaderSize(NetworkPipeline pipe);
+            public NetworkEvent.Type PopEventForConnection(NetworkConnection connection, out Unity.Collections.DataStreamReader reader);
+            public NetworkEvent.Type PopEventForConnection(NetworkConnection connection, out Unity.Collections.DataStreamReader reader, out NetworkPipeline pipe);
+        }
+    }
+
+    public struct NetworkEndpoint : System.IEquatable<NetworkEndpoint>
+    {
+        public NetworkEndpoint.TransferrableData Transferrable;
+        public string Address { get; }
+        public static NetworkEndpoint AnyIpv4 { get; }
+        public static NetworkEndpoint AnyIpv6 { get; }
+        public NetworkFamily Family { get; set; }
+        public bool IsAny { get; }
+        public bool IsLoopback { get; }
+        public bool IsValid { get; }
+        public int Length { get; }
+        public static NetworkEndpoint LoopbackIpv4 { get; }
+        public static NetworkEndpoint LoopbackIpv6 { get; }
+        public ushort Port { get; set; }
+        [System.Obsolete(@"Use Port instead, and use standard C# APIs to convert to/from network byte order.")] public ushort RawPort { get; set; }
+        public override bool Equals(object other);
+        public bool Equals(NetworkEndpoint other);
+        public override int GetHashCode();
+        public Unity.Collections.NativeArray<byte> GetRawAddressBytes();
+        public static bool operator ==(NetworkEndpoint lhs, NetworkEndpoint rhs);
+        public static bool operator !=(NetworkEndpoint lhs, NetworkEndpoint rhs);
+        public static NetworkEndpoint Parse(string address, ushort port, NetworkFamily family = NetworkFamily.Invalid);
+        public void SetRawAddressBytes(Unity.Collections.NativeArray<byte> bytes, NetworkFamily family = NetworkFamily.Ipv4);
+        public Unity.Collections.FixedString128Bytes ToFixedString();
+        public Unity.Collections.FixedString512Bytes ToFixedString512Bytes();
+        public Unity.Collections.FixedString512Bytes ToFixedStringNoPort();
+        public override string ToString();
+        public static bool TryParse(string address, ushort port, out NetworkEndpoint endpoint, NetworkFamily family = NetworkFamily.Invalid);
+        public NetworkEndpoint WithPort(ushort port);
+        public struct TransferrableData
+        {
+        }
+    }
+
+    [System.Obsolete(@"NetworkEndPoint has been renamed to NetworkEndpoint. (UnityUpgradable) -> NetworkEndpoint", true)] public struct NetworkEndPoint
+    {
+    }
+
+    public struct NetworkEvent
+    {
+        public enum Type : short
+        {
+            Empty = 0,
+            Data = 1,
+            Connect = 2,
+            Disconnect = 3,
+        }
+    }
+
+    public enum NetworkFamily
+    {
+        Invalid = 0,
+        Ipv4 = 2,
+        Ipv6 = 23,
+        Custom = 255,
+    }
+
+    [System.Obsolete(@"Use NetworkEndpoint instead.", true)] public struct NetworkInterfaceEndPoint : System.IEquatable<NetworkInterfaceEndPoint>
+    {
+        public bool Equals(NetworkInterfaceEndPoint other);
+    }
+
+    public struct NetworkInterfaceUnmanagedWrapper<T> : INetworkInterface, System.IDisposable where T : INetworkInterface
+    {
+        public NetworkEndpoint LocalEndpoint { get; }
+        public int Bind(NetworkEndpoint endpoint);
+        public void Dispose();
+        public int Initialize(ref NetworkSettings settings, ref int packetPadding);
+        public int Listen();
+        public Unity.Jobs.JobHandle ScheduleReceive(ref ReceiveJobArguments receiveJobArguments, Unity.Jobs.JobHandle dep);
+        public Unity.Jobs.JobHandle ScheduleSend(ref SendJobArguments sendJobArguments, Unity.Jobs.JobHandle dep);
+    }
+
+    [System.Obsolete(@"Use ReceiveJobArguments.ReceiveQueue instead", true)] public struct NetworkPacketReceiver
+    {
+        public long LastUpdateTime { get; }
+        public int ReceiveErrorCode { get; }
+        public nint AllocateMemory(ref int dataLen);
+        public bool AppendPacket(nint data, ref NetworkEndpoint address, int dataLen, NetworkPacketReceiver.AppendPacketMode mode = NetworkPacketReceiver.AppendPacketMode.None);
+        public bool IsAddressUsed(NetworkEndpoint address);
+        [System.Flags] public enum AppendPacketMode
+        {
+            None = 0,
+            NoCopyNeeded = 1 << 0,
+        }
+    }
+
+    public struct NetworkParameterConstants
+    {
+        public const int ConnectTimeoutMS = 1000;
+        public const int DisconnectTimeoutMS = 30000;
+        public const int HeartbeatTimeoutMS = 500;
+        public const int MaxConnectAttempts = 60;
+        public const int MaxMessageSize = 1400;
+        public const int MTU = 1400;
+        public const int ReceiveQueueCapacity = 512;
+        public const int ReconnectionTimeoutMS = 2000;
+        public const int SendQueueCapacity = 512;
+    }
+
+    public struct NetworkPipeline : System.IEquatable<NetworkPipeline>
+    {
+        public static NetworkPipeline Null { get; }
+        public override bool Equals(object compare);
+        public bool Equals(NetworkPipeline connection);
+        public override int GetHashCode();
+        public static bool operator ==(NetworkPipeline lhs, NetworkPipeline rhs);
+        public static bool operator !=(NetworkPipeline lhs, NetworkPipeline rhs);
+    }
+
+    public struct NetworkPipelineContext
+    {
+        public int accumulatedHeaderCapacity;
+        public Unity.Collections.DataStreamWriter header;
+        public byte* internalProcessBuffer;
+        public int internalProcessBufferLength;
+        public byte* internalSharedProcessBuffer;
+        public int internalSharedProcessBufferLength;
+        public int maxMessageSize;
+        public byte* staticInstanceBuffer;
+        public int staticInstanceBufferLength;
+        public long timestamp;
+    }
+
+    public struct NetworkPipelineStage
+    {
+        public readonly int HeaderCapacity;
+        public Unity.Networking.Transport.TransportFunctionPointer<NetworkPipelineStage.InitializeConnectionDelegate> InitializeConnection;
+        public readonly int PayloadCapacity;
+        public Unity.Networking.Transport.TransportFunctionPointer<NetworkPipelineStage.ReceiveDelegate> Receive;
+        public readonly int ReceiveCapacity;
+        public Unity.Networking.Transport.TransportFunctionPointer<NetworkPipelineStage.SendDelegate> Send;
+        public readonly int SendCapacity;
+        public readonly int SharedStateCapacity;
+        public NetworkPipelineStage(Unity.Networking.Transport.TransportFunctionPointer<NetworkPipelineStage.ReceiveDelegate> Receive, Unity.Networking.Transport.TransportFunctionPointer<NetworkPipelineStage.SendDelegate> Send, Unity.Networking.Transport.TransportFunctionPointer<NetworkPipelineStage.InitializeConnectionDelegate> InitializeConnection, int ReceiveCapacity, int SendCapacity, int HeaderCapacity, int SharedStateCapacity, int PayloadCapacity = 0) {}
+        [System.Runtime.InteropServices.UnmanagedFunctionPointer(System.Runtime.InteropServices.CallingConvention.Cdecl)] public delegate void InitializeConnectionDelegate(byte* staticInstanceBuffer, int staticInstanceBufferLength, byte* sendProcessBuffer, int sendProcessBufferLength, byte* recvProcessBuffer, int recvProcessBufferLength, byte* sharedProcessBuffer, int sharedProcessBufferLength);
+        [System.Runtime.InteropServices.UnmanagedFunctionPointer(System.Runtime.InteropServices.CallingConvention.Cdecl)] public delegate void ReceiveDelegate(ref NetworkPipelineContext ctx, ref InboundRecvBuffer inboundBuffer, ref NetworkPipelineStage.Requests requests, int systemHeadersSize);
+        [System.Flags] public enum Requests
+        {
+            None = 0,
+            Resume = 1 << 0,
+            Update = 1 << 1,
+            SendUpdate = 1 << 2,
+            Error = 1 << 3,
+        }
+        [System.Runtime.InteropServices.UnmanagedFunctionPointer(System.Runtime.InteropServices.CallingConvention.Cdecl)] public delegate int SendDelegate(ref NetworkPipelineContext ctx, ref InboundSendBuffer inboundBuffer, ref NetworkPipelineStage.Requests requests, int systemHeadersSize);
+    }
+
+    public struct NetworkPipelineStageId : System.IEquatable<NetworkPipelineStageId>
+    {
+        public override bool Equals(object other);
+        public bool Equals(NetworkPipelineStageId other);
+        public static NetworkPipelineStageId Get<T>() where T : struct, unmanaged, INetworkPipelineStage, new();
+        public override int GetHashCode();
+        public static bool operator ==(NetworkPipelineStageId lhs, NetworkPipelineStageId rhs);
+        public static bool operator !=(NetworkPipelineStageId lhs, NetworkPipelineStageId rhs);
+    }
+
+    public struct NetworkSettings : System.IDisposable
+    {
+        public bool IsCreated { get; }
+        public NetworkSettings(Unity.Collections.Allocator allocator) {}
+        public void AddRawParameterStruct<T>(ref T parameter) where T : struct, unmanaged, INetworkParameter, new();
+        public NetworkSettings AsReadOnly();
+        public void Dispose();
+        public bool TryGet<T>(out T parameter) where T : struct, unmanaged, INetworkParameter, new();
+    }
+
+    public struct NetworkSimulatorParameter : INetworkParameter
+    {
+        public float ReceiveMtu;
+        public float ReceivePacketLossPercent;
+        public uint SendDelayMS;
+        public float SendDuplicatePercent;
+        public uint SendJitterMS;
+        public float SendPacketLossPercent;
+        public bool Validate();
+    }
+
+    public static class NetworkSimulatorParameterExtensions
+    {
+        public static void ModifyNetworkSimulatorParameters(this NetworkDriver driver, NetworkSimulatorParameter newParams);
+        public static ref NetworkSettings WithNetworkSimulatorParameters(this ref NetworkSettings settings, float receivePacketLossPercent = 0f, float sendPacketLossPercent = 0f, uint sendDelayMS = 0, uint sendJitterMS = 0, float sendDuplicatePercent = 0f, int receiveMtu = 0);
+    }
+
+    [Unity.Burst.BurstCompile] public struct NullPipelineStage : INetworkPipelineStage
+    {
+        public int StaticSize { get; }
+        public NetworkPipelineStage StaticInitialize(byte* staticInstanceBuffer, int staticInstanceBufferLength, NetworkSettings netParams);
+    }
+
+    public struct OperationResult : System.IDisposable
+    {
+        public int ErrorCode { get; set; }
+        public void Dispose();
+    }
+
+    public struct PacketProcessor
+    {
+        public int BytesAvailableAtEnd { get; }
+        public int BytesAvailableAtStart { get; }
+        public int Capacity { get; }
+        public ref NetworkEndpoint EndpointRef { get; }
+        public bool IsCreated { get; }
+        public int Length { get; }
+        public int Offset { get; }
+        public void AppendToPayload<T>(T value) where T : struct, unmanaged, new();
+        public void AppendToPayload(PacketProcessor processor);
+        public void AppendToPayload(void* dataPtr, int size);
+        public int CopyPayload(void* destinationPtr, int size);
+        public void Drop();
+        public ref T GetPayloadDataRef<T>(int offset = 0) where T : struct, unmanaged, new();
+        public void* GetUnsafePayloadPtr();
+        public void PrependToPayload<T>(T value) where T : struct, unmanaged, new();
+        public T RemoveFromPayloadStart<T>() where T : struct, unmanaged, new();
+        public void RemoveFromPayloadStart(void* ptr, int size);
+    }
+
+    public struct PacketsQueue : System.IDisposable
+    {
+        public int Capacity { get; }
+        public int Count { get; }
+        public bool IsCreated { get; }
+        public PacketProcessor this[int packetIndex] { get; }
+        public void Clear();
+        public void Dispose();
+        public bool EnqueuePacket(out PacketProcessor packetProcessor);
+        public void EnqueuePackets(ref PacketsQueue originQueue);
+    }
+
+    public struct ReceiveJobArguments
+    {
+        public PacketsQueue ReceiveQueue;
+        public OperationResult ReceiveResult;
+        public long Time;
+    }
+
+    [Unity.Burst.BurstCompile] public struct ReliableSequencedPipelineStage : INetworkPipelineStage
+    {
+        public int StaticSize { get; }
+        public NetworkPipelineStage StaticInitialize(byte* staticInstanceBuffer, int staticInstanceBufferLength, NetworkSettings settings);
+    }
+
+    public struct SendJobArguments
+    {
+        public PacketsQueue SendQueue;
+        public long Time;
+    }
+
+    [Unity.Burst.BurstCompile] public struct SimulatorPipelineStage : INetworkPipelineStage
+    {
+        public int StaticSize { get; }
+        public NetworkPipelineStage StaticInitialize(byte* staticInstanceBuffer, int staticInstanceBufferLength, NetworkSettings settings);
+    }
+
+    [System.Obsolete(@"Use SimulatorPipelineStage with an ApplyMode set for sending instead.")] [Unity.Burst.BurstCompile] public struct SimulatorPipelineStageInSend : INetworkPipelineStage
+    {
+        public int StaticSize { get; }
+        public NetworkPipelineStage StaticInitialize(byte* staticInstanceBuffer, int staticInstanceBufferLength, NetworkSettings settings);
+    }
+
+    public struct TransportFunctionPointer<T> where T : System.Delegate
+    {
+        public readonly Unity.Burst.FunctionPointer<T> Ptr;
+        public TransportFunctionPointer(T executeDelegate) {}
+        public TransportFunctionPointer(Unity.Burst.FunctionPointer<T> pointer) {}
+        public static Unity.Networking.Transport.TransportFunctionPointer<T> Burst(T burstCompilableDelegate);
+        public static Unity.Networking.Transport.TransportFunctionPointer<T> Managed(T managedDelegate);
+    }
+
+    [Unity.Burst.BurstCompile] public struct UDPNetworkInterface : INetworkInterface, System.IDisposable
+    {
+        public NetworkEndpoint LocalEndpoint { get; }
+        public int Bind(NetworkEndpoint endpoint);
+        public void Dispose();
+        public int Initialize(ref NetworkSettings settings, ref int packetPadding);
+        public int Listen();
+        public Unity.Jobs.JobHandle ScheduleReceive(ref ReceiveJobArguments arguments, Unity.Jobs.JobHandle dep);
+        public Unity.Jobs.JobHandle ScheduleSend(ref SendJobArguments arguments, Unity.Jobs.JobHandle dep);
+    }
+
+    [Unity.Burst.BurstCompile] public struct UnreliableSequencedPipelineStage : INetworkPipelineStage
+    {
+        public int StaticSize { get; }
+        public NetworkPipelineStage StaticInitialize(byte* staticInstanceBuffer, int staticInstanceBufferLength, NetworkSettings settings);
+        public struct SequenceId
+        {
+            public Unity.Collections.FixedString64Bytes ToFixedString();
+            public override string ToString();
+        }
+        public struct Statistics
+        {
+            public ulong NumPacketsCulledOutOfOrder;
+            public ulong NumPacketsDroppedNeverArrived;
+            public ulong NumPacketsReceived;
+            public ulong NumPacketsSent;
+            public double CombinedPacketLossPercent { get; }
+            public double NetworkPacketLossPercent { get; }
+            public double OutOfOrderPacketLossPercent { get; }
+            public Unity.Collections.FixedString512Bytes ToFixedString();
+            public override string ToString();
+        }
+    }
+
+    [Unity.Burst.BurstCompile] public struct WebSocketNetworkInterface : INetworkInterface, System.IDisposable
+    {
+        public NetworkEndpoint LocalEndpoint { get; }
+        public int Bind(NetworkEndpoint endpoint);
+        public void Dispose();
+        public int Initialize(ref NetworkSettings settings, ref int packetPadding);
+        public int Listen();
+        public Unity.Jobs.JobHandle ScheduleReceive(ref ReceiveJobArguments arguments, Unity.Jobs.JobHandle dep);
+        public Unity.Jobs.JobHandle ScheduleSend(ref SendJobArguments arguments, Unity.Jobs.JobHandle dep);
+    }
+
+    public struct WebSocketParameter : INetworkParameter
+    {
+        public Unity.Collections.FixedString128Bytes Path;
+        public bool Validate();
+    }
+
+    public static class WebSocketParameterExtensions
+    {
+        public static WebSocketParameter GetWebSocketParameters(this ref NetworkSettings settings);
+        public static ref NetworkSettings WithWebSocketParameters(this ref NetworkSettings settings, Unity.Collections.FixedString128Bytes path = default(Unity.Collections.FixedString128Bytes));
+    }
+}
+
+namespace Unity.Networking.Transport.Error
+{
+    public enum DisconnectReason : byte
+    {
+        Default = 0,
+        Timeout = 1,
+        MaxConnectionAttempts = 2,
+        ClosedByRemote = 3,
+        AuthenticationFailure = 6,
+        ProtocolError = 7,
+        [System.Obsolete(@"Value is not in use anymore and nothing will return it.")] Count = 8,
+        HostNotFound = 9,
+    }
+
+    public enum StatusCode
+    {
+        NetworkSocketError = -11,
+        NetworkReceiveQueueFull = -10,
+        [System.Obsolete(@"Return code is not in use anymore and nothing will return it.")] NetworkArgumentMismatch = -9,
+        NetworkSendHandleInvalid = -8,
+        NetworkDriverParallelForErr = -7,
+        [System.Obsolete(@"Return code is not in use anymore and nothing will return it.")] NetworkHeaderInvalid = -6,
+        NetworkSendQueueFull = -5,
+        NetworkPacketOverflow = -4,
+        NetworkStateMismatch = -3,
+        NetworkVersionMismatch = -2,
+        NetworkIdMismatch = -1,
+        Success = 0,
+    }
+}
+
+namespace Unity.Networking.Transport.Logging
+{
+    public struct LoggingParameter : INetworkParameter
+    {
+        public Unity.Collections.FixedString32Bytes DriverName;
+        public bool Validate();
+    }
+
+    public static class LoggingParameterExtensions
+    {
+        public static ref NetworkSettings WithLoggingParameters(this ref NetworkSettings settings, Unity.Collections.FixedString32Bytes driverName);
+    }
+}
+
+namespace Unity.Networking.Transport.Relay
+{
+    public static class NetworkDriverRelayExtensions
+    {
+        public static NetworkConnection Connect(this NetworkDriver driver);
+        public static RelayConnectionStatus GetRelayConnectionStatus(this NetworkDriver driver);
+    }
+
+    public struct RelayAllocationId : System.IComparable<RelayAllocationId>, System.IEquatable<RelayAllocationId>
+    {
+        public const int k_Length = 16;
+        public fixed byte Value[16];
+        public int CompareTo(RelayAllocationId other);
+        public override bool Equals(object other);
+        public bool Equals(RelayAllocationId other);
+        public static RelayAllocationId FromByteArray(byte[] data);
+        public static RelayAllocationId FromBytePointer(byte* dataPtr, int length);
+        public override int GetHashCode();
+        public static bool operator ==(RelayAllocationId lhs, RelayAllocationId rhs);
+        public static bool operator !=(RelayAllocationId lhs, RelayAllocationId rhs);
+    }
+
+    public struct RelayConnectionData
+    {
+        public const int k_Length = 255;
+        public fixed byte Value[255];
+        public static RelayConnectionData FromByteArray(byte[] data);
+        public static RelayConnectionData FromBytePointer(byte* dataPtr, int length);
+    }
+
+    public enum RelayConnectionStatus
+    {
+        NotEstablished = 0,
+        Established = 1,
+        AllocationInvalid = 2,
+        NotUsingRelay = 3,
+    }
+
+    public struct RelayHMACKey
+    {
+        public const int k_Length = 64;
+        public fixed byte Value[64];
+        public static RelayHMACKey FromByteArray(byte[] data);
+        public static RelayHMACKey FromBytePointer(byte* data, int length);
+    }
+
+    public struct RelayNetworkParameter : INetworkParameter
+    {
+        public int RelayConnectionTimeMS;
+        public RelayServerData ServerData;
+        public bool Validate();
+    }
+
+    public static class RelayParameterExtensions
+    {
+        public static RelayNetworkParameter GetRelayParameters(this ref NetworkSettings settings);
+        public static ref NetworkSettings WithRelayParameters(this ref NetworkSettings settings, ref RelayServerData serverData, int relayConnectionTimeMS = 3000);
+    }
+
+    public struct RelayServerData
+    {
+        public RelayAllocationId AllocationId;
+        public RelayConnectionData ConnectionData;
+        public NetworkEndpoint Endpoint;
+        public RelayHMACKey HMACKey;
+        public RelayConnectionData HostConnectionData;
+        public readonly byte IsSecure;
+        public readonly byte IsWebSocket;
+        public ushort Nonce;
+        public RelayServerData(string host, ushort port, byte[] allocationId, byte[] connectionData, byte[] hostConnectionData, byte[] key, bool isSecure) {}
+        public RelayServerData(ref NetworkEndpoint endpoint, ushort nonce, ref RelayAllocationId allocationId, ref RelayConnectionData connectionData, ref RelayConnectionData hostConnectionData, ref RelayHMACKey key, bool isSecure) {}
+        public RelayServerData(string host, ushort port, byte[] allocationId, byte[] connectionData, byte[] hostConnectionData, byte[] key, bool isSecure, bool isWebSocket) {}
+        public RelayServerData(ref NetworkEndpoint endpoint, ushort nonce, ref RelayAllocationId allocationId, ref RelayConnectionData connectionData, ref RelayConnectionData hostConnectionData, ref RelayHMACKey key, bool isSecure, bool isWebSocket) {}
+        public void IncrementNonce();
+    }
+}
+
+namespace Unity.Networking.Transport.TLS
+{
+    public struct FixedPEMString
+    {
+        public const int MaxLength = 16383;
+        public int Length { get; }
+        public FixedPEMString(string pem) {}
+    }
+
+    public enum SecureClientAuthPolicy : uint
+    {
+        None = 0,
+        Optional = 1,
+        Required = 2,
+    }
+
+    public struct SecureNetworkProtocolParameter : INetworkParameter
+    {
+        public FixedPEMString CACertificate;
+        public FixedPEMString Certificate;
+        public SecureClientAuthPolicy ClientAuthenticationPolicy;
+        public Unity.Collections.FixedString512Bytes Hostname;
+        public FixedPEMString PrivateKey;
+        public bool Validate();
+    }
+
+    public static class SecureParameterExtensions
+    {
+        public static SecureNetworkProtocolParameter GetSecureParameters(this ref NetworkSettings settings);
+        public static ref NetworkSettings WithSecureClientParameters(this ref NetworkSettings settings, string serverName);
+        public static ref NetworkSettings WithSecureClientParameters(this ref NetworkSettings settings, ref Unity.Collections.FixedString512Bytes serverName);
+        public static ref NetworkSettings WithSecureClientParameters(this ref NetworkSettings settings, string caCertificate, string serverName);
+        public static ref NetworkSettings WithSecureClientParameters(this ref NetworkSettings settings, ref Unity.Collections.FixedString4096Bytes caCertificate, ref Unity.Collections.FixedString512Bytes serverName);
+        public static ref NetworkSettings WithSecureClientParameters(this ref NetworkSettings settings, ref FixedPEMString caCertificate, ref Unity.Collections.FixedString512Bytes serverName);
+        public static ref NetworkSettings WithSecureClientParameters(this ref NetworkSettings settings, string certificate, string privateKey, string caCertificate, string serverName);
+        public static ref NetworkSettings WithSecureClientParameters(this ref NetworkSettings settings, ref Unity.Collections.FixedString4096Bytes certificate, ref Unity.Collections.FixedString4096Bytes privateKey, ref Unity.Collections.FixedString4096Bytes caCertificate, ref Unity.Collections.FixedString512Bytes serverName);
+        public static ref NetworkSettings WithSecureClientParameters(this ref NetworkSettings settings, ref FixedPEMString certificate, ref FixedPEMString privateKey, ref FixedPEMString caCertificate, ref Unity.Collections.FixedString512Bytes serverName);
+        public static ref NetworkSettings WithSecureServerParameters(this ref NetworkSettings settings, string certificate, string privateKey);
+        public static ref NetworkSettings WithSecureServerParameters(this ref NetworkSettings settings, ref Unity.Collections.FixedString4096Bytes certificate, ref Unity.Collections.FixedString4096Bytes privateKey);
+        public static ref NetworkSettings WithSecureServerParameters(this ref NetworkSettings settings, ref FixedPEMString certificate, ref FixedPEMString privateKey);
+        public static ref NetworkSettings WithSecureServerParameters(this ref NetworkSettings settings, string certificate, string privateKey, string caCertificate, string clientName, SecureClientAuthPolicy clientAuthenticationPolicy = SecureClientAuthPolicy.Required);
+        public static ref NetworkSettings WithSecureServerParameters(this ref NetworkSettings settings, ref Unity.Collections.FixedString4096Bytes certificate, ref Unity.Collections.FixedString4096Bytes privateKey, ref Unity.Collections.FixedString4096Bytes caCertificate, ref Unity.Collections.FixedString512Bytes clientName, SecureClientAuthPolicy clientAuthenticationPolicy = SecureClientAuthPolicy.Required);
+        public static ref NetworkSettings WithSecureServerParameters(this ref NetworkSettings settings, ref FixedPEMString certificate, ref FixedPEMString privateKey, ref FixedPEMString caCertificate, ref Unity.Collections.FixedString512Bytes clientName, SecureClientAuthPolicy clientAuthenticationPolicy = SecureClientAuthPolicy.Required);
+    }
+}
+
+namespace Unity.Networking.Transport.Utilities
+{
+    public enum ApplyMode : byte
+    {
+        ReceivedPacketsOnly = 0,
+        SentPacketsOnly = 1,
+        AllPackets = 2,
+        Off = 3,
+    }
+
+    public static class FragmentationStageParameterExtensions
+    {
+        public static FragmentationUtility.Parameters GetFragmentationStageParameters(this ref NetworkSettings settings);
+        public static ref NetworkSettings WithFragmentationStageParameters(this ref NetworkSettings settings, int payloadCapacity = 4096);
+    }
+
+    public struct FragmentationUtility
+    {
+        public struct Parameters : INetworkParameter
+        {
+            public int PayloadCapacity;
+            public bool Validate();
+        }
+    }
+
+    public static class ReliableStageParameterExtensions
+    {
+        public static ReliableUtility.Parameters GetReliableStageParameters(this ref NetworkSettings settings);
+        public static ref NetworkSettings WithReliableStageParameters(this ref NetworkSettings settings, int windowSize = 32, int minimumResendTime = 64, int maximumResendTime = 200);
+    }
+
+    public struct ReliableUtility
+    {
+        public const int DefaultMaximumResendTime = 200;
+        public const int DefaultMinimumResendTime = 64;
+        [System.Obsolete(@"Renamed to DefaultMaximumResendTime. (UnityUpgradable) -> DefaultMaximumResendTime")] public const int MaximumResendTime = 200;
+        public static void SetMaximumResendTime(int value, NetworkDriver driver, NetworkPipeline pipeline, NetworkConnection connection);
+        public static void SetMinimumResendTime(int value, NetworkDriver driver, NetworkPipeline pipeline, NetworkConnection connection);
+        public struct Parameters : INetworkParameter
+        {
+            public int MaximumResendTime;
+            public int MinimumResendTime;
+            public int WindowSize;
+            public bool Validate();
+        }
+        public struct RTTInfo
+        {
+            public int LastRtt;
+            public int ResendTimeout;
+            public float SmoothedRtt;
+            public float SmoothedVariance;
+        }
+        public struct SharedContext
+        {
+            public int MaximumResendTime;
+            public int MinimumResendTime;
+            public ReliableUtility.RTTInfo RttInfo;
+            public ReliableUtility.Statistics stats;
+            public int WindowSize;
+        }
+        public struct Statistics
+        {
+            public int PacketsDropped;
+            public int PacketsDuplicated;
+            public int PacketsOutOfOrder;
+            public int PacketsReceived;
+            public int PacketsResent;
+            public int PacketsSent;
+            public int PacketsStale;
+        }
+    }
+
+    public static class SimulatorStageParameterExtensions
+    {
+        public static SimulatorUtility.Parameters GetSimulatorStageParameters(this ref NetworkSettings settings);
+        public static void ModifySimulatorStageParameters(this NetworkDriver driver, SimulatorUtility.Parameters newParams);
+        public static ref NetworkSettings WithSimulatorStageParameters(this ref NetworkSettings settings, int maxPacketCount, int maxPacketSize = 1472, ApplyMode mode = ApplyMode.AllPackets, int packetDelayMs = 0, int packetJitterMs = 0, int packetDropInterval = 0, int packetDropPercentage = 0, int packetDuplicationPercentage = 0, int fuzzFactor = 0, int fuzzOffset = 0, uint randomSeed = 0);
+    }
+
+    public static class SimulatorUtility
+    {
+        public struct Parameters : INetworkParameter
+        {
+            public int FuzzFactor;
+            public int FuzzOffset;
+            public int MaxPacketCount;
+            public int MaxPacketSize;
+            public ApplyMode Mode;
+            public int PacketDelayMs;
+            public int PacketDropInterval;
+            public int PacketDropPercentage;
+            public int PacketDuplicationPercentage;
+            public int PacketJitterMs;
+            public uint RandomSeed;
+            public bool Validate();
+        }
+    }
+}

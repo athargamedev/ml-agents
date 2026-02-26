@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.coplaydev.unity-mcp": "file:D:/GithubRepos/unity-mcp-beta/MCPForUnity",
     "com.unity.ai.inference": "2.5.0",
     "com.unity.ai.navigation": "2.0.6",
     "com.unity.formats.fbx": "5.1.1",

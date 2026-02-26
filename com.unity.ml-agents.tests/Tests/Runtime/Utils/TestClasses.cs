@@ -30,7 +30,7 @@ namespace Unity.MLAgents.Utils.Tests
 
         public ref readonly ActionBuffers DecideAction() { return ref s_EmptyActionBuffers; }
 
-        public void Dispose() { }
+        public void Dispose() {}
     }
 
     public class TestAgent : Agent
@@ -154,7 +154,7 @@ namespace Unity.MLAgents.Utils.Tests
             return sensorName;
         }
 
-        public void Update() { }
+        public void Update() {}
 
         public void Reset()
         {

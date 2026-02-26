@@ -1,0 +1,226 @@
+{
+    "schemaVersion": 1,
+    "updatedUtc": "2026-02-26T13:35:02.8597964Z",
+    "entries": [
+        {
+            "key": "dissolve",
+            "effectType": "dissolve",
+            "scaleMultiplier": 1.0,
+            "durationMultiplier": 1.0,
+            "attachScore": 0.0,
+            "fitScore": 0.0,
+            "sampleCount": 7,
+            "lastOutcome": "looks_correct",
+            "lastUpdatedUtc": "2026-02-26T10:44:24.3807242Z"
+        },
+        {
+            "key": "fireflies",
+            "effectType": "prefab_power",
+            "scaleMultiplier": 1.0,
+            "durationMultiplier": 1.0,
+            "attachScore": 0.0,
+            "fitScore": 0.0,
+            "sampleCount": 1,
+            "lastOutcome": "looks_correct",
+            "lastUpdatedUtc": "2026-02-25T15:05:54.5830011Z"
+        },
+        {
+            "key": "tinyexplosion",
+            "effectType": "prefab_power",
+            "scaleMultiplier": 1.0,
+            "durationMultiplier": 1.0,
+            "attachScore": 0.0,
+            "fitScore": 0.0,
+            "sampleCount": 1,
+            "lastOutcome": "looks_correct",
+            "lastUpdatedUtc": "2026-02-25T15:07:13.4720269Z"
+        },
+        {
+            "key": "icelance",
+            "effectType": "prefab_power",
+            "scaleMultiplier": 0.9963600039482117,
+            "durationMultiplier": 1.100000023841858,
+            "attachScore": 0.8300000429153442,
+            "fitScore": 0.44999998807907107,
+            "sampleCount": 4,
+            "lastOutcome": "not_visible",
+            "lastUpdatedUtc": "2026-02-26T09:52:12.6444520Z"
+        },
+        {
+            "key": "floor_freeze_material",
+            "effectType": "surface_material",
+            "scaleMultiplier": 1.0,
+            "durationMultiplier": 1.0,
+            "attachScore": 0.0,
+            "fitScore": 0.0,
+            "sampleCount": 4,
+            "lastOutcome": "looks_correct",
+            "lastUpdatedUtc": "2026-02-26T08:24:12.0434333Z"
+        },
+        {
+            "key": "electricalsparks",
+            "effectType": "prefab_power",
+            "scaleMultiplier": 1.7588400840759278,
+            "durationMultiplier": 1.5006183385849,
+            "attachScore": 0.0,
+            "fitScore": 0.0,
+            "sampleCount": 6,
+            "lastOutcome": "looks_correct",
+            "lastUpdatedUtc": "2026-02-26T02:19:26.5340810Z"
+        },
+        {
+            "key": "fireball",
+            "effectType": "prefab_power",
+            "scaleMultiplier": 1.1399999856948853,
+            "durationMultiplier": 1.100000023841858,
+            "attachScore": 0.0,
+            "fitScore": 0.0,
+            "sampleCount": 1,
+            "lastOutcome": "not_visible",
+            "lastUpdatedUtc": "2026-02-26T02:18:04.9584600Z"
+        },
+        {
+            "key": "wildfire",
+            "effectType": "prefab_power",
+            "scaleMultiplier": 1.1399999856948853,
+            "durationMultiplier": 1.100000023841858,
+            "attachScore": 0.0,
+            "fitScore": 0.0,
+            "sampleCount": 1,
+            "lastOutcome": "not_visible",
+            "lastUpdatedUtc": "2026-02-26T02:18:21.4184116Z"
+        },
+        {
+            "key": "lightnigstormcloud",
+            "effectType": "prefab_power",
+            "scaleMultiplier": 1.1399999856948853,
+            "durationMultiplier": 1.100000023841858,
+            "attachScore": 0.0,
+            "fitScore": 0.0,
+            "sampleCount": 1,
+            "lastOutcome": "not_visible",
+            "lastUpdatedUtc": "2026-02-26T02:18:35.5096331Z"
+        },
+        {
+            "key": "bigexplosion",
+            "effectType": "prefab_power",
+            "scaleMultiplier": 1.1399999856948853,
+            "durationMultiplier": 1.100000023841858,
+            "attachScore": 0.0,
+            "fitScore": 0.0,
+            "sampleCount": 1,
+            "lastOutcome": "not_visible",
+            "lastUpdatedUtc": "2026-02-26T02:18:52.3722544Z"
+        },
+        {
+            "key": "smokeeffect",
+            "effectType": "prefab_power",
+            "scaleMultiplier": 1.0,
+            "durationMultiplier": 1.0,
+            "attachScore": 0.0,
+            "fitScore": 0.0,
+            "sampleCount": 1,
+            "lastOutcome": "looks_correct",
+            "lastUpdatedUtc": "2026-02-26T02:19:03.3905798Z"
+        },
+        {
+            "key": "flamestream",
+            "effectType": "prefab_power",
+            "scaleMultiplier": 1.0,
+            "durationMultiplier": 1.0,
+            "attachScore": 0.0,
+            "fitScore": 0.0,
+            "sampleCount": 1,
+            "lastOutcome": "looks_correct",
+            "lastUpdatedUtc": "2026-02-26T02:20:16.7150598Z"
+        },
+        {
+            "key": "waterfall",
+            "effectType": "prefab_power",
+            "scaleMultiplier": 1.0,
+            "durationMultiplier": 1.0,
+            "attachScore": 0.0,
+            "fitScore": 0.0,
+            "sampleCount": 1,
+            "lastOutcome": "looks_correct",
+            "lastUpdatedUtc": "2026-02-26T02:21:00.0474370Z"
+        },
+        {
+            "key": "energyexplosion",
+            "effectType": "prefab_power",
+            "scaleMultiplier": 1.1399999856948853,
+            "durationMultiplier": 1.100000023841858,
+            "attachScore": 0.0,
+            "fitScore": 0.0,
+            "sampleCount": 1,
+            "lastOutcome": "not_visible",
+            "lastUpdatedUtc": "2026-02-26T02:21:36.8233994Z"
+        },
+        {
+            "key": "steam",
+            "effectType": "prefab_power",
+            "scaleMultiplier": 1.0,
+            "durationMultiplier": 1.0,
+            "attachScore": 0.0,
+            "fitScore": 0.0,
+            "sampleCount": 1,
+            "lastOutcome": "looks_correct",
+            "lastUpdatedUtc": "2026-02-26T02:21:53.7395879Z"
+        },
+        {
+            "key": "electricalsparkseffect",
+            "effectType": "prefab_power",
+            "scaleMultiplier": 1.0,
+            "durationMultiplier": 1.0,
+            "attachScore": 0.0,
+            "fitScore": 0.0,
+            "sampleCount": 1,
+            "lastOutcome": "looks_correct",
+            "lastUpdatedUtc": "2026-02-26T02:22:09.9818001Z"
+        },
+        {
+            "key": "respawn",
+            "effectType": "respawn",
+            "scaleMultiplier": 0.9200000166893005,
+            "durationMultiplier": 1.0,
+            "attachScore": 0.20000000298023225,
+            "fitScore": 0.44999998807907107,
+            "sampleCount": 1,
+            "lastOutcome": "wrong_mesh_fit",
+            "lastUpdatedUtc": "2026-02-26T02:22:41.6306536Z"
+        },
+        {
+            "key": "rockettrail",
+            "effectType": "prefab_power",
+            "scaleMultiplier": 1.0,
+            "durationMultiplier": 1.0,
+            "attachScore": 0.0,
+            "fitScore": 0.0,
+            "sampleCount": 1,
+            "lastOutcome": "looks_correct",
+            "lastUpdatedUtc": "2026-02-26T02:23:04.5403408Z"
+        },
+        {
+            "key": "largeflames",
+            "effectType": "prefab_power",
+            "scaleMultiplier": 1.0,
+            "durationMultiplier": 1.0,
+            "attachScore": 0.0,
+            "fitScore": 0.0,
+            "sampleCount": 1,
+            "lastOutcome": "looks_correct",
+            "lastUpdatedUtc": "2026-02-26T02:23:27.6952150Z"
+        },
+        {
+            "key": "waterleak",
+            "effectType": "prefab_power",
+            "scaleMultiplier": 1.0,
+            "durationMultiplier": 1.0,
+            "attachScore": 0.0,
+            "fitScore": 0.0,
+            "sampleCount": 1,
+            "lastOutcome": "looks_correct",
+            "lastUpdatedUtc": "2026-02-26T02:23:52.3206743Z"
+        }
+    ]
+}

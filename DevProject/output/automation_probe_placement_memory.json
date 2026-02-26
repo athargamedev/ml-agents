@@ -1,0 +1,48 @@
+{
+    "schema_version": 1,
+    "updated_utc": "2026-02-26T02:22:41.6316650Z",
+    "entries": [
+        {
+            "effect_tag": "bigexplosion",
+            "disfavored_placements": [
+                "area"
+            ]
+        },
+        {
+            "effect_tag": "energyexplosion",
+            "disfavored_placements": [
+                "area"
+            ]
+        },
+        {
+            "effect_tag": "fireball",
+            "disfavored_placements": [
+                "projectile"
+            ]
+        },
+        {
+            "effect_tag": "icelance",
+            "disfavored_placements": [
+                "projectile"
+            ]
+        },
+        {
+            "effect_tag": "lightnigstormcloud",
+            "disfavored_placements": [
+                "area"
+            ]
+        },
+        {
+            "effect_tag": "respawn",
+            "disfavored_placements": [
+                "attached"
+            ]
+        },
+        {
+            "effect_tag": "wildfire",
+            "disfavored_placements": [
+                "attached"
+            ]
+        }
+    ]
+}

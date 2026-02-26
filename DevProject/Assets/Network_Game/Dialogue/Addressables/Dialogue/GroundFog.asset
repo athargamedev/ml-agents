@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0974d0dac49eab4fbfe4ef844c0de60, type: 3}
+  m_Name: GroundFog
+  m_EditorClassIdentifier: 
+  effectTag: Ground Fog
+  description: Creeping corrosive fog that damages anyone who lingers inside. Obscures vision and lingers.
+  effectPrefab: {fileID: 1269120730060968, guid: 36617ee701d2e63479bc8eb6fb22ea59, type: 3}
+  defaultScale: 1.5
+  defaultDuration: 6
+  defaultColor: {r: 0.8, g: 0.85, b: 0.95, a: 0.7}
+  allowCustomScale: 1
+  allowCustomDuration: 1
+  allowCustomColor: 1
+  enableGameplayDamage: 1
+  enableHoming: 0
+  projectileSpeed: 0
+  homingTurnRateDegrees: 0
+  damageAmount: 8
+  damageRadius: 2.5
+  affectPlayerOnly: 1
+  damageType: arcane
+  alternativeTags:
+  - fog
+  - mist
+  - obscure
+  - void

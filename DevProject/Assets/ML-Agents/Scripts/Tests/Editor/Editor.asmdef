@@ -1,14 +1,14 @@
 {
     "name": "Unity.ML-Agents.DevTests.Editor",
+    "rootNamespace": "",
     "references": [
         "Unity.ML-Agents.Editor",
         "Unity.ML-Agents",
         "Unity.InferenceEngine",
         "Unity.ML-Agents.CommunicatorObjects",
-        "Unity.PerformanceTesting"
-    ],
-    "optionalUnityReferences": [
-        "TestAssemblies"
+        "Unity.PerformanceTesting",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
     ],
     "includePlatforms": [
         "Editor"
@@ -19,10 +19,12 @@
     "precompiledReferences": [
         "System.IO.Abstractions.dll",
         "System.IO.Abstractions.TestingHelpers.dll",
-        "Google.Protobuf.dll"
+        "nunit.framework.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [
         "UNITY_INCLUDE_TESTS"
-    ]
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

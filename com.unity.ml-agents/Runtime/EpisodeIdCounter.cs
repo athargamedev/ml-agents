@@ -9,12 +9,14 @@ namespace Unity.MLAgents
         {
             return s_Counter++;
         }
+
 #if UNITY_EDITOR
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void ResetStaticsOnLoad()
         {
             s_Counter = 0;
         }
+
 #endif
     }
 }

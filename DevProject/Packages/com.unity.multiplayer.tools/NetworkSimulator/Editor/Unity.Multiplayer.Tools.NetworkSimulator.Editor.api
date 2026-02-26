@@ -1,0 +1,11 @@
+// This file is generated. Do not modify by hand.
+// XML documentation file not found. To check if public methods have XML comments,
+// make sure the XML doc file is present and located next to the scraped dll
+namespace Unity.Multiplayer.Tools.NetworkSimulator.Editor.UI.PropertyDrawers
+{
+    [UnityEditor.CustomPropertyDrawer(typeof(Unity.Multiplayer.Tools.NetworkSimulator.Runtime.MinMaxRangeAttribute))] public class MinMaxDrawer : UnityEditor.PropertyDrawer
+    {
+        public MinMaxDrawer() {}
+        public override void OnGUI(UnityEngine.Rect position, UnityEditor.SerializedProperty property, UnityEngine.GUIContent label);
+    }
+}
