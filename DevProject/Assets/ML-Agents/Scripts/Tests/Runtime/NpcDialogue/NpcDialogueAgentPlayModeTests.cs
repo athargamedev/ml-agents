@@ -185,15 +185,19 @@ namespace NpcDialogue.Tests.Runtime
         }
 
         [UnityTest]
-        public IEnumerator B3_CompletedDialogueResponse_SetsPhase_ToResponded()
+        public IEnumerator B3_CompletedDialogueTelemetry_SetsPhase_ToResponded()
         {
-            InvokeHandleResponse(requestId: 1,
+            // Phase is driven by telemetry, not the ClientRpc response path.
+            // ClientRpc reconstructs DialogueRequest with IsUserInitiated=false,
+            // so the response handler skips turn logic for all multiplayer turns.
+            InvokeHandleTelemetry(requestId: 1,
                 status: NetworkDialogueService.DialogueStatus.Completed,
-                responseText: "Hello adventurer!",
+                totalLatencyMs: 1000f,
+                retryCount: 0,
                 isUserInitiated: true);
 
             Assert.AreEqual(2, GetPhase(),
-                "Phase must be Responded (2) after a completed dialogue response.");
+                "Phase must be Responded (2) after completed telemetry.");
             yield return null;
         }
 
@@ -211,10 +215,11 @@ namespace NpcDialogue.Tests.Runtime
         [UnityTest]
         public IEnumerator B5_FeedbackWithoutEffect_DoesNotAdvance_ToResolved()
         {
-            // Put agent in Responded state first
-            InvokeHandleResponse(requestId: 3,
+            // Put agent in Responded state first via telemetry (same path as production).
+            InvokeHandleTelemetry(requestId: 3,
                 status: NetworkDialogueService.DialogueStatus.Completed,
-                responseText: "A reply.",
+                totalLatencyMs: 1000f,
+                retryCount: 0,
                 isUserInitiated: true);
             Assert.AreEqual(2, GetPhase());
 
