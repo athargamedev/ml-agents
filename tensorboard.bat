@@ -28,6 +28,6 @@ echo.
 :: Open browser automatically
 start "" "http://localhost:6006"
 
-%PYTHON% -m tensorboard.main --logdir="%RESULTS%" --port=6006
+C:\Users\andre_wjgj23f\miniconda3\envs\mlagents\Scripts\tensorboard.exe --logdir="%RESULTS%" --port=6006
 
 pause

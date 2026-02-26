@@ -604,9 +604,9 @@ namespace Network_Game.Dialogue
                 if (m_LlmAgent == null)
                 {
 #if UNITY_2023_1_OR_NEWER
-                    m_LlmAgent = FindAnyObjectByType<LLMAgent>();
+                    m_LlmAgent = FindAnyObjectByType<LLMAgent>(FindObjectsInactive.Exclude);
 #else
-                    m_LlmAgent = FindAnyObjectByType<LLMAgent>();
+                    m_LlmAgent = FindObjectOfType<LLMAgent>();
 #endif
                 }
             }
@@ -622,9 +622,9 @@ namespace Network_Game.Dialogue
             if (m_SceneEffectsController == null)
             {
 #if UNITY_2023_1_OR_NEWER
-                m_SceneEffectsController = FindAnyObjectByType<DialogueSceneEffectsController>();
+                m_SceneEffectsController = FindAnyObjectByType<DialogueSceneEffectsController>(FindObjectsInactive.Exclude);
 #else
-                m_SceneEffectsController = FindAnyObjectByType<DialogueSceneEffectsController>();
+                m_SceneEffectsController = FindObjectOfType<DialogueSceneEffectsController>();
 #endif
             }
 
@@ -690,7 +690,11 @@ namespace Network_Game.Dialogue
 
         private void DisableUnusedLocalLlmServers()
         {
-            var llmServers = FindObjectsByType<LLMUnity.LLM>(FindObjectsInactive.Exclude);
+#if UNITY_2023_1_OR_NEWER
+            var llmServers = FindObjectsByType<LLMUnity.LLM>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+#else
+            var llmServers = FindObjectsOfType<LLMUnity.LLM>();
+#endif
             if (llmServers == null)
             {
                 return;
@@ -1513,7 +1517,8 @@ namespace Network_Game.Dialogue
             string rejectionReason,
             string conversationKey,
             ulong speakerNetworkId,
-            ulong listenerNetworkId
+            ulong listenerNetworkId,
+            bool isUserInitiated = false
         )
         {
             DialogueResponseClientRpc(
@@ -1525,6 +1530,8 @@ namespace Network_Game.Dialogue
                 conversationKey ?? string.Empty,
                 speakerNetworkId,
                 listenerNetworkId,
+                targetClientId,
+                isUserInitiated,
                 RpcTarget.Single(targetClientId, RpcTargetUse.Temp)
             );
         }
@@ -3433,6 +3440,8 @@ namespace Network_Game.Dialogue
                 state.Request.ConversationKey ?? string.Empty,
                 state.Request.SpeakerNetworkId,
                 state.Request.ListenerNetworkId,
+                state.Request.RequestingClientId,
+                state.Request.IsUserInitiated,
                 RpcTarget.Single(state.Request.RequestingClientId, RpcTargetUse.Temp)
             );
         }
@@ -8982,7 +8991,8 @@ namespace Network_Game.Dialogue
                 rejectionReason,
                 canonicalKey,
                 speakerNetworkId,
-                listenerNetworkId
+                listenerNetworkId,
+                isUserInitiated
             );
         }
 
@@ -8996,6 +9006,8 @@ namespace Network_Game.Dialogue
             string conversationKey,
             ulong speakerNetworkId,
             ulong listenerNetworkId,
+            ulong requestingClientId,
+            bool isUserInitiated,
             RpcParams rpcParams = default
         )
         {
@@ -9026,6 +9038,8 @@ namespace Network_Game.Dialogue
                     ClientRequestId = clientRequestId,
                     SpeakerNetworkId = speakerNetworkId,
                     ListenerNetworkId = listenerNetworkId,
+                    RequestingClientId = requestingClientId,
+                    IsUserInitiated = isUserInitiated,
                 },
             };
 

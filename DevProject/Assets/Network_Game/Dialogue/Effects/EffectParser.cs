@@ -314,19 +314,6 @@ namespace Network_Game.Dialogue.Effects
                     }
                     break;
 
-                case "count":
-                case "amount":
-                case "particles":
-                case "quantity":
-                case "number":
-                    // Store as radius reuse for count hint (used by heuristic merger)
-                    // since EffectIntent has no count field; pass as intensity modifier
-                    if (TryParseFloat(value, out float countVal) && intent.intensity <= 1f)
-                    {
-                        // Scale intensity slightly to hint density – bounded to 0.5–3
-                        intent.intensity = UnityEngine.Mathf.Clamp(countVal, 0.5f, 3f);
-                    }
-                    break;
             }
         }
 
@@ -842,12 +829,5 @@ namespace Network_Game.Dialogue.Effects
             return stripped.Trim();
         }
 
-        /// <summary>
-        /// Get the catalog (convenience method).
-        /// </summary>
-        public static EffectCatalog GetCatalog()
-        {
-            return EffectCatalog.Load();
-        }
     }
 }

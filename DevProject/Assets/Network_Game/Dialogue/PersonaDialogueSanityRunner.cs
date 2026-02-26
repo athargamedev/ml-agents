@@ -608,7 +608,7 @@ namespace Network_Game.Dialogue
         private NpcDialogueActor[] FindActors()
         {
 #if UNITY_2023_1_OR_NEWER
-            NpcDialogueActor[] actors = FindObjectsByType<NpcDialogueActor>(FindObjectsSortMode.None);
+            NpcDialogueActor[] actors = FindObjectsByType<NpcDialogueActor>(FindObjectsInactive.Exclude);
 #else
             NpcDialogueActor[] actors = FindObjectsOfType<NpcDialogueActor>();
 #endif

@@ -812,7 +812,7 @@ namespace Network_Game.Dialogue.MCP
         {
 #if UNITY_2023_1_OR_NEWER
             return UnityEngine.Object.FindObjectsByType<NpcDialogueActor>(
-                FindObjectsInactive.Exclude, FindObjectsSortMode.None
+                FindObjectsInactive.Exclude
             );
 #else
             return UnityEngine.Object.FindObjectsOfType<NpcDialogueActor>();
@@ -971,7 +971,7 @@ namespace Network_Game.Dialogue.MCP
         {
 #if UNITY_2023_1_OR_NEWER
             return UnityEngine.Object.FindObjectsByType<NetworkObject>(
-                FindObjectsInactive.Exclude, FindObjectsSortMode.None
+                FindObjectsInactive.Exclude
             );
 #else
             return UnityEngine.Object.FindObjectsOfType<NetworkObject>();
@@ -982,7 +982,7 @@ namespace Network_Game.Dialogue.MCP
         {
 #if UNITY_2023_1_OR_NEWER
             return UnityEngine.Object.FindObjectsByType<Renderer>(
-                FindObjectsInactive.Exclude, FindObjectsSortMode.None
+                FindObjectsInactive.Exclude
             );
 #else
             return UnityEngine.Object.FindObjectsOfType<Renderer>();
@@ -1132,7 +1132,7 @@ namespace Network_Game.Dialogue.MCP
 
 #if UNITY_2023_1_OR_NEWER
             var systems = UnityEngine.Object.FindObjectsByType<ParticleSystem>(
-                FindObjectsInactive.Exclude, FindObjectsSortMode.None
+                FindObjectsInactive.Exclude
             );
 #else
             var systems = UnityEngine.Object.FindObjectsOfType<ParticleSystem>();

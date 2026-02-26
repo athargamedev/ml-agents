@@ -1,8 +1,5 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace Network_Game.Dialogue.Effects
 {
@@ -164,16 +161,7 @@ namespace Network_Game.Dialogue.Effects
         }
 
         /// <summary>
-        /// Get the fallback effect prefab (for graceful degradation).
-        /// </summary>
-        public GameObject GetFallbackPrefab()
-        {
-            return fallbackEffectPrefab;
-        }
-
-        /// <summary>
-        /// Load the catalog from Resources (sync fallback).
-        /// Prefer <see cref="LoadAsync"/> for new code paths.
+        /// Load the catalog from Resources.
         /// </summary>
         public static EffectCatalog Load()
         {
@@ -186,44 +174,6 @@ namespace Network_Game.Dialogue.Effects
                 Instance.Initialize();
             }
             return Instance;
-        }
-
-        private static AsyncOperationHandle<EffectCatalog> s_AddressableHandle;
-
-        /// <summary>
-        /// Load the catalog via Addressables (preferred async path).
-        /// Falls back to Resources.Load if Addressables fails.
-        /// </summary>
-        public static async Task<EffectCatalog> LoadAsync()
-        {
-            if (Instance != null)
-                return Instance;
-
-            try
-            {
-                s_AddressableHandle = Addressables.LoadAssetAsync<EffectCatalog>("EffectCatalog");
-                Instance = await s_AddressableHandle.Task;
-                if (Instance != null)
-                {
-                    Instance.Initialize();
-                    return Instance;
-                }
-            }
-            catch
-            {
-                // Addressable not configured yet — fall back to Resources
-            }
-
-            return Load();
-        }
-
-        /// <summary>
-        /// Release the Addressables handle when no longer needed.
-        /// </summary>
-        public static void ReleaseAddressable()
-        {
-            if (s_AddressableHandle.IsValid())
-                Addressables.Release(s_AddressableHandle);
         }
 
         /// <summary>

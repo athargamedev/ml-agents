@@ -129,6 +129,7 @@ namespace Network_Game.Dialogue.MCP
         private int m_PreShotVirtualCameraPriority;
         private int m_LastHandledDialogueRequestId = int.MinValue;
         private float m_LastDialogueHookAtRealtime = -100f;
+        private bool m_DialogueHookSubscribed;
 
         public string ActiveShotId => m_ActiveShotId;
 
@@ -288,20 +289,68 @@ namespace Network_Game.Dialogue.MCP
             {
                 EnsureSetup();
             }
+
+            RefreshDialogueHookSubscription();
         }
 
         private void OnEnable()
         {
-            if (Application.isPlaying)
-            {
-                NetworkDialogueService.OnDialogueResponse += HandleDialogueResponse;
-            }
+            RefreshDialogueHookSubscription();
         }
 
         private void OnDisable()
         {
-            NetworkDialogueService.OnDialogueResponse -= HandleDialogueResponse;
+            RefreshDialogueHookSubscription(forceUnsubscribe: true);
             StopActiveShot(restoreState: true);
+        }
+
+        private void Update()
+        {
+            if (!Application.isPlaying)
+            {
+                return;
+            }
+
+            // Enter Play Mode options can skip domain/scene reload, so keep the hook subscription healthy.
+            RefreshDialogueHookSubscription();
+        }
+
+        private void RefreshDialogueHookSubscription(bool forceUnsubscribe = false)
+        {
+            bool shouldSubscribe =
+                !forceUnsubscribe
+                && isActiveAndEnabled
+                && Application.isPlaying
+                && m_EnableDialogueResponseShotHook;
+
+            if (shouldSubscribe)
+            {
+                if (!m_DialogueHookSubscribed)
+                {
+                    // Defensive de-dupe in case a prior play session left the static event subscribed.
+                    NetworkDialogueService.OnDialogueResponse -= HandleDialogueResponse;
+                    NetworkDialogueService.OnDialogueResponse += HandleDialogueResponse;
+                    m_DialogueHookSubscribed = true;
+
+                    if (m_LogDebug)
+                    {
+                        Debug.Log("[MCPShowcasePolish] Dialogue hook subscribed.", this);
+                    }
+                }
+
+                return;
+            }
+
+            if (m_DialogueHookSubscribed)
+            {
+                NetworkDialogueService.OnDialogueResponse -= HandleDialogueResponse;
+                m_DialogueHookSubscribed = false;
+
+                if (m_LogDebug)
+                {
+                    Debug.Log("[MCPShowcasePolish] Dialogue hook unsubscribed.", this);
+                }
+            }
         }
 
         private void EnsureSetup()
@@ -851,7 +900,9 @@ namespace Network_Game.Dialogue.MCP
             int maxPriority = 0;
 #if UNITY_2023_1_OR_NEWER
             CinemachineVirtualCameraBase[] all =
-                FindObjectsByType<CinemachineVirtualCameraBase>(FindObjectsInactive.Include);
+                FindObjectsByType<CinemachineVirtualCameraBase>(
+                    FindObjectsInactive.Include
+                );
 #else
             CinemachineVirtualCameraBase[] all = FindObjectsOfType<CinemachineVirtualCameraBase>(true);
 #endif

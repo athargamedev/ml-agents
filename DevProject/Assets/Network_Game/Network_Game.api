@@ -854,14 +854,11 @@ namespace Network_Game.Dialogue.Effects
         [UnityEngine.Header(@"Settings")] [UnityEngine.Tooltip(@"Log warnings when LLM uses unknown effect tags")] public bool logUnknownTags = true;
         public static EffectCatalog Instance { get; }
         public EffectCatalog() {}
-        public UnityEngine.GameObject GetFallbackPrefab();
         public string GetPromptCatalog();
         public void Initialize();
         public static EffectCatalog Load();
-        public static async System.Threading.Tasks.Task<EffectCatalog> LoadAsync();
         public void RebuildLookup();
         public void RegisterRuntimeEffect(EffectDefinition def);
-        public static void ReleaseAddressable();
         public bool TryGet(string tag, out EffectDefinition effect);
     }
 
@@ -916,20 +913,7 @@ namespace Network_Game.Dialogue.Effects
         public float scale = 1f;
         public float speed;
         public string target;
-        public string Anchor { get; }
-        public string CollisionPolicy { get; }
-        public string ColorOverride { get; }
-        public System.Nullable<float> Duration { get; }
-        public System.Nullable<bool> GroundSnap { get; }
-        public System.Nullable<float> Intensity { get; }
         public bool isValid { get; }
-        public string Name { get; }
-        public string PlacementType { get; }
-        public System.Nullable<float> Radius { get; }
-        public System.Nullable<bool> RequireLineOfSight { get; }
-        public System.Nullable<float> Scale { get; }
-        public System.Nullable<float> Speed { get; }
-        public string Target { get; }
         public EffectIntent() {}
         public UnityEngine.Color GetEffectiveColor();
         public float GetEffectiveDuration();
@@ -941,7 +925,6 @@ namespace Network_Game.Dialogue.Effects
     public static class EffectParser
     {
         public static System.Collections.Generic.List<EffectIntent> ExtractIntents(string responseText, EffectCatalog catalog, bool stripTags = true);
-        public static EffectCatalog GetCatalog();
         public static string StripTags(string text);
     }
 

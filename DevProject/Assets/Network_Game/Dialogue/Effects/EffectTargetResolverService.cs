@@ -49,7 +49,7 @@ namespace Network_Game.Dialogue.Effects
             {
 #if UNITY_2023_1_OR_NEWER
                 CombatHealth[] found = UnityEngine.Object.FindObjectsByType<CombatHealth>(
-                    FindObjectsInactive.Exclude, FindObjectsSortMode.None
+                    FindObjectsInactive.Exclude
                 );
 #else
                 CombatHealth[] found = UnityEngine.Object.FindObjectsOfType<CombatHealth>();
@@ -116,7 +116,7 @@ namespace Network_Game.Dialogue.Effects
 
 #if UNITY_2023_1_OR_NEWER
             NpcDialogueActor[] actors = UnityEngine.Object.FindObjectsByType<NpcDialogueActor>(
-                FindObjectsInactive.Exclude, FindObjectsSortMode.None
+                FindObjectsInactive.Exclude
             );
 #else
             NpcDialogueActor[] actors = UnityEngine.Object.FindObjectsOfType<NpcDialogueActor>();

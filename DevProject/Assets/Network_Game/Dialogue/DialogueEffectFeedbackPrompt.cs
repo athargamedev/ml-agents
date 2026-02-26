@@ -1361,7 +1361,7 @@ namespace Network_Game.Dialogue
             }
 
 #if UNITY_2023_1_OR_NEWER
-            StarterAssetsInputs[] inputs = FindObjectsByType<StarterAssetsInputs>(FindObjectsSortMode.None);
+            StarterAssetsInputs[] inputs = FindObjectsByType<StarterAssetsInputs>(FindObjectsInactive.Exclude);
 #else
             StarterAssetsInputs[] inputs = FindObjectsOfType<StarterAssetsInputs>();
 #endif
@@ -1396,7 +1396,7 @@ namespace Network_Game.Dialogue
             }
 
 #if UNITY_2023_1_OR_NEWER
-            PlayerInput[] inputs = FindObjectsByType<PlayerInput>(FindObjectsSortMode.None);
+            PlayerInput[] inputs = FindObjectsByType<PlayerInput>(FindObjectsInactive.Exclude);
 #else
             PlayerInput[] inputs = FindObjectsOfType<PlayerInput>();
 #endif

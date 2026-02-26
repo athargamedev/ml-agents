@@ -1517,7 +1517,7 @@ namespace Network_Game.Dialogue
             int added = 0;
 
 #if UNITY_2023_1_OR_NEWER
-            NpcDialogueActor[] actors = FindObjectsByType<NpcDialogueActor>(FindObjectsSortMode.None);
+            NpcDialogueActor[] actors = FindObjectsByType<NpcDialogueActor>(FindObjectsInactive.Exclude);
 #else
             NpcDialogueActor[] actors = FindObjectsOfType<NpcDialogueActor>();
 #endif
@@ -1633,7 +1633,7 @@ namespace Network_Game.Dialogue
             }
 
 #if UNITY_2023_1_OR_NEWER
-            m_TargetLights = FindObjectsByType<Light>(FindObjectsSortMode.None);
+            m_TargetLights = FindObjectsByType<Light>(FindObjectsInactive.Exclude);
 #else
             m_TargetLights = FindObjectsOfType<Light>();
 #endif
@@ -2323,7 +2323,7 @@ namespace Network_Game.Dialogue
             string normalized = surfaceId.Trim();
 #if UNITY_2023_1_OR_NEWER
             EffectSurface[] surfaces = FindObjectsByType<EffectSurface>(
-                FindObjectsInactive.Include, FindObjectsSortMode.None
+                FindObjectsInactive.Include
             );
 #else
             EffectSurface[] surfaces = FindObjectsOfType<EffectSurface>(true);
@@ -2371,7 +2371,7 @@ namespace Network_Game.Dialogue
 
 #if UNITY_2023_1_OR_NEWER
             Renderer[] renderers = FindObjectsByType<Renderer>(
-                FindObjectsInactive.Include, FindObjectsSortMode.None
+                FindObjectsInactive.Include
             );
 #else
             Renderer[] renderers = FindObjectsOfType<Renderer>(true);

@@ -7645,7 +7645,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Network_Game::Network_Game.Dialogue.MCP.MCPShowcasePolishController
   m_ShowcaseCamera: {fileID: 1063314238}
-  m_ShowcaseVirtualCamera: {fileID: 0}
+  m_ShowcaseVirtualCamera: {fileID: 1431802604}
   m_CameraAnchorsRoot: {fileID: 528478760}
   m_AutoDiscoverOnAwake: 1
   m_AutoRebuildBindingsWhenMissing: 1

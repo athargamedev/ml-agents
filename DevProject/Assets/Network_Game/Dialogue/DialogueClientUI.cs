@@ -2170,7 +2170,7 @@ namespace Network_Game.Dialogue
 
             // Fallback: find any StarterAssetsInputs in scene
 #if UNITY_2023_1_OR_NEWER
-            var allInputs = FindObjectsByType<StarterAssetsInputs>(FindObjectsSortMode.None);
+            var allInputs = FindObjectsByType<StarterAssetsInputs>(FindObjectsInactive.Exclude);
 #else
             var allInputs = FindObjectsOfType<StarterAssetsInputs>();
 #endif

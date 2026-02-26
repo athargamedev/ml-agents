@@ -116,7 +116,7 @@ namespace Network_Game.Editor.CustomTools.Services
             }
 
 #if UNITY_2023_1_OR_NEWER
-            var actors = UnityEngine.Object.FindObjectsByType<NpcDialogueActor>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            var actors = UnityEngine.Object.FindObjectsByType<NpcDialogueActor>(FindObjectsInactive.Exclude);
 #else
             var actors = UnityEngine.Object.FindObjectsOfType<NpcDialogueActor>();
 #endif

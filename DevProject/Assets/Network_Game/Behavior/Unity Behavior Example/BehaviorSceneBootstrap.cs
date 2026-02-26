@@ -638,7 +638,7 @@ namespace Network_Game.Behavior
         private void BuildNavMeshIfNeeded()
         {
 #if UNITY_2023_1_OR_NEWER
-            var surfaces = FindObjectsByType<NavMeshSurface>();
+            var surfaces = FindObjectsByType<NavMeshSurface>(FindObjectsInactive.Exclude);
 #else
             var surfaces = FindObjectsOfType<NavMeshSurface>();
 #endif
@@ -712,7 +712,11 @@ namespace Network_Game.Behavior
                 return;
             }
 
-            if (FindAnyObjectByType<Network_Game.Diagnostics.LlmDebugAssistant>() != null)
+#if UNITY_2023_1_OR_NEWER
+            if (FindAnyObjectByType<Network_Game.Diagnostics.LlmDebugAssistant>(FindObjectsInactive.Exclude) != null)
+#else
+            if (FindObjectOfType<Network_Game.Diagnostics.LlmDebugAssistant>() != null)
+#endif
             {
                 return;
             }

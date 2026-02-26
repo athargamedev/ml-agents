@@ -381,15 +381,11 @@ public class NpcDialogueAgent : Agent
         switch (response.Status)
         {
             case NetworkDialogueService.DialogueStatus.Completed:
+                // Turn completion and state are driven by HandleDialogueTelemetry, which
+                // has the original request with IsUserInitiated preserved. Only penalise
+                // here for empty responses that slip through.
                 if (string.IsNullOrWhiteSpace(response.ResponseText))
-                {
                     AddRewardComponent(-0.1f * m_OutcomeRewardScale, "Outcome/EmptyCompleted");
-                    return;
-                }
-
-                m_ConversationActive = true;
-                m_ConversationPhase  = ConversationPhase.Responded;
-                OnDialogueTurnComplete(playerReplied: true);
                 break;
 
             case NetworkDialogueService.DialogueStatus.Failed:
@@ -409,6 +405,17 @@ public class NpcDialogueAgent : Agent
 
         if (telemetry.RequestId > 0 && !m_RewardedTelemetryRequestIds.Add(telemetry.RequestId))
             return;
+
+        // Drive turn completion from telemetry — the ClientRpc response path reconstructs
+        // DialogueRequest without IsUserInitiated (always false), so we can't rely on
+        // HandleNetworkDialogueResponse for this. Telemetry uses state.Request directly
+        // and correctly preserves IsUserInitiated=true for player-initiated turns.
+        if (telemetry.Status == NetworkDialogueService.DialogueStatus.Completed)
+        {
+            m_ConversationActive = true;
+            m_ConversationPhase  = ConversationPhase.Responded;
+            OnDialogueTurnComplete(playerReplied: true);
+        }
 
         RecordStat("Latency/QueueMs", telemetry.QueueLatencyMs);
         RecordStat("Latency/ModelMs", telemetry.ModelLatencyMs);

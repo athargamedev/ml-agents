@@ -480,7 +480,7 @@ namespace Network_Game.Dialogue.Editor
             Debug.Log("============================================================\n");
 
             Debug.Log(
-                @"When you use powers, include effect tags in your response.
+@"When you use powers, include effect tags in your response.
 Format: [EFFECT: EffectName | Target: Player | Intensity: 1.0 | Scale: 1.0 | Duration: 4 | Emotion: epic | Damage: 1.0]
 
 Available parameters (all optional except EffectName):

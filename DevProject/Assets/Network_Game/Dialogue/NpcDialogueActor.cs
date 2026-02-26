@@ -29,7 +29,7 @@ namespace Network_Game.Dialogue
         [SerializeField]
         [Tooltip(
             "Optional in-scene TextMeshPro reference. If missing, one is auto-created as a child."
-        )]
+         )]
         private TextMeshPro m_SpeechText;
 
         [SerializeField]
@@ -246,8 +246,8 @@ namespace Network_Game.Dialogue
             sb.AppendLine("[Effects] Append one hidden tag at the END of your response when a visual should appear.");
             sb.AppendLine(
                 $"Format: [EFFECT: EffectName | Target: {listenerName}/Self/SceneName"
-                    + " | Duration: sec | Scale: x | Intensity: x | Radius: m | Speed: m/s"
-                    + " | Color: name|hex | Emotion: peaceful|epic|chaotic|triumphant|sad | Damage: x]"
+                + " | Duration: sec | Scale: x | Intensity: x | Radius: m | Speed: m/s"
+                + " | Color: name|hex | Emotion: peaceful|epic|chaotic|triumphant|sad | Damage: x]"
             );
             sb.AppendLine("Omit the tag entirely if nothing visual is happening.");
 
@@ -273,8 +273,8 @@ namespace Network_Game.Dialogue
 
                     string label = string.IsNullOrWhiteSpace(entry.PowerName)
                         ? entry.EffectPrefab != null
-                            ? entry.EffectPrefab.name
-                            : $"power_{i + 1}"
+                        ? entry.EffectPrefab.name
+                        : $"power_{i + 1}"
                         : entry.PowerName.Trim();
 
                     string description = !string.IsNullOrWhiteSpace(entry.VisualDescription)
@@ -468,7 +468,9 @@ namespace Network_Game.Dialogue
                 string[] aliases = semantic.GetCompactAliases(2);
                 string aliasPart =
                     aliases.Length > 0 ? $" aliases={string.Join("/", aliases)}" : string.Empty;
-                entries.Add($"\"{name}\" role={role}{aliasPart}");
+                string desc = semantic.Description;
+                string descPart = !string.IsNullOrEmpty(desc) ? $" — {desc}" : string.Empty;
+                entries.Add($"\"{name}\" role={role}{aliasPart}{descPart}");
             }
 
             if (entries.Count == 0)
@@ -484,7 +486,7 @@ namespace Network_Game.Dialogue
         {
 #if UNITY_2023_1_OR_NEWER
             return UnityEngine.Object.FindObjectsByType<DialogueSemanticTag>(
-                FindObjectsInactive.Exclude, FindObjectsSortMode.None
+                FindObjectsInactive.Exclude
             );
 #else
             return UnityEngine.Object.FindObjectsOfType<DialogueSemanticTag>();
@@ -711,7 +713,7 @@ namespace Network_Game.Dialogue
                     ("actor", actorName),
                     ("profileId", best.ProfileId ?? string.Empty),
                     ("score", bestScore)
-                ),
+                    ),
                 this
             );
             return true;
@@ -804,8 +806,8 @@ namespace Network_Game.Dialogue
 
             NetworkObject player =
                 NetworkManager.Singleton != null
-                    ? NetworkManager.Singleton.LocalClient?.PlayerObject
-                    : null;
+                ? NetworkManager.Singleton.LocalClient?.PlayerObject
+                : null;
             if (player == null)
             {
                 NGLog.Warn("NpcDialogueActor", "Local player object not available.");
@@ -848,12 +850,12 @@ namespace Network_Game.Dialogue
                     ("speaker", speakerId),
                     ("listener", listenerId),
                     ("key", key)
-                ),
+                    ),
                 this
             );
         }
 
-        private void BuildEffectCard(
+        private static void BuildEffectCard(
             StringBuilder sb,
             string label,
             string description,
@@ -886,7 +888,14 @@ namespace Network_Game.Dialogue
             {
                 sb.Append("  Keywords: ").AppendLine(string.Join(", ", entry.Keywords));
             }
-            sb.AppendLine($"  → [EFFECT: {label} | Target: Player]");
+
+            // Include actual defaults so the LLM knows what "normal" looks like for this effect
+            var exParts = new List<string> { "Target: Player" };
+            if (entry.Scale != 1f)
+                exParts.Add($"Scale: {entry.Scale:0.#}");
+            if (entry.DurationSeconds > 0f)
+                exParts.Add($"Duration: {entry.DurationSeconds:0.#}");
+            sb.AppendLine($"  → [EFFECT: {label} | {string.Join(" | ", exParts)}]");
         }
 
         /// <summary>
@@ -918,25 +927,11 @@ namespace Network_Game.Dialogue
                     if (effect == null || string.IsNullOrWhiteSpace(effect.effectTag))
                         continue;
 
-                    // Skip if already in profile
                     if (profilePowerNames.Contains(effect.effectTag))
                         continue;
 
                     sb.AppendLine();
-                    sb.Append($"- **{effect.effectTag}**: {effect.description}");
-
-                    // Add gameplay tags
-                    var tags = new List<string>();
-                    if (effect.enableGameplayDamage)
-                        tags.Add("Damage");
-                    if (effect.enableHoming)
-                        tags.Add("Homing");
-                    if (tags.Count > 0)
-                    {
-                        sb.Append($" ({string.Join(", ", tags)})");
-                    }
-                    sb.AppendLine();
-                    sb.AppendLine($"  → [EFFECT: {effect.effectTag} | Target: Player]");
+                    AppendCatalogEffectCard(sb, effect);
                     addedAny = true;
                 }
 
@@ -950,6 +945,56 @@ namespace Network_Game.Dialogue
                 // Non-fatal - catalog might not exist yet
                 NGLog.Warn("NpcDialogueActor", $"Could not load EffectCatalog: {ex.Message}");
             }
+        }
+
+        private static void AppendCatalogEffectCard(StringBuilder sb, Effects.EffectDefinition effect)
+        {
+            sb.Append($"- **{effect.effectTag}**: {effect.description}");
+
+            var tags = new List<string>();
+            if (effect.enableGameplayDamage) tags.Add("Damage");
+            if (effect.enableHoming) tags.Add("Homing");
+            if (tags.Count > 0)
+                sb.Append($" ({string.Join(", ", tags)})");
+            sb.AppendLine();
+
+            // Use the effect's intended target type for a realistic example
+            string targetExample;
+            switch (effect.targetType)
+            {
+                case Effects.EffectTargetType.Floor:
+                case Effects.EffectTargetType.WorldPoint:
+                    targetExample = "Floor";
+                    break;
+                case Effects.EffectTargetType.Npc:
+                    targetExample = "Self";
+                    break;
+                default:
+                    targetExample = "Player";
+                    break;
+            }
+
+            var exParts = new List<string> { $"Target: {targetExample}" };
+            if (effect.allowCustomScale)
+                exParts.Add($"Scale: {effect.defaultScale:0.#}");
+            if (effect.allowCustomDuration)
+                exParts.Add($"Duration: {effect.defaultDuration:0.#}");
+            if (effect.placementMode == Effects.EffectPlacementMode.GroundAoe)
+                exParts.Add($"Radius: {(effect.minRadius + effect.maxRadius) * 0.4f:0.#}");
+            sb.AppendLine($"  → [EFFECT: {effect.effectTag} | {string.Join(" | ", exParts)}]");
+
+            // Show customizable parameter ranges so LLM knows what values are valid
+            var hints = new List<string>();
+            if (effect.allowCustomScale)
+                hints.Add($"Scale {effect.minScale:0.#}–{effect.maxScale:0.#}");
+            if (effect.allowCustomDuration)
+                hints.Add($"Duration {effect.minDuration:0.#}–{effect.maxDuration:0.#}s");
+            if (effect.allowCustomColor)
+                hints.Add("Color");
+            if (effect.placementMode != Effects.EffectPlacementMode.Auto)
+                hints.Add(effect.placementMode.ToString());
+            if (hints.Count > 0)
+                sb.AppendLine($"  Params: [{string.Join("] [", hints)}]");
         }
     }
 }

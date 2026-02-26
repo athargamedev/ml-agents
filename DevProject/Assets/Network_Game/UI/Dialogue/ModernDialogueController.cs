@@ -859,7 +859,7 @@ namespace Network_Game.UI.Dialogue
 
             m_NextNpcCacheRefreshAt = Time.unscaledTime + NpcCacheRefreshInterval;
 #if UNITY_2023_1_OR_NEWER
-            m_CachedNpcActors = FindObjectsByType<NpcDialogueActor>(FindObjectsSortMode.None);
+            m_CachedNpcActors = FindObjectsByType<NpcDialogueActor>(FindObjectsInactive.Exclude);
 #else
             m_CachedNpcActors = FindObjectsOfType<NpcDialogueActor>();
 #endif
@@ -1092,7 +1092,7 @@ namespace Network_Game.UI.Dialogue
 
 #if UNITY_2023_1_OR_NEWER
             var allInputs =
-                FindObjectsByType<Network_Game.ThirdPersonController.StarterAssetsInputs>(FindObjectsSortMode.None);
+                FindObjectsByType<Network_Game.ThirdPersonController.StarterAssetsInputs>(FindObjectsInactive.Exclude);
 #else
             var allInputs =
                 FindObjectsOfType<Network_Game.ThirdPersonController.StarterAssetsInputs>();
@@ -1316,7 +1316,7 @@ namespace Network_Game.UI.Dialogue
 
 #if UNITY_2023_1_OR_NEWER
             CinemachineVirtualCameraBase[] found = FindObjectsByType<CinemachineVirtualCameraBase>(
-                FindObjectsInactive.Include, FindObjectsSortMode.None
+                FindObjectsInactive.Include
             );
 #else
             CinemachineVirtualCameraBase[] found = FindObjectsOfType<CinemachineVirtualCameraBase>(

@@ -119,7 +119,7 @@ namespace LLMUnity
         /// <summary>Number of recent tokens to consider for repetition penalty (0 = disabled, -1 = context size)</summary>
         [Tooltip(
             "Number of recent tokens to consider for repetition penalty (0 = disabled, -1 = context size)"
-        )]
+         )]
         [ModelAdvanced, Range(0, 2048)]
         public int repeatLastN = 64;
 
@@ -407,8 +407,8 @@ namespace LLMUnity
 
             var validLLMs = new List<LLM>();
 
-#if UNITY_6000_0_OR_NEWER
-            foreach (LLM foundLlm in FindObjectsByType<LLM>(FindObjectsSortMode.None))
+#if UNITY_2023_1_OR_NEWER
+            foreach (LLM foundLlm in FindObjectsByType<LLM>(FindObjectsInactive.Exclude))
 #else
             foreach (LLM foundLlm in FindObjectsOfType<LLM>())
 #endif
@@ -449,7 +449,7 @@ namespace LLMUnity
                         || (
                             sameScene
                             && array[j].transform.GetSiblingIndex()
-                                > array[j + 1].transform.GetSiblingIndex()
+                            > array[j + 1].transform.GetSiblingIndex()
                         )
                     );
                     if (swap)

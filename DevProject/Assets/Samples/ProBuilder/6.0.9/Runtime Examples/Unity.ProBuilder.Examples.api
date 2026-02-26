@@ -1,0 +1,62 @@
+// This file is generated. Do not modify by hand.
+// XML documentation file not found. To check if public methods have XML comments,
+// make sure the XML doc file is present and located next to the scraped dll
+namespace ProBuilder.Examples
+{
+    public class CameraControls : UnityEngine.MonoBehaviour
+    {
+        [UnityEngine.Tooltip(@"How fast the camera should rotate around the sphere when idle.")] public float idleRotation = 1f;
+        [UnityEngine.Range(2f, 15f)] [UnityEngine.Tooltip(@"How fast the camera should rotate around the sphere.")] public float orbitSpeed = 6f;
+        [UnityEngine.Range(0.3f, 2f)] [UnityEngine.Tooltip(@"The speed at which the camera zooms in and out.")] public float zoomSpeed = 0.8f;
+        public CameraControls() {}
+    }
+
+    public class CreatePolyShape : UnityEngine.MonoBehaviour
+    {
+        public bool m_FlipNormals;
+        public float m_Height = 1f;
+        public float m_RadiusMax = 2f;
+        public float m_RadiusMin = 1.5f;
+        public CreatePolyShape() {}
+    }
+
+    public class HighlightNearestFace : UnityEngine.MonoBehaviour
+    {
+        public float speed = 0.2f;
+        public float travel = 50f;
+        public HighlightNearestFace() {}
+    }
+
+    [UnityEngine.RequireComponent(typeof(UnityEngine.AudioSource))] public class IcoBumpin : UnityEngine.MonoBehaviour
+    {
+        public bool bounceWaveform;
+        [UnityEngine.Range(1f, 50f)] public float extrusion = 30f;
+        [UnityEngine.Range(8f, 128f)] public int fftBounds = 32;
+        public UnityEngine.AnimationCurve frequencyCurve;
+        [UnityEngine.Range(1f, 10f)] public float icoRadius = 2f;
+        [UnityEngine.Range(0f, 3f)] public int icoSubdivisions = 2;
+        public UnityEngine.GameObject missingClipWarning;
+        public bool rotateWaveformRing;
+        [UnityEngine.Range(0f, 1f)] public float startingExtrusion = 0.1f;
+        [UnityEngine.Range(0f, 10f)] public float verticalBounce = 4f;
+        public UnityEngine.LineRenderer waveform;
+        public float waveformHeight = 2f;
+        public float waveformRadius = 20f;
+        public float waveformSpeed = 0.1f;
+        public IcoBumpin() {}
+    }
+
+    [UnityEngine.RequireComponent(typeof(UnityEngine.MeshFilter))] public class MakePrimitiveEditable : UnityEngine.MonoBehaviour
+    {
+        public MakePrimitiveEditable() {}
+    }
+
+    public enum ViewTool
+    {
+        None = 0,
+        Orbit = 1,
+        Pan = 2,
+        Dolly = 3,
+        Look = 4,
+    }
+}

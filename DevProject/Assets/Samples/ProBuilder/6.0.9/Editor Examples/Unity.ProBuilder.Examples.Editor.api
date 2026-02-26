@@ -1,0 +1,33 @@
+// This file is generated. Do not modify by hand.
+// XML documentation file not found. To check if public methods have XML comments,
+// make sure the XML doc file is present and located next to the scraped dll
+namespace ProBuilder.ExampleActions
+{
+    [UnityEditor.ProBuilder.ProBuilderMenuAction] public class MakeFacesDoubleSided : UnityEditor.ProBuilder.MenuAction
+    {
+        public override bool enabled { get; }
+        public override UnityEditor.ProBuilder.ToolbarGroup group { get; }
+        public override UnityEngine.Texture2D icon { get; }
+        public override string iconPath { get; }
+        public override UnityEditor.ProBuilder.TooltipContent tooltip { get; }
+        public override UnityEngine.ProBuilder.SelectMode validSelectModes { get; }
+        public MakeFacesDoubleSided() {}
+        protected override UnityEngine.ProBuilder.ActionResult PerformActionImplementation();
+    }
+}
+
+namespace UnityEditor.ProBuilder.Actions
+{
+    [ProBuilderMenuAction] public class SoftDeleteEdgesAction : MenuAction
+    {
+        public override bool enabled { get; }
+        public override ToolbarGroup group { get; }
+        protected override bool hasFileMenuEntry { get; }
+        public override UnityEngine.Texture2D icon { get; }
+        public override string iconPath { get; }
+        public override TooltipContent tooltip { get; }
+        public override UnityEngine.ProBuilder.SelectMode validSelectModes { get; }
+        public SoftDeleteEdgesAction() {}
+        protected override UnityEngine.ProBuilder.ActionResult PerformActionImplementation();
+    }
+}
