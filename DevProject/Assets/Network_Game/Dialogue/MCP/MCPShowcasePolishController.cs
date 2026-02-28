@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Netcode;
 using Unity.Cinemachine;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Network_Game.Dialogue.MCP
@@ -43,7 +43,9 @@ namespace Network_Game.Dialogue.MCP
         private Camera m_ShowcaseCamera;
 
         [SerializeField]
-        [Tooltip("Optional Cinemachine virtual camera used for showcase shots. If set, this is preferred over enabling a separate raw Camera.")]
+        [Tooltip(
+            "Optional Cinemachine virtual camera used for showcase shots. If set, this is preferred over enabling a separate raw Camera."
+         )]
         private CinemachineVirtualCameraBase m_ShowcaseVirtualCamera;
 
         [SerializeField]
@@ -63,20 +65,28 @@ namespace Network_Game.Dialogue.MCP
         private bool m_EnableShowcaseCameraDuringShot = true;
 
         [SerializeField]
-        [Tooltip("Prefer Cinemachine priority switching when a showcase virtual camera is available.")]
+        [Tooltip(
+            "Prefer Cinemachine priority switching when a showcase virtual camera is available."
+         )]
         private bool m_PreferCinemachineForShots = true;
 
         [SerializeField]
         [Min(1)]
-        [Tooltip("Priority boost added above the highest active Cinemachine camera when a showcase shot goes live.")]
+        [Tooltip(
+            "Priority boost added above the highest active Cinemachine camera when a showcase shot goes live."
+         )]
         private int m_CinemachinePriorityBoost = 50;
 
         [SerializeField]
-        [Tooltip("If no showcase Cinemachine camera is assigned, auto-add a CinemachineCamera component to MCP_ShowcaseCamera in Play Mode.")]
+        [Tooltip(
+            "If no showcase Cinemachine camera is assigned, auto-add a CinemachineCamera component to MCP_ShowcaseCamera in Play Mode."
+         )]
         private bool m_AutoCreateShowcaseVirtualCameraInPlayMode = true;
 
         [SerializeField]
-        [Tooltip("Disable the raw showcase Camera component while using the Cinemachine showcase camera to avoid double-rendering conflicts.")]
+        [Tooltip(
+            "Disable the raw showcase Camera component while using the Cinemachine showcase camera to avoid double-rendering conflicts."
+         )]
         private bool m_DisableRawShowcaseCameraWhenUsingCinemachine = true;
 
         [SerializeField]
@@ -95,20 +105,28 @@ namespace Network_Game.Dialogue.MCP
         private bool m_DialogueHookUserInitiatedOnly = true;
 
         [SerializeField]
-        [Tooltip("Only react when the request belongs to the local client (recommended for multiplayer).")]
+        [Tooltip(
+            "Only react when the request belongs to the local client (recommended for multiplayer)."
+         )]
         private bool m_DialogueHookLocalRequesterOnly = true;
 
         [SerializeField]
-        [Tooltip("Enable the showcase camera when a dialogue hook triggers a shot. If false, snaps only the disabled rig camera.")]
+        [Tooltip(
+            "Enable the showcase camera when a dialogue hook triggers a shot. If false, snaps only the disabled rig camera."
+         )]
         private bool m_DialogueHookEnableShowcaseCamera;
 
         [SerializeField]
-        [Tooltip("Isolate the matching NPC polish set (light/ring/aura) when a dialogue hook triggers a shot.")]
+        [Tooltip(
+            "Isolate the matching NPC polish set (light/ring/aura) when a dialogue hook triggers a shot."
+         )]
         private bool m_DialogueHookIsolatePolish = true;
 
         [SerializeField]
         [Min(0f)]
-        [Tooltip("Override duration for dialogue-triggered shots. Set to 0 to use the controller default.")]
+        [Tooltip(
+            "Override duration for dialogue-triggered shots. Set to 0 to use the controller default."
+         )]
         private float m_DialogueHookShotDurationSeconds = 0f;
 
         [SerializeField]
@@ -196,7 +214,8 @@ namespace Network_Game.Dialogue.MCP
 
             m_ActiveShotId = binding.ShotId ?? string.Empty;
 
-            float resolvedDuration = durationSeconds >= 0f ? durationSeconds : m_DefaultShotDurationSeconds;
+            float resolvedDuration =
+                durationSeconds >= 0f ? durationSeconds : m_DefaultShotDurationSeconds;
             if (resolvedDuration > 0f)
             {
                 m_ActiveShotRoutine = StartCoroutine(RestoreAfterDelay(resolvedDuration));
@@ -405,7 +424,9 @@ namespace Network_Game.Dialogue.MCP
 
             if (m_ShowcaseVirtualCamera == null)
             {
-                m_ShowcaseVirtualCamera = GetComponentInChildren<CinemachineVirtualCameraBase>(true);
+                m_ShowcaseVirtualCamera = GetComponentInChildren<CinemachineVirtualCameraBase>(
+                    true
+                );
             }
 
             if (m_CameraAnchorsRoot == null)
@@ -637,7 +658,8 @@ namespace Network_Game.Dialogue.MCP
 
             if (
                 m_DialogueHookCooldownSeconds > 0f
-                && Time.realtimeSinceStartup - m_LastDialogueHookAtRealtime < m_DialogueHookCooldownSeconds
+                && Time.realtimeSinceStartup - m_LastDialogueHookAtRealtime
+                < m_DialogueHookCooldownSeconds
             )
             {
                 if (m_LogDebug)
@@ -707,7 +729,10 @@ namespace Network_Game.Dialogue.MCP
             var candidateTokens = new List<string>(6);
 
             if (
-                TryResolveSpeakerNpcActor(response.Request.SpeakerNetworkId, out NpcDialogueActor speakerActor)
+                TryResolveSpeakerNpcActor(
+                    response.Request.SpeakerNetworkId,
+                    out NpcDialogueActor speakerActor
+                )
                 && speakerActor != null
             )
             {
@@ -731,7 +756,9 @@ namespace Network_Game.Dialogue.MCP
             }
             else
             {
-                GameObject speakerObject = ResolveNetworkObjectGameObject(response.Request.SpeakerNetworkId);
+                GameObject speakerObject = ResolveNetworkObjectGameObject(
+                    response.Request.SpeakerNetworkId
+                );
                 if (speakerObject != null)
                 {
                     candidateTokens.Add(speakerObject.name);
@@ -747,7 +774,10 @@ namespace Network_Game.Dialogue.MCP
             {
                 string available = availableShots[i];
                 string normalizedShot = NormalizeShotId(available);
-                if (string.IsNullOrEmpty(normalizedShot) || normalizedShot == NormalizeShotId("wide"))
+                if (
+                    string.IsNullOrEmpty(normalizedShot)
+                    || normalizedShot == NormalizeShotId("wide")
+                )
                 {
                     continue;
                 }
@@ -870,7 +900,10 @@ namespace Network_Game.Dialogue.MCP
             Transform vcamTransform = m_ShowcaseVirtualCamera.transform;
             vcamTransform.SetPositionAndRotation(anchor.position, anchor.rotation);
 
-            if (m_ShowcaseVirtualCamera.gameObject != null && !m_ShowcaseVirtualCamera.gameObject.activeSelf)
+            if (
+                m_ShowcaseVirtualCamera.gameObject != null
+                && !m_ShowcaseVirtualCamera.gameObject.activeSelf
+            )
             {
                 m_ShowcaseVirtualCamera.gameObject.SetActive(true);
             }
@@ -899,12 +932,13 @@ namespace Network_Game.Dialogue.MCP
         {
             int maxPriority = 0;
 #if UNITY_2023_1_OR_NEWER
-            CinemachineVirtualCameraBase[] all =
-                FindObjectsByType<CinemachineVirtualCameraBase>(
-                    FindObjectsInactive.Include
-                );
+            CinemachineVirtualCameraBase[] all = FindObjectsByType<CinemachineVirtualCameraBase>(
+                FindObjectsInactive.Include
+            );
 #else
-            CinemachineVirtualCameraBase[] all = FindObjectsOfType<CinemachineVirtualCameraBase>(true);
+            CinemachineVirtualCameraBase[] all = FindObjectsOfType<CinemachineVirtualCameraBase>(
+                true
+            );
 #endif
             if (all != null)
             {
@@ -957,7 +991,10 @@ namespace Network_Game.Dialogue.MCP
             return 0;
         }
 
-        private static void SetVirtualCameraPriority(CinemachineVirtualCameraBase camera, int priority)
+        private static void SetVirtualCameraPriority(
+            CinemachineVirtualCameraBase camera,
+            int priority
+        )
         {
             if (camera == null)
             {

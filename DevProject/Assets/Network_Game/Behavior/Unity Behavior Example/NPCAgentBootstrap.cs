@@ -8,35 +8,37 @@ using UnityEngine;
 namespace Network_Game.Behavior
 {
     /// <summary>
-    /// Handles LLM agent configuration and NPC discovery.
-    /// Extracted from BehaviorSceneBootstrap for modularity.
+    /// Handles NPC discovery and local player/NPC dialogue bindings.
     /// </summary>
-    public class NPCAgentBootstrap : MonoBehaviour
+    [DisallowMultipleComponent]
+    public sealed class NPCAgentBootstrap : MonoBehaviour
     {
         [Header("NPC Discovery")]
         [SerializeField]
         private string m_NpcTag = "NPC";
 
-        /// <summary>
-        /// Configures a list of NPC agents.
-        /// </summary>
-        public void ConfigureNpcAgents(List<GameObject> npcObjects) { }
-
-        public void PrewireLlmAgent(GameObject target) { }
+        private DialogueClientUI m_LastWiredUi;
+        private NetworkObject m_LastWiredPlayer;
+        private NetworkObject m_LastWiredNpc;
 
         public void DisableLlmAgent(GameObject target)
         {
             if (target == null)
-                return;
-            var llm = target.GetComponent<LLMAgent>();
-            if (llm != null)
             {
-                NGLog.Info(
-                    "NPCBootstrap",
-                    $"Disabling LLM Agent on '{target.name}' (Player Instance)"
-                );
-                llm.enabled = false;
+                return;
             }
+
+            LLMAgent llm = target.GetComponent<LLMAgent>();
+            if (llm == null || !llm.enabled)
+            {
+                return;
+            }
+
+            NGLog.Info(
+                "NPCBootstrap",
+                $"Disabling LLM Agent on '{target.name}' (Player Instance)"
+            );
+            llm.enabled = false;
         }
 
         /// <summary>
@@ -53,8 +55,25 @@ namespace Network_Game.Behavior
                 seen.Add(primaryNpc);
             }
 
-            GameObject[] taggedNpcs = GameObject.FindGameObjectsWithTag(m_NpcTag);
-            foreach (var npc in taggedNpcs)
+            GameObject[] taggedNpcs;
+            try
+            {
+                taggedNpcs = GameObject.FindGameObjectsWithTag(m_NpcTag);
+            }
+            catch (UnityException ex)
+            {
+                NGLog.Warn(
+                    "NPCBootstrap",
+                    NGLog.Format(
+                        "NPC discovery skipped because tag is invalid",
+                        ("tag", m_NpcTag),
+                        ("reason", ex.Message)
+                    )
+                );
+                return results;
+            }
+
+            foreach (GameObject npc in taggedNpcs)
             {
                 if (npc != null && IsValidNpc(npc) && !seen.Contains(npc))
                 {
@@ -79,6 +98,7 @@ namespace Network_Game.Behavior
             {
                 return false;
             }
+
             if (playerNet.IsSpawned && !playerNet.IsOwner)
             {
                 NGLog.Warn(
@@ -93,10 +113,19 @@ namespace Network_Game.Behavior
                 return false;
             }
 
-            var dialogueUi = DialogueClientUI.Instance;
+            DialogueClientUI dialogueUi = DialogueClientUI.Instance;
             if (dialogueUi == null)
             {
                 return false;
+            }
+
+            if (
+                m_LastWiredUi == dialogueUi
+                && m_LastWiredPlayer == playerNet
+                && m_LastWiredNpc == npcNet
+            )
+            {
+                return true;
             }
 
             NGLog.Info(
@@ -104,15 +133,19 @@ namespace Network_Game.Behavior
                 $"Wiring Dialogue UI between '{player.name}' and '{npcObject.name}'"
             );
             dialogueUi.ConfigureParticipants(playerNet, npcNet);
+            m_LastWiredUi = dialogueUi;
+            m_LastWiredPlayer = playerNet;
+            m_LastWiredNpc = npcNet;
             return true;
         }
 
-        private bool IsValidNpc(GameObject npc)
+        private static bool IsValidNpc(GameObject npc)
         {
             if (npc == null)
+            {
                 return false;
+            }
 
-            // Check for NetworkObject as per BehaviorSceneBootstrap legacy logic
             if (npc.GetComponent<NetworkObject>() == null)
             {
                 NGLog.Debug("NPCBootstrap", $"Skipping NPC '{npc.name}' - No NetworkObject found.");

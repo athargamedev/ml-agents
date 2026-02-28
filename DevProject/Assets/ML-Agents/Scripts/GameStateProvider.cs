@@ -10,10 +10,13 @@ using UnityEngine;
 public class GameStateProvider : MonoBehaviour
 {
     [Header("Player")]
-    [SerializeField] private Transform m_PlayerTransform;
+    [SerializeField]
+    private Transform m_PlayerTransform;
 
     [Tooltip("Max HP used to normalise current HP to 0-1 range.")]
-    [SerializeField] [Min(1f)] private float m_MaxPlayerHealth = 100f;
+    [SerializeField]
+    [Min(1f)]
+    private float m_MaxPlayerHealth = 100f;
 
     // Pushed each frame by the health system via SetPlayerHealth()
     private float m_CurrentPlayerHealth;
@@ -29,8 +32,7 @@ public class GameStateProvider : MonoBehaviour
 
     // ── Public read accessors ─────────────────────────────────────────────────
 
-    public float NormalizedPlayerHealth =>
-        Mathf.Clamp01(m_CurrentPlayerHealth / m_MaxPlayerHealth);
+    public float NormalizedPlayerHealth => Mathf.Clamp01(m_CurrentPlayerHealth / m_MaxPlayerHealth);
 
     public bool IsPlayerInCombat => m_IsPlayerInCombat;
 
@@ -45,7 +47,7 @@ public class GameStateProvider : MonoBehaviour
     public string BuildDynamicContext()
     {
         int healthPct = Mathf.RoundToInt(NormalizedPlayerHealth * 100f);
-        Vector3 pos   = PlayerPosition;
+        Vector3 pos = PlayerPosition;
         return $"[GameState] player_health={healthPct}% in_combat={m_IsPlayerInCombat} pos=({pos.x:F0},{pos.z:F0})";
     }
 

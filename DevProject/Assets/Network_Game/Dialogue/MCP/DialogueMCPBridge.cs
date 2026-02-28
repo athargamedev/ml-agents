@@ -970,9 +970,7 @@ namespace Network_Game.Dialogue.MCP
         private static NetworkObject[] FindSceneNetworkObjects()
         {
 #if UNITY_2023_1_OR_NEWER
-            return UnityEngine.Object.FindObjectsByType<NetworkObject>(
-                FindObjectsInactive.Exclude
-            );
+            return UnityEngine.Object.FindObjectsByType<NetworkObject>(FindObjectsInactive.Exclude);
 #else
             return UnityEngine.Object.FindObjectsOfType<NetworkObject>();
 #endif
@@ -981,9 +979,7 @@ namespace Network_Game.Dialogue.MCP
         private static Renderer[] FindSceneRenderers()
         {
 #if UNITY_2023_1_OR_NEWER
-            return UnityEngine.Object.FindObjectsByType<Renderer>(
-                FindObjectsInactive.Exclude
-            );
+            return UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsInactive.Exclude);
 #else
             return UnityEngine.Object.FindObjectsOfType<Renderer>();
 #endif
@@ -1553,7 +1549,10 @@ namespace Network_Game.Dialogue.MCP
                 LocalPlayerAuthService auth = LocalPlayerAuthService.Instance;
                 if (auth != null)
                 {
-                    string testNpcId = npcTargets[0].name.Trim().ToLowerInvariant().Replace(" ", "_");
+                    string testNpcId = npcTargets[0]
+                        .name.Trim()
+                        .ToLowerInvariant()
+                        .Replace(" ", "_");
                     auth.SetPlayerClass("berserker");
                     auth.SetReputation(testNpcId, 90);
                     auth.AddInventoryTag("cursed_blade");
@@ -2677,7 +2676,8 @@ namespace Network_Game.Dialogue.MCP
                         string narrativeKeyword = currentStep.NarrativeKeywords[i];
                         if (
                             !string.IsNullOrWhiteSpace(narrativeKeyword)
-                            && text.IndexOf(narrativeKeyword, StringComparison.OrdinalIgnoreCase) >= 0
+                            && text.IndexOf(narrativeKeyword, StringComparison.OrdinalIgnoreCase)
+                                >= 0
                         )
                         {
                             passed = true;

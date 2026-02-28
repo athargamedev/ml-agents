@@ -30,4 +30,10 @@ namespace Network_Game.Dialogue.Editor
         public EffectEditorWindow() {}
         [UnityEditor.MenuItem(@"Window/Dialogue/Effect Authoring")] public static void ShowWindow();
     }
+
+    public sealed class NpcDialogueTrainingLauncherWindow : UnityEditor.EditorWindow
+    {
+        public NpcDialogueTrainingLauncherWindow() {}
+        [UnityEditor.MenuItem(@"Network Game/MCP/Npc Dialogue Training Launcher")] public static void ShowWindow();
+    }
 }

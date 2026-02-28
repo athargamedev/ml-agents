@@ -589,9 +589,7 @@ namespace Network_Game.Dialogue
         {
             if (Instance != null && Instance != this)
             {
-                NGLog.Warn("Dialogue",
-                    $"Duplicate instance detected. Disabling. ({this})"
-                );
+                NGLog.Warn("Dialogue", $"Duplicate instance detected. Disabling. ({this})");
                 enabled = false;
                 return;
             }
@@ -622,7 +620,9 @@ namespace Network_Game.Dialogue
             if (m_SceneEffectsController == null)
             {
 #if UNITY_2023_1_OR_NEWER
-                m_SceneEffectsController = FindAnyObjectByType<DialogueSceneEffectsController>(FindObjectsInactive.Exclude);
+                m_SceneEffectsController = FindAnyObjectByType<DialogueSceneEffectsController>(
+                    FindObjectsInactive.Exclude
+                );
 #else
                 m_SceneEffectsController = FindObjectOfType<DialogueSceneEffectsController>();
 #endif
@@ -648,7 +648,11 @@ namespace Network_Game.Dialogue
                 2048
             );
             m_RemoteUserPromptCharBudget = Mathf.Clamp(m_RemoteUserPromptCharBudget, 64, 2048);
-            m_RemoteSystemPromptCharBudget = Mathf.Clamp(m_RemoteSystemPromptCharBudget, 512, 24000);
+            m_RemoteSystemPromptCharBudget = Mathf.Clamp(
+                m_RemoteSystemPromptCharBudget,
+                512,
+                24000
+            );
             m_RemoteSystemPromptHardCapChars = Mathf.Clamp(
                 m_RemoteSystemPromptHardCapChars,
                 512,
@@ -664,8 +668,7 @@ namespace Network_Game.Dialogue
         {
             if (m_LlmAgent == null)
             {
-                NGLog.Warn("Dialogue",
-                    "LLMAgent missing on NetworkDialogueService.");
+                NGLog.Warn("Dialogue", "LLMAgent missing on NetworkDialogueService.");
                 return;
             }
 
@@ -673,8 +676,10 @@ namespace Network_Game.Dialogue
             {
                 if (m_LogDebug)
                 {
-                    NGLog.Info("Dialogue",
-                        "LLMAgent is configured as remote; warmup/chat uses remote provider.");
+                    NGLog.Info(
+                        "Dialogue",
+                        "LLMAgent is configured as remote; warmup/chat uses remote provider."
+                    );
                 }
 
                 DisableUnusedLocalLlmServers();
@@ -683,15 +688,17 @@ namespace Network_Game.Dialogue
 
             if (m_LlmAgent.llm == null && m_LogDebug)
             {
-                NGLog.Warn("Dialogue",
-                    "LLMAgent.LLM reference is null; EnsureLlmAgentReady will attempt to resolve it at runtime.");
+                NGLog.Warn(
+                    "Dialogue",
+                    "LLMAgent.LLM reference is null; EnsureLlmAgentReady will attempt to resolve it at runtime."
+                );
             }
         }
 
         private void DisableUnusedLocalLlmServers()
         {
 #if UNITY_2023_1_OR_NEWER
-            var llmServers = FindObjectsByType<LLMUnity.LLM>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            var llmServers = FindObjectsByType<LLMUnity.LLM>(FindObjectsInactive.Exclude);
 #else
             var llmServers = FindObjectsOfType<LLMUnity.LLM>();
 #endif
@@ -1377,7 +1384,11 @@ namespace Network_Game.Dialogue
                 blockRepeatedPrompt
                 && !string.IsNullOrWhiteSpace(prompt)
                 && !string.IsNullOrWhiteSpace(state.LastCompletedPrompt)
-                && string.Equals(state.LastCompletedPrompt, prompt, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(
+                    state.LastCompletedPrompt,
+                    prompt,
+                    StringComparison.OrdinalIgnoreCase
+                )
             )
             {
                 reason = "duplicate_prompt";
@@ -1409,8 +1420,10 @@ namespace Network_Game.Dialogue
                         request.RequestingClientId,
                         request.ConversationKey
                     );
-                    NGLog.Warn("Dialogue",
-                        $"Request rejected on server | reason={rejectionReason ?? "unknown"} | key={key}");
+                    NGLog.Warn(
+                        "Dialogue",
+                        $"Request rejected on server | reason={rejectionReason ?? "unknown"} | key={key}"
+                    );
                     if (request.NotifyClient)
                     {
                         PublishLocalRejection(
@@ -1765,8 +1778,10 @@ namespace Network_Game.Dialogue
                         state.Status = DialogueStatus.Failed;
                         state.Error = "Dialogue request timed out in queue.";
                         TrackTimeout();
-                        NGLog.Warn("Dialogue",
-                            $"Request timed out in queue | id={requestId} | wait={waitTime}");
+                        NGLog.Warn(
+                            "Dialogue",
+                            $"Request timed out in queue | id={requestId} | wait={waitTime}"
+                        );
                         terminal = true;
                         return;
                     }
@@ -1790,7 +1805,8 @@ namespace Network_Game.Dialogue
                 activeConversationKey = key;
                 m_ActiveConversationKeys.Add(key);
 
-                NGLog.Info("Dialogue",
+                NGLog.Info(
+                    "Dialogue",
                     $"Worker started request | id={requestId} | key={key} | queueLatency={Mathf.Max(0f, state.StartedAt - state.EnqueuedAt)} | enqueuedAt={state.EnqueuedAt} | startedAt={state.StartedAt}"
                 );
 
@@ -1899,7 +1915,10 @@ namespace Network_Game.Dialogue
                     result = await chatTask;
 
                     // For stateless clients (e.g., OpenAI API), persist history here.
-                    if (!inferenceClient.ManagesHistoryInternally && !string.IsNullOrWhiteSpace(result))
+                    if (
+                        !inferenceClient.ManagesHistoryInternally
+                        && !string.IsNullOrWhiteSpace(result)
+                    )
                     {
                         history.Add(new ChatMessage("user", promptForRequest));
                         history.Add(new ChatMessage("assistant", result));
@@ -1989,7 +2008,8 @@ namespace Network_Game.Dialogue
                     ? history
                     : new List<ChatMessage>(m_LlmAgent.chat);
                 StoreHistory(key, historyToStore);
-                NGLog.Info("Dialogue",
+                NGLog.Info(
+                    "Dialogue",
                     $"Completed request | id={requestId} | responseLen={result.Length}"
                 );
 
@@ -2914,8 +2934,7 @@ namespace Network_Game.Dialogue
 
         private string ResolveConfiguredRemoteModelName()
         {
-            string configured =
-                m_RemoteModelName == null ? string.Empty : m_RemoteModelName.Trim();
+            string configured = m_RemoteModelName == null ? string.Empty : m_RemoteModelName.Trim();
             if (string.IsNullOrWhiteSpace(configured))
             {
                 return string.Empty;
@@ -4701,7 +4720,9 @@ namespace Network_Game.Dialogue
             string playerClass = TryReadJsonString(customizationJson, "class");
             if (!string.IsNullOrWhiteSpace(playerClass))
             {
-                hints.Append($"- This player is a {playerClass}; open your greeting with lore that fits their archetype.\n");
+                hints.Append(
+                    $"- This player is a {playerClass}; open your greeting with lore that fits their archetype.\n"
+                );
                 hasHints = true;
             }
 
@@ -4715,11 +4736,16 @@ namespace Network_Game.Dialogue
                     rep = Mathf.Clamp(rep, 0, 100);
                     string repHint = rep switch
                     {
-                        < 20  => $"- This player has deeply wronged you (reputation {rep}/100); be cold, suspicious, and unwilling to help.\n",
-                        < 40  => $"- This player is distrusted (reputation {rep}/100); keep them at arm's length and be guarded.\n",
-                        < 60  => $"- This player is a neutral acquaintance (reputation {rep}/100); treat them professionally.\n",
-                        < 80  => $"- This player has earned your goodwill (reputation {rep}/100); be warm and willing to share extra lore.\n",
-                        _     => $"- This player is a trusted champion (reputation {rep}/100); speak with reverence and share your deepest secrets.\n",
+                        < 20 =>
+                            $"- This player has deeply wronged you (reputation {rep}/100); be cold, suspicious, and unwilling to help.\n",
+                        < 40 =>
+                            $"- This player is distrusted (reputation {rep}/100); keep them at arm's length and be guarded.\n",
+                        < 60 =>
+                            $"- This player is a neutral acquaintance (reputation {rep}/100); treat them professionally.\n",
+                        < 80 =>
+                            $"- This player has earned your goodwill (reputation {rep}/100); be warm and willing to share extra lore.\n",
+                        _ =>
+                            $"- This player is a trusted champion (reputation {rep}/100); speak with reverence and share your deepest secrets.\n",
                     };
                     hints.Append(repHint);
                     hasHints = true;
@@ -4727,13 +4753,20 @@ namespace Network_Game.Dialogue
                 else
                 {
                     // Fallback: legacy binary relationship field
-                    string relationship = TryReadJsonString(customizationJson, $"relationship_{npcProfile.ProfileId}");
+                    string relationship = TryReadJsonString(
+                        customizationJson,
+                        $"relationship_{npcProfile.ProfileId}"
+                    );
                     if (string.Equals(relationship, "hostile", StringComparison.OrdinalIgnoreCase))
                     {
-                        hints.Append("- Your relationship with this player is hostile; act accordingly.\n");
+                        hints.Append(
+                            "- Your relationship with this player is hostile; act accordingly.\n"
+                        );
                         hasHints = true;
                     }
-                    else if (string.Equals(relationship, "ally", StringComparison.OrdinalIgnoreCase))
+                    else if (
+                        string.Equals(relationship, "ally", StringComparison.OrdinalIgnoreCase)
+                    )
                     {
                         hints.Append("- This player is your ally; protect and empower them.\n");
                         hasHints = true;
@@ -4745,7 +4778,9 @@ namespace Network_Game.Dialogue
             string inventoryRaw = TryReadJsonString(customizationJson, "inventory_tags");
             if (!string.IsNullOrWhiteSpace(inventoryRaw))
             {
-                hints.Append($"- The player carries: {inventoryRaw}. Reference these items naturally if relevant.\n");
+                hints.Append(
+                    $"- The player carries: {inventoryRaw}. Reference these items naturally if relevant.\n"
+                );
                 hasHints = true;
             }
 
@@ -4753,7 +4788,9 @@ namespace Network_Game.Dialogue
             string questRaw = TryReadJsonString(customizationJson, "quest_flags");
             if (!string.IsNullOrWhiteSpace(questRaw))
             {
-                hints.Append($"- Player story flags: {questRaw}. Use these to advance or acknowledge the narrative.\n");
+                hints.Append(
+                    $"- Player story flags: {questRaw}. Use these to advance or acknowledge the narrative.\n"
+                );
                 hasHints = true;
             }
 
@@ -4761,7 +4798,9 @@ namespace Network_Game.Dialogue
             string lastAction = TryReadJsonString(customizationJson, "last_action");
             if (!string.IsNullOrWhiteSpace(lastAction))
             {
-                hints.Append($"- The player recently: {lastAction}. React to this in your opening line if appropriate.\n");
+                hints.Append(
+                    $"- The player recently: {lastAction}. React to this in your opening line if appropriate.\n"
+                );
                 hasHints = true;
             }
 
@@ -5094,7 +5133,9 @@ namespace Network_Game.Dialogue
             }
 
             string effectContext = BuildEffectContextText(request.Prompt, responseText);
-            string keywordContext = isGameplayProbe ? (responseText ?? string.Empty) : effectContext;
+            string keywordContext = isGameplayProbe
+                ? (responseText ?? string.Empty)
+                : effectContext;
             Color boredColor = Color.blue;
             float boredIntensity = 1f;
             float transitionSeconds = 0.35f;
@@ -5159,7 +5200,12 @@ namespace Network_Game.Dialogue
             bool hasCatalogIntents = catalogIntents != null && catalogIntents.Count > 0;
             if (isGameplayProbe)
             {
-                AdjustIntentsForProbeMode(request, catalog, ref catalogIntents, ref hasCatalogIntents);
+                AdjustIntentsForProbeMode(
+                    request,
+                    catalog,
+                    ref catalogIntents,
+                    ref hasCatalogIntents
+                );
             }
             PlayerSpecialEffectMode specialEffectMode = ResolvePlayerSpecialEffectMode(
                 isGameplayProbe ? string.Empty : request.Prompt,
@@ -5448,13 +5494,17 @@ namespace Network_Game.Dialogue
                 return;
             }
 
-            int materialSlotIndex = effectSurface != null
-                ? effectSurface.ResolveMaterialSlot(targetRenderer, surfaceTarget.MaterialSlotIndex)
-                : Mathf.Clamp(
-                    surfaceTarget.MaterialSlotIndex,
-                    0,
-                    Mathf.Max(0, (targetRenderer.sharedMaterials?.Length ?? 1) - 1)
-                );
+            int materialSlotIndex =
+                effectSurface != null
+                    ? effectSurface.ResolveMaterialSlot(
+                        targetRenderer,
+                        surfaceTarget.MaterialSlotIndex
+                    )
+                    : Mathf.Clamp(
+                        surfaceTarget.MaterialSlotIndex,
+                        0,
+                        Mathf.Max(0, (targetRenderer.sharedMaterials?.Length ?? 1) - 1)
+                    );
 
             float durationSeconds = ResolveFloorFreezeSurfaceDurationSeconds(
                 request,
@@ -5462,7 +5512,9 @@ namespace Network_Game.Dialogue
                 parameterIntent
             );
             string surfaceId = effectSurface != null ? effectSurface.SurfaceId : string.Empty;
-            string rendererPath = EffectTargetResolverService.GetHierarchyPath(targetRenderer.transform);
+            string rendererPath = EffectTargetResolverService.GetHierarchyPath(
+                targetRenderer.transform
+            );
 
             try
             {
@@ -5630,7 +5682,10 @@ namespace Network_Game.Dialogue
             if (
                 IntentMatchesKeywords(intents, DissolveKeywords)
                 || ContainsAnyKeyword(promptText, DissolvePromptCommands)
-                || ContainsAnyKeyword(responseText, new[] { "make you invisible", "you are invisible" })
+                || ContainsAnyKeyword(
+                    responseText,
+                    new[] { "make you invisible", "you are invisible" }
+                )
             )
             {
                 return PlayerSpecialEffectMode.Dissolve;
@@ -5639,7 +5694,10 @@ namespace Network_Game.Dialogue
             if (
                 IntentMatchesKeywords(intents, RespawnKeywords)
                 || ContainsAnyKeyword(promptText, RespawnPromptCommands)
-                || ContainsAnyKeyword(responseText, new[] { "make you visible", "you are visible again" })
+                || ContainsAnyKeyword(
+                    responseText,
+                    new[] { "make you visible", "you are visible again" }
+                )
             )
             {
                 return PlayerSpecialEffectMode.Respawn;
@@ -5866,7 +5924,9 @@ namespace Network_Game.Dialogue
 
         private void RegisterAllProfilePowers(EffectCatalog catalog)
         {
-            NpcDialogueActor[] actors = FindObjectsByType<NpcDialogueActor>();
+            NpcDialogueActor[] actors = FindObjectsByType<NpcDialogueActor>(
+                FindObjectsInactive.Exclude
+            );
             int registeredCount = 0;
             foreach (NpcDialogueActor actor in actors)
             {
@@ -5874,7 +5934,11 @@ namespace Network_Game.Dialogue
                     continue;
                 foreach (PrefabPowerEntry entry in actor.Profile.PrefabPowers)
                 {
-                    if (entry == null || !entry.Enabled || string.IsNullOrWhiteSpace(entry.PowerName))
+                    if (
+                        entry == null
+                        || !entry.Enabled
+                        || string.IsNullOrWhiteSpace(entry.PowerName)
+                    )
                         continue;
                     catalog.RegisterRuntimeEffect(entry.ToEffectDefinition());
                     registeredCount++;
@@ -5882,7 +5946,10 @@ namespace Network_Game.Dialogue
             }
             if (m_LogDebug)
             {
-                NGLog.Debug("DialogueFX", $"Registered {registeredCount} profile powers with EffectCatalog.");
+                NGLog.Debug(
+                    "DialogueFX",
+                    $"Registered {registeredCount} profile powers with EffectCatalog."
+                );
             }
         }
 
@@ -5916,7 +5983,9 @@ namespace Network_Game.Dialogue
             }
 
             requestedIntents = requestedIntents
-                .Where(intent => intent != null && !LooksLikePlaceholderEffectTag(intent.rawTagName))
+                .Where(intent =>
+                    intent != null && !LooksLikePlaceholderEffectTag(intent.rawTagName)
+                )
                 .ToList();
 
             if (requestedIntents.Count == 0)
@@ -5934,8 +6003,8 @@ namespace Network_Game.Dialogue
             if (requestedIntents.Count > 1)
             {
                 EffectIntent selected =
-                    requestedIntents.FirstOrDefault(
-                        intent => intent != null && !LooksLikePlaceholderEffectTag(intent.rawTagName)
+                    requestedIntents.FirstOrDefault(intent =>
+                        intent != null && !LooksLikePlaceholderEffectTag(intent.rawTagName)
                     ) ?? requestedIntents[0];
                 requestedIntents = new List<EffectIntent>(1) { selected };
             }
@@ -6200,7 +6269,8 @@ namespace Network_Game.Dialogue
                     targetNetworkObjectId,
                     request.SpeakerNetworkId,
                     attachToTarget: intentSpatialType == EffectSpatialType.Attached,
-                    fitToTargetMesh: intentSpatialType == EffectSpatialType.Attached && def.preferFitTargetMesh,
+                    fitToTargetMesh: intentSpatialType == EffectSpatialType.Attached
+                        && def.preferFitTargetMesh,
                     serverSpawnTimeSeconds: ResolveServerEffectTimeSeconds(),
                     effectSeed: ResolveEffectSeed()
                 );
@@ -6892,7 +6962,14 @@ namespace Network_Game.Dialogue
                 return false;
             }
 
-            return lower is "player" or "listener" or "me" or "myself" or "target" or "hero" or "user"
+            return lower
+                    is "player"
+                        or "listener"
+                        or "me"
+                        or "myself"
+                        or "target"
+                        or "hero"
+                        or "user"
                 || lower.Equals("role:player", StringComparison.Ordinal)
                 || lower.Equals("semantic:player", StringComparison.Ordinal)
                 || lower.StartsWith("id:player", StringComparison.Ordinal)
@@ -6907,7 +6984,14 @@ namespace Network_Game.Dialogue
                 return false;
             }
 
-            return lower is "ground" or "floor" or "terrain" or "grounded" or "fllor" or "flor" or "grond"
+            return lower
+                    is "ground"
+                        or "floor"
+                        or "terrain"
+                        or "grounded"
+                        or "fllor"
+                        or "flor"
+                        or "grond"
                 || lower.Contains("on ground", StringComparison.Ordinal)
                 || lower.Contains("at ground", StringComparison.Ordinal)
                 || lower.Contains("on floor", StringComparison.Ordinal)
@@ -7488,8 +7572,9 @@ namespace Network_Game.Dialogue
 
 #if UNITY_2023_1_OR_NEWER
             Transform[] transforms = UnityEngine.Object.FindObjectsByType<Transform>(
-                FindObjectsInactive.Exclude, FindObjectsSortMode.None
+                findObjectsInactive: FindObjectsInactive.Exclude
             );
+
 #else
             Transform[] transforms = UnityEngine.Object.FindObjectsOfType<Transform>();
 #endif
@@ -7536,10 +7621,12 @@ namespace Network_Game.Dialogue
 
 #if UNITY_2023_1_OR_NEWER
             DialogueSemanticTag[] tags = UnityEngine.Object.FindObjectsByType<DialogueSemanticTag>(
-                FindObjectsInactive.Exclude, FindObjectsSortMode.None
+                findObjectsInactive: FindObjectsInactive.Exclude
             );
+
 #else
-            DialogueSemanticTag[] tags = UnityEngine.Object.FindObjectsOfType<DialogueSemanticTag>();
+            DialogueSemanticTag[] tags =
+                UnityEngine.Object.FindObjectsOfType<DialogueSemanticTag>();
 #endif
             if (tags == null || tags.Length == 0)
             {
@@ -7589,7 +7676,15 @@ namespace Network_Game.Dialogue
                     continue;
                 }
 
-                int score = ScoreSemanticTagMatch(tag, raw, lower, filterLower, filterNorm, useRoleFilter, useIdFilter);
+                int score = ScoreSemanticTagMatch(
+                    tag,
+                    raw,
+                    lower,
+                    filterLower,
+                    filterNorm,
+                    useRoleFilter,
+                    useIdFilter
+                );
                 if (score > bestScore)
                 {
                     bestScore = score;
@@ -7649,7 +7744,10 @@ namespace Network_Game.Dialogue
             {
                 score = Mathf.Max(score, 260);
             }
-            else if (displayNorm.Length > 0 && (displayNorm == NormalizeSemanticToken(lowerQuery) || displayNorm == filterNorm))
+            else if (
+                displayNorm.Length > 0
+                && (displayNorm == NormalizeSemanticToken(lowerQuery) || displayNorm == filterNorm)
+            )
             {
                 score = Mathf.Max(score, 235);
             }
@@ -7682,7 +7780,13 @@ namespace Network_Game.Dialogue
                         break;
                     }
 
-                    if (aliasNorm.Length > 0 && (aliasNorm == NormalizeSemanticToken(lowerQuery) || aliasNorm == filterNorm))
+                    if (
+                        aliasNorm.Length > 0
+                        && (
+                            aliasNorm == NormalizeSemanticToken(lowerQuery)
+                            || aliasNorm == filterNorm
+                        )
+                    )
                     {
                         score = Mathf.Max(score, 220);
                         break;
@@ -8139,9 +8243,18 @@ namespace Network_Game.Dialogue
             bool hasGroundSignal =
                 ContainsAnyKeyword(powerName, GroundSurfaceKeywords)
                 || ContainsAnyKeyword(prefabName, GroundSurfaceKeywords)
-                || ContainsAnyKeyword(powerName, new[] { "fog", "mist", "aoe", "field", "burst", "break" })
-                || ContainsAnyKeyword(prefabName, new[] { "fog", "mist", "aoe", "field", "burst", "break" })
-                || ContainsAnyKeyword(string.Join(" ", entry.Keywords ?? Array.Empty<string>()), GroundSurfaceKeywords)
+                || ContainsAnyKeyword(
+                    powerName,
+                    new[] { "fog", "mist", "aoe", "field", "burst", "break" }
+                )
+                || ContainsAnyKeyword(
+                    prefabName,
+                    new[] { "fog", "mist", "aoe", "field", "burst", "break" }
+                )
+                || ContainsAnyKeyword(
+                    string.Join(" ", entry.Keywords ?? Array.Empty<string>()),
+                    GroundSurfaceKeywords
+                )
                 || ContainsAnyKeyword(
                     string.Join(" ", entry.CreativeTriggers ?? Array.Empty<string>()),
                     GroundSurfaceKeywords
@@ -8151,36 +8264,67 @@ namespace Network_Game.Dialogue
                 ContainsAnyKeyword(powerName, GroundFreezeKeywords)
                 || ContainsAnyKeyword(prefabName, GroundFreezeKeywords)
                 || ContainsAnyKeyword(entry.Element, new[] { "ice", "frost", "cold", "water" })
-                || ContainsAnyKeyword(string.Join(" ", entry.Keywords ?? Array.Empty<string>()), GroundFreezeKeywords)
+                || ContainsAnyKeyword(
+                    string.Join(" ", entry.Keywords ?? Array.Empty<string>()),
+                    GroundFreezeKeywords
+                )
                 || ContainsAnyKeyword(
                     string.Join(" ", entry.CreativeTriggers ?? Array.Empty<string>()),
                     GroundFreezeKeywords
                 );
 
             bool hasGroundFogSignal =
-                ContainsAnyKeyword(powerName, new[] { "groundfog", "ground fog", "frost field", "ice field" })
-                || ContainsAnyKeyword(prefabName, new[] { "groundfog", "ground fog", "frost field", "ice field" })
+                ContainsAnyKeyword(
+                    powerName,
+                    new[] { "groundfog", "ground fog", "frost field", "ice field" }
+                )
+                || ContainsAnyKeyword(
+                    prefabName,
+                    new[] { "groundfog", "ground fog", "frost field", "ice field" }
+                )
                 || ContainsAnyKeyword(powerName, new[] { "fog", "mist" })
                 || ContainsAnyKeyword(prefabName, new[] { "fog", "mist" });
 
-            return hasGroundSignal && (hasFreezeSignal || hasGroundFogSignal || entry.DamageRadius >= 1f);
+            return hasGroundSignal
+                && (hasFreezeSignal || hasGroundFogSignal || entry.DamageRadius >= 1f);
         }
 
-        private static readonly HashSet<string> s_CombatKeywords = new(StringComparer.OrdinalIgnoreCase)
+        private static readonly HashSet<string> s_CombatKeywords = new(
+            StringComparer.OrdinalIgnoreCase
+        )
         {
-            "damage","attack","strike","blast","hit","hurt","harm","kill","destroy",
-            "burn","freeze","shock","explode","fire","lightning","curse","wound","slash"
+            "damage",
+            "attack",
+            "strike",
+            "blast",
+            "hit",
+            "hurt",
+            "harm",
+            "kill",
+            "destroy",
+            "burn",
+            "freeze",
+            "shock",
+            "explode",
+            "fire",
+            "lightning",
+            "curse",
+            "wound",
+            "slash",
         };
 
         private static bool IsCombatPowerKeywords(PrefabPowerEntry entry)
         {
-            if (entry == null) return false;
+            if (entry == null)
+                return false;
             if (entry.Keywords != null)
                 foreach (string kw in entry.Keywords)
-                    if (!string.IsNullOrEmpty(kw) && s_CombatKeywords.Contains(kw)) return true;
+                    if (!string.IsNullOrEmpty(kw) && s_CombatKeywords.Contains(kw))
+                        return true;
             if (!string.IsNullOrEmpty(entry.PowerName))
                 foreach (string kw in s_CombatKeywords)
-                    if (entry.PowerName.Contains(kw, StringComparison.OrdinalIgnoreCase)) return true;
+                    if (entry.PowerName.Contains(kw, StringComparison.OrdinalIgnoreCase))
+                        return true;
             return false;
         }
 
@@ -8771,7 +8915,8 @@ namespace Network_Game.Dialogue
             }
 
             return !string.IsNullOrWhiteSpace(promptText)
-                && promptText.IndexOf("Gameplay probe for ", StringComparison.OrdinalIgnoreCase) >= 0;
+                && promptText.IndexOf("Gameplay probe for ", StringComparison.OrdinalIgnoreCase)
+                    >= 0;
         }
 
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]

@@ -7458,12 +7458,11 @@ MonoBehaviour:
   m_InputLegibilityCheckIntervalSeconds: 0.2
   m_ManualCloseSuppressSeconds: 0.2
   m_InputTextColor: {r: 0.95, g: 0.95, b: 0.95, a: 1}
-  m_EnableCameraSwitchButton: 0
+  m_EnableCameraSwitchButton: 1
   m_SelectedCameraPriorityBoost: 50
   m_UseExclusiveCameraActivation: 0
   m_PreferredCameraOrder:
   - PlayerCinemachineCamera
-  - PlayerCinemachineCameraFar
   - PlayerCinemachineCameraFar
 --- !u!114 &380736409
 MonoBehaviour:
@@ -7572,7 +7571,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &391025208
 Transform:
   m_ObjectHideFlags: 0
@@ -7617,7 +7616,7 @@ MonoBehaviour:
   m_CameraAnchorsRoot: {fileID: 528478760}
   m_AutoDiscoverOnAwake: 1
   m_AutoRebuildBindingsWhenMissing: 1
-  m_DefaultShotDurationSeconds: 2.5
+  m_DefaultShotDurationSeconds: 3
   m_EnableShowcaseCameraDuringShot: 1
   m_PreferCinemachineForShots: 1
   m_CinemachinePriorityBoost: 50
@@ -7633,11 +7632,6 @@ MonoBehaviour:
   m_DialogueHookShotDurationSeconds: 0
   m_DialogueHookCooldownSeconds: 0.35
   m_Shots:
-  - ShotId: wide
-    Anchor: {fileID: 735646405}
-    KeyLight: {fileID: 0}
-    Ring: {fileID: 0}
-    Aura: {fileID: 0}
   - ShotId: storm
     Anchor: {fileID: 328749752}
     KeyLight: {fileID: 1105559737}
@@ -7648,11 +7642,6 @@ MonoBehaviour:
     KeyLight: {fileID: 791238451}
     Ring: {fileID: 1583745183}
     Aura: {fileID: 1725125489}
-  - ShotId: archivist
-    Anchor: {fileID: 1559039984}
-    KeyLight: {fileID: 422971933}
-    Ring: {fileID: 2124951734}
-    Aura: {fileID: 483196427}
 --- !u!1001 &396904583
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8452,7 +8441,7 @@ MonoBehaviour:
   m_UseChildSensors: 1
   m_UseChildActuators: 1
   m_DeterministicInference: 0
-  m_ObservableAttributeHandling: 0
+  m_ObservableAttributeHandling: 2
 --- !u!4 &438669036
 Transform:
   m_ObjectHideFlags: 0
@@ -8515,7 +8504,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!23 &443786066
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -14322,7 +14311,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &605698503
 Transform:
   m_ObjectHideFlags: 0
@@ -14752,7 +14741,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &639935472
 Transform:
   m_ObjectHideFlags: 0
@@ -16313,7 +16302,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &791238452
 Transform:
   m_ObjectHideFlags: 0
@@ -18345,7 +18334,7 @@ Camera:
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 0
-  m_AllowMSAA: 1
+  m_AllowMSAA: 0
   m_AllowDynamicResolution: 1
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
@@ -18375,7 +18364,7 @@ MonoBehaviour:
     DefaultMode: 2
   DefaultBlend:
     Style: 1
-    Time: 2
+    Time: 3
     CustomCurve:
       serializedVersion: 2
       m_Curve: []
@@ -18912,7 +18901,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1105559738
 Transform:
   m_ObjectHideFlags: 0
@@ -23547,7 +23536,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1583745184
 Transform:
   m_ObjectHideFlags: 0
@@ -24474,7 +24463,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1646799626
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30972,7 +30961,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1871709556
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32974,7 +32963,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2124951735
 Transform:
   m_ObjectHideFlags: 0
@@ -34237,11 +34226,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72ece51f2901e7445ab60da3685d6b5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineBrain
-  ShowDebugText: 1
+  ShowDebugText: 0
   ShowCameraFrustum: 1
   IgnoreTimeScale: 1
   WorldUpOverride: {fileID: 0}
-  ChannelMask: -1
+  ChannelMask: 0
   UpdateMethod: 1
   BlendUpdateMethod: 1
   LensModeOverride:

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineBlenderSettings
   CustomBlends:
   - From: '**ANY CAMERA**'
-    To: PlayerCinemachineCameraFar
+    To: '**ANY CAMERA**'
     Blend:
       Style: 1
       Time: 3

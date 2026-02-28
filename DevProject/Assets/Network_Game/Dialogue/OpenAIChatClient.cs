@@ -192,10 +192,10 @@ namespace Network_Game.Dialogue
 
             LogInfo(
                 $"Sending OpenAI request | url={url} | model={requestBody["model"] ?? "auto"}"
-                    + $" | temp={Temperature} | topK={TopK} | topP={TopP}"
-                    + $" | repeatPenalty={RepeatPenalty} | minP={MinP}"
-                    + $" | typicalP={TypicalP} | repeatLastN={RepeatLastN}"
-                    + $" | mirostat={Mirostat} | maxTokens={MaxTokens} | seed={Seed}"
+                + $" | temp={Temperature} | topK={TopK} | topP={TopP}"
+                + $" | repeatPenalty={RepeatPenalty} | minP={MinP}"
+                + $" | typicalP={TypicalP} | repeatLastN={RepeatLastN}"
+                + $" | mirostat={Mirostat} | maxTokens={MaxTokens} | seed={Seed}"
             );
 
             HttpResponseMessage response = null;
@@ -212,7 +212,9 @@ namespace Network_Game.Dialogue
             }
             catch (TaskCanceledException) when (!ct.IsCancellationRequested)
             {
-                LogWarn("OpenAI request timed out (internal HttpClient timeout, not caller cancellation).");
+                LogWarn(
+                    "OpenAI request timed out (internal HttpClient timeout, not caller cancellation)."
+                );
                 return string.Empty;
             }
 
@@ -233,14 +235,14 @@ namespace Network_Game.Dialogue
                     try
                     {
                         using HttpResponseMessage retryResponse = await SendChatRequestAsync(
-                                url,
-                                retryJson,
-                                ct
-                            )
-                            .ConfigureAwait(false);
-                        responseBody = await retryResponse.Content
-                            .ReadAsStringAsync()
-                            .ConfigureAwait(false);
+                            url,
+                            retryJson,
+                            ct
+                        )
+                                    .ConfigureAwait(false);
+                        responseBody = await retryResponse
+                            .Content.ReadAsStringAsync()
+                                .ConfigureAwait(false);
                         if (!retryResponse.IsSuccessStatusCode)
                         {
                             LogError(
@@ -272,7 +274,7 @@ namespace Network_Game.Dialogue
             try
             {
                 var obj = JObject.Parse(responseBody);
-                string content = obj?["choices"]?[0]?["message"]?["content"]?.ToString();
+                string content = obj ? ["choices"] ? [0] ? ["message"] ? ["content"]?.ToString();
 
                 if (
                     string.IsNullOrEmpty(content)
@@ -323,8 +325,8 @@ namespace Network_Game.Dialogue
                     request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", ApiKey);
 
                 using HttpResponseMessage response = await s_Http
-                    .SendAsync(request, effectiveToken)
-                    .ConfigureAwait(false);
+                        .SendAsync(request, effectiveToken)
+                            .ConfigureAwait(false);
 
                 if (!response.IsSuccessStatusCode)
                 {
@@ -343,7 +345,7 @@ namespace Network_Game.Dialogue
                     var data = obj["data"] as JArray;
                     if (data != null && data.Count > 0)
                     {
-                        string firstId = data[0]?["id"]?.ToString() ?? "(unknown)";
+                        string firstId = data[0] ? ["id"]?.ToString() ?? "(unknown)";
                         m_LastActiveModelId = firstId;
                         string configured = string.IsNullOrWhiteSpace(Model) ? "(auto)" : Model;
                         bool configuredAvailable = IsConfiguredModelAvailable(data);
@@ -499,7 +501,7 @@ namespace Network_Game.Dialogue
             JObject requestBody
         )
         {
-            string currentModel = requestBody?["model"]?.ToString();
+            string currentModel = requestBody ? ["model"]?.ToString();
             if (string.Equals(currentModel, "auto", StringComparison.OrdinalIgnoreCase))
             {
                 return false;
@@ -530,7 +532,7 @@ namespace Network_Game.Dialogue
             string configured = Model.Trim();
             for (int i = 0; i < models.Count; i++)
             {
-                string loaded = models[i]?["id"]?.ToString();
+                string loaded = models[i] ? ["id"]?.ToString();
                 if (string.Equals(loaded, configured, StringComparison.OrdinalIgnoreCase))
                 {
                     return true;
@@ -549,11 +551,9 @@ namespace Network_Game.Dialogue
 
         private static void LogInfo(string msg) => NGLog.Info("OpenAI", msg);
 
-        private static void LogWarn(string msg) =>
-            NGLog.Warn("OpenAI", msg);
+        private static void LogWarn(string msg) => NGLog.Warn("OpenAI", msg);
 
-        private static void LogError(string msg) =>
-            NGLog.Error("OpenAI", msg);
+        private static void LogError(string msg) => NGLog.Error("OpenAI", msg);
 
         [Serializable]
         private class MessageDto

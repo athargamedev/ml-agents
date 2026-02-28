@@ -28,11 +28,6 @@ namespace Network_Game
 
 namespace Network_Game.Auth
 {
-    [UnityEngine.DisallowMultipleComponent] [UnityEngine.RequireComponent(typeof(UnityEngine.UIElements.UIDocument))] public sealed class LocalAuthSessionBrowserBridge : UnityEngine.MonoBehaviour
-    {
-        public LocalAuthSessionBrowserBridge() {}
-    }
-
     [UnityEngine.DefaultExecutionOrder(-220)] public class LocalPlayerAuthService : UnityEngine.MonoBehaviour
     {
         public static event System.Action<LocalPlayerAuthService.LocalPlayerRecord> OnPlayerLoggedIn;
@@ -74,14 +69,6 @@ namespace Network_Game.Auth
             public string ProfileVersion;
         }
     }
-
-    [UnityEngine.DefaultExecutionOrder(-80)] public class LocalPlayerAuthUI : UnityEngine.MonoBehaviour
-    {
-        public static LocalPlayerAuthUI Instance { get; }
-        public LocalPlayerAuthUI() {}
-        public static LocalPlayerAuthUI EnsureOnDialogueCanvas();
-        public void LoginFromInput();
-    }
 }
 
 namespace Network_Game.Behavior
@@ -92,14 +79,12 @@ namespace Network_Game.Behavior
         public BehaviorSceneBootstrap() {}
     }
 
-    public class NPCAgentBootstrap : UnityEngine.MonoBehaviour
+    [UnityEngine.DisallowMultipleComponent] public sealed class NPCAgentBootstrap : UnityEngine.MonoBehaviour
     {
         public NPCAgentBootstrap() {}
         public System.Collections.Generic.List<UnityEngine.GameObject> CollectAndPrioritizeNpcs(UnityEngine.GameObject primaryNpc = default(UnityEngine.GameObject));
         public bool ConfigureDialogueUiParticipants(UnityEngine.GameObject player, UnityEngine.GameObject npcObject);
-        public void ConfigureNpcAgents(System.Collections.Generic.List<UnityEngine.GameObject> npcObjects);
         public void DisableLlmAgent(UnityEngine.GameObject target);
-        public void PrewireLlmAgent(UnityEngine.GameObject target);
     }
 
     [UnityEngine.AddComponentMenu(@"Network Game/Behavior/NPC Flight Chase State Machine")] [UnityEngine.DisallowMultipleComponent] [UnityEngine.RequireComponent(typeof(Unity.Netcode.NetworkObject))] public sealed class NpcFlightChaseStateMachine : Unity.Netcode.NetworkBehaviour
@@ -428,20 +413,6 @@ namespace Network_Game.Dialogue
         public DialogueInferenceRuntimeConfig() {}
     }
 
-    [UnityEngine.DefaultExecutionOrder(-500)] public class DialogueLoraBootstrap : UnityEngine.MonoBehaviour
-    {
-        public DialogueLoraBootstrap() {}
-        public static string GetLoraPathForPersona(string personaId);
-        public static System.Collections.Generic.IEnumerable<string> GetRegisteredPersonas();
-        public static bool IsPersonaRegistered(string personaId);
-        public struct LoraPersonaMapping
-        {
-            [UnityEngine.Tooltip(@"Optional display name for logging")] public string DisplayName;
-            [UnityEngine.Tooltip(@"Filename of the LoRA adapter (e.g., 'storm_oracle.gguf')")] public string LoraFileName;
-            [UnityEngine.Tooltip(@"Unique identifier for the persona (matches NpcDialogueProfile.PersonaId)")] public string PersonaId;
-        }
-    }
-
     [UnityEngine.DisallowMultipleComponent] public sealed class DialogueParticleCollisionDamage : UnityEngine.MonoBehaviour
     {
         public DialogueParticleCollisionDamage() {}
@@ -535,16 +506,6 @@ namespace Network_Game.Dialogue
         public async System.Threading.Tasks.Task<string> ChatAsync(string systemPrompt, System.Collections.Generic.IReadOnlyList<DialogueInferenceMessage> history, string userPrompt, bool addToHistory = true, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken));
         public System.Threading.Tasks.Task<bool> CheckConnectionAsync(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken));
         public void SetAgent(LLMUnity.LLMAgent agent);
-    }
-
-    [UnityEngine.DisallowMultipleComponent] public sealed class MultiplayerIdentitySanityRunner : Unity.Netcode.NetworkBehaviour
-    {
-        public MultiplayerIdentitySanityRunner() {}
-        protected override string __getTypeName();
-        protected override void __initializeRpcs();
-        protected override void __initializeVariables();
-        public override void OnNetworkSpawn();
-        [UnityEngine.ContextMenu(@"Dialogue/Run Multiplayer Identity Sanity Check")] public void RunNow();
     }
 
     [UnityEngine.DefaultExecutionOrder(-450)] public class NetworkDialogueService : Unity.Netcode.NetworkBehaviour
@@ -793,12 +754,6 @@ namespace Network_Game.Dialogue
             public float SpeedMultiplier;
             public static ParticleParameterExtractor.ParticleParameterIntent Default { get; }
         }
-    }
-
-    [UnityEngine.DisallowMultipleComponent] public class PersonaDialogueSanityRunner : UnityEngine.MonoBehaviour
-    {
-        public PersonaDialogueSanityRunner() {}
-        [UnityEngine.ContextMenu(@"Run Persona Sanity Check")] public void RunPersonaSanityCheck();
     }
 
     public class PrefabPowerEntry

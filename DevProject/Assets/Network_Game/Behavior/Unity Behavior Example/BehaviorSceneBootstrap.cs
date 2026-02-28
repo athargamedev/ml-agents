@@ -1,10 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-#if !UNITY_WEBGL
-using System.Net;
-using System.Net.Sockets;
-#endif
 using System.Reflection;
 using Network_Game.Auth;
 using Network_Game.Combat;
@@ -14,6 +10,10 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
+#if !UNITY_WEBGL
+using System.Net;
+using System.Net.Sockets;
+#endif
 
 namespace Network_Game.Behavior
 {
@@ -42,7 +42,7 @@ namespace Network_Game.Behavior
         [SerializeField]
         [Tooltip(
             "If true, host startup waits until auth is confirmed instead of continuing after timeout."
-         )]
+        )]
         private bool m_BlockNetworkStartUntilAuthenticated = true;
 
         [SerializeField]
@@ -53,14 +53,14 @@ namespace Network_Game.Behavior
         [SerializeField]
         [Tooltip(
             "When enabled, local player is aligned to SpawnPoint after network spawn resolves."
-         )]
+        )]
         private bool m_AlignLocalPlayerToSpawnPoint = true;
 
         [Header("Client Mode (MPPM / 2-Player)")]
         [SerializeField]
         [Tooltip(
             "Force this instance to start as a client instead of host. Use for manual 2-player testing."
-         )]
+        )]
         private bool m_ForceClientMode;
 
         [SerializeField]
@@ -70,13 +70,13 @@ namespace Network_Game.Behavior
         [SerializeField]
         [Tooltip(
             "Avoids noisy host bind failures by switching to client mode when the configured UTP listen port is already occupied."
-         )]
+        )]
         private bool m_AvoidHostStartWhenPortIsInUse = true;
 
         [SerializeField]
         [Tooltip(
             "If host startup fails unexpectedly, retry host on the next free UDP port instead of silently falling back to client mode."
-         )]
+        )]
         private bool m_TryHostPortFallbackOnStartFailure = true;
 
         [SerializeField]
@@ -93,7 +93,7 @@ namespace Network_Game.Behavior
         [SerializeField]
         [Tooltip(
             "Auto-creates LlmDebugAssistant at runtime. Keep disabled for multiplayer latency tests to avoid extra LLM traffic."
-         )]
+        )]
         private bool m_AutoCreateLlmDebugAssistant;
 
         [SerializeField]
@@ -109,8 +109,6 @@ namespace Network_Game.Behavior
         {
             NGLog.Info("Bootstrap", "Awake");
             InitializeModules();
-            if (m_NpcBootstrap != null)
-                m_NpcBootstrap.PrewireLlmAgent(gameObject);
         }
 
         private void InitializeModules()
@@ -278,15 +276,12 @@ namespace Network_Game.Behavior
 
             List<GameObject> npcObjects =
                 m_NpcBootstrap != null
-                ? m_NpcBootstrap.CollectAndPrioritizeNpcs(m_PrimaryNpc)
-                : new List<GameObject>();
+                    ? m_NpcBootstrap.CollectAndPrioritizeNpcs(m_PrimaryNpc)
+                    : new List<GameObject>();
             if (npcObjects.Count > 0)
             {
                 m_PrimaryNpc = npcObjects[0];
             }
-
-            if (m_NpcBootstrap != null)
-                m_NpcBootstrap.ConfigureNpcAgents(npcObjects);
 
             if (player != null)
             {
@@ -375,13 +370,15 @@ namespace Network_Game.Behavior
                 foreach (string pair in query.Split('&'))
                 {
                     int eq = pair.IndexOf('=');
-                    if (eq < 0) continue;
+                    if (eq < 0)
+                        continue;
                     string key = pair.Substring(0, eq);
                     string val = pair.Substring(eq + 1);
                     if (string.Equals(key, "server", StringComparison.OrdinalIgnoreCase))
                         serverIp = val;
                     else if (string.Equals(key, "port", StringComparison.OrdinalIgnoreCase))
-                        if (ushort.TryParse(val, out ushort p)) port = p;
+                        if (ushort.TryParse(val, out ushort p))
+                            port = p;
                 }
 
                 var transport = manager.GetComponent<Unity.Netcode.Transports.UTP.UnityTransport>();
@@ -399,7 +396,6 @@ namespace Network_Game.Behavior
                 NGLog.Warn("Bootstrap", $"Failed to read server address from URL: {ex.Message}");
             }
         }
-
 #endif
 
         private IEnumerator EnsureAuthGate()
@@ -589,7 +585,13 @@ namespace Network_Game.Behavior
             var netTransform = player.GetComponent<Unity.Netcode.Components.NetworkTransform>();
             if (netTransform != null)
             {
-                if (netTransform.AuthorityMode != Unity.Netcode.Components.NetworkTransform.AuthorityModes.Owner) { NGLog.Warn("Bootstrap", "Server Authority detected!"); } // Removed assignment
+                if (
+                    netTransform.AuthorityMode
+                    != Unity.Netcode.Components.NetworkTransform.AuthorityModes.Owner
+                )
+                {
+                    NGLog.Warn("Bootstrap", "Server Authority detected!");
+                } // Removed assignment
                 // Assignment removed for NGO compliance. Authority set in Prefab.
                 if (netObj != null && netObj.IsOwner)
                 {
@@ -713,7 +715,11 @@ namespace Network_Game.Behavior
             }
 
 #if UNITY_2023_1_OR_NEWER
-            if (FindAnyObjectByType<Network_Game.Diagnostics.LlmDebugAssistant>(FindObjectsInactive.Exclude) != null)
+            if (
+                FindAnyObjectByType<Network_Game.Diagnostics.LlmDebugAssistant>(
+                    FindObjectsInactive.Exclude
+                ) != null
+            )
 #else
             if (FindObjectOfType<Network_Game.Diagnostics.LlmDebugAssistant>() != null)
 #endif
@@ -854,17 +860,10 @@ namespace Network_Game.Behavior
                     manager.Shutdown();
                 }
 
-                transport.SetConnectionData(
-                    "127.0.0.1",
-                    (ushort)candidatePort,
-                    "0.0.0.0"
-                );
+                transport.SetConnectionData("127.0.0.1", (ushort)candidatePort, "0.0.0.0");
                 NGLog.Warn(
                     "Bootstrap",
-                    NGLog.Format(
-                        "Retrying host start on fallback port",
-                        ("port", candidatePort)
-                    )
+                    NGLog.Format("Retrying host start on fallback port", ("port", candidatePort))
                 );
 
                 if (manager.StartHost())
@@ -1113,16 +1112,28 @@ namespace Network_Game.Behavior
 
         private static void EnsureAuthLoginUiAvailable()
         {
-            bool hasSessionBrowserBridge = false;
-#if UNITY_2023_1_OR_NEWER
-            hasSessionBrowserBridge =
-                FindAnyObjectByType<LocalAuthSessionBrowserBridge>() != null;
-#else
-            hasSessionBrowserBridge = FindObjectOfType<LocalAuthSessionBrowserBridge>() != null;
-#endif
-            if (!hasSessionBrowserBridge)
+            Network_Game.UI.Login.PlayerLoginController[] loginControllers =
+                Resources.FindObjectsOfTypeAll<Network_Game.UI.Login.PlayerLoginController>();
+            for (int i = 0; i < loginControllers.Length; i++)
             {
-                LocalPlayerAuthUI.EnsureOnDialogueCanvas();
+                Network_Game.UI.Login.PlayerLoginController loginController = loginControllers[i];
+                if (loginController == null || !loginController.gameObject.scene.IsValid())
+                {
+                    continue;
+                }
+
+                if (!loginController.gameObject.activeSelf)
+                {
+                    loginController.gameObject.SetActive(true);
+                }
+
+                if (!loginController.enabled)
+                {
+                    loginController.enabled = true;
+                }
+
+                loginController.Show();
+                return;
             }
         }
     }
