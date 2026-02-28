@@ -98,7 +98,10 @@ public class NpcDialogueAgent : Agent
     [Header("Decisioning")]
     [Tooltip("Auto-add a DecisionRequester at runtime so Python env.reset()/env.step() receives decisions.")]
     [SerializeField] private bool m_AutoAddDecisionRequester = true;
-    [SerializeField][Range(1, 20)] private int m_DecisionPeriod = 1;
+    // DecisionPeriod=5: make one decision every 5 FixedUpdate frames (~100ms at 50Hz).
+    // Was 1 (every frame). At 11s LLM latency the agent made ~550 idle decisions per
+    // LLM wait — pure noise. At period=5 that drops to ~110, improving credit assignment.
+    [SerializeField][Range(1, 20)] private int m_DecisionPeriod = 5;
     [SerializeField] private bool m_TakeActionsBetweenDecisions = true;
 
     [Header("Training Reward Shaping")]
@@ -121,6 +124,16 @@ public class NpcDialogueAgent : Agent
     [Tooltip("Logs each reward component added by this agent (source + amount + cumulative reward).")]
     [SerializeField] private bool m_LogRewardComponents = true;
 
+    // ── Constants ─────────────────────────────────────────────────────────────
+    private const int   MaxTurnsBeforeForceEnd       = 20;    // P4.1 — action mask
+    private const float ConversationTimeoutSeconds   = 30f;   // P4.2 — LM Studio crash guard
+    private const float FullArcBonus                 = 0.02f; // P3.4 — Idle→Initiated→Responded→Resolved
+    private const float MaxSingleRewardComponent     = 0.5f;  // P3.2 — clip magnitude
+    // Small per-step cost for idling within interaction range when no conversation is active.
+    // Without this cost, the policy finds the trivially easy strategy: idle forever then end
+    // for the small EndConversation reward, never discovering that engaging leads to larger rewards.
+    private const float IdleNearNpcCostPerStep       = 0.001f;
+
     // ── Runtime ───────────────────────────────────────────────────────────────
     private LlmDialogueChannel        m_Channel;
     private SideChannelDialogueClient m_Client;
@@ -134,7 +147,8 @@ public class NpcDialogueAgent : Agent
     private readonly HashSet<int> m_RewardedTelemetryRequestIds = new HashSet<int>();
     private readonly HashSet<int> m_RewardedFeedbackRequestIds = new HashSet<int>();
     private ConversationPhase m_ConversationPhase = ConversationPhase.Idle;
-    private float m_LastEffectFireTime = float.NegativeInfinity;
+    private float m_LastEffectFireTime    = float.NegativeInfinity;
+    private float m_PhaseInitiatedTime   = float.NegativeInfinity; // P4.2
 
     // ── ML-Agents lifecycle ───────────────────────────────────────────────────
 
@@ -182,6 +196,7 @@ public class NpcDialogueAgent : Agent
         m_ConversationActive     = false;
         m_ConversationPhase      = ConversationPhase.Idle;
         m_LastEffectFireTime     = float.NegativeInfinity;
+        m_PhaseInitiatedTime     = float.NegativeInfinity; // P4.2
         m_RewardedTerminalRequestIds.Clear();
         m_RewardedTelemetryRequestIds.Clear();
         m_RewardedFeedbackRequestIds.Clear();
@@ -223,6 +238,16 @@ public class NpcDialogueAgent : Agent
     {
         m_EpisodeTime += Time.fixedDeltaTime;
 
+        // Per-step idle cost: penalise staying idle when the player is within reach
+        // and no conversation is running. This prevents entropy collapse where the
+        // policy learns "idle → end" as the dominant strategy.
+        if (actions.DiscreteActions[0] == 0
+            && !m_ConversationActive
+            && GetProximityObservation() >= m_MinEngageProximity)
+        {
+            AddRewardComponent(-IdleNearNpcCostPerStep, "Action/IdleNearNpcCost");
+        }
+
         switch (actions.DiscreteActions[0])
         {
             case 1: // Engage
@@ -235,6 +260,7 @@ public class NpcDialogueAgent : Agent
                 {
                     m_ConversationActive = true;
                     m_ConversationPhase  = ConversationPhase.Initiated;
+                    m_PhaseInitiatedTime = Time.time; // P4.2 — start timeout timer
                     AddRewardComponent(0.02f, "Action/Engage");
                 }
                 else if (overrideChanged)
@@ -253,8 +279,27 @@ public class NpcDialogueAgent : Agent
                         SetOverrideClientEnabled(false);
                     m_ConversationActive = false;
                     m_ConversationPhase  = ConversationPhase.Idle;
-                    AddRewardComponent(m_TurnCount * 0.05f, "Action/EndConversation");
+
+                    // Do not reward ending immediately after the first turn; that
+                    // creates a trivial "one reply then stop" local optimum.
+                    if (m_TurnCount > 1)
+                    {
+                        AddRewardComponent(m_TurnCount * 0.05f, "Action/EndConversation");
+                    }
+
+                    // P3.3 — capture stats before EndEpisode() resets them via OnEpisodeBegin().
+                    float episodeCumulative = GetCumulativeReward();
+                    int   episodeTurns      = m_TurnCount;
+                    int   episodeEffects    = float.IsNegativeInfinity(m_LastEffectFireTime) ? 0 : 1;
+
                     EndEpisode();
+
+                    Debug.Log(
+                        $"[NpcDialogueAgent][EpisodeSummary] " +
+                        $"cumulative={episodeCumulative:+0.000;-0.000;0.000} " +
+                        $"turns={episodeTurns} " +
+                        $"effects={episodeEffects}"
+                    );
                 }
                 break;
             }
@@ -280,11 +325,37 @@ public class NpcDialogueAgent : Agent
 
         if (!m_ConversationActive && GetProximityObservation() < m_MinEngageProximity)
             actionMask.SetActionEnabled(0, 1, false); // don't "engage" when player is far away
+
+        // P4.1 — prevent the policy from looping forever in unproductive long conversations.
+        if (m_TurnCount >= MaxTurnsBeforeForceEnd)
+            actionMask.SetActionEnabled(0, 1, false);
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
     {
         actionsOut.DiscreteActions.Array[0] = 1; // always engage during manual testing
+    }
+
+    // ── P4.2 — Conversation timeout (LM Studio crash guard) ──────────────────
+
+    private void Update()
+    {
+        // If we've been waiting in Initiated phase for longer than the timeout,
+        // LM Studio has likely crashed or hung. Fire a penalty and reset to Idle
+        // so the agent can recover and attempt a new conversation.
+        if (m_ConversationPhase == ConversationPhase.Initiated
+            && !float.IsNegativeInfinity(m_PhaseInitiatedTime)
+            && Time.time - m_PhaseInitiatedTime > ConversationTimeoutSeconds)
+        {
+            Debug.LogWarning(
+                $"[NpcDialogueAgent] Conversation timeout after {ConversationTimeoutSeconds}s " +
+                "with no LLM response — resetting phase to Idle. " +
+                "Check that LM Studio / run_llm_bridge.py is running."
+            );
+            AddRewardComponent(-m_TimeoutPenalty, "Latency/ConversationTimeout");
+            m_ConversationPhase  = ConversationPhase.Idle;
+            m_PhaseInitiatedTime = float.NegativeInfinity;
+        }
     }
 
     // ── Called by the dialogue system after each LLM response ─────────────────
@@ -414,6 +485,7 @@ public class NpcDialogueAgent : Agent
         {
             m_ConversationActive = true;
             m_ConversationPhase  = ConversationPhase.Responded;
+            m_PhaseInitiatedTime = float.NegativeInfinity; // P4.2 — got response, clear timeout
             OnDialogueTurnComplete(playerReplied: true);
         }
 
@@ -473,8 +545,13 @@ public class NpcDialogueAgent : Agent
 
         if (feedback.HasEffect)
         {
-            m_LastEffectFireTime = Time.time;
-            m_ConversationPhase  = ConversationPhase.Resolved;
+            // P3.4 — full arc bonus: only award if we came through Responded,
+            // confirming the complete Idle→Initiated→Responded→Resolved sequence.
+            bool completedFullArc = m_ConversationPhase == ConversationPhase.Responded;
+            m_LastEffectFireTime  = Time.time;
+            m_ConversationPhase   = ConversationPhase.Resolved;
+            if (completedFullArc)
+                AddRewardComponent(FullArcBonus, "Quality/FullArcBonus");
         }
 
         float normalizedScore = Mathf.Clamp(feedback.Score / 6f, -1f, 1f);
@@ -509,6 +586,9 @@ public class NpcDialogueAgent : Agent
     {
         if (Mathf.Approximately(amount, 0f))
             return;
+
+        // P3.2 — prevent rare spikes from dominating the gradient.
+        amount = Mathf.Clamp(amount, -MaxSingleRewardComponent, MaxSingleRewardComponent);
 
         AddReward(amount);
         RecordStat($"Reward/{statName}", amount);

@@ -113,7 +113,7 @@ namespace Network_Game.Dialogue
         private string m_ResolvedOutputPath = string.Empty;
         private string m_ResolvedUnifiedOutputPath = string.Empty;
         private string m_Comment = string.Empty;
-        private Rect m_WindowRect = new Rect(40f, 40f, 560f, 330f);
+        private Rect m_WindowRect = new Rect(40f, 96f, 400f, 250f);
         private VisualElement m_UiHostRoot;
         private VisualElement m_UiOverlayRoot;
         private Label m_UiTitleLabel;
@@ -413,29 +413,30 @@ namespace Network_Game.Dialogue
             overlay.style.right = 0f;
             overlay.style.top = 0f;
             overlay.style.bottom = 0f;
-            overlay.style.justifyContent = Justify.FlexEnd;
+            overlay.style.justifyContent = Justify.FlexStart;
             overlay.style.alignItems = Align.FlexEnd;
-            overlay.style.paddingRight = 14f;
+            overlay.style.paddingRight = 12f;
             overlay.style.paddingBottom = 14f;
-            overlay.style.paddingLeft = 14f;
-            overlay.style.paddingTop = 14f;
+            overlay.style.paddingLeft = 0f;
+            overlay.style.paddingTop = 96f;
             overlay.style.display = DisplayStyle.None;
-            overlay.style.backgroundColor = new Color(0f, 0f, 0f, 0.08f);
+            overlay.style.backgroundColor = new Color(0f, 0f, 0f, 0f);
             overlay.pickingMode = PickingMode.Ignore;
 
             var card = new VisualElement { name = "dialogue-effect-feedback-card" };
             card.AddToClassList("blocks-profile-card");
-            card.style.width = 720f;
-            card.style.maxWidth = 720f;
-            card.style.backgroundColor = new Color(16f / 255f, 16f / 255f, 16f / 255f, 0.88f);
-            card.style.borderTopLeftRadius = 14f;
-            card.style.borderTopRightRadius = 14f;
-            card.style.borderBottomLeftRadius = 14f;
-            card.style.borderBottomRightRadius = 14f;
+            card.style.width = 400f;
+            card.style.minWidth = 360f;
+            card.style.maxWidth = 420f;
+            card.style.backgroundColor = new Color(16f / 255f, 16f / 255f, 16f / 255f, 0.80f);
+            card.style.borderTopLeftRadius = 16f;
+            card.style.borderTopRightRadius = 16f;
+            card.style.borderBottomLeftRadius = 16f;
+            card.style.borderBottomRightRadius = 16f;
             card.style.paddingTop = 0f;
-            card.style.paddingBottom = 10f;
-            card.style.paddingLeft = 10f;
-            card.style.paddingRight = 10f;
+            card.style.paddingBottom = 8f;
+            card.style.paddingLeft = 8f;
+            card.style.paddingRight = 8f;
             card.style.borderTopWidth = 1f;
             card.style.borderBottomWidth = 1f;
             card.style.borderLeftWidth = 1f;
@@ -447,12 +448,12 @@ namespace Network_Game.Dialogue
 
             var header = new VisualElement { name = "feedback-header" };
             header.AddToClassList("blocks-profile-card__header");
-            header.style.marginBottom = 8f;
-            header.style.paddingLeft = 12f;
-            header.style.paddingRight = 12f;
-            header.style.paddingTop = 8f;
-            header.style.paddingBottom = 8f;
-            header.style.backgroundColor = new Color(1f, 1f, 1f, 0.04f);
+            header.style.marginBottom = 6f;
+            header.style.paddingLeft = 10f;
+            header.style.paddingRight = 10f;
+            header.style.paddingTop = 6f;
+            header.style.paddingBottom = 6f;
+            header.style.backgroundColor = new Color(1f, 1f, 1f, 0.03f);
             header.style.alignItems = Align.Center;
 
             var titleBlock = new VisualElement();
@@ -462,27 +463,28 @@ namespace Network_Game.Dialogue
 
             m_UiTitleLabel = new Label("EFFECT FEEDBACK");
             m_UiTitleLabel.AddToClassList("blocks-header");
-            m_UiTitleLabel.style.fontSize = 15f;
+            m_UiTitleLabel.style.fontSize = 13f;
             m_UiTitleLabel.style.unityFontStyleAndWeight = FontStyle.Bold;
-            m_UiTitleLabel.style.letterSpacing = 1f;
+            m_UiTitleLabel.style.letterSpacing = 0.8f;
             titleBlock.Add(m_UiTitleLabel);
 
             m_UiQueueLabel = new Label("Queue: 0");
             m_UiQueueLabel.AddToClassList("blocks-login-label");
-            m_UiQueueLabel.style.fontSize = 11f;
-            m_UiQueueLabel.style.marginTop = 2f;
+            m_UiQueueLabel.style.fontSize = 10f;
+            m_UiQueueLabel.style.marginTop = 1f;
             titleBlock.Add(m_UiQueueLabel);
 
             header.Add(titleBlock);
 
             var submitNoteButton = new Button(() => SubmitCurrent("note_only", m_Comment))
             {
-                text = "SUBMIT NOTE",
+                text = "NOTE ONLY",
             };
             submitNoteButton.AddToClassList("blocks-button");
-            submitNoteButton.style.height = 28f;
-            submitNoteButton.style.minWidth = 110f;
+            submitNoteButton.style.height = 24f;
+            submitNoteButton.style.minWidth = 92f;
             submitNoteButton.style.marginLeft = 6f;
+            submitNoteButton.style.fontSize = 10f;
             header.Add(submitNoteButton);
 
             card.Add(header);
@@ -496,16 +498,17 @@ namespace Network_Game.Dialogue
             m_UiEffectLabel = CreateInfoLabel(body);
             m_UiSourceLabel = CreateInfoLabel(body);
             m_UiTargetLabel = CreateInfoLabel(body);
+            m_UiTargetLabel.style.display = DisplayStyle.None;
             m_UiMetricsLabel = CreateInfoLabel(body);
             m_UiModeLabel = CreateInfoLabel(body);
             m_UiModeLabel.style.color = new Color(0.72f, 0.96f, 0.76f, 1f);
-            m_UiModeLabel.style.marginBottom = 8f;
+            m_UiModeLabel.style.marginBottom = 6f;
 
             var outcomesHeader = new Label("QUICK OUTCOMES");
             outcomesHeader.AddToClassList("blocks-login-label");
-            outcomesHeader.style.fontSize = 11f;
+            outcomesHeader.style.fontSize = 10f;
             outcomesHeader.style.unityFontStyleAndWeight = FontStyle.Bold;
-            outcomesHeader.style.marginBottom = 4f;
+            outcomesHeader.style.marginBottom = 3f;
             body.Add(outcomesHeader);
 
             body.Add(
@@ -525,19 +528,19 @@ namespace Network_Game.Dialogue
 
             var notesLabel = new Label("NOTES");
             notesLabel.AddToClassList("blocks-login-label");
-            notesLabel.style.fontSize = 11f;
+            notesLabel.style.fontSize = 10f;
             notesLabel.style.unityFontStyleAndWeight = FontStyle.Bold;
-            notesLabel.style.marginTop = 8f;
-            notesLabel.style.marginBottom = 4f;
+            notesLabel.style.marginTop = 6f;
+            notesLabel.style.marginBottom = 3f;
             body.Add(notesLabel);
 
             m_UiCommentField = new TextField();
             m_UiCommentField.multiline = true;
             m_UiCommentField.value = m_Comment ?? string.Empty;
             m_UiCommentField.AddToClassList("blocks-textfield");
-            m_UiCommentField.style.minHeight = 90f;
-            m_UiCommentField.style.maxHeight = 140f;
-            m_UiCommentField.style.height = 100f;
+            m_UiCommentField.style.minHeight = 56f;
+            m_UiCommentField.style.maxHeight = 72f;
+            m_UiCommentField.style.height = 60f;
             m_UiCommentField.style.whiteSpace = WhiteSpace.Normal;
             m_UiCommentField.style.marginBottom = 4f;
             m_UiCommentField.RegisterValueChangedCallback(evt =>
@@ -556,8 +559,8 @@ namespace Network_Game.Dialogue
         {
             var label = new Label(string.Empty);
             label.AddToClassList("blocks-login-label");
-            label.style.fontSize = 12f;
-            label.style.marginBottom = 2f;
+            label.style.fontSize = 11f;
+            label.style.marginBottom = 1f;
             label.style.whiteSpace = WhiteSpace.Normal;
             parent.Add(label);
             return label;
@@ -571,7 +574,7 @@ namespace Network_Game.Dialogue
         {
             var row = new VisualElement();
             row.style.flexDirection = FlexDirection.Row;
-            row.style.marginBottom = 4f;
+            row.style.marginBottom = 3f;
             row.Add(CreateOutcomeButton(a.label, a.outcome));
             row.Add(CreateOutcomeButton(b.label, b.outcome));
             row.Add(CreateOutcomeButton(c.label, c.outcome));
@@ -584,11 +587,11 @@ namespace Network_Game.Dialogue
             button.AddToClassList("blocks-button");
             button.style.flexGrow = 1f;
             button.style.flexBasis = 0f;
-            button.style.height = 28f;
-            button.style.marginRight = 4f;
+            button.style.height = 24f;
+            button.style.marginRight = 3f;
             button.style.unityTextAlign = TextAnchor.MiddleCenter;
-            button.style.fontSize = 11f;
-            button.style.letterSpacing = 0.5f;
+            button.style.fontSize = 10f;
+            button.style.letterSpacing = 0.3f;
             return button;
         }
 
@@ -642,22 +645,17 @@ namespace Network_Game.Dialogue
             DialogueSceneEffectsController.AppliedEffectInfo effect = m_Current.Effect;
             if (m_UiEffectLabel != null)
             {
-                m_UiEffectLabel.text = $"Effect: {effect.EffectName} ({effect.EffectType})";
+                m_UiEffectLabel.text = $"{effect.EffectName} | {effect.EffectType}";
             }
             if (m_UiSourceLabel != null)
             {
                 m_UiSourceLabel.text =
-                    $"Source: {BuildDisplayName(m_Current.SourceName, effect.SourceNetworkObjectId)}";
-            }
-            if (m_UiTargetLabel != null)
-            {
-                m_UiTargetLabel.text =
-                    $"Target: {BuildDisplayName(m_Current.TargetName, effect.TargetNetworkObjectId)}";
+                    $"Scene: {BuildDisplayName(m_Current.SourceName, effect.SourceNetworkObjectId)} -> {BuildDisplayName(m_Current.TargetName, effect.TargetNetworkObjectId)}";
             }
             if (m_UiMetricsLabel != null)
             {
                 m_UiMetricsLabel.text =
-                    $"Scale {effect.Scale:F2} | Duration {effect.DurationSeconds:F2}s | Attach {effect.AttachToTarget} | FitMesh {effect.FitToTargetMesh}";
+                    $"{effect.Scale:F2}x | {effect.DurationSeconds:F1}s | {(effect.AttachToTarget ? "Attached" : "Free")} | Mesh {(effect.FitToTargetMesh ? "On" : "Off")}";
             }
 
             if (m_UiModeLabel != null)
@@ -665,11 +663,11 @@ namespace Network_Game.Dialogue
                 if (!ShouldCaptureInteraction())
                 {
                     m_UiModeLabel.text =
-                        "Camera-safe mode: use hotkeys 1-6 (Enter = note only). Press F8 to enable pointer/text input.";
+                        "Hotkeys 1-6, Enter=note, F8=pointer.";
                 }
                 else if (!m_PauseGameWhilePromptOpen)
                 {
-                    m_UiModeLabel.text = "Pointer mode enabled (F8 toggles).";
+                    m_UiModeLabel.text = "Pointer mode on (F8).";
                 }
                 else
                 {
@@ -688,55 +686,52 @@ namespace Network_Game.Dialogue
             GUILayout.BeginVertical();
 
             GUILayout.Label(
-                $"Effect: {m_Current.Effect.EffectName} ({m_Current.Effect.EffectType})"
+                $"{m_Current.Effect.EffectName} | {m_Current.Effect.EffectType}"
             );
             GUILayout.Label(
-                $"Source: {BuildDisplayName(m_Current.SourceName, m_Current.Effect.SourceNetworkObjectId)}"
+                $"Scene: {BuildDisplayName(m_Current.SourceName, m_Current.Effect.SourceNetworkObjectId)} -> {BuildDisplayName(m_Current.TargetName, m_Current.Effect.TargetNetworkObjectId)}"
             );
             GUILayout.Label(
-                $"Target: {BuildDisplayName(m_Current.TargetName, m_Current.Effect.TargetNetworkObjectId)}"
-            );
-            GUILayout.Label(
-                $"Scale: {m_Current.Effect.Scale:F2}  Duration: {m_Current.Effect.DurationSeconds:F2}s  Attach: {m_Current.Effect.AttachToTarget}  FitMesh: {m_Current.Effect.FitToTargetMesh}"
+                $"{m_Current.Effect.Scale:F2}x  {m_Current.Effect.DurationSeconds:F1}s  {(m_Current.Effect.AttachToTarget ? "Attached" : "Free")}  Mesh {(m_Current.Effect.FitToTargetMesh ? "On" : "Off")}"
             );
             if (!ShouldCaptureInteraction())
             {
                 GUILayout.Label(
-                    "Camera-safe mode: submit with hotkeys 1-6 (Enter = note only). Press F8 to enable pointer/text input."
+                    "Hotkeys 1-6, Enter=note, F8=pointer."
                 );
             }
             else if (!m_PauseGameWhilePromptOpen)
             {
-                GUILayout.Label("Pointer mode enabled (F8 toggles).");
+                GUILayout.Label("Pointer mode on (F8).");
             }
 
             GUILayout.Space(8f);
             GUILayout.Label("Quick outcomes:");
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Looks Correct", GUILayout.Height(28f)))
+            if (GUILayout.Button("Looks Correct", GUILayout.Height(24f)))
             {
                 SubmitCurrent("looks_correct", m_Comment);
             }
-            if (GUILayout.Button("Not Visible", GUILayout.Height(28f)))
+            if (GUILayout.Button("Not Visible", GUILayout.Height(24f)))
             {
                 SubmitCurrent("not_visible", m_Comment);
             }
-            if (GUILayout.Button("Wrong Target", GUILayout.Height(28f)))
+            if (GUILayout.Button("Wrong Target", GUILayout.Height(24f)))
             {
                 SubmitCurrent("wrong_target", m_Comment);
             }
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Wrong Placement", GUILayout.Height(28f)))
+            if (GUILayout.Button("Wrong Placement", GUILayout.Height(24f)))
             {
                 SubmitCurrent("wrong_placement", m_Comment);
             }
-            if (GUILayout.Button("Wrong Mesh Fit", GUILayout.Height(28f)))
+            if (GUILayout.Button("Wrong Mesh Fit", GUILayout.Height(24f)))
             {
                 SubmitCurrent("wrong_mesh_fit", m_Comment);
             }
-            if (GUILayout.Button("Skip", GUILayout.Height(28f)))
+            if (GUILayout.Button("Skip", GUILayout.Height(24f)))
             {
                 SubmitCurrent("skipped", m_Comment);
             }
@@ -744,10 +739,10 @@ namespace Network_Game.Dialogue
 
             GUILayout.Space(8f);
             GUILayout.Label("Notes:");
-            m_Comment = GUILayout.TextArea(m_Comment ?? string.Empty, GUILayout.Height(100f));
+            m_Comment = GUILayout.TextArea(m_Comment ?? string.Empty, GUILayout.Height(60f));
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Submit Note", GUILayout.Height(30f)))
+            if (GUILayout.Button("Note Only", GUILayout.Height(26f)))
             {
                 SubmitCurrent("note_only", m_Comment);
             }
@@ -817,6 +812,18 @@ namespace Network_Game.Dialogue
             else if (ShouldCaptureInteraction())
             {
                 SetUiInteractionEnabled(true);
+            }
+
+            if (!m_UseUiToolkitOverlay)
+            {
+                float width = Mathf.Clamp(m_WindowRect.width, 360f, Screen.width - 20f);
+                float height = Mathf.Clamp(m_WindowRect.height, 220f, Screen.height - 20f);
+                m_WindowRect = new Rect(
+                    Mathf.Max(10f, Screen.width - width - 14f),
+                    Mathf.Clamp(96f, 10f, Mathf.Max(10f, Screen.height - height - 10f)),
+                    width,
+                    height
+                );
             }
 
             RefreshPromptUiState();
@@ -1031,8 +1038,8 @@ namespace Network_Game.Dialogue
 
         private void EnsureWindowInView()
         {
-            float width = Mathf.Clamp(m_WindowRect.width, 420f, Screen.width - 20f);
-            float height = Mathf.Clamp(m_WindowRect.height, 260f, Screen.height - 20f);
+            float width = Mathf.Clamp(m_WindowRect.width, 360f, Screen.width - 20f);
+            float height = Mathf.Clamp(m_WindowRect.height, 220f, Screen.height - 20f);
             float x = Mathf.Clamp(m_WindowRect.x, 10f, Mathf.Max(10f, Screen.width - width - 10f));
             float y = Mathf.Clamp(
                 m_WindowRect.y,

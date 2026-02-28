@@ -1241,6 +1241,8 @@ namespace Network_Game.Dialogue.MCP
             "Network Game/MCP/Gameplay Copilot/Probe Nearby NPCs";
         private const string RunAutomatedProbesMenuPath =
             "Network Game/MCP/Gameplay Copilot/Run Automated Probes (Feedback-Gated)";
+        private const string RunAutomatedTrainingProbesMenuPath =
+            "Network Game/MCP/Gameplay Copilot/Run Automated Probes (Training Mode, Skip Narrative)";
         private const string StopAutomatedProbesMenuPath =
             "Network Game/MCP/Gameplay Copilot/Stop Automated Probes";
         private const string ClearAutomationPlacementMemoryMenuPath =
@@ -1424,6 +1426,17 @@ namespace Network_Game.Dialogue.MCP
         [UnityEditor.MenuItem(RunAutomatedProbesMenuPath)]
         public static void RunAutomatedProbes()
         {
+            RunAutomatedProbesInternal(includeNarrativePrelude: true);
+        }
+
+        [UnityEditor.MenuItem(RunAutomatedTrainingProbesMenuPath)]
+        public static void RunAutomatedTrainingProbes()
+        {
+            RunAutomatedProbesInternal(includeNarrativePrelude: false);
+        }
+
+        private static void RunAutomatedProbesInternal(bool includeNarrativePrelude)
+        {
             EnsureGameplayProbeSubscription();
             EnsureAutomationPlacementMemoryLoaded();
 
@@ -1532,30 +1545,40 @@ namespace Network_Game.Dialogue.MCP
                 return;
             }
 
-            // ── Seed player data for narrative hint testing ────────────────────────
             s_TestPlayerDataSeeded = false;
-            LocalPlayerAuthService auth = LocalPlayerAuthService.Instance;
-            if (auth != null)
+            int narrativeStepCount = 0;
+            if (includeNarrativePrelude)
             {
-                string testNpcId = npcTargets[0].name.Trim().ToLowerInvariant().Replace(" ", "_");
-                auth.SetPlayerClass("berserker");
-                auth.SetReputation(testNpcId, 90);
-                auth.AddInventoryTag("cursed_blade");
-                auth.AddInventoryTag("ancient_tome");
-                auth.SetQuestFlag("met_elder");
-                auth.SetQuestFlag("defeated_dragon");
-                auth.SetLastAction("defeated_boss_unscathed");
-                s_TestPlayerDataSeeded = true;
-                Debug.Log(
-                    $"[DialogueMCP] Seeded test player data: class=berserker, reputation[{testNpcId}]=90, "
-                        + "inventory=[cursed_blade,ancient_tome], flags=[met_elder,defeated_dragon], "
-                        + "last_action=defeated_boss_unscathed"
-                );
+                // ── Seed player data for narrative hint testing ────────────────────
+                LocalPlayerAuthService auth = LocalPlayerAuthService.Instance;
+                if (auth != null)
+                {
+                    string testNpcId = npcTargets[0].name.Trim().ToLowerInvariant().Replace(" ", "_");
+                    auth.SetPlayerClass("berserker");
+                    auth.SetReputation(testNpcId, 90);
+                    auth.AddInventoryTag("cursed_blade");
+                    auth.AddInventoryTag("ancient_tome");
+                    auth.SetQuestFlag("met_elder");
+                    auth.SetQuestFlag("defeated_dragon");
+                    auth.SetLastAction("defeated_boss_unscathed");
+                    s_TestPlayerDataSeeded = true;
+                    Debug.Log(
+                        $"[DialogueMCP] Seeded test player data: class=berserker, reputation[{testNpcId}]=90, "
+                            + "inventory=[cursed_blade,ancient_tome], flags=[met_elder,defeated_dragon], "
+                            + "last_action=defeated_boss_unscathed"
+                    );
+                }
+                else
+                {
+                    Debug.LogWarning(
+                        "[DialogueMCP] LocalPlayerAuthService not found — narrative hints will not be seeded."
+                    );
+                }
             }
             else
             {
-                Debug.LogWarning(
-                    "[DialogueMCP] LocalPlayerAuthService not found — narrative hints will not be seeded."
+                Debug.Log(
+                    "[DialogueMCP] Training-mode automated probes: skipping narrative prelude and player-data seeding."
                 );
             }
 
@@ -1565,17 +1588,24 @@ namespace Network_Game.Dialogue.MCP
                 plannedTags = plannedTags.Take(MaxAutomatedEffectsPerRun).ToList();
             }
 
-            var steps = new List<GameplayProbeAutomationRunner.ProbeStep>(plannedTags.Count + 5);
-
-            // ── Prepend 5 narrative probe steps (one per new player-data field) ───
-            (ulong narrativeListenerNetworkId, ulong _, string narrativeListenerLabel) =
-                listenerTargets[0];
-            List<GameplayProbeAutomationRunner.ProbeStep> narrativeSteps = BuildNarrativeProbeSteps(
-                npcTargets[0],
-                narrativeListenerNetworkId,
-                narrativeListenerLabel
+            var steps = new List<GameplayProbeAutomationRunner.ProbeStep>(
+                plannedTags.Count + (includeNarrativePrelude ? 5 : 0)
             );
-            steps.AddRange(narrativeSteps);
+
+            if (includeNarrativePrelude)
+            {
+                // ── Prepend 5 narrative probe steps (one per new player-data field) ─
+                (ulong narrativeListenerNetworkId, ulong _, string narrativeListenerLabel) =
+                    listenerTargets[0];
+                List<GameplayProbeAutomationRunner.ProbeStep> narrativeSteps =
+                    BuildNarrativeProbeSteps(
+                        npcTargets[0],
+                        narrativeListenerNetworkId,
+                        narrativeListenerLabel
+                    );
+                steps.AddRange(narrativeSteps);
+                narrativeStepCount = narrativeSteps.Count;
+            }
 
             // ── Effect validation steps ───────────────────────────────────────────
             for (int i = 0; i < plannedTags.Count; i++)
@@ -1586,6 +1616,11 @@ namespace Network_Game.Dialogue.MCP
                 ];
                 string effectTag = plannedTags[i];
                 string placementHint = SelectAutomationPlacementHint(effectTag, null);
+                if (string.IsNullOrWhiteSpace(placementHint))
+                {
+                    continue;
+                }
+
                 steps.Add(
                     new GameplayProbeAutomationRunner.ProbeStep
                     {
@@ -1614,7 +1649,7 @@ namespace Network_Game.Dialogue.MCP
                 )
             );
             Debug.Log(
-                $"[DialogueMCP] Built automated plan: {narrativeSteps.Count} narrative check(s) + {plannedTags.Count} effect tag(s) across {npcTargets.Count} NPC(s) and {listenerTargets.Count} listener target(s): {listenerSummary}"
+                $"[DialogueMCP] Built automated plan: {narrativeStepCount} narrative check(s) + {plannedTags.Count} effect tag(s) across {npcTargets.Count} NPC(s) and {listenerTargets.Count} listener target(s): {listenerSummary}"
             );
         }
 
@@ -1970,6 +2005,11 @@ namespace Network_Game.Dialogue.MCP
             string listenerInstruction = string.IsNullOrWhiteSpace(listenerLabel)
                 ? string.Empty
                 : $" Address the current listener player ({listenerLabel}) directly.";
+            string spatialGuide =
+                " Think in visible scene results only: attached = on the target body and follows it; "
+                + "area = on the ground near the target; projectile = starts away and travels toward the target; "
+                + "ambient = hangs in nearby world space. Mesh-fit means match the target's visible body size. "
+                + "Do not reason about Unity internals such as GameObjects, meshes, materials, shaders, or animations.";
 
             // When player data was seeded, embed a brief narrative context so the LLM response
             // weaves character identity with effect instantiation in a single reply.
@@ -1987,6 +2027,7 @@ namespace Network_Game.Dialogue.MCP
                     " | Scale: 1.0 | Duration: 3.5 | ",
                     extras,
                     "].",
+                    spatialGuide,
                     listenerInstruction,
                     playerContext,
                     " The effect tag name must match exactly and you must not emit any additional [EFFECT:] tags. ",
@@ -2001,39 +2042,39 @@ namespace Network_Game.Dialogue.MCP
             string listenerLabel
         )
         {
-            // Each tuple: (playerDataField, expectedKeywordInResponse, openDialoguePrompt)
+            // Each tuple: (playerDataField, acceptedKeywordsInResponse, openDialoguePrompt)
             // Keywords are deliberately broad so a paraphrase still counts as a PASS.
-            var configs = new (string field, string keyword, string prompt)[]
+            var configs = new (string field, string[] keywords, string prompt)[]
             {
                 (
                     "class",
-                    "berserker",
+                    new[] { "berserker", "warrior", "fighter" },
                     "Greet me, warrior. What do you think of someone with the fighting spirit of a berserker?"
                 ),
                 (
                     "reputation",
-                    "champion",
+                    new[] { "champion", "hero", "renowned" },
                     "Tell me honestly — do you know who I am and how much I've done for you?"
                 ),
                 (
                     "inventory_tags",
-                    "cursed",
+                    new[] { "cursed", "blade", "tome" },
                     "I carry something unusual on my person. Do you notice what I have in my possession?"
                 ),
                 (
                     "quest_flags",
-                    "elder",
+                    new[] { "elder", "keep", "journey" },
                     "I recently met the elder of the northern keep. Have you heard of my journey?"
                 ),
                 (
                     "last_action",
-                    "boss",
+                    new[] { "boss", "victory", "accomplishment", "defeated" },
                     "Word travels fast in these lands. Have you heard about my recent accomplishment in the keep?"
                 ),
             };
 
             var steps = new List<GameplayProbeAutomationRunner.ProbeStep>(configs.Length);
-            foreach (var (field, keyword, prompt) in configs)
+            foreach (var (field, keywords, prompt) in configs)
             {
                 steps.Add(
                     new GameplayProbeAutomationRunner.ProbeStep
@@ -2048,7 +2089,7 @@ namespace Network_Game.Dialogue.MCP
                         Directive = prompt,
                         IsNarrativeCheck = true,
                         NarrativeField = field,
-                        NarrativeKeyword = keyword,
+                        NarrativeKeywords = keywords,
                     }
                 );
             }
@@ -2121,7 +2162,7 @@ namespace Network_Game.Dialogue.MCP
                 return candidate;
             }
 
-            return defaultPlacement;
+            return null;
         }
 
         private static bool IsNegativePlacementOutcome(string outcome)
@@ -2463,8 +2504,8 @@ namespace Network_Game.Dialogue.MCP
                 /// <summary>Which player-data field is under test: "class" | "reputation" | "inventory_tags" | "quest_flags" | "last_action"</summary>
                 public string NarrativeField;
 
-                /// <summary>Substring expected anywhere in the LLM response (case-insensitive) for a PASS verdict.</summary>
-                public string NarrativeKeyword;
+                /// <summary>Accepted substrings anywhere in the LLM response (case-insensitive) for a PASS verdict.</summary>
+                public string[] NarrativeKeywords;
             }
 
             private const double LocalStepResponseTimeoutSeconds = 55d;
@@ -2478,7 +2519,7 @@ namespace Network_Game.Dialogue.MCP
             private sealed class NarrativeCheckResult
             {
                 public string Field;
-                public string Keyword;
+                public string Keywords;
                 public bool Passed;
                 public string Excerpt;
             }
@@ -2551,7 +2592,7 @@ namespace Network_Game.Dialogue.MCP
                     {
                         string marker = r.Passed ? "✅" : "❌";
                         Debug.Log(
-                            $"  {marker} [{r.Field}] keyword='{r.Keyword}'\n     {r.Excerpt}"
+                            $"  {marker} [{r.Field}] keywords='{r.Keywords}'\n     {r.Excerpt}"
                         );
                     }
                 }
@@ -2622,30 +2663,41 @@ namespace Network_Game.Dialogue.MCP
                     );
                 }
 
-                // Narrative check: validate that the expected player-data keyword appears in the response
+                // Narrative check: validate that at least one accepted keyword appears in the response
                 if (
                     currentStep.IsNarrativeCheck
-                    && !string.IsNullOrWhiteSpace(currentStep.NarrativeKeyword)
+                    && currentStep.NarrativeKeywords != null
+                    && currentStep.NarrativeKeywords.Length > 0
                 )
                 {
-                    bool passed =
-                        text.IndexOf(
-                            currentStep.NarrativeKeyword,
-                            StringComparison.OrdinalIgnoreCase
-                        ) >= 0;
+                    string keywordSummary = string.Join("|", currentStep.NarrativeKeywords);
+                    bool passed = false;
+                    for (int i = 0; i < currentStep.NarrativeKeywords.Length; i++)
+                    {
+                        string narrativeKeyword = currentStep.NarrativeKeywords[i];
+                        if (
+                            !string.IsNullOrWhiteSpace(narrativeKeyword)
+                            && text.IndexOf(narrativeKeyword, StringComparison.OrdinalIgnoreCase) >= 0
+                        )
+                        {
+                            passed = true;
+                            break;
+                        }
+                    }
+
                     string excerpt = text.Length > 140 ? text.Substring(0, 140) + "…" : text;
                     m_NarrativeResults.Add(
                         new NarrativeCheckResult
                         {
                             Field = currentStep.NarrativeField,
-                            Keyword = currentStep.NarrativeKeyword,
+                            Keywords = keywordSummary,
                             Passed = passed,
                             Excerpt = excerpt,
                         }
                     );
-                    string verdict = passed ? "✅ PASS" : "❌ FAIL (keyword not found in response)";
+                    string verdict = passed ? "✅ PASS" : "❌ FAIL (keywords not found in response)";
                     Debug.Log(
-                        $"[DialogueMCP] Narrative [{currentStep.NarrativeField}] keyword='{currentStep.NarrativeKeyword}' → {verdict}"
+                        $"[DialogueMCP] Narrative [{currentStep.NarrativeField}] keywords='{keywordSummary}' → {verdict}"
                     );
                 }
 

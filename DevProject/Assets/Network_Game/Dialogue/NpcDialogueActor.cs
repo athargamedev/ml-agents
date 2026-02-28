@@ -250,6 +250,18 @@ namespace Network_Game.Dialogue
                 + " | Color: name|hex | Emotion: peaceful|epic|chaotic|triumphant|sad | Damage: x]"
             );
             sb.AppendLine("Omit the tag entirely if nothing visual is happening.");
+            sb.AppendLine(
+                "Think in visible scene results only. Do not reason about Unity internals such as GameObjects, meshes, materials, shaders, or animations."
+            );
+            sb.AppendLine(
+                $"- Target: {listenerName} = affect the listener, Self = affect your own body, SceneName = affect a fixed place in the world."
+            );
+            sb.AppendLine(
+                "- Scale = visual size, Duration = how long it remains visible, Radius = ground area size, Speed = travel speed for moving effects."
+            );
+            sb.AppendLine(
+                "- Use Color or Emotion only to adjust the look of a known effect, never to invent a new effect name."
+            );
 
             string sceneInfo = BuildSceneContextInfo();
             if (!string.IsNullOrWhiteSpace(sceneInfo))

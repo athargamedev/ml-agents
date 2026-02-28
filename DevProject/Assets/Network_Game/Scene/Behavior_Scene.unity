@@ -752,7 +752,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &91208375
 Transform:
   m_ObjectHideFlags: 0
@@ -6177,40 +6177,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1847307792383872, guid: 21f4ee7b875c5614bae545ccd6c7652e,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 230255768}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 21f4ee7b875c5614bae545ccd6c7652e, type: 3}
---- !u!1 &230255767 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1847307792383872, guid: 21f4ee7b875c5614bae545ccd6c7652e,
-    type: 3}
-  m_PrefabInstance: {fileID: 230255766}
-  m_PrefabAsset: {fileID: 0}
---- !u!64 &230255768
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 230255767}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: 56419c3da9429f0488c038e5b86ebd7c, type: 3}
 --- !u!4 &230255769 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4217075624832600, guid: 21f4ee7b875c5614bae545ccd6c7652e,
@@ -7509,7 +7477,7 @@ MonoBehaviour:
   m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
-  m_PanelSettings: {fileID: 11400000, guid: 7a38f2dd4a52f3c43802f4f88af54bfe, type: 2}
+  m_PanelSettings: {fileID: 11400000, guid: 34f8af425f4594331ac532e00b9e83bf, type: 2}
   m_ParentUI: {fileID: 0}
   sourceAsset: {fileID: 9197481963319205126, guid: e8e6fd509b82d9a4d806becbfb1fedb4,
     type: 3}
@@ -7990,40 +7958,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1847307792383872, guid: 21f4ee7b875c5614bae545ccd6c7652e,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 410774770}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 21f4ee7b875c5614bae545ccd6c7652e, type: 3}
---- !u!1 &410774769 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1847307792383872, guid: 21f4ee7b875c5614bae545ccd6c7652e,
-    type: 3}
-  m_PrefabInstance: {fileID: 410774768}
-  m_PrefabAsset: {fileID: 0}
---- !u!64 &410774770
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 410774769}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: 56419c3da9429f0488c038e5b86ebd7c, type: 3}
 --- !u!4 &410774771 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4217075624832600, guid: 21f4ee7b875c5614bae545ccd6c7652e,
@@ -8127,7 +8063,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &422971934
 Transform:
   m_ObjectHideFlags: 0
@@ -8472,7 +8408,7 @@ MonoBehaviour:
   m_MinEngageProximity: 0.05
   m_DialogueRoutingMode: 0
   m_AutoAddDecisionRequester: 1
-  m_DecisionPeriod: 1
+  m_DecisionPeriod: 2
   m_TakeActionsBetweenDecisions: 1
   m_OutcomeRewardScale: 1
   m_FeedbackScoreRewardScale: 0.02
@@ -8560,7 +8496,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.ML-Agents::Unity.MLAgents.DecisionRequester
   DecisionPeriod: 5
-  DecisionStep: 0
+  DecisionStep: 5
   TakeActionsBetweenDecisions: 1
 --- !u!1 &443786063
 GameObject:
@@ -8578,7 +8514,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 1
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!23 &443786066
 MeshRenderer:
@@ -8943,7 +8879,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &483196428
 Transform:
   m_ObjectHideFlags: 0
@@ -14355,40 +14291,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1847307792383872, guid: 21f4ee7b875c5614bae545ccd6c7652e,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 593833959}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 21f4ee7b875c5614bae545ccd6c7652e, type: 3}
---- !u!1 &593833958 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1847307792383872, guid: 21f4ee7b875c5614bae545ccd6c7652e,
-    type: 3}
-  m_PrefabInstance: {fileID: 593833957}
-  m_PrefabAsset: {fileID: 0}
---- !u!64 &593833959
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 593833958}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: 56419c3da9429f0488c038e5b86ebd7c, type: 3}
 --- !u!4 &593833960 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4217075624832600, guid: 21f4ee7b875c5614bae545ccd6c7652e,
@@ -14458,7 +14362,7 @@ MonoBehaviour:
   m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
-  m_PanelSettings: {fileID: 11400000, guid: 7a38f2dd4a52f3c43802f4f88af54bfe, type: 2}
+  m_PanelSettings: {fileID: 11400000, guid: 34f8af425f4594331ac532e00b9e83bf, type: 2}
   m_ParentUI: {fileID: 0}
   sourceAsset: {fileID: 9197481963319205126, guid: 55c00b464baf6ac4dac97b7ae646d75c,
     type: 3}
@@ -15047,7 +14951,7 @@ GameObject:
   - component: {fileID: 650503616}
   - component: {fileID: 650503615}
   - component: {fileID: 650503614}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: PlayerCinemachineCameraFar
   m_TagString: CinemachineCamera
   m_Icon: {fileID: 0}
@@ -15974,6 +15878,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EarthShatter
       objectReference: {fileID: 0}
+    - target: {fileID: 1314945738539566, guid: 32c9fd11a72259d45aa26ae41c34c5aa, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4825948614923682, guid: 32c9fd11a72259d45aa26ae41c34c5aa, type: 3}
       propertyPath: m_LocalPosition.x
       value: -56.65
@@ -16174,7 +16082,7 @@ MonoBehaviour:
   m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
-  m_PanelSettings: {fileID: 11400000, guid: 7a38f2dd4a52f3c43802f4f88af54bfe, type: 2}
+  m_PanelSettings: {fileID: 11400000, guid: 34f8af425f4594331ac532e00b9e83bf, type: 2}
   m_ParentUI: {fileID: 0}
   sourceAsset: {fileID: 9197481963319205126, guid: 9c8fc3d7ab9cd2d44b6ccf544b033e28,
     type: 3}
@@ -16926,6 +16834,16 @@ PrefabInstance:
       propertyPath: m_Priority
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 8822210966502434851, guid: 686d717823455fc4eaaaf92fccdbb154,
+        type: 3}
+      propertyPath: m_Aliases.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8822210966502434851, guid: 686d717823455fc4eaaaf92fccdbb154,
+        type: 3}
+      propertyPath: 'm_Aliases.Array.data[0]'
+      value: ForgeKeeper
+      objectReference: {fileID: 0}
     - target: {fileID: 9099890564982414676, guid: 686d717823455fc4eaaaf92fccdbb154,
         type: 3}
       propertyPath: m_Enabled
@@ -16968,7 +16886,7 @@ MonoBehaviour:
   m_TextOffsetPadding: 0.05
   m_DefaultTextHeight: 1.5
   m_FaceMainCamera: 1
-  m_AutoCreateSpeechText: 1
+  m_AutoCreateSpeechText: 0
   m_SpeechFontSize: 2
   m_SpeechTextColor: {r: 1, g: 1, b: 1, a: 1}
   m_SpeechLocalScale: {x: 0.08, y: 0.08, z: 0.08}
@@ -18315,6 +18233,7 @@ GameObject:
   - component: {fileID: 1063314236}
   - component: {fileID: 1063314238}
   - component: {fileID: 1063314237}
+  - component: {fileID: 1063314239}
   m_Layer: 0
   m_Name: MCP_ShowcaseCamera
   m_TagString: Untagged
@@ -18330,8 +18249,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1063314235}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.071164645, y: 0.29745838, z: -0.022240067, w: 0.95181906}
-  m_LocalPosition: {x: 9.8, y: 2.1, z: -4.1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 8.34, z: -22.68}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -18412,9 +18331,9 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
-  field of view: 40
+  near clip plane: 3
+  far clip plane: 100
+  field of view: 30
   orthographic: 0
   orthographic size: 5
   m_Depth: 5
@@ -18432,6 +18351,38 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &1063314239
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1063314235}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72ece51f2901e7445ab60da3685d6b5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineBrain
+  ShowDebugText: 0
+  ShowCameraFrustum: 1
+  IgnoreTimeScale: 0
+  WorldUpOverride: {fileID: 0}
+  ChannelMask: -1
+  UpdateMethod: 1
+  BlendUpdateMethod: 1
+  LensModeOverride:
+    Enabled: 0
+    DefaultMode: 2
+  DefaultBlend:
+    Style: 1
+    Time: 2
+    CustomCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  CustomBlends: {fileID: 11400000, guid: 453bbf765bb782e4c804cfa3b8bf39b9, type: 2}
 --- !u!1 &1064732041 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1670752068961550, guid: 21617474d5ac06548b6020406dbe6e6b,
@@ -20135,7 +20086,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1259697296
 Transform:
@@ -21053,6 +21004,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.y
       value: 180.00002
       objectReference: {fileID: 0}
+    - target: {fileID: 3021707831073168243, guid: d40e6ae8e2813774882bcaf23d9a9cd6,
+        type: 3}
+      propertyPath: m_Aliases.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3021707831073168243, guid: d40e6ae8e2813774882bcaf23d9a9cd6,
+        type: 3}
+      propertyPath: 'm_Aliases.Array.data[0]'
+      value: Stairs
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -21603,7 +21564,7 @@ GameObject:
   - component: {fileID: 1431802604}
   - component: {fileID: 1431802607}
   - component: {fileID: 1431802606}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: PlayerCinemachineCamera
   m_TagString: CinemachineCamera
   m_Icon: {fileID: 0}
@@ -22472,7 +22433,7 @@ GameObject:
   - component: {fileID: 1500839698}
   - component: {fileID: 1500839701}
   - component: {fileID: 1500839702}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: NetworkDialogueService
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -22510,7 +22471,7 @@ MonoBehaviour:
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
-  AlwaysReplicateAsRoot: 1
+  AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
   SceneMigrationSynchronization: 0
@@ -22569,7 +22530,7 @@ MonoBehaviour:
   m_EffectFallbackDistance: 1.5
   m_MaxHistoryMessages: 100
   m_MaxPendingRequests: 50
-  m_MaxConcurrentRequests: 1
+  m_MaxConcurrentRequests: 2
   m_MaxRequestsPerClient: 2
   m_MinSecondsBetweenRequests: 0.2
   m_RequestTimeoutSeconds: 120
@@ -22579,17 +22540,17 @@ MonoBehaviour:
   m_WarmupTimeoutSeconds: 120
   m_DegradedWarmupFailureThreshold: 3
   m_WarmupRetryCooldownSeconds: 5
-  m_BroadcastMaxCharacters: 180
-  m_BroadcastSingleLinePreview: 1
+  m_BroadcastMaxCharacters: 300
+  m_BroadcastSingleLinePreview: 0
   m_LogDebug: 1
-  m_RemoteModelName: llama-3.2-3b-instruct@q4_k_s
+  m_RemoteModelName: qwen2.5-coder-7b-instruct@q8_0
   m_RemoteStopSequences:
   - </s>
   - '[INST]'
   - 'User:'
   - 'Assistant:'
   m_RemoteMinRequestTimeoutSeconds: 240
-  m_RemoteSystemPromptCharBudget: 8000
+  m_RemoteSystemPromptCharBudget: 5000
   m_RemoteMaxHistoryMessages: 6
   m_RemoteHistoryHardCapMessages: 8
   m_RemoteHistoryMessageCharBudget: 320
@@ -22611,18 +22572,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4326d5ae3b03ff55847035351559f4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: undream.llmunity.Runtime::LLMUnity.LLMAgent
-  advancedOptions: 0
+  advancedOptions: 1
   _remote: 1
   _llm: {fileID: 0}
-  _APIKey: 
-  _host: 127.0.0.1
+  _APIKey: sk-lm-D7EfxvIM:ZPhjeLnaxzLvrBgdAHLr
+  _host: 100.80.22.49
   _port: 7002
-  numRetries: 2
+  numRetries: 1
   _grammar: 
-  numPredict: 320
+  numPredict: 2048
   cachePrompt: 1
   seed: 0
-  temperature: 0.2
+  temperature: 0.3
   topK: 40
   topP: 0.9
   minP: 0.05
@@ -22637,7 +22598,7 @@ MonoBehaviour:
   nProbs: 0
   ignoreEos: 0
   save: DialogueHistory
-  debugPrompt: 0
+  debugPrompt: 1
   _slot: -1
   _systemPrompt: A Dialogue between a NPC and a player inside a unity game.
 --- !u!114 &1500839702
@@ -22673,7 +22634,7 @@ MonoBehaviour:
   m_WarningCount: 0
   m_LogCount: 0
   m_LastError: 
-  m_PollInterval: 0.25
+  m_PollInterval: 1
 --- !u!4 &1510482347 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4000014129045996, guid: 78b71003e8b357d4bbf89c8b5e5e4f0e,
@@ -22800,6 +22761,11 @@ PrefabInstance:
       propertyPath: m_ProfileIdOverride
       value: StormOracle
       objectReference: {fileID: 0}
+    - target: {fileID: 6396420133140615980, guid: 686d717823455fc4eaaaf92fccdbb154,
+        type: 3}
+      propertyPath: m_AutoCreateSpeechText
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6634309892908796911, guid: 686d717823455fc4eaaaf92fccdbb154,
         type: 3}
       propertyPath: m_Enabled
@@ -22897,7 +22863,8 @@ MonoBehaviour:
   m_Role: 2
   m_Priority: 10
   m_IncludeInSceneSnapshots: 1
-  m_Aliases: []
+  m_Aliases:
+  - StormOracle
   m_Description: 
 --- !u!1 &1523149165
 GameObject:
@@ -24073,6 +24040,10 @@ PrefabInstance:
       value: PlasmaExplosion
       objectReference: {fileID: 0}
     - target: {fileID: 1000011128802252, guid: 96730f8640590934eacb6f860058e7f9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1000011128802252, guid: 96730f8640590934eacb6f860058e7f9, type: 3}
       propertyPath: m_TagString
       value: Effects
       objectReference: {fileID: 0}
@@ -25140,7 +25111,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1725125490
 Transform:
   m_ObjectHideFlags: 0
@@ -25542,7 +25513,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startSizeY:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 1
       minScalar: 1
       maxCurve:
@@ -25595,7 +25566,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startSizeZ:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 1
       minScalar: 1
       maxCurve:
@@ -30721,40 +30692,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1847307792383872, guid: 21f4ee7b875c5614bae545ccd6c7652e,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1844522041}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 21f4ee7b875c5614bae545ccd6c7652e, type: 3}
---- !u!1 &1844522040 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1847307792383872, guid: 21f4ee7b875c5614bae545ccd6c7652e,
-    type: 3}
-  m_PrefabInstance: {fileID: 1844522039}
-  m_PrefabAsset: {fileID: 0}
---- !u!64 &1844522041
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1844522040}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: 56419c3da9429f0488c038e5b86ebd7c, type: 3}
 --- !u!4 &1844522042 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4217075624832600, guid: 21f4ee7b875c5614bae545ccd6c7652e,
@@ -31114,7 +31053,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1269120730060968, guid: 1a365141225c22e49a7bb976869b22a8, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1269120730060968, guid: 1a365141225c22e49a7bb976869b22a8, type: 3}
       propertyPath: m_TagString
@@ -31567,6 +31506,16 @@ PrefabInstance:
       propertyPath: m_Priority
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 8822210966502434851, guid: 686d717823455fc4eaaaf92fccdbb154,
+        type: 3}
+      propertyPath: m_Aliases.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8822210966502434851, guid: 686d717823455fc4eaaaf92fccdbb154,
+        type: 3}
+      propertyPath: 'm_Aliases.Array.data[0]'
+      value: Archivist
+      objectReference: {fileID: 0}
     - target: {fileID: 9099890564982414676, guid: 686d717823455fc4eaaaf92fccdbb154,
         type: 3}
       propertyPath: m_Enabled
@@ -31608,7 +31557,7 @@ MonoBehaviour:
   m_TextOffsetPadding: 0.05
   m_DefaultTextHeight: 1.5
   m_FaceMainCamera: 1
-  m_AutoCreateSpeechText: 1
+  m_AutoCreateSpeechText: 0
   m_SpeechFontSize: 2
   m_SpeechTextColor: {r: 1, g: 1, b: 1, a: 1}
   m_SpeechLocalScale: {x: 0.08, y: 0.08, z: 0.08}
@@ -31949,6 +31898,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: LightnigStormCloud
+      objectReference: {fileID: 0}
+    - target: {fileID: 2707303645313174804, guid: 3ac741c58ee37a941b5408ec58f21743,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2707303645313174804, guid: 3ac741c58ee37a941b5408ec58f21743,
         type: 3}
@@ -32518,40 +32472,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1847307792383872, guid: 21f4ee7b875c5614bae545ccd6c7652e,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2023895009}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 21f4ee7b875c5614bae545ccd6c7652e, type: 3}
---- !u!1 &2023895008 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1847307792383872, guid: 21f4ee7b875c5614bae545ccd6c7652e,
-    type: 3}
-  m_PrefabInstance: {fileID: 2023895007}
-  m_PrefabAsset: {fileID: 0}
---- !u!64 &2023895009
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2023895008}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: 56419c3da9429f0488c038e5b86ebd7c, type: 3}
 --- !u!4 &2023895010 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4217075624832600, guid: 21f4ee7b875c5614bae545ccd6c7652e,
@@ -32749,40 +32671,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1847307792383872, guid: 21f4ee7b875c5614bae545ccd6c7652e,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2054591587}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 21f4ee7b875c5614bae545ccd6c7652e, type: 3}
---- !u!1 &2054591586 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1847307792383872, guid: 21f4ee7b875c5614bae545ccd6c7652e,
-    type: 3}
-  m_PrefabInstance: {fileID: 2054591585}
-  m_PrefabAsset: {fileID: 0}
---- !u!64 &2054591587
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2054591586}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: 56419c3da9429f0488c038e5b86ebd7c, type: 3}
 --- !u!4 &2054591588 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4217075624832600, guid: 21f4ee7b875c5614bae545ccd6c7652e,
@@ -32966,7 +32856,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17737e0516da2445b9b0077ae2bd9b4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Multiplayer.Tools.NetStatsMonitor.Component::Unity.Multiplayer.Tools.NetStatsMonitor.RuntimeNetStatsMonitor
-  m_Visible: 1
+  m_Visible: 0
   m_MaxRefreshRate: 30
   <CustomStyleSheet>k__BackingField: {fileID: 0}
   <PanelSettingsOverride>k__BackingField: {fileID: 0}
@@ -33567,7 +33457,7 @@ GameObject:
   - component: {fileID: 82771309797653595}
   - component: {fileID: 5911490032476959063}
   - component: {fileID: 8917156256683509437}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: MainCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}

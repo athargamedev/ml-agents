@@ -701,6 +701,22 @@ namespace Network_Game.Dialogue
             {
                 position = targetTransform.position;
             }
+            else if (targetTransform != null && position.y - targetTransform.position.y > 5f)
+            {
+                // Non-attached effects should not inherit stale elevated probe positions.
+                Vector3 anchorForward = Vector3.ProjectOnPlane(targetTransform.forward, Vector3.up);
+                if (anchorForward.sqrMagnitude < 0.0001f)
+                {
+                    anchorForward = Vector3.ProjectOnPlane(spawnForward, Vector3.up);
+                }
+
+                if (anchorForward.sqrMagnitude < 0.0001f)
+                {
+                    anchorForward = Vector3.forward;
+                }
+
+                position = targetTransform.position + anchorForward.normalized * 2f;
+            }
 
             instance.transform.SetPositionAndRotation(position, rotation);
             instance.transform.localScale = prefab.transform.localScale * clampedScale;

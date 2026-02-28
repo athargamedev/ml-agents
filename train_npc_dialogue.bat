@@ -21,10 +21,11 @@ set PYTHON=C:\Users\andre_wjgj23f\miniconda3\envs\mlagents\python.exe
 set REPO=D:\GithubRepos\ml-agents
 set CONFIG=%REPO%\config\ppo\NpcDialogue.yaml
 
-:: Auto-generate a timestamped run ID if none provided
+:: Auto-generate a timestamped run ID if none provided.
+:: Use PowerShell for a locale-independent timestamp with second precision.
 if "%~1"=="" (
-    for /f "tokens=1-6 delims=/:. " %%a in ("%DATE% %TIME%") do (
-        set RUN_ID=npc_dialogue_%%c%%b%%a_%%d%%e
+    for /f %%i in ('powershell -NoProfile -Command "(Get-Date).ToString('yyyyMMdd_HHmmss')"') do (
+        set RUN_ID=npc_dialogue_%%i
     )
 ) else (
     set RUN_ID=%~1
@@ -55,7 +56,17 @@ cd /d "%REPO%"
     --results-dir="%REPO%\results" ^
     --time-scale=1
 
+set EXIT_CODE=%ERRORLEVEL%
+
 echo.
+if not "%EXIT_CODE%"=="0" (
+    echo  Training failed with exit code %EXIT_CODE%.
+    echo  The trainer did not start a new run.
+    echo  If the run ID already exists, use a different name or start run_training.py to resume.
+    pause
+    exit /b %EXIT_CODE%
+)
+
 echo  Training complete. Results in: results\%RUN_ID%
 echo  Run tensorboard.bat to visualise.
 pause

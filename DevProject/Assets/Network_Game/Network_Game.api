@@ -1062,6 +1062,7 @@ namespace Network_Game.Dialogue.MCP
         [UnityEditor.MenuItem(@"Network Game/MCP/Gameplay Copilot/Probe Nearby NPCs")] public static void ProbeNearbyNpcs();
         [UnityEditor.MenuItem(@"Network Game/MCP/Queue Status")] public static void QueueStatus();
         [UnityEditor.MenuItem(@"Network Game/MCP/Gameplay Copilot/Run Automated Probes (Feedback-Gated)")] public static void RunAutomatedProbes();
+        [UnityEditor.MenuItem(@"Network Game/MCP/Gameplay Copilot/Run Automated Probes (Training Mode, Skip Narrative)")] public static void RunAutomatedTrainingProbes();
         [UnityEditor.MenuItem(@"Network Game/MCP/Gameplay Copilot/Scan Scene")] public static void ScanGameplayScene();
         [UnityEditor.MenuItem(@"Network Game/MCP/Gameplay Copilot/Stop Automated Probes")] public static void StopAutomatedProbes();
     }

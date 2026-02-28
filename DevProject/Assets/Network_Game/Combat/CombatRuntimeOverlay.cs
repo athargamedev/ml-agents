@@ -25,21 +25,21 @@ namespace Network_Game.Combat
         private bool m_ShowOverlay = true;
 
         [SerializeField]
-        private Key m_ToggleKey = Key.F8;
+        private Key m_ToggleKey = Key.F9;
 
         [SerializeField]
         [Min(2)]
-        private int m_MaxLogEntries = 8;
+        private int m_MaxLogEntries = 4;
 
         [SerializeField]
         [Min(1f)]
         private float m_LogLifetimeSeconds = 14f;
 
         [SerializeField]
-        private Vector2 m_PanelPosition = new Vector2(12f, 12f);
+        private Vector2 m_PanelPosition = new Vector2(12f, 54f);
 
         [SerializeField]
-        private float m_PanelWidth = 520f;
+        private float m_PanelWidth = 360f;
 
         private readonly List<CombatHealth> m_PlayerHealthTargets = new List<CombatHealth>(16);
         private readonly List<LogEntry> m_RecentEffects = new List<LogEntry>(16);
@@ -124,13 +124,13 @@ namespace Network_Game.Combat
             float y = Mathf.Max(0f, m_PanelPosition.y);
             float width = Mathf.Clamp(m_PanelWidth, 320f, 760f);
 
-            float line = 20f;
+            float line = 18f;
             int healthCount = m_PlayerHealthTargets.Count;
             int effectCount = Mathf.Min(m_MaxLogEntries, m_RecentEffects.Count);
             int damageCount = Mathf.Min(m_MaxLogEntries, m_RecentDamage.Count);
-            float panelHeight = 110f + (healthCount * 24f) + ((effectCount + damageCount) * line);
+            float panelHeight = 94f + (healthCount * 22f) + ((effectCount + damageCount) * line);
 
-            GUI.Box(new Rect(x, y, width, panelHeight), "Combat Runtime Overlay  (F8)");
+            GUI.Box(new Rect(x, y, width, panelHeight), $"Combat Runtime  ({m_ToggleKey})");
 
             float rowY = y + 28f;
             NetworkManager networkManager = NetworkManager.Singleton;
@@ -374,6 +374,7 @@ namespace Network_Game.Combat
             {
                 m_HeaderLabelStyle = new GUIStyle(GUI.skin.label)
                 {
+                    fontSize = 11,
                     fontStyle = FontStyle.Bold,
                     richText = false,
                 };
@@ -384,7 +385,7 @@ namespace Network_Game.Combat
             {
                 m_LogLabelStyle = new GUIStyle(GUI.skin.label)
                 {
-                    fontSize = 11,
+                    fontSize = 10,
                     clipping = TextClipping.Clip,
                     wordWrap = false,
                     richText = false,

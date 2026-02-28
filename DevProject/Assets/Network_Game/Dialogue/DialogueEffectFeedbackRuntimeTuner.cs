@@ -36,6 +36,7 @@ namespace Network_Game.Dialogue
             public float attachScore;
             public float fitScore;
             public int sampleCount;
+            public int looksCorrectCount;    // P2.4: visibility ratio numerator
             public string lastOutcome = string.Empty;
             public string lastUpdatedUtc = string.Empty;
         }
@@ -284,12 +285,31 @@ namespace Network_Game.Dialogue
             switch (normalized)
             {
                 case "looks_correct":
+                    entry.looksCorrectCount++;  // P2.4: track visibility ratio
                     entry.scaleMultiplier = Mathf.Lerp(entry.scaleMultiplier, 1f, lr);
                     entry.durationMultiplier = Mathf.Lerp(entry.durationMultiplier, 1f, lr);
                     entry.attachScore = Mathf.Lerp(entry.attachScore, 0f, lr * 0.5f);
                     entry.fitScore = Mathf.Lerp(entry.fitScore, 0f, lr * 0.5f);
                     break;
                 case "not_visible":
+                    // P2.1 / P2.4 — positionally broken guard.
+                    // If the effect has never been seen correctly in 6+ samples AND has a low
+                    // attach score, scaling is the wrong fix — the spawn position is the problem.
+                    // Continuing to scale here was producing ElectricalSparks=2.61×, FireBall=2.57×.
+                    if (IsPositionallyBroken(entry))
+                    {
+                        NGLog.Warn(
+                            kLogCategory,
+                            NGLog.Format(
+                                "Skipped scale-up: effect may be positionally broken (never visible in scene)",
+                                ("key", entry.key),
+                                ("samples", entry.sampleCount),
+                                ("looksCorrect", entry.looksCorrectCount),
+                                ("attachScore", entry.attachScore.ToString("F3"))
+                            )
+                        );
+                        break;
+                    }
                     entry.scaleMultiplier *= 1f + (0.14f * lr / 0.18f);
                     entry.durationMultiplier *= 1f + (0.10f * lr / 0.18f);
                     break;
@@ -321,6 +341,19 @@ namespace Network_Game.Dialogue
                 m_MinDurationMultiplier,
                 m_MaxDurationMultiplier
             );
+        }
+
+        /// <summary>
+        /// P2.1 — Returns true when the effect has been submitted enough times to be
+        /// statistically confident, but has never once appeared correct on screen AND
+        /// shows no preference for attach targeting. Under these conditions scaling will
+        /// never fix visibility — the spawn anchor/position needs to be corrected instead.
+        /// </summary>
+        private static bool IsPositionallyBroken(TuningEntry entry)
+        {
+            return entry.sampleCount > 5
+                && entry.looksCorrectCount == 0
+                && entry.attachScore < 0.1f;
         }
 
         private static string BuildEffectKey(string effectName, string effectType)
@@ -420,6 +453,7 @@ namespace Network_Game.Dialogue
                     entry.attachScore = Mathf.Clamp01(entry.attachScore);
                     entry.fitScore = Mathf.Clamp01(entry.fitScore);
                     entry.sampleCount = Mathf.Max(0, entry.sampleCount);
+                    entry.looksCorrectCount = Mathf.Max(0, entry.looksCorrectCount); // P2.4
                     m_ByKey[entry.key] = entry;
                     m_Entries.Add(entry);
                 }
