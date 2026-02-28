@@ -33,13 +33,13 @@ EditorSettings:
   m_AssetNamingUsesSpace: 1
   m_InspectorUseIMGUIDefaultInspector: 0
   m_UseLegacyProbeSampleCount: 0
-  m_SerializeInlineMappingsOnOneLine: 0
+  m_SerializeInlineMappingsOnOneLine: 1
   m_DisableCookiesInLightmapper: 1
   m_ShadowmaskStitching: 0
   m_AssetPipelineMode: 1
   m_RefreshImportMode: 1
-  m_CacheServerMode: 0
-  m_CacheServerEndpoint: 
+  m_CacheServerMode: 1
+  m_CacheServerEndpoint: AtharPredator:10080
   m_CacheServerNamespacePrefix: default
   m_CacheServerEnableDownload: 1
   m_CacheServerEnableUpload: 1

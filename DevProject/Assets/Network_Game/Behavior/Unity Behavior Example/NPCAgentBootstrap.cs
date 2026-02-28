@@ -34,10 +34,7 @@ namespace Network_Game.Behavior
                 return;
             }
 
-            NGLog.Info(
-                "NPCBootstrap",
-                $"Disabling LLM Agent on '{target.name}' (Player Instance)"
-            );
+            NGLog.Info("NPCBootstrap", $"Disabling LLM Agent on '{target.name}' (Player Instance)");
             llm.enabled = false;
         }
 

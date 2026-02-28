@@ -102,8 +102,8 @@ namespace Network_Game.Editor
                 _scroll = scroll.scrollPosition;
                 EditorGUILayout.TextArea(
                     string.IsNullOrWhiteSpace(_lastResultJson)
-                        ? "(no result yet)"
-                        : _lastResultJson,
+                    ? "(no result yet)"
+                    : _lastResultJson,
                     GUILayout.ExpandHeight(true)
                 );
             }
@@ -111,42 +111,44 @@ namespace Network_Game.Editor
 
         private void RefreshStatus()
         {
-            SetLastResult(EffectsTestModeTool.HandleCommand(new JObject
-            {
-                ["action"] = "status"
-            }));
+            SetLastResult(
+                result: EffectsTestModeTool.HandleCommand(
+                    new JObject { [propertyName: "action"] = "status" }
+                )
+            );
         }
 
         private void RunEffectsTestMode(string action)
         {
-            var payload = new JObject
-            {
-                ["action"] = action,
-            };
+            var payload = new JObject { [propertyName: "action"] = action };
 
             if (action == "start")
             {
-                payload["disable_feedback_prompt"] = _disablePromptOnStart;
-                payload["start_suite"] = _startSuiteOnStart;
+                payload[propertyName : "disable_feedback_prompt"] = _disablePromptOnStart;
+                payload[propertyName : "start_suite"] = _startSuiteOnStart;
             }
             else if (action == "stop")
             {
-                payload["stop_suite"] = _stopSuiteOnStop;
-                payload["restore_prompt_on_stop"] = _restorePromptOnStop;
+                payload[propertyName : "stop_suite"] = _stopSuiteOnStop;
+                payload[propertyName : "restore_prompt_on_stop"] = _restorePromptOnStop;
             }
             else if (action == "spawn_once")
             {
-                payload["disable_feedback_prompt"] = _disablePromptOnStart;
+                payload[propertyName : "disable_feedback_prompt"] = _disablePromptOnStart;
             }
 
-            SetLastResult(EffectsTestModeTool.HandleCommand(payload));
+            SetLastResult(result: EffectsTestModeTool.HandleCommand(@params: payload));
         }
 
         private void SetLastResult(object result)
         {
             try
             {
-                JObject jo = result as JObject ?? JObject.FromObject(result ?? new ErrorResponse("null_result"));
+                JObject jo =
+                    result as JObject
+                    ?? JObject.FromObject(
+                        o: result ?? new ErrorResponse(messageOrCode: "null_result")
+                    );
                 _lastResultJson = jo.ToString();
             }
             catch (System.Exception ex)

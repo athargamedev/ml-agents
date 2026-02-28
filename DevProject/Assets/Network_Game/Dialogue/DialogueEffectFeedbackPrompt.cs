@@ -342,6 +342,11 @@ namespace Network_Game.Dialogue
                 return;
             }
 
+            if (m_UiHostRoot != null && !IsUsableUiToolkitHostRoot(m_UiHostRoot))
+            {
+                DestroyUiToolkitOverlay();
+            }
+
             if (
                 m_UiOverlayRoot != null
                 && m_UiOverlayRoot.parent != null
@@ -382,7 +387,7 @@ namespace Network_Game.Dialogue
             for (int i = 0; i < docs.Length; i++)
             {
                 UIDocument doc = docs[i];
-                if (doc == null || doc.rootVisualElement == null)
+                if (doc == null)
                 {
                     continue;
                 }
@@ -392,10 +397,30 @@ namespace Network_Game.Dialogue
                     continue;
                 }
 
+                if (!IsUsableUiToolkitHostRoot(doc.rootVisualElement))
+                {
+                    continue;
+                }
+
                 return doc;
             }
 
             return null;
+        }
+
+        private static bool IsUsableUiToolkitHostRoot(VisualElement hostRoot)
+        {
+            if (hostRoot == null || hostRoot.panel == null)
+            {
+                return false;
+            }
+
+            if (hostRoot.style.display.value == DisplayStyle.None)
+            {
+                return false;
+            }
+
+            return hostRoot.resolvedStyle.display != DisplayStyle.None;
         }
 
         private void BuildUiToolkitOverlay(VisualElement hostRoot)

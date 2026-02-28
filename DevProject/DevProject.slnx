@@ -98,8 +98,8 @@
   <Project Path="Network_Game.csproj" />
   <Project Path="Unity.Multiplayer.Tools.MultiplayerToolsWindow.Tests.Editor.csproj" />
   <Project Path="Unity.Multiplayer.Center.Common.csproj" />
-  <Project Path="Unity.TestTools.CodeCoverage.Editor.csproj" />
   <Project Path="Unity.UnifiedRayTracing.Runtime.csproj" />
+  <Project Path="Unity.TestTools.CodeCoverage.Editor.csproj" />
   <Project Path="Unity.TestTools.CodeCoverage.Editor.OpenCover.Mono.Reflection.csproj" />
   <Project Path="Unity.Multiplayer.Tools.DependencyInjection.UIElements.csproj" />
   <Project Path="Unity.Numerics.Linear.Solvers.Lowlevel.csproj" />
@@ -114,6 +114,7 @@
   <Project Path="Unity.DedicatedServer.Editor.csproj" />
   <Project Path="Unity.ProBuilder.Poly2Tri.csproj" />
   <Project Path="Unity.Multiplayer.Tools.NetVis.Configuration.csproj" />
+  <Project Path="Unity.UI.TestFramework.Editor.csproj" />
   <Project Path="Unity.Entities.Editor.Properties.csproj" />
   <Project Path="Unity.Entities.UI.csproj" />
   <Project Path="Unity.Entities.CodeGen.csproj" />
@@ -123,6 +124,7 @@
   <Project Path="Unity.Multiplayer.Tools.NetVis.Editor.UI.csproj" />
   <Project Path="VFXGraph.OutputEventHandlers.csproj" />
   <Project Path="Unity.Addressables.csproj" />
+  <Project Path="Unity.UI.TestFramework.Runtime.csproj" />
   <Project Path="Unity.AppUI.Editor.csproj" />
   <Project Path="Unity.PathTracing.Runtime.csproj" />
   <Project Path="Unity.Transforms.csproj" />
@@ -213,6 +215,7 @@
   <Project Path="Unity.InputSystem.IntegrationTests.csproj" />
   <Project Path="Unity.Numerics.Linear.csproj" />
   <Project Path="Unity.InternalAPIEditorBridge.004.csproj" />
+  <Project Path="Domain_Reload.csproj" />
   <Project Path="Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.csproj" />
   <Project Path="Unity.RenderPipelines.Core.ShaderLibrary.csproj" />
   <Project Path="Autodesk.Fbx.BuildTestAssets.csproj" />

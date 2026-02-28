@@ -70,6 +70,11 @@ namespace Network_Game.Combat
             overlayRoot.AddComponent<CombatRuntimeOverlay>();
         }
 
+        private void Awake()
+        {
+            ApplyCompactLayoutMigration();
+        }
+
         private void OnEnable()
         {
             CombatHealthRegistry.OnRegistered += HandleHealthRegistered;
@@ -78,6 +83,29 @@ namespace Network_Game.Combat
             CombatHealth.OnHealthChanged += HandleHealthChanged;
             DialogueSceneEffectsController.OnEffectApplied += HandleEffectApplied;
             RebuildPlayerHealthTargets();
+        }
+
+        private void ApplyCompactLayoutMigration()
+        {
+            if (m_ToggleKey == Key.F8)
+            {
+                m_ToggleKey = Key.F9;
+            }
+
+            if (m_MaxLogEntries > 4)
+            {
+                m_MaxLogEntries = 4;
+            }
+
+            if (m_PanelPosition.y < 40f)
+            {
+                m_PanelPosition = new Vector2(m_PanelPosition.x, 54f);
+            }
+
+            if (m_PanelWidth > 360f)
+            {
+                m_PanelWidth = 360f;
+            }
         }
 
         private void OnDisable()

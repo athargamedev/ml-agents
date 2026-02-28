@@ -1,6 +1,6 @@
 {
     "schemaVersion": 1,
-    "updatedUtc": "2026-02-28T01:19:46.9824917Z",
+    "updatedUtc": "2026-02-28T06:23:38.3255564Z",
     "entries": [
         {
             "key": "dissolve",
@@ -9,10 +9,10 @@
             "durationMultiplier": 1.0,
             "attachScore": 0.0,
             "fitScore": 0.0,
-            "sampleCount": 25,
-            "looksCorrectCount": 3,
+            "sampleCount": 26,
+            "looksCorrectCount": 4,
             "lastOutcome": "looks_correct",
-            "lastUpdatedUtc": "2026-02-28T01:07:59.1849236Z"
+            "lastUpdatedUtc": "2026-02-28T06:08:01.6836160Z"
         },
         {
             "key": "fireflies",
@@ -113,14 +113,14 @@
         {
             "key": "bigexplosion",
             "effectType": "prefab_power",
-            "scaleMultiplier": 1.0348999500274659,
-            "durationMultiplier": 1.0249285697937012,
+            "scaleMultiplier": 1.0286179780960084,
+            "durationMultiplier": 1.0204414129257203,
             "attachScore": 0.0,
             "fitScore": 0.0,
-            "sampleCount": 8,
-            "looksCorrectCount": 4,
+            "sampleCount": 9,
+            "looksCorrectCount": 5,
             "lastOutcome": "looks_correct",
-            "lastUpdatedUtc": "2026-02-28T01:05:54.6759745Z"
+            "lastUpdatedUtc": "2026-02-28T06:05:06.5162844Z"
         },
         {
             "key": "smokeeffect",
@@ -149,14 +149,14 @@
         {
             "key": "waterfall",
             "effectType": "prefab_power",
-            "scaleMultiplier": 0.949999988079071,
-            "durationMultiplier": 1.0,
+            "scaleMultiplier": 1.0829999446868897,
+            "durationMultiplier": 1.100000023841858,
             "attachScore": 0.6299999952316284,
             "fitScore": 0.0,
-            "sampleCount": 3,
+            "sampleCount": 4,
             "looksCorrectCount": 0,
-            "lastOutcome": "wrong_target",
-            "lastUpdatedUtc": "2026-02-28T01:08:59.1501781Z"
+            "lastOutcome": "not_visible",
+            "lastUpdatedUtc": "2026-02-28T06:08:31.5075145Z"
         },
         {
             "key": "energyexplosion",

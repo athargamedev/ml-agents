@@ -1,6 +1,6 @@
 {
     "schema_version": 1,
-    "updated_utc": "2026-02-28T01:19:18.7759864Z",
+    "updated_utc": "2026-02-28T06:08:31.5080261Z",
     "entries": [
         {
             "effect_tag": "bigexplosion",
@@ -130,7 +130,8 @@
             "effect_tag": "waterfall",
             "disfavored_placements": [
                 "attached",
-                "area"
+                "area",
+                "projectile"
             ]
         },
         {

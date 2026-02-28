@@ -499,7 +499,7 @@ MonoBehaviour:
   active: 1
   mode:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   gaussianStart:
     m_OverrideState: 1
     m_Value: 10
@@ -511,7 +511,7 @@ MonoBehaviour:
     m_Value: 1
   highQualitySampling:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   focusDistance:
     m_OverrideState: 1
     m_Value: 10
@@ -685,7 +685,7 @@ MonoBehaviour:
     m_Value: 0.1
   scaleBiasWithMinProbeDistance:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   samplingNoise:
     m_OverrideState: 1
     m_Value: 0.1
@@ -694,7 +694,7 @@ MonoBehaviour:
     m_Value: 1
   leakReductionMode:
     m_OverrideState: 1
-    m_Value: 2
+    m_Value: 1
   minValidDotProductValue:
     m_OverrideState: 1
     m_Value: 0.1

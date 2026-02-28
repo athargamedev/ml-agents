@@ -483,11 +483,6 @@ namespace Network_Game.Dialogue
         public string ResolveDisplayName(UnityEngine.GameObject fallbackObject);
     }
 
-    [UnityEngine.DefaultExecutionOrder(-50)] public class EffectFeedbackPopup : UnityEngine.MonoBehaviour
-    {
-        public EffectFeedbackPopup() {}
-    }
-
     public interface IDialogueInferenceClient
     {
         public string BackendName { get; }
@@ -1151,19 +1146,17 @@ namespace Network_Game.ThirdPersonController.Debug
 
 namespace Network_Game.UI
 {
-    [UnityEngine.ExecuteAlways] public class ModernUISetup : UnityEngine.MonoBehaviour
+    [UnityEngine.DisallowMultipleComponent] [UnityEngine.ExecuteAlways] public class ModernUISetup : UnityEngine.MonoBehaviour
     {
         public UnityEngine.UIElements.UIDocument DialogueDoc;
         public UnityEngine.UIElements.VisualTreeAsset DialogueUxml;
         [UnityEngine.Header(@"Components")] public UnityEngine.UIElements.UIDocument LoginDoc;
         public UnityEngine.UIElements.VisualTreeAsset LoginUxml;
-        [UnityEngine.SerializeField] public bool m_LivePreviewInPlayMode = true;
         [UnityEngine.Header(@"Assets")] public UnityEngine.UIElements.PanelSettings PanelSettings;
         public UnityEngine.UIElements.UIDocument ProfileDoc;
         public UnityEngine.UIElements.VisualTreeAsset ProfileUxml;
         public ModernUISetup() {}
         [UnityEngine.ContextMenu(@"Apply UI Assets")] public void Apply();
-        [UnityEngine.ContextMenu(@"Apply HUD Style Overrides")] public void ApplyHudStylesOnly();
     }
 }
 
