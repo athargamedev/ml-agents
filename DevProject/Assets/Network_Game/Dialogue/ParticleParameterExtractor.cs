@@ -38,30 +38,30 @@ namespace Network_Game.Dialogue
 
             public static ParticleParameterIntent Default =>
                 new ParticleParameterIntent
-                {
-                    HasAnyOverride = false,
-                    HasColorOverride = false,
-                    ColorOverride = Color.white,
-                    IntensityMultiplier = 1f,
-                    DurationMultiplier = 1f,
-                    RadiusMultiplier = 1f,
-                    SizeMultiplier = 1f,
-                    SpeedMultiplier = 1f,
-                    CountMultiplier = 1f,
-                    ForceMultiplier = 1f,
-                    HasExplicitDurationSeconds = false,
-                    ExplicitDurationSeconds = 0f,
-                    HasExplicitIntensityMultiplier = false,
-                    ExplicitIntensityMultiplier = 1f,
-                    DetectedElement = "",
-                    EmotionalMultiplier = 1f,
-                    HasExplicitRadius = false,
-                    ExplicitRadius = 0f,
-                    HasExplicitScale = false,
-                    ExplicitScale = 1f,
-                    HasExplicitCount = false,
-                    ExplicitCount = 0,
-                };
+            {
+                HasAnyOverride = false,
+                HasColorOverride = false,
+                ColorOverride = Color.white,
+                IntensityMultiplier = 1f,
+                DurationMultiplier = 1f,
+                RadiusMultiplier = 1f,
+                SizeMultiplier = 1f,
+                SpeedMultiplier = 1f,
+                CountMultiplier = 1f,
+                ForceMultiplier = 1f,
+                HasExplicitDurationSeconds = false,
+                ExplicitDurationSeconds = 0f,
+                HasExplicitIntensityMultiplier = false,
+                ExplicitIntensityMultiplier = 1f,
+                DetectedElement = "",
+                EmotionalMultiplier = 1f,
+                HasExplicitRadius = false,
+                ExplicitRadius = 0f,
+                HasExplicitScale = false,
+                ExplicitScale = 1f,
+                HasExplicitCount = false,
+                ExplicitCount = 0,
+            };
         }
 
         private static readonly Regex s_DurationSecondsRegex = new Regex(
@@ -679,7 +679,7 @@ namespace Network_Game.Dialogue
                 return "";
             for (int i = 0; i < s_ElementalMappings.Length; i++)
             {
-                var (terms, element) = s_ElementalMappings[i];
+                var(terms, element) = s_ElementalMappings[i];
                 if (ContainsAny(lower, terms))
                 {
                     return element;
@@ -697,7 +697,7 @@ namespace Network_Game.Dialogue
             int matches = 0;
             for (int i = 0; i < s_EmotionalIntensity.Length; i++)
             {
-                var (terms, multiplier) = s_EmotionalIntensity[i];
+                var(terms, multiplier) = s_EmotionalIntensity[i];
                 if (ContainsAny(lower, terms))
                 {
                     sum += multiplier;
@@ -716,7 +716,7 @@ namespace Network_Game.Dialogue
             string lower = emotion.ToLowerInvariant().Trim();
             for (int i = 0; i < s_EmotionalIntensity.Length; i++)
             {
-                var (terms, multiplier) = s_EmotionalIntensity[i];
+                var(terms, multiplier) = s_EmotionalIntensity[i];
                 for (int t = 0; t < terms.Length; t++)
                 {
                     if (lower == terms[t])
@@ -726,7 +726,7 @@ namespace Network_Game.Dialogue
             // Fallback partial scan
             for (int i = 0; i < s_EmotionalIntensity.Length; i++)
             {
-                var (terms, multiplier) = s_EmotionalIntensity[i];
+                var(terms, multiplier) = s_EmotionalIntensity[i];
                 if (ContainsAny(lower, terms))
                     return multiplier;
             }

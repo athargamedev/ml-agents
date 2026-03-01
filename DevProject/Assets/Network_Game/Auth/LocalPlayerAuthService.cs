@@ -755,34 +755,49 @@ namespace Network_Game.Auth
 
         public bool SetReputation(string npcId, int value)
         {
-            if (string.IsNullOrWhiteSpace(npcId)) return false;
+            if (string.IsNullOrWhiteSpace(npcId))
+                return false;
             int clamped = Mathf.Clamp(value, 0, 100);
-            return SetCustomizationValue($"reputation_{npcId.Trim().ToLowerInvariant()}", clamped.ToString());
+            return SetCustomizationValue(
+                $"reputation_{npcId.Trim().ToLowerInvariant()}",
+                clamped.ToString()
+            );
         }
 
         public int GetReputation(string npcId)
         {
-            if (string.IsNullOrWhiteSpace(npcId)) return 50;
-            if (!TryGetCustomizationValue($"reputation_{npcId.Trim().ToLowerInvariant()}", out string raw)) return 50;
+            if (string.IsNullOrWhiteSpace(npcId))
+                return 50;
+            if (
+                !TryGetCustomizationValue(
+                    $"reputation_{npcId.Trim().ToLowerInvariant()}",
+                    out string raw
+                )
+            )
+                return 50;
             return int.TryParse(raw, out int v) ? Mathf.Clamp(v, 0, 100) : 50;
         }
 
         public bool AddInventoryTag(string tag)
         {
-            if (string.IsNullOrWhiteSpace(tag)) return false;
+            if (string.IsNullOrWhiteSpace(tag))
+                return false;
             string t = tag.Trim().ToLowerInvariant();
             TryGetCustomizationValue("inventory_tags", out string existing);
             var tags = ParseCsvSet(existing);
-            if (!tags.Add(t)) return true; // already present
+            if (!tags.Add(t))
+                return true; // already present
             return SetCustomizationValue("inventory_tags", string.Join(",", tags));
         }
 
         public bool RemoveInventoryTag(string tag)
         {
-            if (string.IsNullOrWhiteSpace(tag)) return false;
+            if (string.IsNullOrWhiteSpace(tag))
+                return false;
             TryGetCustomizationValue("inventory_tags", out string existing);
             var tags = ParseCsvSet(existing);
-            if (!tags.Remove(tag.Trim().ToLowerInvariant())) return true;
+            if (!tags.Remove(tag.Trim().ToLowerInvariant()))
+                return true;
             return SetCustomizationValue("inventory_tags", string.Join(",", tags));
         }
 
@@ -790,26 +805,31 @@ namespace Network_Game.Auth
 
         public bool SetQuestFlag(string flag)
         {
-            if (string.IsNullOrWhiteSpace(flag)) return false;
+            if (string.IsNullOrWhiteSpace(flag))
+                return false;
             string f = flag.Trim().ToLowerInvariant();
             TryGetCustomizationValue("quest_flags", out string existing);
             var flags = ParseCsvSet(existing);
-            if (!flags.Add(f)) return true;
+            if (!flags.Add(f))
+                return true;
             return SetCustomizationValue("quest_flags", string.Join(",", flags));
         }
 
         public bool ClearQuestFlag(string flag)
         {
-            if (string.IsNullOrWhiteSpace(flag)) return false;
+            if (string.IsNullOrWhiteSpace(flag))
+                return false;
             TryGetCustomizationValue("quest_flags", out string existing);
             var flags = ParseCsvSet(existing);
-            if (!flags.Remove(flag.Trim().ToLowerInvariant())) return true;
+            if (!flags.Remove(flag.Trim().ToLowerInvariant()))
+                return true;
             return SetCustomizationValue("quest_flags", string.Join(",", flags));
         }
 
         public bool HasQuestFlag(string flag)
         {
-            if (string.IsNullOrWhiteSpace(flag)) return false;
+            if (string.IsNullOrWhiteSpace(flag))
+                return false;
             TryGetCustomizationValue("quest_flags", out string existing);
             return ParseCsvSet(existing).Contains(flag.Trim().ToLowerInvariant());
         }
@@ -825,7 +845,8 @@ namespace Network_Game.Auth
             foreach (string part in csv.Split(','))
             {
                 string t = part.Trim();
-                if (!string.IsNullOrEmpty(t)) set.Add(t);
+                if (!string.IsNullOrEmpty(t))
+                    set.Add(t);
             }
             return set;
         }

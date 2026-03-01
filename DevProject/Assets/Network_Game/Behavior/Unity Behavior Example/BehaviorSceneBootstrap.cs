@@ -507,13 +507,62 @@ namespace Network_Game.Behavior
                     return localPlayer;
                 }
 
+                GameObject ownedTaggedPlayer = ResolveTaggedPlayerCandidate(manager);
+                if (ownedTaggedPlayer != null)
+                {
+                    return ownedTaggedPlayer;
+                }
+
                 if (manager.IsListening)
                 {
                     return null;
                 }
             }
 
-            return GameObject.FindGameObjectWithTag(m_PlayerTag);
+            return ResolveTaggedPlayerCandidate(null);
+        }
+
+        private GameObject ResolveTaggedPlayerCandidate(NetworkManager manager)
+        {
+            if (string.IsNullOrWhiteSpace(m_PlayerTag))
+            {
+                return null;
+            }
+
+            GameObject[] candidates = GameObject.FindGameObjectsWithTag(m_PlayerTag);
+            if (candidates == null || candidates.Length == 0)
+            {
+                return null;
+            }
+
+            if (manager != null)
+            {
+                ulong localClientId = manager.LocalClientId;
+                foreach (GameObject candidate in candidates)
+                {
+                    if (candidate == null || !candidate.activeInHierarchy)
+                    {
+                        continue;
+                    }
+
+                    NetworkObject networkObject = candidate.GetComponent<NetworkObject>();
+                    if (
+                        networkObject != null
+                        && networkObject.IsSpawned
+                        && networkObject.OwnerClientId == localClientId
+                    )
+                    {
+                        return candidate;
+                    }
+                }
+            }
+
+            if (candidates.Length == 1 && candidates[0] != null && candidates[0].activeInHierarchy)
+            {
+                return candidates[0];
+            }
+
+            return null;
         }
 
         private void EnableLocalInput(GameObject player)

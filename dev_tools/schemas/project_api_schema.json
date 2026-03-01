@@ -1,0 +1,524 @@
+{
+  "NpcDialogueAgent": {
+    "class": "NpcDialogueAgent",
+    "namespace": "",
+    "base_class": "Agent",
+    "serialized_fields": [
+      {
+        "name": "m_PlayerTransform",
+        "type": "Transform",
+        "visibility": "private"
+      },
+      {
+        "name": "m_GameState",
+        "type": "GameStateProvider",
+        "visibility": "private"
+      }
+    ],
+    "public_methods": [
+      {
+        "name": "Initialize",
+        "return_type": "void",
+        "params": "",
+        "is_override": false
+      },
+      {
+        "name": "OnEpisodeBegin",
+        "return_type": "void",
+        "params": "",
+        "is_override": false
+      },
+      {
+        "name": "CollectObservations",
+        "return_type": "void",
+        "params": "VectorSensor sensor",
+        "is_override": false
+      },
+      {
+        "name": "OnActionReceived",
+        "return_type": "void",
+        "params": "ActionBuffers actions",
+        "is_override": false
+      },
+      {
+        "name": "WriteDiscreteActionMask",
+        "return_type": "void",
+        "params": "IDiscreteActionMask actionMask",
+        "is_override": false
+      },
+      {
+        "name": "Heuristic",
+        "return_type": "void",
+        "params": "in ActionBuffers actionsOut",
+        "is_override": false
+      },
+      {
+        "name": "OnDialogueTurnComplete",
+        "return_type": "void",
+        "params": "bool playerReplied",
+        "is_override": false
+      }
+    ],
+    "events": [],
+    "enums": [
+      "ConversationPhase",
+      "DialogueRoutingMode"
+    ],
+    "observation_layout": [
+      "proximity of player to nearest active NPC  (0=far, 1=right next to it)",
+      "player health normalised                   (0–1)",
+      "player in combat                           (0 or 1)",
+      "current conversation turn count / 10       (soft-normalised)",
+      "time in episode / 60                       (soft-normalised, max 1)",
+      "conversation phase                         (0=idle, 0.33=initiated, 0.67=responded, 1=resolved)",
+      "active effect state                        (1=effect just fired, decays exponentially to 0)"
+    ],
+    "action_layout": {
+      "type": "discrete",
+      "branches": 1,
+      "branch_0_size": 3,
+      "action_meanings": {
+        "0": "idle",
+        "1": "engage/continue",
+        "2": "end conversation"
+      }
+    },
+    "notes": [
+      "Space Size: 7"
+    ]
+  },
+  "NetworkDialogueService": {
+    "class": "NetworkDialogueService",
+    "namespace": "Network_Game.Dialogue",
+    "base_class": "NetworkBehaviour",
+    "serialized_fields": [
+      {
+        "name": "m_LlmAgent",
+        "type": "LLMAgent",
+        "visibility": "private"
+      },
+      {
+        "name": "m_SceneEffectsController",
+        "type": "DialogueSceneEffectsController",
+        "visibility": "private"
+      }
+    ],
+    "public_methods": [
+      {
+        "name": "GetConversationKeys",
+        "return_type": "string[]",
+        "params": "",
+        "is_override": false
+      },
+      {
+        "name": "GetHistoryPublic",
+        "return_type": "List<ChatMessage>",
+        "params": "string conversationKey",
+        "is_override": false
+      },
+      {
+        "name": "ClearHistory",
+        "return_type": "void",
+        "params": "string conversationKey",
+        "is_override": false
+      },
+      {
+        "name": "ClearPendingRequests",
+        "return_type": "void",
+        "params": "",
+        "is_override": false
+      },
+      {
+        "name": "TryGetPlayerIdentityByClientId",
+        "return_type": "bool",
+        "params": "ulong clientId,\n            out PlayerIdentitySnapshot snapshot",
+        "is_override": false
+      },
+      {
+        "name": "TryGetPlayerIdentityByNetworkId",
+        "return_type": "bool",
+        "params": "ulong playerNetworkId,\n            out PlayerIdentitySnapshot snapshot",
+        "is_override": false
+      },
+      {
+        "name": "SetPlayerPromptContext",
+        "return_type": "bool",
+        "params": "ulong playerNetworkId,\n            string nameId,\n            string customizationJson",
+        "is_override": false
+      },
+      {
+        "name": "ClearPlayerPromptContext",
+        "return_type": "bool",
+        "params": "ulong playerNetworkId",
+        "is_override": false
+      },
+      {
+        "name": "SetPlayerPromptContextForClient",
+        "return_type": "bool",
+        "params": "ulong clientId,\n            string nameId,\n            string customizationJson",
+        "is_override": false
+      },
+      {
+        "name": "ClearPlayerPromptContextForClient",
+        "return_type": "bool",
+        "params": "ulong clientId",
+        "is_override": false
+      },
+      {
+        "name": "RequestSetPlayerPromptContextFromClient",
+        "return_type": "bool",
+        "params": "string nameId, string customizationJson",
+        "is_override": false
+      },
+      {
+        "name": "RequestClearPlayerPromptContextFromClient",
+        "return_type": "bool",
+        "params": "",
+        "is_override": false
+      },
+      {
+        "name": "EnqueueRequest",
+        "return_type": "int",
+        "params": "DialogueRequest request",
+        "is_override": false
+      },
+      {
+        "name": "TryEnqueueRequest",
+        "return_type": "bool",
+        "params": "DialogueRequest request,\n            out int requestId,\n            out string rejectionReason",
+        "is_override": false
+      },
+      {
+        "name": "TryConsumeResponse",
+        "return_type": "bool",
+        "params": "int requestId, out DialogueResponse response",
+        "is_override": false
+      },
+      {
+        "name": "TryConsumeResponseByClientRequestId",
+        "return_type": "bool",
+        "params": "int clientRequestId,\n            out DialogueResponse response,\n            ulong requestingClientId = ulong.MaxValue",
+        "is_override": false
+      },
+      {
+        "name": "TryGetTerminalResponseByClientRequestId",
+        "return_type": "bool",
+        "params": "int clientRequestId,\n            out DialogueResponse response,\n            ulong requestingClientId = ulong.MaxValue",
+        "is_override": false
+      },
+      {
+        "name": "GetStats",
+        "return_type": "DialogueStats",
+        "params": "",
+        "is_override": false
+      },
+      {
+        "name": "IsClientRequestInFlight",
+        "return_type": "bool",
+        "params": "int clientRequestId,\n            ulong requestingClientId = ulong.MaxValue",
+        "is_override": false
+      },
+      {
+        "name": "LogPlayerIdentityReport",
+        "return_type": "void",
+        "params": "",
+        "is_override": false
+      }
+    ],
+    "events": [
+      {
+        "name": "OnDialogueResponse",
+        "delegate": "Action<DialogueResponse>",
+        "visibility": "public"
+      },
+      {
+        "name": "OnDialogueResponseTelemetry",
+        "delegate": "Action<DialogueResponseTelemetry>",
+        "visibility": "public"
+      }
+    ],
+    "enums": [
+      "DialogueStatus",
+      "PlayerSpecialEffectMode",
+      "EffectSpatialType"
+    ]
+  },
+  "EffectDefinition": {
+    "class": "EffectDefinition",
+    "namespace": "Network_Game.Dialogue.Effects",
+    "base_class": "ScriptableObject",
+    "serialized_fields": [
+      {
+        "name": "effectTag",
+        "type": "string",
+        "visibility": "public"
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "visibility": "public"
+      },
+      {
+        "name": "effectPrefab",
+        "type": "GameObject",
+        "visibility": "public"
+      },
+      {
+        "name": "defaultScale",
+        "type": "float",
+        "visibility": "public"
+      },
+      {
+        "name": "defaultDuration",
+        "type": "float",
+        "visibility": "public"
+      },
+      {
+        "name": "defaultColor",
+        "type": "Color",
+        "visibility": "public"
+      },
+      {
+        "name": "allowCustomScale",
+        "type": "bool",
+        "visibility": "public"
+      },
+      {
+        "name": "allowCustomDuration",
+        "type": "bool",
+        "visibility": "public"
+      },
+      {
+        "name": "allowCustomColor",
+        "type": "bool",
+        "visibility": "public"
+      },
+      {
+        "name": "placementMode",
+        "type": "EffectPlacementMode",
+        "visibility": "public"
+      },
+      {
+        "name": "targetType",
+        "type": "EffectTargetType",
+        "visibility": "public"
+      },
+      {
+        "name": "preferFitTargetMesh",
+        "type": "bool",
+        "visibility": "public"
+      },
+      {
+        "name": "attachBone",
+        "type": "string",
+        "visibility": "public"
+      },
+      {
+        "name": "minScale",
+        "type": "float",
+        "visibility": "public"
+      },
+      {
+        "name": "maxScale",
+        "type": "float",
+        "visibility": "public"
+      },
+      {
+        "name": "minDuration",
+        "type": "float",
+        "visibility": "public"
+      },
+      {
+        "name": "maxDuration",
+        "type": "float",
+        "visibility": "public"
+      },
+      {
+        "name": "minRadius",
+        "type": "float",
+        "visibility": "public"
+      },
+      {
+        "name": "maxRadius",
+        "type": "float",
+        "visibility": "public"
+      },
+      {
+        "name": "enableGameplayDamage",
+        "type": "bool",
+        "visibility": "public"
+      },
+      {
+        "name": "enableHoming",
+        "type": "bool",
+        "visibility": "public"
+      },
+      {
+        "name": "projectileSpeed",
+        "type": "float",
+        "visibility": "public"
+      },
+      {
+        "name": "homingTurnRateDegrees",
+        "type": "float",
+        "visibility": "public"
+      },
+      {
+        "name": "damageAmount",
+        "type": "float",
+        "visibility": "public"
+      },
+      {
+        "name": "damageRadius",
+        "type": "float",
+        "visibility": "public"
+      },
+      {
+        "name": "affectPlayerOnly",
+        "type": "bool",
+        "visibility": "public"
+      },
+      {
+        "name": "damageType",
+        "type": "string",
+        "visibility": "public"
+      },
+      {
+        "name": "alternativeTags",
+        "type": "string[]",
+        "visibility": "public"
+      }
+    ],
+    "public_methods": [],
+    "events": [],
+    "enums": [
+      "EffectPlacementMode",
+      "EffectTargetType"
+    ]
+  },
+  "EffectCatalog": {
+    "class": "EffectCatalog",
+    "namespace": "Network_Game.Dialogue.Effects",
+    "base_class": "ScriptableObject",
+    "serialized_fields": [
+      {
+        "name": "allEffects",
+        "type": "List<EffectDefinition>",
+        "visibility": "public"
+      },
+      {
+        "name": "fallbackEffectPrefab",
+        "type": "GameObject",
+        "visibility": "public"
+      },
+      {
+        "name": "logUnknownTags",
+        "type": "bool",
+        "visibility": "public"
+      },
+      {
+        "name": "allowUnknownTags",
+        "type": "bool",
+        "visibility": "public"
+      }
+    ],
+    "public_methods": [
+      {
+        "name": "Initialize",
+        "return_type": "void",
+        "params": "",
+        "is_override": false
+      },
+      {
+        "name": "TryGet",
+        "return_type": "bool",
+        "params": "string tag, out EffectDefinition effect",
+        "is_override": false
+      },
+      {
+        "name": "RegisterRuntimeEffect",
+        "return_type": "void",
+        "params": "EffectDefinition def",
+        "is_override": false
+      },
+      {
+        "name": "GetPromptCatalog",
+        "return_type": "string",
+        "params": "",
+        "is_override": false
+      },
+      {
+        "name": "Load",
+        "return_type": "EffectCatalog",
+        "params": "",
+        "is_override": false
+      },
+      {
+        "name": "RebuildLookup",
+        "return_type": "void",
+        "params": "",
+        "is_override": false
+      },
+      {
+        "name": "GetAllRegisteredEffects",
+        "return_type": "IEnumerable<EffectDefinition>",
+        "params": "",
+        "is_override": false
+      }
+    ],
+    "events": [],
+    "enums": []
+  },
+  "NpcDialogueProfile": {
+    "class": "NpcDialogueProfile",
+    "namespace": "Network_Game.Dialogue",
+    "base_class": "ScriptableObject",
+    "serialized_fields": [],
+    "public_methods": [
+      {
+        "name": "ToEffectDefinition",
+        "return_type": "EffectDefinition",
+        "params": "",
+        "is_override": false
+      },
+      {
+        "name": "GetKeywords",
+        "return_type": "string[]",
+        "params": "",
+        "is_override": false
+      },
+      {
+        "name": "GetAllProfiles",
+        "return_type": "NpcDialogueProfile[]",
+        "params": "",
+        "is_override": false
+      },
+      {
+        "name": "GetProfile",
+        "return_type": "NpcDialogueProfile",
+        "params": "string profileId",
+        "is_override": false
+      },
+      {
+        "name": "GetKeywordIndex",
+        "return_type": "HashSet<string>",
+        "params": "",
+        "is_override": false
+      },
+      {
+        "name": "HasKeyword",
+        "return_type": "bool",
+        "params": "string keyword, HashSet<string> cachedIndex",
+        "is_override": false
+      },
+      {
+        "name": "BuildCompressedEffectGuide",
+        "return_type": "string",
+        "params": "string listenerName, int maxPowers = 5",
+        "is_override": false
+      }
+    ],
+    "events": [],
+    "enums": []
+  }
+}

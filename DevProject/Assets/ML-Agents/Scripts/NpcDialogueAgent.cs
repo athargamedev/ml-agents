@@ -106,7 +106,7 @@ public class NpcDialogueAgent : Agent
 
     [Header("Training Reward Shaping")]
     [SerializeField] private float m_OutcomeRewardScale = 1f;
-    [SerializeField] private float m_FeedbackScoreRewardScale = 0.02f;
+    [SerializeField] private float m_FeedbackScoreRewardScale = 0.1f;
     [SerializeField] private float m_FastResponseBonus = 0.03f;
     [SerializeField] private float m_AcceptableResponseBonus = 0.01f;
     [SerializeField] private float m_SlowResponsePenalty = 0.03f;
@@ -149,6 +149,7 @@ public class NpcDialogueAgent : Agent
     private ConversationPhase m_ConversationPhase = ConversationPhase.Idle;
     private float m_LastEffectFireTime    = float.NegativeInfinity;
     private float m_PhaseInitiatedTime   = float.NegativeInfinity; // P4.2
+    private bool m_RuntimeHandlersRegistered;
 
     // ── ML-Agents lifecycle ───────────────────────────────────────────────────
 
@@ -168,9 +169,7 @@ public class NpcDialogueAgent : Agent
             m_Client.OnStructuredDialogueResponseReceived += HandleStructuredDialogueResponse;
         }
 
-        NetworkDialogueService.OnDialogueResponse += HandleNetworkDialogueResponse;
-        NetworkDialogueService.OnDialogueResponseTelemetry += HandleDialogueTelemetry;
-        DialogueFeedbackCollector.OnFeedbackScored += HandleFeedbackScore;
+        RegisterRuntimeHandlers();
 
         EnsureDecisionRequester();
 
@@ -353,6 +352,7 @@ public class NpcDialogueAgent : Agent
                 "Check that LM Studio / run_llm_bridge.py is running."
             );
             AddRewardComponent(-m_TimeoutPenalty, "Latency/ConversationTimeout");
+            m_ConversationActive = false;
             m_ConversationPhase  = ConversationPhase.Idle;
             m_PhaseInitiatedTime = float.NegativeInfinity;
         }
@@ -627,9 +627,7 @@ public class NpcDialogueAgent : Agent
 
     private void OnDestroy()
     {
-        NetworkDialogueService.OnDialogueResponse -= HandleNetworkDialogueResponse;
-        NetworkDialogueService.OnDialogueResponseTelemetry -= HandleDialogueTelemetry;
-        DialogueFeedbackCollector.OnFeedbackScored -= HandleFeedbackScore;
+        UnregisterRuntimeHandlers();
 
         if (m_Channel != null)
         {
@@ -644,6 +642,51 @@ public class NpcDialogueAgent : Agent
 
         if (m_OverrideClientEnabled)
             SetOverrideClientEnabled(false);
+    }
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+
+        if (!Application.isPlaying)
+            return;
+
+        RegisterRuntimeHandlers();
+
+        if (m_StatsRecorder != null)
+            ApplyRoutingModeToDialogueService();
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+
+        UnregisterRuntimeHandlers();
+
+        if (m_OverrideClientEnabled)
+            SetOverrideClientEnabled(false);
+    }
+
+    private void RegisterRuntimeHandlers()
+    {
+        if (m_RuntimeHandlersRegistered)
+            return;
+
+        NetworkDialogueService.OnDialogueResponse += HandleNetworkDialogueResponse;
+        NetworkDialogueService.OnDialogueResponseTelemetry += HandleDialogueTelemetry;
+        DialogueFeedbackCollector.OnFeedbackScored += HandleFeedbackScore;
+        m_RuntimeHandlersRegistered = true;
+    }
+
+    private void UnregisterRuntimeHandlers()
+    {
+        if (!m_RuntimeHandlersRegistered)
+            return;
+
+        NetworkDialogueService.OnDialogueResponse -= HandleNetworkDialogueResponse;
+        NetworkDialogueService.OnDialogueResponseTelemetry -= HandleDialogueTelemetry;
+        DialogueFeedbackCollector.OnFeedbackScored -= HandleFeedbackScore;
+        m_RuntimeHandlersRegistered = false;
     }
 
     private bool UseSideChannelOverride => m_DialogueRoutingMode == DialogueRoutingMode.SideChannelOverride;

@@ -1,0 +1,78 @@
+// This file is generated. Do not modify by hand.
+// XML documentation file not found. To check if public methods have XML comments,
+// make sure the XML doc file is present and located next to the scraped dll
+namespace Unity.Cinemachine.Editor
+{
+    public class CinemachineChannelNames : UnityEngine.ScriptableObject
+    {
+        public string[] ChannelNames;
+        public static CinemachineChannelNames Instance { get; }
+        public static CinemachineChannelNames InstanceIfExists { get; }
+        public CinemachineChannelNames() {}
+    }
+
+    public class CinemachineImpulseChannels : UnityEngine.ScriptableObject
+    {
+        public string[] ImpulseChannels;
+        public static CinemachineImpulseChannels Instance { get; }
+        public static CinemachineImpulseChannels InstanceIfExists { get; }
+        public CinemachineImpulseChannels() {}
+    }
+
+    public sealed class CinemachineLensPalette : UnityEngine.ScriptableObject
+    {
+        [UnityEngine.Tooltip(@"The array containing Preset definitions, for nonphysical cameras")] public System.Collections.Generic.List<CinemachineLensPalette.Preset> Presets = new();
+        public static CinemachineLensPalette Instance { get; }
+        public static CinemachineLensPalette InstanceIfExists { get; }
+        public CinemachineLensPalette() {}
+        public int GetMatchingPreset(float verticalFOV);
+        public int GetPresetIndex(string presetName);
+        public struct Preset
+        {
+            [UnityEngine.Serialization.FormerlySerializedAs(@"m_Name")] [UnityEngine.Tooltip(@"Lens Name")] public string Name;
+            [UnityEngine.Range(1f, 179f)] [UnityEngine.Serialization.FormerlySerializedAs(@"m_FieldOfView")] [UnityEngine.Tooltip(@"This is the camera view in vertical degrees. For cinematic people,  a 50mm lens on a super-35mm sensor would equal a 19.6 degree FOV")] public float VerticalFOV;
+        }
+    }
+
+    public sealed class CinemachinePhysicalLensPalette : UnityEngine.ScriptableObject
+    {
+        [UnityEngine.Tooltip(@"The array containing Preset definitions, for physical cameras")] public System.Collections.Generic.List<CinemachinePhysicalLensPalette.Preset> Presets = new();
+        public static CinemachinePhysicalLensPalette Instance { get; }
+        public static CinemachinePhysicalLensPalette InstanceIfExists { get; }
+        public CinemachinePhysicalLensPalette() {}
+        public int GetMatchingPreset(CinemachinePhysicalLensPalette.Preset p);
+        public int GetPresetIndex(string presetName);
+        public struct Preset
+        {
+            [UnityEngine.Serialization.FormerlySerializedAs(@"m_FocalLength")] [UnityEngine.Tooltip(@"This is the camera focal length in mm")] public float FocalLength;
+            [UnityEngine.Serialization.FormerlySerializedAs(@"m_Name")] [UnityEngine.Tooltip(@"Lens Name")] public string Name;
+            [UnityEngine.Tooltip(@"Physical lens settings")] public LensSettings.PhysicalSettings PhysicalProperties;
+        }
+    }
+
+    [System.Obsolete(@"This class is no longer used.")] public abstract class CinemachineTool : UnityEditor.EditorTools.EditorTool, UnityEditor.EditorTools.IDrawSelectedHandles
+    {
+        public override UnityEngine.GUIContent toolbarIcon { get; }
+        protected CinemachineTool() {}
+        protected abstract UnityEngine.GUIContent GetIcon();
+        public override void OnActivated();
+        public void OnDrawHandles();
+        public override void OnWillBeDeactivated();
+    }
+
+    [UnityEditor.CanEditMultipleObjects] [UnityEditor.CustomEditor(typeof(CinemachineVirtualCameraBase), true, isFallback = true)] public class CinemachineVirtualCameraBaseEditor : UnityEditor.Editor
+    {
+        public CinemachineVirtualCameraBaseEditor() {}
+        protected virtual void AddInspectorProperties(UnityEngine.UIElements.VisualElement ux);
+        public override UnityEngine.UIElements.VisualElement CreateInspectorGUI();
+    }
+
+    [UnityEditor.InitializeOnLoad] public class SaveDuringPlay
+    {
+        public static string kEnabledKey = @"SaveDuringPlay_Enabled";
+        public static SaveDuringPlay.OnHotSaveDelegate OnHotSave;
+        public static bool Enabled { get; set; }
+        public SaveDuringPlay() {}
+        public delegate void OnHotSaveDelegate();
+    }
+}

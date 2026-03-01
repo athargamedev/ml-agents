@@ -36,7 +36,7 @@ namespace Network_Game.Dialogue
             public float attachScore;
             public float fitScore;
             public int sampleCount;
-            public int looksCorrectCount;    // P2.4: visibility ratio numerator
+            public int looksCorrectCount; // P2.4: visibility ratio numerator
             public string lastOutcome = string.Empty;
             public string lastUpdatedUtc = string.Empty;
         }
@@ -56,7 +56,7 @@ namespace Network_Game.Dialogue
         [SerializeField]
         [Min(0f)]
         [Tooltip("How strongly each feedback submission changes tuning values.")]
-        private float m_LearningRate = 0.18f;
+        private float m_LearningRate = 0.05f;
 
         [SerializeField]
         [Min(0f)]
@@ -76,11 +76,11 @@ namespace Network_Game.Dialogue
 
         [SerializeField]
         [Range(0f, 1f)]
-        private float m_AttachPreferenceThreshold = 0.35f;
+        private float m_AttachPreferenceThreshold = 0.4f;
 
         [SerializeField]
         [Range(0f, 1f)]
-        private float m_FitPreferenceThreshold = 0.35f;
+        private float m_FitPreferenceThreshold = 0.3f;
 
         [Header("Persistence")]
         [SerializeField]
@@ -285,7 +285,7 @@ namespace Network_Game.Dialogue
             switch (normalized)
             {
                 case "looks_correct":
-                    entry.looksCorrectCount++;  // P2.4: track visibility ratio
+                    entry.looksCorrectCount++; // P2.4: track visibility ratio
                     entry.scaleMultiplier = Mathf.Lerp(entry.scaleMultiplier, 1f, lr);
                     entry.durationMultiplier = Mathf.Lerp(entry.durationMultiplier, 1f, lr);
                     entry.attachScore = Mathf.Lerp(entry.attachScore, 0f, lr * 0.5f);

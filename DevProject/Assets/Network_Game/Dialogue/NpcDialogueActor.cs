@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Network_Game.Diagnostics;
+using Network_Game.Dialogue.Effects;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
@@ -87,6 +88,49 @@ namespace Network_Game.Dialogue
         private void Awake()
         {
             EnsureSpeechTextReference();
+        }
+
+        private void Start()
+        {
+            RegisterProfilePowersIntoCatalog();
+        }
+
+        /// <summary>
+        /// Bridges profile PrefabPowerEntry items into the EffectCatalog so the EffectParser
+        /// can resolve tags like [EFFECT: BigExplosion] that are defined on the profile but
+        /// have no standalone EffectDefinition asset.
+        /// </summary>
+        private void RegisterProfilePowersIntoCatalog()
+        {
+            if (m_Profile == null || m_Profile.PrefabPowers == null || m_Profile.PrefabPowers.Length == 0)
+                return;
+
+            var catalog = EffectCatalog.Load();
+            if (catalog == null)
+                return;
+
+            int registered = 0;
+            foreach (var power in m_Profile.PrefabPowers)
+            {
+                if (power == null || !power.Enabled || string.IsNullOrWhiteSpace(power.PowerName))
+                    continue;
+
+                if (catalog.TryGet(power.PowerName, out _))
+                    continue;
+
+                var def = ScriptableObject.CreateInstance<EffectDefinition>();
+                def.effectTag = power.PowerName;
+                def.effectPrefab = power.EffectPrefab;
+                def.description = $"Profile power: {power.PowerName}";
+                catalog.RegisterRuntimeEffect(def);
+                registered++;
+            }
+
+            if (registered > 0)
+                NGLog.Info(
+                    "DialogueFX",
+                    $"[NpcDialogueActor] Registered {registered} profile power(s) into catalog | npc={gameObject.name}"
+                );
         }
 
         private void LateUpdate()
@@ -242,59 +286,20 @@ namespace Network_Game.Dialogue
                 return string.Empty;
             }
 
-            var sb = new StringBuilder(600);
-            sb.AppendLine("[Effects] Append one hidden tag at the END of your response when a visual should appear.");
-            sb.AppendLine(
-                $"Format: [EFFECT: EffectName | Target: {listenerName}/Self/SceneName"
-                + " | Duration: sec | Scale: x | Intensity: x | Radius: m | Speed: m/s"
-                + " | Color: name|hex | Emotion: peaceful|epic|chaotic|triumphant|sad | Damage: x]"
-            );
-            sb.AppendLine("Omit the tag entirely if nothing visual is happening.");
-            sb.AppendLine(
-                "Think in visible scene results only. Do not reason about Unity internals such as GameObjects, meshes, materials, shaders, or animations."
-            );
-            sb.AppendLine(
-                $"- Target: {listenerName} = affect the listener, Self = affect your own body, SceneName = affect a fixed place in the world."
-            );
-            sb.AppendLine(
-                "- Scale = visual size, Duration = how long it remains visible, Radius = ground area size, Speed = travel speed for moving effects."
-            );
-            sb.AppendLine(
-                "- Use Color or Emotion only to adjust the look of a known effect, never to invent a new effect name."
-            );
-
+            string guide = m_Profile.BuildCompressedEffectGuide(listenerName, 5);
             string sceneInfo = BuildSceneContextInfo();
-            if (!string.IsNullOrWhiteSpace(sceneInfo))
+
+            var sb = new StringBuilder(600);
+            if (!string.IsNullOrWhiteSpace(guide))
             {
-                sb.AppendLine(sceneInfo);
+                sb.AppendLine(guide.Trim());
             }
 
-            sb.AppendLine();
-            sb.AppendLine("[AvailablePowers]");
-
-            PrefabPowerEntry[] powers = m_Profile.PrefabPowers;
-            if (powers != null && powers.Length > 0)
+            if (!string.IsNullOrWhiteSpace(sceneInfo))
             {
-                for (int i = 0; i < powers.Length; i++)
-                {
-                    PrefabPowerEntry entry = powers[i];
-                    if (entry == null || !entry.Enabled)
-                    {
-                        continue;
-                    }
-
-                    string label = string.IsNullOrWhiteSpace(entry.PowerName)
-                        ? entry.EffectPrefab != null
-                        ? entry.EffectPrefab.name
-                        : $"power_{i + 1}"
-                        : entry.PowerName.Trim();
-
-                    string description = !string.IsNullOrWhiteSpace(entry.VisualDescription)
-                        ? entry.VisualDescription
-                        : $"Particle effect: {label}";
-
-                    BuildEffectCard(sb, label, description, entry);
-                }
+                if (sb.Length > 0)
+                    sb.AppendLine();
+                sb.AppendLine(sceneInfo.Trim());
             }
 
             TryAppendCatalogPowers(sb);
@@ -933,8 +938,10 @@ namespace Network_Game.Dialogue
                     }
                 }
 
+                // Use GetAllRegisteredEffects() so runtime-registered NPC powers from
+                // other actors (and any future catalog entries) appear in this NPC's prompt.
                 bool addedAny = false;
-                foreach (var effect in catalog.allEffects)
+                foreach (var effect in catalog.GetAllRegisteredEffects())
                 {
                     if (effect == null || string.IsNullOrWhiteSpace(effect.effectTag))
                         continue;

@@ -13,7 +13,7 @@ namespace Network_Game.Dialogue.Effects
     public static class EffectParser
     {
         private static readonly Regex TagRegex = new Regex(
-            @"\[(?:EFFECT|FX|POWER)\s*:\s*([^\]]+)\]",
+            @"\[\s*(?:EFFECT|FX|POWER)\s*:\s*([^\]]+)\]",
             RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline
         );
         private static readonly Regex BareTagRegex = new Regex(

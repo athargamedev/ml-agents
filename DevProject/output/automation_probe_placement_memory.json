@@ -1,11 +1,17 @@
 {
     "schema_version": 1,
-    "updated_utc": "2026-02-28T06:08:31.5080261Z",
+    "updated_utc": "2026-03-01T07:50:15.9204407Z",
     "entries": [
         {
             "effect_tag": "bigexplosion",
             "disfavored_placements": [
                 "area"
+            ]
+        },
+        {
+            "effect_tag": "dissolve",
+            "disfavored_placements": [
+                "attached"
             ]
         },
         {
@@ -15,19 +21,11 @@
             ]
         },
         {
-            "effect_tag": "electricalsparks",
-            "disfavored_placements": [
-                "attached",
-                "area",
-                "projectile",
-                "ambient"
-            ]
-        },
-        {
             "effect_tag": "electricalsparkseffect",
             "disfavored_placements": [
                 "attached",
-                "area"
+                "area",
+                "projectile"
             ]
         },
         {
@@ -49,16 +47,20 @@
             "effect_tag": "flamestream",
             "disfavored_placements": [
                 "attached",
-                "area",
-                "projectile",
-                "ambient"
+                "area"
+            ]
+        },
+        {
+            "effect_tag": "groundfog",
+            "disfavored_placements": [
+                "attached"
             ]
         },
         {
             "effect_tag": "icelance",
             "disfavored_placements": [
-                "projectile",
                 "attached",
+                "projectile",
                 "area",
                 "ambient"
             ]
@@ -66,7 +68,6 @@
         {
             "effect_tag": "largeflames",
             "disfavored_placements": [
-                "attached",
                 "area"
             ]
         },
@@ -86,33 +87,7 @@
             ]
         },
         {
-            "effect_tag": "plasmaexplosioneffect",
-            "disfavored_placements": [
-                "area"
-            ]
-        },
-        {
             "effect_tag": "respawn",
-            "disfavored_placements": [
-                "attached",
-                "area"
-            ]
-        },
-        {
-            "effect_tag": "rockettrail",
-            "disfavored_placements": [
-                "attached",
-                "area"
-            ]
-        },
-        {
-            "effect_tag": "shower",
-            "disfavored_placements": [
-                "attached"
-            ]
-        },
-        {
-            "effect_tag": "smokeeffect",
             "disfavored_placements": [
                 "attached",
                 "area",
@@ -121,22 +96,9 @@
             ]
         },
         {
-            "effect_tag": "tinyexplosion",
-            "disfavored_placements": [
-                "area"
-            ]
-        },
-        {
             "effect_tag": "waterfall",
             "disfavored_placements": [
-                "attached",
                 "area",
-                "projectile"
-            ]
-        },
-        {
-            "effect_tag": "waterleak",
-            "disfavored_placements": [
                 "attached"
             ]
         },

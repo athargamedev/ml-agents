@@ -1,0 +1,81 @@
+[INFO] Listening on port 5004. Start training by pressing the Play button in the Unity Editor.
+[INFO] Connected to Unity environment with package version 4.0.2 and communication version 1.5.0
+[INFO] Connected new brain: Walker?team=0
+
+
+	Unity Technologies
+
+ Version information:
+  ml-agents: 1.2.0.dev0,
+  ml-agents-envs: 1.2.0.dev0,
+  Communicator API: 1.5.0,
+  PyTorch: 2.2.2+cu121
+[INFO] Hyperparameters for behavior name Walker: 
+	trainer_type:	ppo
+	hyperparameters:	
+	  batch_size:	2048
+	  buffer_size:	20480
+	  learning_rate:	0.0003
+	  beta:	0.005
+	  epsilon:	0.2
+	  lambd:	0.95
+	  num_epoch:	3
+	  shared_critic:	False
+	  learning_rate_schedule:	linear
+	  beta_schedule:	linear
+	  epsilon_schedule:	linear
+	checkpoint_interval:	500000
+	network_settings:	
+	  normalize:	True
+	  hidden_units:	256
+	  num_layers:	3
+	  vis_encode_type:	simple
+	  memory:	None
+	  goal_conditioning_type:	hyper
+	  deterministic:	False
+	reward_signals:	
+	  extrinsic:	
+	    gamma:	0.995
+	    strength:	1.0
+	    network_settings:	
+	      normalize:	False
+	      hidden_units:	128
+	      num_layers:	2
+	      vis_encode_type:	simple
+	      memory:	None
+	      goal_conditioning_type:	hyper
+	      deterministic:	False
+	init_path:	None
+	keep_checkpoints:	5
+	even_checkpoints:	False
+	max_steps:	30000000
+	time_horizon:	1000
+	summary_freq:	30000
+	threaded:	False
+	self_play:	None
+	behavioral_cloning:	None
+[INFO] Walker. Step: 30000. Time Elapsed: 105.960 s. Mean Reward: -0.819. Std of Reward: 0.354. Training.
+[INFO] Walker. Step: 60000. Time Elapsed: 164.794 s. Mean Reward: -0.725. Std of Reward: 0.495. Training.
+[INFO] Walker. Step: 90000. Time Elapsed: 224.480 s. Mean Reward: -0.526. Std of Reward: 0.810. Training.
+[INFO] Walker. Step: 120000. Time Elapsed: 282.620 s. Mean Reward: -0.361. Std of Reward: 1.028. Training.
+[INFO] Walker. Step: 150000. Time Elapsed: 358.085 s. Mean Reward: -0.087. Std of Reward: 1.369. Training.
+[INFO] Walker. Step: 180000. Time Elapsed: 425.708 s. Mean Reward: 0.167. Std of Reward: 1.530. Training.
+[INFO] Walker. Step: 210000. Time Elapsed: 490.935 s. Mean Reward: 0.421. Std of Reward: 1.801. Training.
+[INFO] Walker. Step: 240000. Time Elapsed: 547.850 s. Mean Reward: 0.748. Std of Reward: 2.144. Training.
+[INFO] Walker. Step: 270000. Time Elapsed: 620.091 s. Mean Reward: 0.919. Std of Reward: 2.272. Training.
+[INFO] Walker. Step: 300000. Time Elapsed: 675.332 s. Mean Reward: 1.131. Std of Reward: 2.478. Training.
+[INFO] Walker. Step: 330000. Time Elapsed: 735.975 s. Mean Reward: 1.429. Std of Reward: 2.607. Training.
+[INFO] Walker. Step: 360000. Time Elapsed: 792.514 s. Mean Reward: 1.848. Std of Reward: 2.955. Training.
+[INFO] Walker. Step: 390000. Time Elapsed: 852.188 s. Mean Reward: 1.981. Std of Reward: 3.042. Training.
+[INFO] Walker. Step: 420000. Time Elapsed: 909.796 s. Mean Reward: 2.281. Std of Reward: 3.221. Training.
+[INFO] Walker. Step: 450000. Time Elapsed: 980.201 s. Mean Reward: 2.578. Std of Reward: 3.409. Training.
+[INFO] Walker. Step: 480000. Time Elapsed: 1045.929 s. Mean Reward: 2.895. Std of Reward: 3.603. Training.
+[INFO] Exported results\walker_20260228_070312\Walker\Walker-499992.onnx
+[INFO] Walker. Step: 510000. Time Elapsed: 1105.597 s. Mean Reward: 3.285. Std of Reward: 3.885. Training.
+[INFO] Walker. Step: 540000. Time Elapsed: 1169.657 s. Mean Reward: 3.471. Std of Reward: 3.975. Training.
+[INFO] Walker. Step: 570000. Time Elapsed: 1248.406 s. Mean Reward: 3.715. Std of Reward: 4.126. Training.
+[INFO] Walker. Step: 600000. Time Elapsed: 1313.398 s. Mean Reward: 4.094. Std of Reward: 4.418. Training.
+[WARNING] Restarting worker[0] after 'Communicator has exited.'
+[INFO] Listening on port 5004. Start training by pressing the Play button in the Unity Editor.
+[INFO] Exported results\walker_20260228_070312\Walker\Walker-608965.onnx
+[INFO] Copied results\walker_20260228_070312\Walker\Walker-608965.onnx to results\walker_20260228_070312\Walker.onnx.

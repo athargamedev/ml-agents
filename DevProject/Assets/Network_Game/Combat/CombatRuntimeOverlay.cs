@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using Network_Game.Dialogue;
+using Network_Game.UI;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 namespace Network_Game.Combat
 {
@@ -47,6 +49,12 @@ namespace Network_Game.Combat
         private bool m_PlayerListDirty = true;
         private GUIStyle m_HeaderLabelStyle;
         private GUIStyle m_LogLabelStyle;
+        private VisualElement m_UiHostRoot;
+        private VisualElement m_UiOverlayRoot;
+        private Label m_UiNetLabel;
+        private VisualElement m_UiHealthList;
+        private VisualElement m_UiEffectsList;
+        private VisualElement m_UiDamageList;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void EnsureInstance()
@@ -115,10 +123,13 @@ namespace Network_Game.Combat
             CombatHealth.OnDamageApplied -= HandleDamageApplied;
             CombatHealth.OnHealthChanged -= HandleHealthChanged;
             DialogueSceneEffectsController.OnEffectApplied -= HandleEffectApplied;
+            DestroyUiToolkitOverlay();
         }
 
         private void Update()
         {
+            TryEnsureUiToolkitOverlay();
+
             if (Keyboard.current != null && Keyboard.current[m_ToggleKey].wasPressedThisFrame)
             {
                 m_ShowOverlay = !m_ShowOverlay;
@@ -137,10 +148,16 @@ namespace Network_Game.Combat
             float now = Time.unscaledTime;
             PruneExpiredLogs(m_RecentEffects, now);
             PruneExpiredLogs(m_RecentDamage, now);
+            RefreshUiToolkitOverlay();
         }
 
         private void OnGUI()
         {
+            if (m_UiOverlayRoot != null && m_UiOverlayRoot.panel != null)
+            {
+                return;
+            }
+
             if (!m_ShowOverlay)
             {
                 return;
@@ -420,6 +437,325 @@ namespace Network_Game.Combat
                 };
                 m_LogLabelStyle.normal.textColor = new Color(0.92f, 0.92f, 0.92f);
             }
+        }
+
+        private void TryEnsureUiToolkitOverlay()
+        {
+            if (m_UiHostRoot != null && !IsUsableUiToolkitHostRoot(m_UiHostRoot))
+            {
+                DestroyUiToolkitOverlay();
+            }
+
+            if (m_UiOverlayRoot != null && m_UiOverlayRoot.parent != null && m_UiOverlayRoot.panel != null)
+            {
+                return;
+            }
+
+            VisualElement hudZone = ModernHudController.TryGetZone(ModernHudController.HudZone.TopLeft);
+            if (hudZone != null)
+            {
+                BuildUiToolkitOverlay(hudZone, true);
+                RefreshUiToolkitOverlay();
+                return;
+            }
+
+            VisualElement hostRoot = FindUiToolkitHostRoot();
+            if (hostRoot == null)
+            {
+                return;
+            }
+
+            BuildUiToolkitOverlay(hostRoot, false);
+            RefreshUiToolkitOverlay();
+        }
+
+        private void BuildUiToolkitOverlay(VisualElement hostRoot, bool useHudZone)
+        {
+            m_UiHostRoot = hostRoot;
+
+            var overlay = new VisualElement { name = "combat-runtime-overlay" };
+            overlay.style.display = DisplayStyle.None;
+            overlay.style.backgroundColor = new Color(0.06f, 0.07f, 0.09f, 0.78f);
+            overlay.style.borderTopLeftRadius = 10f;
+            overlay.style.borderTopRightRadius = 10f;
+            overlay.style.borderBottomLeftRadius = 10f;
+            overlay.style.borderBottomRightRadius = 10f;
+            overlay.style.borderTopWidth = 1f;
+            overlay.style.borderRightWidth = 1f;
+            overlay.style.borderBottomWidth = 1f;
+            overlay.style.borderLeftWidth = 1f;
+            overlay.style.borderTopColor = new Color(0.24f, 0.28f, 0.34f, 1f);
+            overlay.style.borderRightColor = new Color(0.24f, 0.28f, 0.34f, 1f);
+            overlay.style.borderBottomColor = new Color(0.24f, 0.28f, 0.34f, 1f);
+            overlay.style.borderLeftColor = new Color(0.24f, 0.28f, 0.34f, 1f);
+            overlay.style.paddingLeft = 10f;
+            overlay.style.paddingRight = 10f;
+            overlay.style.paddingTop = 8f;
+            overlay.style.paddingBottom = 8f;
+            overlay.pickingMode = PickingMode.Ignore;
+
+            if (!useHudZone)
+            {
+                overlay.style.width = Mathf.Clamp(m_PanelWidth, 320f, 760f);
+                overlay.style.position = Position.Absolute;
+                overlay.style.left = m_PanelPosition.x;
+                overlay.style.top = m_PanelPosition.y;
+            }
+            else
+            {
+                overlay.style.width = new Length(100f, LengthUnit.Percent);
+                overlay.style.position = Position.Relative;
+                overlay.style.marginBottom = 8f;
+                overlay.style.alignSelf = Align.FlexStart;
+            }
+
+            var title = new Label($"Combat Runtime  ({m_ToggleKey})");
+            title.style.fontSize = 11f;
+            title.style.unityFontStyleAndWeight = FontStyle.Bold;
+            title.style.color = new Color(0.88f, 0.95f, 1f, 1f);
+            title.style.marginBottom = 4f;
+            overlay.Add(title);
+
+            m_UiNetLabel = CreateOverlayLabel(10f, true);
+            overlay.Add(m_UiNetLabel);
+
+            m_UiHealthList = CreateListContainer(4f);
+            overlay.Add(m_UiHealthList);
+
+            overlay.Add(CreateSectionHeader("Recent effects:"));
+            m_UiEffectsList = CreateListContainer(2f);
+            overlay.Add(m_UiEffectsList);
+
+            overlay.Add(CreateSectionHeader("Recent damage:"));
+            m_UiDamageList = CreateListContainer(0f);
+            overlay.Add(m_UiDamageList);
+
+            hostRoot.Add(overlay);
+            m_UiOverlayRoot = overlay;
+        }
+
+        private void RefreshUiToolkitOverlay()
+        {
+            if (m_UiOverlayRoot == null)
+            {
+                return;
+            }
+
+            m_UiOverlayRoot.style.display = m_ShowOverlay ? DisplayStyle.Flex : DisplayStyle.None;
+            if (!m_ShowOverlay)
+            {
+                return;
+            }
+
+            NetworkManager networkManager = NetworkManager.Singleton;
+            string netState =
+                networkManager == null
+                ? "offline"
+                : networkManager.IsServer
+                ? "server"
+                : networkManager.IsClient ? "client" : "unknown";
+
+            if (m_UiNetLabel != null)
+            {
+                m_UiNetLabel.text = $"Net: {netState} | Players tracked: {m_PlayerHealthTargets.Count}";
+            }
+
+            RebuildHealthListUi();
+            RebuildLogListUi(m_UiEffectsList, m_RecentEffects);
+            RebuildLogListUi(m_UiDamageList, m_RecentDamage);
+        }
+
+        private void RebuildHealthListUi()
+        {
+            if (m_UiHealthList == null)
+            {
+                return;
+            }
+
+            m_UiHealthList.Clear();
+            if (m_PlayerHealthTargets.Count == 0)
+            {
+                m_UiHealthList.Add(CreateOverlayLabel("No player CombatHealth found.", 9f, 0f));
+                return;
+            }
+
+            for (int i = 0; i < m_PlayerHealthTargets.Count; i++)
+            {
+                CombatHealth health = m_PlayerHealthTargets[i];
+                if (health == null)
+                {
+                    continue;
+                }
+
+                NetworkObject networkObject = health.CachedNetworkObject;
+                string playerLabel = health.gameObject.name;
+                if (networkObject != null)
+                {
+                    playerLabel =
+                        $"{playerLabel} [obj:{networkObject.NetworkObjectId} owner:{networkObject.OwnerClientId}]";
+                }
+
+                float maxHealth = Mathf.Max(1f, health.MaxHealth);
+                float currentHealth = Mathf.Clamp(health.CurrentHealth, 0f, maxHealth);
+                float fillRatio = currentHealth / maxHealth;
+
+                var row = new VisualElement();
+                row.style.marginBottom = 4f;
+
+                row.Add(CreateOverlayLabel($"{playerLabel}  {currentHealth:0}/{maxHealth:0}", 9f, 1f));
+
+                var barTrack = new VisualElement();
+                barTrack.style.height = 8f;
+                barTrack.style.marginTop = 1f;
+                barTrack.style.backgroundColor = new Color(0f, 0f, 0f, 0.6f);
+                barTrack.style.borderTopLeftRadius = 4f;
+                barTrack.style.borderTopRightRadius = 4f;
+                barTrack.style.borderBottomLeftRadius = 4f;
+                barTrack.style.borderBottomRightRadius = 4f;
+
+                var barFill = new VisualElement();
+                barFill.style.height = 8f;
+                barFill.style.width = Length.Percent(fillRatio * 100f);
+                barFill.style.backgroundColor = Color.Lerp(
+                    new Color(0.85f, 0.15f, 0.15f),
+                    new Color(0.1f, 0.75f, 0.2f),
+                    fillRatio
+                );
+                barFill.style.borderTopLeftRadius = 4f;
+                barFill.style.borderTopRightRadius = 4f;
+                barFill.style.borderBottomLeftRadius = 4f;
+                barFill.style.borderBottomRightRadius = 4f;
+
+                barTrack.Add(barFill);
+                row.Add(barTrack);
+                m_UiHealthList.Add(row);
+            }
+        }
+
+        private void RebuildLogListUi(VisualElement container, List<LogEntry> entries)
+        {
+            if (container == null)
+            {
+                return;
+            }
+
+            container.Clear();
+            int count = Mathf.Min(m_MaxLogEntries, entries.Count);
+            int start = Mathf.Max(0, entries.Count - count);
+            for (int i = start; i < entries.Count; i++)
+            {
+                LogEntry entry = entries[i];
+                if (entry == null)
+                {
+                    continue;
+                }
+
+                container.Add(CreateOverlayLabel(entry.Text, 9f, 1f));
+            }
+
+            if (count == 0)
+            {
+                container.Add(CreateOverlayLabel("(none yet)", 9f, 1f));
+            }
+        }
+
+        private static VisualElement CreateListContainer(float marginBottom)
+        {
+            var container = new VisualElement();
+            container.style.marginBottom = marginBottom;
+            return container;
+        }
+
+        private static Label CreateSectionHeader(string text)
+        {
+            var label = new Label(text);
+            label.style.fontSize = 10f;
+            label.style.unityFontStyleAndWeight = FontStyle.Bold;
+            label.style.color = new Color(0.88f, 0.95f, 1f, 1f);
+            label.style.marginTop = 2f;
+            label.style.marginBottom = 1f;
+            return label;
+        }
+
+        private static Label CreateOverlayLabel(string text, float fontSize, float marginBottom)
+        {
+            var label = new Label(text);
+            label.style.fontSize = fontSize;
+            label.style.color = new Color(0.92f, 0.92f, 0.92f, 1f);
+            label.style.whiteSpace = WhiteSpace.NoWrap;
+            label.style.marginBottom = marginBottom;
+            return label;
+        }
+
+        private static Label CreateOverlayLabel(float fontSize, bool bold)
+        {
+            var label = CreateOverlayLabel(string.Empty, fontSize, 2f);
+            if (bold)
+            {
+                label.style.unityFontStyleAndWeight = FontStyle.Bold;
+            }
+
+            return label;
+        }
+
+        private void DestroyUiToolkitOverlay()
+        {
+            if (m_UiOverlayRoot != null && m_UiOverlayRoot.parent != null)
+            {
+                m_UiOverlayRoot.parent.Remove(m_UiOverlayRoot);
+            }
+
+            m_UiHostRoot = null;
+            m_UiOverlayRoot = null;
+            m_UiNetLabel = null;
+            m_UiHealthList = null;
+            m_UiEffectsList = null;
+            m_UiDamageList = null;
+        }
+
+        private static bool IsUsableUiToolkitHostRoot(VisualElement hostRoot)
+        {
+            if (hostRoot == null || hostRoot.panel == null)
+            {
+                return false;
+            }
+
+            return hostRoot.resolvedStyle.display != DisplayStyle.None;
+        }
+
+        private static VisualElement FindUiToolkitHostRoot()
+        {
+            ModernHudController hud = FindAnyObjectByType<ModernHudController>();
+            if (hud != null)
+            {
+                UIDocument[] preferred =
+                {
+                    hud.DialogueDocument,
+                    hud.ProfileDocument,
+                    hud.LoginDocument,
+                };
+
+                for (int i = 0; i < preferred.Length; i++)
+                {
+                    UIDocument doc = preferred[i];
+                    if (doc != null && doc.isActiveAndEnabled && IsUsableUiToolkitHostRoot(doc.rootVisualElement))
+                    {
+                        return doc.rootVisualElement;
+                    }
+                }
+            }
+
+            UIDocument[] docs = FindObjectsByType<UIDocument>(FindObjectsInactive.Exclude);
+            for (int i = 0; i < docs.Length; i++)
+            {
+                UIDocument doc = docs[i];
+                if (doc != null && doc.isActiveAndEnabled && IsUsableUiToolkitHostRoot(doc.rootVisualElement))
+                {
+                    return doc.rootVisualElement;
+                }
+            }
+
+            return null;
         }
     }
 }

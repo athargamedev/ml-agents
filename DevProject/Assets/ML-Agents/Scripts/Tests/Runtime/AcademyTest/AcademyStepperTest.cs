@@ -1,9 +1,9 @@
 using System.Collections;
 using NUnit.Framework;
-using UnityEngine.TestTools;
+using Unity.MLAgents;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Unity.MLAgents;
+using UnityEngine.TestTools;
 #if UNITY_EDITOR
 using UnityEditor.SceneManagement;
 #endif
@@ -18,7 +18,9 @@ namespace Tests
             // We need register the communicator first before accessing the Academy.
             CommunicatorFactory.Register<ICommunicator>(RpcCommunicator.Create);
             Academy.Instance.Dispose();
-            SceneManager.LoadScene("ML-Agents/Scripts/Tests/Runtime/AcademyTest/AcademyStepperTestScene");
+            SceneManager.LoadScene(
+                "ML-Agents/Scripts/Tests/Runtime/AcademyTest/AcademyStepperTestScene"
+            );
             var academy = Academy.Instance;
         }
 

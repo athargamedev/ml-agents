@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using Network_Game.Diagnostics;
 using Unity.Cinemachine;
 using Unity.Netcode;
@@ -75,47 +76,6 @@ namespace Network_Game.Behavior
                 return false;
             }
 
-            CinemachineVirtualCameraBase cmCamera = ResolveActiveVirtualCamera(brain);
-            if (cmCamera == null)
-            {
-                NGLog.Warn("CameraManager", "No active Cinemachine virtual camera found.");
-                return false;
-            }
-
-            // Normalize blend hints
-            if (
-                cmCamera is CinemachineCamera cinemachineCamera
-                && (int)cinemachineCamera.BlendHint < 0
-            )
-            {
-                cinemachineCamera.BlendHint = (CinemachineCore.BlendHints) 0;
-                NGLog.Warn("CameraManager", $"Normalized invalid blend hint on '{cmCamera.name}'");
-            }
-
-            // Safeguard against asset targets
-            if (
-                cmCamera.Follow != null
-                && string.IsNullOrEmpty(cmCamera.Follow.gameObject.scene.name)
-            )
-            {
-                NGLog.Warn(
-                    "CameraManager",
-                    $"Camera '{cmCamera.name}' Follow target is an asset. Clearing."
-                );
-                cmCamera.Follow = null;
-            }
-            if (
-                cmCamera.LookAt != null
-                && string.IsNullOrEmpty(cmCamera.LookAt.gameObject.scene.name)
-            )
-            {
-                NGLog.Warn(
-                    "CameraManager",
-                    $"Camera '{cmCamera.name}' LookAt target is an asset. Clearing."
-                );
-                cmCamera.LookAt = null;
-            }
-
             Transform cameraRoot = FindCameraTarget(player);
             if (cameraRoot == null)
             {
@@ -123,23 +83,42 @@ namespace Network_Game.Behavior
                 return false;
             }
 
-            bool changed = false;
-            if (cmCamera.Follow != cameraRoot)
+            List<CinemachineVirtualCameraBase> virtualCameras = ResolveCandidateVirtualCameras(brain);
+            if (virtualCameras.Count == 0)
             {
-                NGLog.Info(
-                    "CameraManager",
-                    $"Assigning Follow target '{cameraRoot.name}' to '{cmCamera.name}'"
-                );
-                cmCamera.Follow = cameraRoot;
-                changed = true;
-            }
-            if (cmCamera.LookAt != cameraRoot)
-            {
-                cmCamera.LookAt = cameraRoot;
-                changed = true;
+                NGLog.Warn("CameraManager", "No active Cinemachine virtual camera found.");
+                return false;
             }
 
-            return changed || (cmCamera.Follow == cameraRoot);
+            bool changed = false;
+            bool bound = false;
+            foreach (CinemachineVirtualCameraBase cmCamera in virtualCameras)
+            {
+                changed |= NormalizeAndSanitizeCamera(cmCamera);
+
+                if (cmCamera.Follow != cameraRoot)
+                {
+                    NGLog.Info(
+                        "CameraManager",
+                        $"Assigning Follow target '{cameraRoot.name}' to '{cmCamera.name}'"
+                    );
+                    cmCamera.Follow = cameraRoot;
+                    changed = true;
+                }
+
+                if (cmCamera.LookAt != cameraRoot)
+                {
+                    cmCamera.LookAt = cameraRoot;
+                    changed = true;
+                }
+
+                if (cmCamera.Follow == cameraRoot)
+                {
+                    bound = true;
+                }
+            }
+
+            return changed || bound;
         }
 
         private Transform FindCameraTarget(GameObject player)
@@ -160,11 +139,95 @@ namespace Network_Game.Behavior
                 Transform[] children = player.GetComponentsInChildren<Transform>(true);
                 foreach (var child in children)
                 {
+                    if (child.name == "PlayerCameraRoot")
+                        return child;
+
                     if (child.CompareTag("CinemachineTarget"))
                         return child;
                 }
             }
             return cameraRoot;
+        }
+
+        private bool NormalizeAndSanitizeCamera(CinemachineVirtualCameraBase cmCamera)
+        {
+            bool changed = false;
+
+            if (
+                cmCamera is CinemachineCamera cinemachineCamera
+                && (int)cinemachineCamera.BlendHint < 0
+            )
+            {
+                cinemachineCamera.BlendHint = (CinemachineCore.BlendHints) 0;
+                NGLog.Warn("CameraManager", $"Normalized invalid blend hint on '{cmCamera.name}'");
+                changed = true;
+            }
+
+            if (
+                cmCamera.Follow != null
+                && string.IsNullOrEmpty(cmCamera.Follow.gameObject.scene.name)
+            )
+            {
+                NGLog.Warn(
+                    "CameraManager",
+                    $"Camera '{cmCamera.name}' Follow target is an asset. Clearing."
+                );
+                cmCamera.Follow = null;
+                changed = true;
+            }
+
+            if (
+                cmCamera.LookAt != null
+                && string.IsNullOrEmpty(cmCamera.LookAt.gameObject.scene.name)
+            )
+            {
+                NGLog.Warn(
+                    "CameraManager",
+                    $"Camera '{cmCamera.name}' LookAt target is an asset. Clearing."
+                );
+                cmCamera.LookAt = null;
+                changed = true;
+            }
+
+            return changed;
+        }
+
+        private List<CinemachineVirtualCameraBase> ResolveCandidateVirtualCameras(
+            CinemachineBrain brain
+        )
+        {
+            var result = new List<CinemachineVirtualCameraBase>();
+            CinemachineVirtualCameraBase activeCamera = ResolveActiveVirtualCamera(brain);
+            if (activeCamera != null)
+            {
+                result.Add(activeCamera);
+            }
+
+#if UNITY_2023_1_OR_NEWER
+            var virtualCameras = FindObjectsByType<CinemachineVirtualCameraBase>(
+                FindObjectsInactive.Include
+            );
+#else
+            var virtualCameras = FindObjectsByType<CinemachineVirtualCameraBase>(
+                FindObjectsInactive.Include
+            );
+#endif
+            foreach (CinemachineVirtualCameraBase vcam in virtualCameras)
+            {
+                if (
+                    vcam == null
+                    || !vcam.isActiveAndEnabled
+                    || !vcam.gameObject.activeInHierarchy
+                    || result.Contains(vcam)
+                )
+                {
+                    continue;
+                }
+
+                result.Add(vcam);
+            }
+
+            return result;
         }
 
         private CinemachineVirtualCameraBase ResolveActiveVirtualCamera(CinemachineBrain brain)
@@ -262,6 +325,12 @@ namespace Network_Game.Behavior
                     return localPlayer;
                 }
 
+                GameObject ownedTaggedPlayer = ResolveTaggedPlayerCandidate(manager, "Player");
+                if (ownedTaggedPlayer != null)
+                {
+                    return ownedTaggedPlayer;
+                }
+
                 // In multiplayer, avoid binding camera/input to another client's tagged player
                 // while waiting for the local player object to spawn.
                 if (manager.IsListening)
@@ -270,7 +339,50 @@ namespace Network_Game.Behavior
                 }
             }
 
-            return GameObject.FindGameObjectWithTag("Player");
+            return ResolveTaggedPlayerCandidate(null, "Player");
+        }
+
+        private static GameObject ResolveTaggedPlayerCandidate(NetworkManager manager, string tagName)
+        {
+            if (string.IsNullOrWhiteSpace(tagName))
+            {
+                return null;
+            }
+
+            GameObject[] candidates = GameObject.FindGameObjectsWithTag(tagName);
+            if (candidates == null || candidates.Length == 0)
+            {
+                return null;
+            }
+
+            if (manager != null)
+            {
+                ulong localClientId = manager.LocalClientId;
+                foreach (GameObject candidate in candidates)
+                {
+                    if (candidate == null || !candidate.activeInHierarchy)
+                    {
+                        continue;
+                    }
+
+                    NetworkObject networkObject = candidate.GetComponent<NetworkObject>();
+                    if (
+                        networkObject != null
+                        && networkObject.IsSpawned
+                        && networkObject.OwnerClientId == localClientId
+                    )
+                    {
+                        return candidate;
+                    }
+                }
+            }
+
+            if (candidates.Length == 1 && candidates[0] != null && candidates[0].activeInHierarchy)
+            {
+                return candidates[0];
+            }
+
+            return null;
         }
 
         [ContextMenu("Log Camera Binding Snapshot")]

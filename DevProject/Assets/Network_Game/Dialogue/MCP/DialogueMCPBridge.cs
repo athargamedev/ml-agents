@@ -2555,6 +2555,18 @@ namespace Network_Game.Dialogue.MCP
                     return;
                 }
 
+                DialogueEffectFeedbackPrompt prompt = DialogueEffectFeedbackPrompt.EnsureForAutomation();
+                if (prompt != null)
+                {
+                    prompt.ForceEnablePrompt(true);
+                }
+                else
+                {
+                    Debug.LogWarning(
+                        "[DialogueMCP] Feedback prompt instance could not be created; probes may auto-advance with no_feedback_prompt."
+                    );
+                }
+
                 IsRunning = true;
                 m_NextStepAt = UnityEditor.EditorApplication.timeSinceStartup;
                 UnityEditor.EditorApplication.update += Tick;

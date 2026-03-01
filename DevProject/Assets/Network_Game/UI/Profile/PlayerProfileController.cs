@@ -1,4 +1,5 @@
 using Network_Game.Auth;
+using Network_Game.UI;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -41,6 +42,10 @@ namespace Network_Game.UI.Profile
             {
                 UpdateProfile(LocalPlayerAuthService.Instance.CurrentPlayer);
             }
+            else
+            {
+                SetProfileVisible(false);
+            }
         }
 
         private void OnDisable()
@@ -80,7 +85,7 @@ namespace Network_Game.UI.Profile
             m_BioLabel.text = LocalPlayerAuthService.Instance.GetCustomizationJson();
             RefreshClientIdLabel();
 
-            m_ProfileCard.style.display = DisplayStyle.Flex;
+            SetProfileVisible(true);
         }
 
         private void ClearProfile()
@@ -90,6 +95,7 @@ namespace Network_Game.UI.Profile
             m_StatusLabel.style.color = new StyleColor(new Color(1f, 1f, 1f, 0.5f));
             m_BioLabel.text = "";
             m_ClientIdLabel.text = "-";
+            SetProfileVisible(false);
         }
 
         private void RefreshClientIdLabel()
@@ -119,6 +125,17 @@ namespace Network_Game.UI.Profile
             if (!string.Equals(m_ClientIdLabel.text, value))
             {
                 m_ClientIdLabel.text = value;
+            }
+        }
+
+        private void SetProfileVisible(bool visible)
+        {
+            if (!ModernHudController.SetPanelVisible(ModernHudController.HudPanel.Profile, visible))
+            {
+                if (m_ProfileCard != null)
+                {
+                    m_ProfileCard.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
+                }
             }
         }
     }

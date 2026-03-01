@@ -155,7 +155,7 @@ namespace Network_Game.Dialogue
                         stepDistance,
                         ~0,
                         QueryTriggerInteraction.Ignore
-                    ) && !IsSourceCollider(hit.collider)
+                        ) && !IsSourceCollider(hit.collider)
                 )
                 {
                     transform.position = hit.point;

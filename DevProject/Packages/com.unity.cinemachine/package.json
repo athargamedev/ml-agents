@@ -1,0 +1,69 @@
+{
+  "name": "com.unity.cinemachine",
+  "displayName": "Cinemachine",
+  "version": "3.1.6",
+  "unity": "2022.3",
+  "description": "Smart camera tools for passionate creators. \n\nCinemachine 3 is a newer and better version of Cinemachine, but upgrading an existing project from 2.X will likely require some effort.  If you're considering upgrading an older project, please see our upgrade guide in the user manual.",
+  "keywords": [
+    "camera",
+    "follow",
+    "rig",
+    "fps",
+    "cinematography",
+    "aim",
+    "orbit",
+    "cutscene",
+    "cinematic",
+    "collision",
+    "freelook",
+    "cinemachine",
+    "compose",
+    "composition",
+    "dolly",
+    "track",
+    "clearshot",
+    "noise",
+    "framing",
+    "handheld",
+    "lens",
+    "impulse"
+  ],
+  "category": "cinematography",
+  "dependencies": {
+    "com.unity.splines": "2.0.0",
+    "com.unity.modules.imgui": "1.0.0"
+  },
+  "samples": [
+    {
+      "displayName": "2D Samples",
+      "description": "Sample scenes illustrating various ways to use Cinemachine in a 2D setting",
+      "path": "Samples~/2D Samples"
+    },
+    {
+      "displayName": "3D Samples",
+      "description": "Sample scenes illustrating various ways to use Cinemachine in a 3D setting",
+      "path": "Samples~/3D Samples"
+    },
+    {
+      "displayName": "Input System Samples",
+      "description": "Sample scenes illustrating various ways to use Cinemachine with the input system.",
+      "path": "Samples~/Input System Samples"
+    }
+  ],
+  "relatedPackages": {
+    "com.unity.cinemachine.tests": "3.1.6"
+  },
+  "_upm": {
+    "changelog": "### Bugfixes\n- Fixed look at being ignored in third person camera when camera is navel gazing.\n- Fixed error when both HDRP and URP rendering pipelines are added to a project.\\\n- Fixed outdated warning on RotationComposerComponent.\n- Fixed GC Alloc in CinemachineInputAxisController.Update().\n- Fixed ForceCameraPosition regression in CinemachineFollow/CinemachineOrbitalFollow/CinemachineTransposer/CinemachineOrbitalTransposer to allow looking away from targets.\n\n### Changed\n- Converted code using InstanceID references and API to EntityID."
+  },
+  "upmCi": {
+    "footprint": "6dc8acadce3d110263039c01f57b757182f33a77"
+  },
+  "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.cinemachine@3.1/manual/index.html",
+  "repository": {
+    "url": "https://github.com/Unity-Technologies/com.unity.cinemachine.git",
+    "type": "git",
+    "revision": "293f7764a9c6e9f087fad05023a586dcfdc1939b"
+  },
+  "_fingerprint": "285f385454873b7d4509f804a9b4c840e834066a"
+}

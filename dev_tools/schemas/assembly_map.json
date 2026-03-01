@@ -1,0 +1,1700 @@
+{
+  "_meta": {
+    "generated": "2026-03-01T05:11:23.474324",
+    "total": 67,
+    "project_count": 17,
+    "package_count": 50,
+    "scan_roots": [
+      "D:\\GithubRepos\\ml-agents\\DevProject\\Assets",
+      "D:\\GithubRepos\\ml-agents\\DevProject\\Packages"
+    ]
+  },
+  "project": {
+    "TestAsmdef": {
+      "name": "TestAsmdef",
+      "path": "DevProject/Assets/MCPTests/Scripts/TestAsmdef/TestAsmdef.asmdef",
+      "rootNamespace": "TestNamespace",
+      "references": [],
+      "precompiledReferences": [],
+      "includePlatforms": [],
+      "autoReferenced": false,
+      "allowUnsafeCode": false,
+      "defineConstraints": [],
+      "is_editor_only": false,
+      "is_test": false,
+      "referenced_by": [
+        "MCPForUnityTests.EditMode"
+      ]
+    },
+    "MCPForUnityTests.EditMode": {
+      "name": "MCPForUnityTests.EditMode",
+      "path": "DevProject/Assets/MCPTests/Tests/EditMode/MCPForUnityTests.Editor.asmdef",
+      "rootNamespace": "",
+      "references": [
+        "MCPForUnity.Editor",
+        "MCPForUnity.Runtime",
+        "Network_Game.Editor",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "TestAsmdef"
+      ],
+      "precompiledReferences": [
+        "nunit.framework.dll",
+        "Newtonsoft.Json.dll"
+      ],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": false,
+      "allowUnsafeCode": false,
+      "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+      ],
+      "is_editor_only": true,
+      "is_test": true,
+      "referenced_by": []
+    },
+    "MCPForUnityTests.PlayMode": {
+      "name": "MCPForUnityTests.PlayMode",
+      "path": "DevProject/Assets/MCPTests/Tests/PlayMode/MCPForUnityTests.PlayMode.asmdef",
+      "rootNamespace": "",
+      "references": [
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+      ],
+      "precompiledReferences": [
+        "nunit.framework.dll"
+      ],
+      "includePlatforms": [],
+      "autoReferenced": false,
+      "allowUnsafeCode": false,
+      "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+      ],
+      "is_editor_only": false,
+      "is_test": true,
+      "referenced_by": []
+    },
+    "NpcDialogue.Tests.Editor": {
+      "name": "NpcDialogue.Tests.Editor",
+      "path": "DevProject/Assets/ML-Agents/Scripts/Tests/Editor/NpcDialogue/NpcDialogue.Tests.Editor.asmdef",
+      "rootNamespace": "NpcDialogue.Tests.Editor",
+      "references": [
+        "Unity.ML-Agents",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+      ],
+      "precompiledReferences": [
+        "nunit.framework.dll"
+      ],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": false,
+      "allowUnsafeCode": false,
+      "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+      ],
+      "is_editor_only": true,
+      "is_test": true,
+      "referenced_by": []
+    },
+    "Unity.ML-Agents.DevTests.Editor": {
+      "name": "Unity.ML-Agents.DevTests.Editor",
+      "path": "DevProject/Assets/ML-Agents/Scripts/Tests/Editor/Unity.ML-Agents.DevTests.Editor.asmdef",
+      "rootNamespace": "Unity.ML-Agents",
+      "references": [
+        "Unity.ML-Agents.Editor",
+        "Unity.ML-Agents",
+        "Unity.InferenceEngine",
+        "Unity.ML-Agents.CommunicatorObjects",
+        "Unity.PerformanceTesting",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+      ],
+      "precompiledReferences": [
+        "System.IO.Abstractions.dll",
+        "System.IO.Abstractions.TestingHelpers.dll",
+        "nunit.framework.dll"
+      ],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": false,
+      "allowUnsafeCode": false,
+      "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+      ],
+      "is_editor_only": true,
+      "is_test": true,
+      "referenced_by": []
+    },
+    "NpcDialogue.Tests.Runtime": {
+      "name": "NpcDialogue.Tests.Runtime",
+      "path": "DevProject/Assets/ML-Agents/Scripts/Tests/Runtime/NpcDialogue/NpcDialogue.Tests.Runtime.asmdef",
+      "rootNamespace": "NpcDialogue.Tests.Runtime",
+      "references": [
+        "Unity.ML-Agents",
+        "Network_Game",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+      ],
+      "precompiledReferences": [
+        "nunit.framework.dll"
+      ],
+      "includePlatforms": [],
+      "autoReferenced": false,
+      "allowUnsafeCode": false,
+      "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+      ],
+      "is_editor_only": false,
+      "is_test": true,
+      "referenced_by": []
+    },
+    "Unity.ML-Agents.DevTests.Runtime": {
+      "name": "Unity.ML-Agents.DevTests.Runtime",
+      "path": "DevProject/Assets/ML-Agents/Scripts/Tests/Runtime/Unity.ML-Agents.DevTests.Runtime.asmdef",
+      "rootNamespace": "Unity.ML-Agents",
+      "references": [
+        "Unity.ML-Agents",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+      ],
+      "precompiledReferences": [
+        "System.IO.Abstractions.dll",
+        "System.IO.Abstractions.TestingHelpers.dll",
+        "nunit.framework.dll"
+      ],
+      "includePlatforms": [],
+      "autoReferenced": false,
+      "allowUnsafeCode": false,
+      "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+      ],
+      "is_editor_only": false,
+      "is_test": true,
+      "referenced_by": []
+    },
+    "Network_Game.Dialogue.Editor": {
+      "name": "Network_Game.Dialogue.Editor",
+      "path": "DevProject/Assets/Network_Game/Dialogue/Editor/Network_Game.Dialogue.Editor.asmdef",
+      "rootNamespace": "Network_Game.Dialogue.Editor",
+      "references": [
+        "Network_Game",
+        "undream.llmunity.Runtime",
+        "Unity.Netcode.Runtime",
+        "MCPForUnity.Editor"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [],
+      "is_editor_only": true,
+      "is_test": false,
+      "referenced_by": []
+    },
+    "Network_Game.Editor": {
+      "name": "Network_Game.Editor",
+      "path": "DevProject/Assets/Network_Game/Editor/Network_Game.Editor.asmdef",
+      "rootNamespace": "Network_Game.Editor",
+      "references": [
+        "Network_Game",
+        "Unity.Netcode.Runtime",
+        "Unity.RenderPipelines.Core.Runtime",
+        "Unity.RenderPipelines.Universal.Runtime",
+        "MCPForUnity.Editor"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [],
+      "is_editor_only": true,
+      "is_test": false,
+      "referenced_by": [
+        "MCPForUnityTests.EditMode"
+      ]
+    },
+    "undream.llmunity.Editor": {
+      "name": "undream.llmunity.Editor",
+      "path": "DevProject/Assets/Network_Game/LLMUnity/Editor/undream.llmunity.Editor.asmdef",
+      "rootNamespace": "LLMUnity",
+      "references": [
+        "undream.llmunity.Runtime"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [],
+      "is_editor_only": true,
+      "is_test": false,
+      "referenced_by": []
+    },
+    "undream.llmunity.Runtime": {
+      "name": "undream.llmunity.Runtime",
+      "path": "DevProject/Assets/Network_Game/LLMUnity/Runtime/undream.llmunity.Runtime.asmdef",
+      "rootNamespace": "LLMUnity",
+      "references": [
+        "UnityEngine.UI",
+        "Unity.InputSystem"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [],
+      "is_editor_only": false,
+      "is_test": false,
+      "referenced_by": [
+        "Network_Game",
+        "Network_Game.Dialogue.Editor",
+        "undream.llmunity.Editor"
+      ]
+    },
+    "Network_Game": {
+      "name": "Network_Game",
+      "path": "DevProject/Assets/Network_Game/Network_Game.asmdef",
+      "rootNamespace": "Network_Game",
+      "references": [
+        "undream.llmunity.Runtime",
+        "Unity.Netcode.Runtime",
+        "Unity.Networking.Transport",
+        "Unity.Cinemachine",
+        "Unity.AI.Navigation",
+        "Unity.InputSystem",
+        "Unity.TextMeshPro",
+        "UnityEngine.UI",
+        "Unity.Addressables",
+        "Unity.ResourceManager"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [],
+      "is_editor_only": false,
+      "is_test": false,
+      "referenced_by": [
+        "Network_Game.Dialogue.Editor",
+        "Network_Game.Editor",
+        "Network_Game.ParticlePack.Ramps.Editor",
+        "NpcDialogue.Tests.Runtime"
+      ]
+    },
+    "Network_Game.ParticlePack.Ramps.Editor": {
+      "name": "Network_Game.ParticlePack.Ramps.Editor",
+      "path": "DevProject/Assets/Network_Game/ParticlePack/Shared/Ramps/Editor/Network_Game.ParticlePack.Ramps.Editor.asmdef",
+      "rootNamespace": "Network_Game.ParticlePack.Ramps.Editor",
+      "references": [
+        "Network_Game"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [],
+      "is_editor_only": true,
+      "is_test": false,
+      "referenced_by": []
+    },
+    "Unity.ProBuilder.Examples.Editor": {
+      "name": "Unity.ProBuilder.Examples.Editor",
+      "path": "DevProject/Assets/Samples/ProBuilder/6.0.9/Editor Examples/Unity.ProBuilder.Examples.Editor.asmdef",
+      "rootNamespace": "",
+      "references": [
+        "Unity.ProBuilder.Editor",
+        "Unity.ProBuilder"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [],
+      "is_editor_only": true,
+      "is_test": false,
+      "referenced_by": []
+    },
+    "Unity.ProBuilder.Examples": {
+      "name": "Unity.ProBuilder.Examples",
+      "path": "DevProject/Assets/Samples/ProBuilder/6.0.9/Runtime Examples/Unity.ProBuilder.Examples.asmdef",
+      "rootNamespace": "",
+      "references": [
+        "Unity.ProBuilder",
+        "Unity.ugui"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [],
+      "is_editor_only": false,
+      "is_test": false,
+      "referenced_by": []
+    },
+    "VFXGraph.OutputEventHandlers.Editor": {
+      "name": "VFXGraph.OutputEventHandlers.Editor",
+      "path": "DevProject/Assets/Samples/Visual Effect Graph/17.4.0/OutputEvent Helpers/Editor/Unity.VisualEffectGraph.OutputEventHandlers.asmdef",
+      "rootNamespace": "",
+      "references": [
+        "Unity.VisualEffectGraph.Runtime",
+        "Unity.Cinemachine",
+        "VFXGraph.OutputEventHandlers"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [],
+      "is_editor_only": true,
+      "is_test": false,
+      "referenced_by": []
+    },
+    "VFXGraph.OutputEventHandlers": {
+      "name": "VFXGraph.OutputEventHandlers",
+      "path": "DevProject/Assets/Samples/Visual Effect Graph/17.4.0/OutputEvent Helpers/Runtime/Unity.VisualEffectGraph.OutputEventHandlers.asmdef",
+      "rootNamespace": "",
+      "references": [
+        "Unity.VisualEffectGraph.Runtime",
+        "Unity.RenderPipelines.Core.Runtime",
+        "Unity.Cinemachine"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [],
+      "is_editor_only": false,
+      "is_test": false,
+      "referenced_by": [
+        "VFXGraph.OutputEventHandlers.Editor"
+      ]
+    }
+  },
+  "packages": {
+    "Unity.Cinemachine.Editor": {
+      "name": "Unity.Cinemachine.Editor",
+      "path": "DevProject/Packages/com.unity.cinemachine/Editor/Unity.Cinemachine.Editor.asmdef",
+      "rootNamespace": "",
+      "references": [
+        "Unity.Timeline",
+        "Unity.Timeline.Editor",
+        "Unity.Postprocessing.Runtime",
+        "Unity.Postprocessing.Editor",
+        "Unity.RenderPipelines.Core.Runtime",
+        "Unity.RenderPipelines.Core.Editor",
+        "Unity.RenderPipelines.HighDefinition.Runtime",
+        "Unity.RenderPipelines.HighDefinition.Editor",
+        "Unity.ugui",
+        "Unity.RenderPipelines.Universal.Runtime",
+        "Unity.RenderPipelines.Universal.Editor",
+        "Unity.Splines",
+        "Unity.Splines.Editor",
+        "Unity.InputSystem",
+        "Unity.Mathematics",
+        "Unity.Cinemachine"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [],
+      "is_editor_only": true,
+      "is_test": false,
+      "referenced_by": []
+    },
+    "Unity.Cinemachine": {
+      "name": "Unity.Cinemachine",
+      "path": "DevProject/Packages/com.unity.cinemachine/Runtime/Unity.Cinemachine.asmdef",
+      "rootNamespace": "",
+      "references": [
+        "Unity.Timeline",
+        "Unity.Postprocessing.Runtime",
+        "Unity.RenderPipelines.Core.Runtime",
+        "Unity.RenderPipelines.HighDefinition.Runtime",
+        "Unity.ugui",
+        "Unity.RenderPipelines.Universal.Runtime",
+        "Unity.2D.PixelPerfect",
+        "Unity.InputSystem",
+        "Unity.RenderPipelines.Universal.2D.Runtime",
+        "Unity.Splines",
+        "Unity.Mathematics"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [],
+      "is_editor_only": false,
+      "is_test": false,
+      "referenced_by": [
+        "Network_Game",
+        "Unity.Cinemachine.Editor",
+        "VFXGraph.OutputEventHandlers",
+        "VFXGraph.OutputEventHandlers.Editor"
+      ]
+    },
+    "Unity.Multiplayer.Tools.Adapters.MockNgo": {
+      "name": "Unity.Multiplayer.Tools.Adapters.MockNgo",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/Adapters/MockNgo/Unity.Multiplayer.Tools.Adapters.MockNgo.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.Adapters.MockNgo",
+      "references": [
+        "Unity.Multiplayer.Tools.Adapters",
+        "Unity.Multiplayer.Tools.Common"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [
+        "UNITY_MP_TOOLS_MOCK_NETWORK_ADAPTER"
+      ],
+      "is_editor_only": false,
+      "is_test": false,
+      "referenced_by": []
+    },
+    "Unity.Multiplayer.Tools.Adapters.Ngo1": {
+      "name": "Unity.Multiplayer.Tools.Adapters.Ngo1",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/Adapters/Ngo1/Unity.Multiplayer.Tools.Adapters.Ngo1.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.Adapters.Ngo1",
+      "references": [
+        "com.unity.netcode.runtime",
+        "Unity.Multiplayer.Tools.Adapters",
+        "Unity.Multiplayer.Tools.Common",
+        "Unity.Multiplayer.Tools.MetricEvents",
+        "Unity.Multiplayer.Tools.MetricTypes",
+        "Unity.Multiplayer.Tools.NetStats",
+        "Unity.Netcode.Runtime"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [],
+      "autoReferenced": false,
+      "allowUnsafeCode": false,
+      "defineConstraints": [
+        "UNITY_NETCODE_GAMEOBJECTS_1_0_ABOVE"
+      ],
+      "is_editor_only": false,
+      "is_test": false,
+      "referenced_by": [
+        "Unity.Multiplayer.Tools.Adapters.Tests.Editor"
+      ]
+    },
+    "Unity.Multiplayer.Tools.Adapters.Ngo1WithUtp2": {
+      "name": "Unity.Multiplayer.Tools.Adapters.Ngo1WithUtp2",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/Adapters/Ngo1WithUtp2/Unity.Multiplayer.Tools.Adapters.Ngo1WithUtp2.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.Adapters.NgoWithUtp2",
+      "references": [
+        "Unity.Multiplayer.Tools.Adapters",
+        "Unity.Networking.Transport",
+        "Unity.Netcode.Runtime",
+        "Unity.Multiplayer.Tools.Adapters.Utp2"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [],
+      "autoReferenced": false,
+      "allowUnsafeCode": true,
+      "defineConstraints": [
+        "UNITY_2022_2_OR_NEWER",
+        "UTP_TRANSPORT_2_0_ABOVE",
+        "UNITY_NETCODE_GAMEOBJECTS_1_1_ABOVE"
+      ],
+      "is_editor_only": false,
+      "is_test": false,
+      "referenced_by": [
+        "Unity.Multiplayer.Tools.Adapters.Tests.Editor"
+      ]
+    },
+    "Unity.Multiplayer.Tools.Adapters": {
+      "name": "Unity.Multiplayer.Tools.Adapters",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/Adapters/Unity.Multiplayer.Tools.Adapters.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.Adapters",
+      "references": [
+        "Unity.Multiplayer.Tools.Common",
+        "Unity.Multiplayer.Tools.NetStats"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [],
+      "is_editor_only": false,
+      "is_test": false,
+      "referenced_by": [
+        "Unity.Multiplayer.Tools.Adapters.MockNgo",
+        "Unity.Multiplayer.Tools.Adapters.Ngo1",
+        "Unity.Multiplayer.Tools.Adapters.Ngo1WithUtp2",
+        "Unity.Multiplayer.Tools.Adapters.Tests.Editor",
+        "Unity.Multiplayer.Tools.Adapters.Utp2",
+        "Unity.Multiplayer.Tools.Initialization",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Implementation",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Implementation.Tests.Editor",
+        "Unity.Multiplayer.Tools.NetVis.Configuration",
+        "Unity.Multiplayer.Tools.NetVis.Editor.UI",
+        "Unity.Multiplayer.Tools.NetVis.Editor.Visualization",
+        "Unity.Multiplayer.Tools.NetVis.Tests.Editor",
+        "Unity.Multiplayer.Tools.NetworkProfiler.Runtime",
+        "Unity.Multiplayer.Tools.NetworkSimulator.Editor",
+        "Unity.Multiplayer.Tools.NetworkSimulator.Tests.Runtime"
+      ]
+    },
+    "Unity.Multiplayer.Tools.Adapters.Utp2": {
+      "name": "Unity.Multiplayer.Tools.Adapters.Utp2",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/Adapters/Utp2/Unity.Multiplayer.Tools.Adapters.Utp2.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.Adapters.Utp2",
+      "references": [
+        "Unity.Multiplayer.Tools.Adapters",
+        "Unity.Networking.Transport"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [],
+      "autoReferenced": false,
+      "allowUnsafeCode": true,
+      "defineConstraints": [
+        "UTP_TRANSPORT_2_0_ABOVE"
+      ],
+      "is_editor_only": false,
+      "is_test": false,
+      "referenced_by": [
+        "Unity.Multiplayer.Tools.Adapters.Ngo1WithUtp2",
+        "Unity.Multiplayer.Tools.Adapters.Tests.Editor",
+        "Unity.Multiplayer.Tools.NetworkSimulator.Editor"
+      ]
+    },
+    "Unity.Multiplayer.Tools.Common": {
+      "name": "Unity.Multiplayer.Tools.Common",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/Common/Runtime/Unity.Multiplayer.Tools.Common.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.Common",
+      "references": [],
+      "precompiledReferences": [],
+      "includePlatforms": [],
+      "autoReferenced": true,
+      "allowUnsafeCode": true,
+      "defineConstraints": [],
+      "is_editor_only": false,
+      "is_test": false,
+      "referenced_by": [
+        "Unity.Multiplayer.Tools.Adapters",
+        "Unity.Multiplayer.Tools.Adapters.MockNgo",
+        "Unity.Multiplayer.Tools.Adapters.Ngo1",
+        "Unity.Multiplayer.Tools.Common.Tests.Editor",
+        "Unity.Multiplayer.Tools.DependencyInjection.UIElements",
+        "Unity.Multiplayer.Tools.Editor",
+        "Unity.Multiplayer.Tools.Initialization",
+        "Unity.Multiplayer.Tools.MetricTestData",
+        "Unity.Multiplayer.Tools.MetricTypes",
+        "Unity.Multiplayer.Tools.NetStats",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Component",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Configuration",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Editor",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Implementation",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Implementation.Tests.Editor",
+        "Unity.Multiplayer.Tools.NetStatsReporting",
+        "Unity.Multiplayer.Tools.NetVis.Configuration",
+        "Unity.Multiplayer.Tools.NetVis.Editor.UI",
+        "Unity.Multiplayer.Tools.NetVis.Editor.Visualization",
+        "Unity.Multiplayer.Tools.NetVis.Tests.Editor",
+        "Unity.Multiplayer.Tools.NetworkProfiler.Editor",
+        "Unity.Multiplayer.Tools.NetworkProfiler.Tests.Editor",
+        "Unity.Multiplayer.Tools.NetworkSimulator.Editor",
+        "Unity.Multiplayer.Tools.NetworkSimulator.Tests.Runtime",
+        "Unity.Netcode.Runtime"
+      ]
+    },
+    "Unity.Multiplayer.Tools.DependencyInjection.UIElements": {
+      "name": "Unity.Multiplayer.Tools.DependencyInjection.UIElements",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/DependencyInjection/UIElements/Unity.Multiplayer.Tools.DependencyInjection.UIElements.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.DependencyInjection.UIElements",
+      "references": [
+        "Unity.Multiplayer.Tools.Common",
+        "Unity.Multiplayer.Tools.Editor",
+        "Unity.Multiplayer.Tools.DependencyInjection"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [],
+      "is_editor_only": true,
+      "is_test": false,
+      "referenced_by": [
+        "Unity.Multiplayer.Tools.NetVis.Editor.UI"
+      ]
+    },
+    "Unity.Multiplayer.Tools.DependencyInjection": {
+      "name": "Unity.Multiplayer.Tools.DependencyInjection",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/DependencyInjection/Unity.Multiplayer.Tools.DependencyInjection.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.DependencyInjection",
+      "references": [],
+      "precompiledReferences": [],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [],
+      "is_editor_only": true,
+      "is_test": false,
+      "referenced_by": [
+        "Unity.Multiplayer.Tools.DependencyInjection.UIElements",
+        "Unity.Multiplayer.Tools.NetVis.Editor.UI"
+      ]
+    },
+    "com.unity.multiplayer.tools.window": {
+      "name": "com.unity.multiplayer.tools.window",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/Editor/MultiplayerToolsWindow/com.unity.multiplayer.tools.window.asmdef",
+      "rootNamespace": "",
+      "references": [
+        "GUID:c2f37c48e057342cda1e4b53ad30d616",
+        "GUID:2c360f3794ebc41388fc11424ddbfdd0",
+        "GUID:2406edb708fb4de7b412856af92595c9",
+        "GUID:1491147abca9d7d4bb7105af628b223e"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [],
+      "is_editor_only": true,
+      "is_test": false,
+      "referenced_by": [
+        "Unity.Multiplayer.Tools.MultiplayerToolsWindow.Tests.Editor"
+      ]
+    },
+    "Unity.Multiplayer.Tools.Editor": {
+      "name": "Unity.Multiplayer.Tools.Editor",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/Editor/Unity.Multiplayer.Tools.Editor.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.Editor",
+      "references": [
+        "Unity.Multiplayer.Tools.Common"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [],
+      "is_editor_only": true,
+      "is_test": false,
+      "referenced_by": [
+        "Unity.Multiplayer.Tools.DependencyInjection.UIElements",
+        "Unity.Multiplayer.Tools.NetVis.Editor.UI"
+      ]
+    },
+    "Unity.Multiplayer.Tools.Initialization": {
+      "name": "Unity.Multiplayer.Tools.Initialization",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/Initialization/Unity.Multiplayer.Tools.Initializationt.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.Context",
+      "references": [
+        "Unity.Multiplayer.Tools.Common",
+        "Unity.Multiplayer.Tools.NetVis.Configuration",
+        "Unity.Multiplayer.Tools.NetVis.Editor.UI",
+        "Unity.Multiplayer.Tools.NetVis.Editor.Visualization",
+        "Unity.Multiplayer.Tools.Adapters"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [],
+      "is_editor_only": false,
+      "is_test": false,
+      "referenced_by": []
+    },
+    "Unity.Multiplayer.Tools.MetricEvents": {
+      "name": "Unity.Multiplayer.Tools.MetricEvents",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/MetricEvents/Runtime/Unity.Multiplayer.Tools.MetricEvents.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.MetricEvents",
+      "references": [
+        "Unity.Collections",
+        "Unity.Multiplayer.Tools.MetricTypes",
+        "Unity.Multiplayer.Tools.NetStats"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [],
+      "is_editor_only": false,
+      "is_test": false,
+      "referenced_by": [
+        "Unity.Multiplayer.Tools.Adapters.Ngo1",
+        "Unity.Multiplayer.Tools.MetricTestData",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Implementation.Tests.Editor",
+        "Unity.Multiplayer.Tools.NetStatsReporting",
+        "Unity.Netcode.Runtime"
+      ]
+    },
+    "Unity.Multiplayer.Tools.MetricTestData": {
+      "name": "Unity.Multiplayer.Tools.MetricTestData",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/MetricTestData/Runtime/Unity.Multiplayer.Tools.MetricTestData.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.MetricTestData",
+      "references": [
+        "Unity.Collections",
+        "Unity.Multiplayer.Tools.Common",
+        "Unity.Multiplayer.Tools.MetricEvents",
+        "Unity.Multiplayer.Tools.MetricTypes",
+        "Unity.Multiplayer.Tools.NetStats"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [],
+      "is_editor_only": false,
+      "is_test": false,
+      "referenced_by": [
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Implementation.Tests.Editor"
+      ]
+    },
+    "Unity.Multiplayer.Tools.MetricTypes": {
+      "name": "Unity.Multiplayer.Tools.MetricTypes",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/MetricTypes/Runtime/Unity.Multiplayer.Tools.MetricTypes.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.MetricTypes",
+      "references": [
+        "Unity.Collections",
+        "Unity.Multiplayer.Tools.Common",
+        "Unity.Multiplayer.Tools.NetStats"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [],
+      "autoReferenced": true,
+      "allowUnsafeCode": true,
+      "defineConstraints": [],
+      "is_editor_only": false,
+      "is_test": false,
+      "referenced_by": [
+        "Unity.Multiplayer.Tools.Adapters.Ngo1",
+        "Unity.Multiplayer.Tools.GameObjects.Tests",
+        "Unity.Multiplayer.Tools.MetricEvents",
+        "Unity.Multiplayer.Tools.MetricTestData",
+        "Unity.Multiplayer.Tools.MetricTypes.Tests.Editor",
+        "Unity.Multiplayer.Tools.NetStats.Tests.Editor",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Configuration",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Implementation",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Implementation.Tests.Editor",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Interface.Tests.Editor",
+        "Unity.Multiplayer.Tools.NetStatsReporting",
+        "Unity.Multiplayer.Tools.NetworkProfiler.Editor",
+        "Unity.Multiplayer.Tools.NetworkProfiler.Runtime",
+        "Unity.Multiplayer.Tools.NetworkProfiler.Tests.Editor",
+        "Unity.Netcode.Editor.Tests",
+        "Unity.Netcode.Runtime",
+        "Unity.Netcode.Runtime.Tests"
+      ]
+    },
+    "Unity.Multiplayer.Tools.NetStats.CodeGen": {
+      "name": "Unity.Multiplayer.Tools.NetStats.CodeGen",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/NetStats/CodeGen/Unity.Multiplayer.Tools.NetStats.CodeGen.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.NetStats.CodeGen",
+      "references": [
+        "Unity.Multiplayer.Tools.NetStats"
+      ],
+      "precompiledReferences": [
+        "Mono.Cecil.dll",
+        "Mono.Cecil.Mdb.dll",
+        "Mono.Cecil.Pdb.dll",
+        "Mono.Cecil.Rocks.dll"
+      ],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": false,
+      "allowUnsafeCode": true,
+      "defineConstraints": [],
+      "is_editor_only": true,
+      "is_test": false,
+      "referenced_by": []
+    },
+    "Unity.Multiplayer.Tools.NetStats": {
+      "name": "Unity.Multiplayer.Tools.NetStats",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/NetStats/Runtime/Unity.Multiplayer.Tools.NetStats.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.NetStats",
+      "references": [
+        "Unity.Collections",
+        "Unity.Multiplayer.Tools.Common"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [],
+      "autoReferenced": true,
+      "allowUnsafeCode": true,
+      "defineConstraints": [],
+      "is_editor_only": false,
+      "is_test": false,
+      "referenced_by": [
+        "Unity.Multiplayer.Tools.Adapters",
+        "Unity.Multiplayer.Tools.Adapters.Ngo1",
+        "Unity.Multiplayer.Tools.GameObjects.Tests",
+        "Unity.Multiplayer.Tools.MetricEvents",
+        "Unity.Multiplayer.Tools.MetricTestData",
+        "Unity.Multiplayer.Tools.MetricTypes",
+        "Unity.Multiplayer.Tools.NetStats.CodeGen",
+        "Unity.Multiplayer.Tools.NetStats.Tests.Editor",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Component",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Configuration",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Editor",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Implementation",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Implementation.Tests.Editor",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Interface.Tests.Editor",
+        "Unity.Multiplayer.Tools.NetStatsReporting",
+        "Unity.Multiplayer.Tools.NetVis.Editor.Visualization",
+        "Unity.Multiplayer.Tools.NetworkProfiler.Editor",
+        "Unity.Multiplayer.Tools.NetworkProfiler.Runtime",
+        "Unity.Multiplayer.Tools.NetworkProfiler.Tests.Editor",
+        "Unity.Netcode.Editor.Tests",
+        "Unity.Netcode.Runtime",
+        "Unity.Netcode.Runtime.Tests"
+      ]
+    },
+    "Unity.Multiplayer.Tools.NetStatsMonitor.Component": {
+      "name": "Unity.Multiplayer.Tools.NetStatsMonitor.Component",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/NetStatsMonitor/Component/Unity.Multiplayer.Tools.NetStatsMonitor.Component.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.NetStatsMonitor",
+      "references": [
+        "Unity.Multiplayer.Tools.Common",
+        "Unity.Multiplayer.Tools.NetStats",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Configuration",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Implementation"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [],
+      "is_editor_only": false,
+      "is_test": false,
+      "referenced_by": [
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Editor",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Implementation.Tests.Editor",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Interface.Tests.Editor",
+        "Unity.Multiplayer.Tools.NetworkProfiler.Tests.Editor"
+      ]
+    },
+    "Unity.Multiplayer.Tools.NetStatsMonitor.Configuration": {
+      "name": "Unity.Multiplayer.Tools.NetStatsMonitor.Configuration",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/NetStatsMonitor/Configuration/Unity.Multiplayer.Tools.NetStatsMonitor.Configuration.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.NetStatsMonitor",
+      "references": [
+        "Unity.Multiplayer.Tools.Common",
+        "Unity.Multiplayer.Tools.MetricTypes",
+        "Unity.Multiplayer.Tools.NetStats"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [],
+      "is_editor_only": false,
+      "is_test": false,
+      "referenced_by": [
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Component",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Editor",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Implementation",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Implementation.Tests.Editor",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Interface.Tests.Editor"
+      ]
+    },
+    "Unity.Multiplayer.Tools.NetStatsMonitor.Editor": {
+      "name": "Unity.Multiplayer.Tools.NetStatsMonitor.Editor",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/NetStatsMonitor/Editor/Unity.Multiplayer.Tools.NetStatsMonitor.Editor.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.NetStatsMonitor.Editor",
+      "references": [
+        "Unity.Multiplayer.Tools.Common",
+        "Unity.Multiplayer.Tools.NetStats",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Configuration",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Component"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [],
+      "is_editor_only": true,
+      "is_test": false,
+      "referenced_by": []
+    },
+    "Unity.Multiplayer.Tools.NetStatsMonitor.Implementation": {
+      "name": "Unity.Multiplayer.Tools.NetStatsMonitor.Implementation",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/NetStatsMonitor/Implementation/Unity.Multiplayer.Tools.NetStatsMonitor.Implementation.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.NetStatsMonitor.Implementation",
+      "references": [
+        "Unity.Multiplayer.Tools.Adapters",
+        "Unity.Multiplayer.Tools.Common",
+        "Unity.Multiplayer.Tools.MetricTypes",
+        "Unity.Multiplayer.Tools.NetStats",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Configuration"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [],
+      "is_editor_only": false,
+      "is_test": false,
+      "referenced_by": [
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Component",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Implementation.Tests.Editor"
+      ]
+    },
+    "Unity.Multiplayer.Tools.NetStatsReporting": {
+      "name": "Unity.Multiplayer.Tools.NetStatsReporting",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/NetStatsReporting/Runtime/Unity.Multiplayer.Tools.NetStatsReporting.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.NetStatsReporting",
+      "references": [
+        "Unity.Collections",
+        "Unity.Multiplayer.Tools.Common",
+        "Unity.Multiplayer.Tools.MetricTypes",
+        "Unity.Multiplayer.Tools.MetricEvents",
+        "Unity.Multiplayer.Tools.NetStats"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [],
+      "is_editor_only": false,
+      "is_test": false,
+      "referenced_by": [
+        "Unity.Netcode.Runtime"
+      ]
+    },
+    "Unity.Multiplayer.Tools.NetVis.Configuration": {
+      "name": "Unity.Multiplayer.Tools.NetVis.Configuration",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/NetVis/Configuration/Unity.Multiplayer.Tools.NetVis.Configuration.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.NetVis.Configuration",
+      "references": [
+        "Unity.Multiplayer.Tools.Common",
+        "Unity.Multiplayer.Tools.Adapters",
+        "Unity.Burst",
+        "Unity.Mathematics"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [
+        "UNITY_2022_3_OR_NEWER",
+        "NETVIS_AVAILABLE"
+      ],
+      "is_editor_only": false,
+      "is_test": false,
+      "referenced_by": [
+        "Unity.Multiplayer.Tools.Initialization",
+        "Unity.Multiplayer.Tools.NetVis.Editor.UI",
+        "Unity.Multiplayer.Tools.NetVis.Editor.Visualization",
+        "Unity.Multiplayer.Tools.NetVis.Tests.Editor",
+        "Unity.Netcode.Editor"
+      ]
+    },
+    "Unity.Multiplayer.Tools.NetVis.Editor.UI": {
+      "name": "Unity.Multiplayer.Tools.NetVis.Editor.UI",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/NetVis/Editor/UI/Unity.Multiplayer.Tools.NetVis.Editor.UI.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.NetVis.Editor.UI",
+      "references": [
+        "Unity.Multiplayer.Tools.Common",
+        "Unity.Multiplayer.Tools.Editor",
+        "Unity.Multiplayer.Tools.NetVis.Configuration",
+        "Unity.Multiplayer.Tools.NetVis.Editor.Visualization",
+        "Unity.Multiplayer.Tools.Adapters",
+        "Unity.Multiplayer.Tools.DependencyInjection",
+        "Unity.Multiplayer.Tools.DependencyInjection.UIElements"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [
+        "UNITY_2022_3_OR_NEWER",
+        "NETVIS_AVAILABLE"
+      ],
+      "is_editor_only": true,
+      "is_test": false,
+      "referenced_by": [
+        "Unity.Multiplayer.Tools.Initialization",
+        "Unity.Multiplayer.Tools.NetVis.Tests.Editor"
+      ]
+    },
+    "Unity.Multiplayer.Tools.NetVis.Editor.Visualization": {
+      "name": "Unity.Multiplayer.Tools.NetVis.Editor.Visualization",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/NetVis/Editor/Visualization/Unity.Multiplayer.Tools.NetVis.Editor.Visualization.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.NetVis.Editor.Visualization",
+      "references": [
+        "Unity.Multiplayer.Tools.Common",
+        "Unity.Multiplayer.Tools.Adapters",
+        "Unity.Multiplayer.Tools.NetStats",
+        "Unity.Multiplayer.Tools.NetVis.Configuration",
+        "Unity.RenderPipelines.Core.Runtime"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [
+        "UNITY_2022_3_OR_NEWER",
+        "NETVIS_AVAILABLE"
+      ],
+      "is_editor_only": true,
+      "is_test": false,
+      "referenced_by": [
+        "Unity.Multiplayer.Tools.Initialization",
+        "Unity.Multiplayer.Tools.NetVis.Editor.UI"
+      ]
+    },
+    "Unity.Multiplayer.Tools.NetworkProfiler.Editor": {
+      "name": "Unity.Multiplayer.Tools.NetworkProfiler.Editor",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/NetworkProfiler/Editor/Unity.Multiplayer.Tools.NetworkProfiler.Editor.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.NetworkProfiler.Editor",
+      "references": [
+        "Unity.Profiling.Core",
+        "Unity.Multiplayer.Tools.Common",
+        "Unity.Multiplayer.Tools.NetworkProfiler.Runtime",
+        "Unity.Multiplayer.Tools.NetStats",
+        "Unity.Multiplayer.Tools.MetricTypes",
+        "Unity.Multiplayer.Tools.NetworkSolutionInterface",
+        "Unity.Collections"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [],
+      "is_editor_only": true,
+      "is_test": false,
+      "referenced_by": [
+        "Unity.Multiplayer.Tools.NetworkProfiler.Tests.Editor"
+      ]
+    },
+    "Unity.Multiplayer.Tools.NetworkProfiler.Runtime": {
+      "name": "Unity.Multiplayer.Tools.NetworkProfiler.Runtime",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/NetworkProfiler/Runtime/Unity.Multiplayer.Tools.NetworkProfiler.Runtime.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.NetworkProfiler.Runtime",
+      "references": [
+        "Unity.Multiplayer.Tools.Adapters",
+        "Unity.Multiplayer.Tools.MetricTypes",
+        "Unity.Multiplayer.Tools.NetStats",
+        "Unity.Profiling.Core"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [],
+      "is_editor_only": false,
+      "is_test": false,
+      "referenced_by": [
+        "Unity.Multiplayer.Tools.NetworkProfiler.Editor",
+        "Unity.Multiplayer.Tools.NetworkProfiler.Tests.Editor"
+      ]
+    },
+    "Unity.Multiplayer.Tools.NetworkSimulator.Editor": {
+      "name": "Unity.Multiplayer.Tools.NetworkSimulator.Editor",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/NetworkSimulator/Editor/Unity.Multiplayer.Tools.NetworkSimulator.Editor.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.NetworkSimulator.Editor",
+      "references": [
+        "Unity.Multiplayer.Tools.Adapters",
+        "Unity.Multiplayer.Tools.Adapters.Utp2",
+        "Unity.Multiplayer.Tools.Common",
+        "Unity.Multiplayer.Tools.NetworkSimulator.Runtime"
+      ],
+      "precompiledReferences": [
+        "Newtonsoft.Json.dll"
+      ],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [
+        "UNITY_2022_2_OR_NEWER",
+        "UTP_TRANSPORT_2_0_ABOVE",
+        "UNITY_NETCODE_GAMEOBJECTS_1_1_ABOVE"
+      ],
+      "is_editor_only": true,
+      "is_test": false,
+      "referenced_by": []
+    },
+    "Unity.Multiplayer.Tools.NetworkSolutionInterface": {
+      "name": "Unity.Multiplayer.Tools.NetworkSolutionInterface",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/NetworkSolutionInterface/Runtime/Unity.Multiplayer.Tools.NetworkSolutionInterface.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools",
+      "references": [],
+      "precompiledReferences": [],
+      "includePlatforms": [],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [],
+      "is_editor_only": false,
+      "is_test": false,
+      "referenced_by": [
+        "Unity.Multiplayer.Tools.NetworkProfiler.Editor",
+        "Unity.Multiplayer.Tools.NetworkSolutionInterface.Tests.Editor",
+        "Unity.Netcode.Runtime"
+      ]
+    },
+    "Unity.Multiplayer.Tools.Common.Tests.Editor": {
+      "name": "Unity.Multiplayer.Tools.Common.Tests.Editor",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/Tests/Editor/Common/Unity.Multiplayer.Tools.Common.Tests.Editor.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.Common.Tests",
+      "references": [
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "Unity.Multiplayer.Tools.Common"
+      ],
+      "precompiledReferences": [
+        "nunit.framework.dll"
+      ],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": false,
+      "allowUnsafeCode": false,
+      "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+      ],
+      "is_editor_only": true,
+      "is_test": true,
+      "referenced_by": []
+    },
+    "Unity.Multiplayer.Tools.MetricTypes.Tests.Editor": {
+      "name": "Unity.Multiplayer.Tools.MetricTypes.Tests.Editor",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/Tests/Editor/MetricTypes/Unity.Multiplayer.Tools.MetricTypes.Tests.Editor.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.MetricTypes.Tests",
+      "references": [
+        "Unity.Multiplayer.Tools.MetricTypes",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "Unity.Collections"
+      ],
+      "precompiledReferences": [
+        "nunit.framework.dll"
+      ],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": false,
+      "allowUnsafeCode": false,
+      "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+      ],
+      "is_editor_only": true,
+      "is_test": true,
+      "referenced_by": []
+    },
+    "Unity.Multiplayer.Tools.MultiplayerToolsWindow.Tests.Editor": {
+      "name": "Unity.Multiplayer.Tools.MultiplayerToolsWindow.Tests.Editor",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/Tests/Editor/MultiplayerToolsWindow/Unity.Multiplayer.Tools.MultiplayerToolsWindow.Tests.Editor.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.MultiplayerToolsWindow.Tests",
+      "references": [
+        "com.unity.multiplayer.tools.window",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+      ],
+      "precompiledReferences": [
+        "nunit.framework.dll"
+      ],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+      ],
+      "is_editor_only": true,
+      "is_test": true,
+      "referenced_by": []
+    },
+    "Unity.Multiplayer.Tools.NetStats.Tests.Editor": {
+      "name": "Unity.Multiplayer.Tools.NetStats.Tests.Editor",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/Tests/Editor/NetStats/Unity.Multiplayer.Tools.NetStats.Tests.Editor.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.NetStats.Tests",
+      "references": [
+        "Unity.Multiplayer.Tools.NetStats",
+        "Unity.Multiplayer.Tools.MetricTypes",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "Unity.Collections"
+      ],
+      "precompiledReferences": [
+        "nunit.framework.dll"
+      ],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": false,
+      "allowUnsafeCode": false,
+      "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+      ],
+      "is_editor_only": true,
+      "is_test": true,
+      "referenced_by": [
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Implementation.Tests.Editor",
+        "Unity.Multiplayer.Tools.NetworkProfiler.Tests.Editor"
+      ]
+    },
+    "Unity.Multiplayer.Tools.NetStatsMonitor.Implementation.Tests.Editor": {
+      "name": "Unity.Multiplayer.Tools.NetStatsMonitor.Implementation.Tests.Editor",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/Tests/Editor/NetStatsMonitor/Implementation/Unity.Multiplayer.Tools.NetStatsMonitor.Implementation.Tests.Editor.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.NetStatsMonitor.Implementation.Tests",
+      "references": [
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "Unity.Multiplayer.Tools.Adapters",
+        "Unity.Multiplayer.Tools.Common",
+        "Unity.Multiplayer.Tools.MetricEvents",
+        "Unity.Multiplayer.Tools.MetricTestData",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Component",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Configuration",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Implementation",
+        "Unity.Multiplayer.Tools.NetStats",
+        "Unity.Multiplayer.Tools.MetricTypes",
+        "Unity.Multiplayer.Tools.NetStats.Tests.Editor"
+      ],
+      "precompiledReferences": [
+        "nunit.framework.dll"
+      ],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": false,
+      "allowUnsafeCode": false,
+      "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+      ],
+      "is_editor_only": true,
+      "is_test": true,
+      "referenced_by": []
+    },
+    "Unity.Multiplayer.Tools.NetStatsMonitor.Interface.Tests.Editor": {
+      "name": "Unity.Multiplayer.Tools.NetStatsMonitor.Interface.Tests.Editor",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/Tests/Editor/NetStatsMonitor/Interface/Unity.Multiplayer.Tools.NetStatsMonitor.Interface.Tests.Editor.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.NetStatsMonitor.Interface.Tests",
+      "references": [
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "Unity.Multiplayer.Tools.MetricTypes",
+        "Unity.Multiplayer.Tools.NetStats",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Component",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Configuration"
+      ],
+      "precompiledReferences": [
+        "nunit.framework.dll"
+      ],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": false,
+      "allowUnsafeCode": false,
+      "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+      ],
+      "is_editor_only": true,
+      "is_test": true,
+      "referenced_by": []
+    },
+    "Unity.Multiplayer.Tools.NetVis.Tests.Editor": {
+      "name": "Unity.Multiplayer.Tools.NetVis.Tests.Editor",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/Tests/Editor/NetVis/Unity.Multiplayer.Tools.NetVis.Tests.Editor.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.NetVis.Tests",
+      "references": [
+        "Unity.Multiplayer.Tools.NetVis.Configuration",
+        "Unity.Multiplayer.Tools.NetVis.Editor.UI",
+        "Unity.Multiplayer.Tools.Common",
+        "Unity.Multiplayer.Tools.Adapters"
+      ],
+      "precompiledReferences": [
+        "nunit.framework.dll"
+      ],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [
+        "UNITY_2023_2_OR_NEWER",
+        "UNITY_INCLUDE_TESTS"
+      ],
+      "is_editor_only": true,
+      "is_test": true,
+      "referenced_by": []
+    },
+    "Unity.Multiplayer.Tools.NetworkProfiler.Tests.Editor": {
+      "name": "Unity.Multiplayer.Tools.NetworkProfiler.Tests.Editor",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/Tests/Editor/NetworkProfiler/Unity.Multiplayer.Tools.NetworkProfiler.Tests.Editor.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.NetworkProfiler.Tests",
+      "references": [
+        "Unity.Multiplayer.Tools.NetworkProfiler.Editor",
+        "Unity.Multiplayer.Tools.NetworkProfiler.Runtime",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "Unity.Multiplayer.Tools.Common",
+        "Unity.Multiplayer.Tools.NetStats",
+        "Unity.Multiplayer.Tools.MetricTypes",
+        "Unity.Multiplayer.Tools.NetStats.Tests.Editor",
+        "Unity.Collections",
+        "Unity.Multiplayer.Tools.NetStatsMonitor.Component"
+      ],
+      "precompiledReferences": [
+        "nunit.framework.dll",
+        "Newtonsoft.Json.dll"
+      ],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": false,
+      "allowUnsafeCode": true,
+      "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+      ],
+      "is_editor_only": true,
+      "is_test": true,
+      "referenced_by": []
+    },
+    "Unity.Multiplayer.Tools.NetworkSolutionInterface.Tests.Editor": {
+      "name": "Unity.Multiplayer.Tools.NetworkSolutionInterface.Tests.Editor",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/Tests/Editor/NetworkSolutionInterface/Unity.Multiplayer.Tools.NetworkSolutionInterface.Tests.Editor.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.Tests",
+      "references": [
+        "Unity.Multiplayer.Tools.NetworkSolutionInterface",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+      ],
+      "precompiledReferences": [
+        "nunit.framework.dll"
+      ],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": false,
+      "allowUnsafeCode": false,
+      "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+      ],
+      "is_editor_only": true,
+      "is_test": true,
+      "referenced_by": []
+    },
+    "Unity.Multiplayer.Tools.Adapters.Tests.Editor": {
+      "name": "Unity.Multiplayer.Tools.Adapters.Tests.Editor",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/Tests/Runtime/Adapters/Unity.Multiplayer.Tools.Adapters.Tests.Editor.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.Adapters.Tests",
+      "references": [
+        "Unity.Multiplayer.Tools.Adapters",
+        "Unity.Multiplayer.Tools.Adapters.Ngo1",
+        "Unity.Multiplayer.Tools.Adapters.Utp2",
+        "Unity.Multiplayer.Tools.Adapters.Ngo1WithUtp2",
+        "Unity.Netcode.Runtime",
+        "UnityEngine.TestRunner"
+      ],
+      "precompiledReferences": [
+        "nunit.framework.dll"
+      ],
+      "includePlatforms": [],
+      "autoReferenced": false,
+      "allowUnsafeCode": false,
+      "defineConstraints": [
+        "UNITY_2022_2_OR_NEWER",
+        "UTP_TRANSPORT_2_0_ABOVE",
+        "UNITY_NETCODE_GAMEOBJECTS_1_1_ABOVE",
+        "UNITY_INCLUDE_TESTS"
+      ],
+      "is_editor_only": false,
+      "is_test": true,
+      "referenced_by": []
+    },
+    "Unity.Multiplayer.Tools.GameObjects.Tests": {
+      "name": "Unity.Multiplayer.Tools.GameObjects.Tests",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/Tests/Runtime/NetcodeForGameObjects/Unity.Multiplauyer.Tools.GameObjects.Tests.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.GameObjects.Tests",
+      "references": [
+        "Unity.Netcode.Runtime",
+        "Unity.Collections",
+        "Unity.Multiplayer.Tools.MetricTypes",
+        "Unity.Multiplayer.Tools.NetStats",
+        "Unity.Networking.Transport",
+        "Unity.Netcode.TestHelpers.Runtime",
+        "Unity.Mathematics",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "Unity.Netcode.Runtime.Tests"
+      ],
+      "precompiledReferences": [
+        "nunit.framework.dll"
+      ],
+      "includePlatforms": [],
+      "autoReferenced": false,
+      "allowUnsafeCode": true,
+      "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+      ],
+      "is_editor_only": false,
+      "is_test": true,
+      "referenced_by": []
+    },
+    "Unity.Multiplayer.Tools.NetworkSimulator.Tests.Runtime": {
+      "name": "Unity.Multiplayer.Tools.NetworkSimulator.Tests.Runtime",
+      "path": "DevProject/Packages/com.unity.multiplayer.tools/Tests/Runtime/NetworkSimulator/Unity.Multiplayer.Tools.NetworkSimulator.Tests.Runtime.asmdef",
+      "rootNamespace": "Unity.Multiplayer.Tools.NetworkSimulator.Tests",
+      "references": [
+        "Unity.Multiplayer.Tools.NetworkSimulator.Runtime",
+        "UnityEngine.TestRunner",
+        "Unity.Multiplayer.Tools.Adapters",
+        "Unity.Multiplayer.Tools.Common"
+      ],
+      "precompiledReferences": [
+        "nunit.framework.dll"
+      ],
+      "includePlatforms": [],
+      "autoReferenced": false,
+      "allowUnsafeCode": false,
+      "defineConstraints": [
+        "UNITY_2022_2_OR_NEWER",
+        "UNITY_INCLUDE_TESTS",
+        "UTP_TRANSPORT_2_0_ABOVE",
+        "UNITY_NETCODE_GAMEOBJECTS_1_1_ABOVE"
+      ],
+      "is_editor_only": false,
+      "is_test": true,
+      "referenced_by": []
+    },
+    "Unity.Netcode.Editor.CodeGen": {
+      "name": "Unity.Netcode.Editor.CodeGen",
+      "path": "DevProject/Packages/com.unity.netcode.gameobjects/Editor/CodeGen/Unity.Netcode.Editor.CodeGen.asmdef",
+      "rootNamespace": "Unity.Netcode.Editor.CodeGen",
+      "references": [
+        "Unity.Netcode.Runtime",
+        "Unity.Collections"
+      ],
+      "precompiledReferences": [
+        "Mono.Cecil.dll",
+        "Mono.Cecil.Mdb.dll",
+        "Mono.Cecil.Pdb.dll",
+        "Mono.Cecil.Rocks.dll"
+      ],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": false,
+      "allowUnsafeCode": true,
+      "defineConstraints": [],
+      "is_editor_only": true,
+      "is_test": false,
+      "referenced_by": []
+    },
+    "Unity.Netcode.PackageChecker.Editor": {
+      "name": "Unity.Netcode.PackageChecker.Editor",
+      "path": "DevProject/Packages/com.unity.netcode.gameobjects/Editor/PackageChecker/Unity.Netcode.PackageChecker.Editor.asmdef",
+      "rootNamespace": "Unity.Netcode.Editor.PackageChecker",
+      "references": [],
+      "precompiledReferences": [],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [],
+      "is_editor_only": true,
+      "is_test": false,
+      "referenced_by": []
+    },
+    "Unity.Netcode.Editor": {
+      "name": "Unity.Netcode.Editor",
+      "path": "DevProject/Packages/com.unity.netcode.gameobjects/Editor/Unity.Netcode.Editor.asmdef",
+      "rootNamespace": "Unity.Netcode.Editor",
+      "references": [
+        "Unity.Netcode.Runtime",
+        "Unity.Networking.Transport",
+        "Unity.Multiplayer.Tools.NetVis.Configuration"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [],
+      "is_editor_only": true,
+      "is_test": false,
+      "referenced_by": [
+        "Unity.Netcode.Editor.Tests"
+      ]
+    },
+    "Unity.Netcode.Runtime": {
+      "name": "Unity.Netcode.Runtime",
+      "path": "DevProject/Packages/com.unity.netcode.gameobjects/Runtime/Unity.Netcode.Runtime.asmdef",
+      "rootNamespace": "Unity.Netcode",
+      "references": [
+        "Unity.Networking.Transport",
+        "Unity.Collections",
+        "Unity.Burst",
+        "Unity.Mathematics",
+        "Unity.Multiplayer.Tools.MetricEvents",
+        "Unity.Multiplayer.Tools.MetricTypes",
+        "Unity.Multiplayer.Tools.NetStats",
+        "Unity.Multiplayer.Tools.NetworkSolutionInterface",
+        "Unity.Multiplayer.Tools.NetStatsReporting",
+        "Unity.Multiplayer.Tools.Common"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [],
+      "autoReferenced": true,
+      "allowUnsafeCode": true,
+      "defineConstraints": [],
+      "is_editor_only": false,
+      "is_test": false,
+      "referenced_by": [
+        "Network_Game",
+        "Network_Game.Dialogue.Editor",
+        "Network_Game.Editor",
+        "Unity.Multiplayer.Tools.Adapters.Ngo1",
+        "Unity.Multiplayer.Tools.Adapters.Ngo1WithUtp2",
+        "Unity.Multiplayer.Tools.Adapters.Tests.Editor",
+        "Unity.Multiplayer.Tools.GameObjects.Tests",
+        "Unity.Netcode.Editor",
+        "Unity.Netcode.Editor.CodeGen",
+        "Unity.Netcode.Editor.Tests",
+        "Unity.Netcode.Runtime.Tests"
+      ]
+    },
+    "Unity.Netcode.Editor.Tests": {
+      "name": "Unity.Netcode.Editor.Tests",
+      "path": "DevProject/Packages/com.unity.netcode.gameobjects/Tests/Editor/Unity.Netcode.Editor.Tests.asmdef",
+      "rootNamespace": "Unity.Netcode.EditorTests",
+      "references": [
+        "Unity.Collections",
+        "Unity.Netcode.Runtime",
+        "Unity.Netcode.Editor",
+        "Unity.Multiplayer.MetricTypes",
+        "Unity.Multiplayer.NetStats",
+        "Unity.Multiplayer.Tools.MetricTypes",
+        "Unity.Multiplayer.Tools.NetStats",
+        "Unity.Networking.Transport",
+        "Unity.Mathematics",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "Unity.Netcode.Runtime.Tests"
+      ],
+      "precompiledReferences": [
+        "nunit.framework.dll"
+      ],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": false,
+      "allowUnsafeCode": true,
+      "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+      ],
+      "is_editor_only": true,
+      "is_test": true,
+      "referenced_by": []
+    },
+    "Unity.Netcode.Runtime.Tests": {
+      "name": "Unity.Netcode.Runtime.Tests",
+      "path": "DevProject/Packages/com.unity.netcode.gameobjects/Tests/Runtime/Unity.Netcode.Runtime.Tests.asmdef",
+      "rootNamespace": "Unity.Netcode.RuntimeTests",
+      "references": [
+        "Unity.Netcode.Runtime",
+        "Unity.Collections",
+        "Unity.Multiplayer.MetricTypes",
+        "Unity.Multiplayer.NetStats",
+        "Unity.Multiplayer.Tools.MetricTypes",
+        "Unity.Multiplayer.Tools.NetStats",
+        "Unity.Networking.Transport",
+        "ClientNetworkTransform",
+        "Unity.Netcode.TestHelpers.Runtime",
+        "Unity.Mathematics",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+      ],
+      "precompiledReferences": [
+        "nunit.framework.dll"
+      ],
+      "includePlatforms": [],
+      "autoReferenced": false,
+      "allowUnsafeCode": true,
+      "defineConstraints": [
+        "UNITY_INCLUDE_TESTS",
+        "UNITY_INCLUDE_TESTS"
+      ],
+      "is_editor_only": false,
+      "is_test": true,
+      "referenced_by": [
+        "Unity.Multiplayer.Tools.GameObjects.Tests",
+        "Unity.Netcode.Editor.Tests"
+      ]
+    },
+    "Unity.Networking.Editor": {
+      "name": "Unity.Networking.Editor",
+      "path": "DevProject/Packages/com.unity.transport/Editor/Unity.Networking.Editor.asmdef",
+      "rootNamespace": "",
+      "references": [],
+      "precompiledReferences": [],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [],
+      "is_editor_only": true,
+      "is_test": false,
+      "referenced_by": []
+    },
+    "Unity.Networking.Transport": {
+      "name": "Unity.Networking.Transport",
+      "path": "DevProject/Packages/com.unity.transport/Runtime/Unity.Networking.Transport.asmdef",
+      "rootNamespace": "",
+      "references": [
+        "Unity.Burst",
+        "Unity.Collections",
+        "Unity.Mathematics"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [],
+      "autoReferenced": true,
+      "allowUnsafeCode": true,
+      "defineConstraints": [],
+      "is_editor_only": false,
+      "is_test": false,
+      "referenced_by": [
+        "Network_Game",
+        "Unity.Multiplayer.Tools.Adapters.Ngo1WithUtp2",
+        "Unity.Multiplayer.Tools.Adapters.Utp2",
+        "Unity.Multiplayer.Tools.GameObjects.Tests",
+        "Unity.Netcode.Editor",
+        "Unity.Netcode.Editor.Tests",
+        "Unity.Netcode.Runtime",
+        "Unity.Netcode.Runtime.Tests"
+      ]
+    }
+  }
+}

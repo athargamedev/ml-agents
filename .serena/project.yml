@@ -1,7 +1,6 @@
 # the name by which the project can be referenced within Serena
 project_name: "ml-agents"
 
-
 # list of languages for which language servers are started; choose from:
 #   al                  bash                clojure             cpp                 csharp
 #   csharp_omnisharp    dart                elixir              elm                 erlang
@@ -26,7 +25,9 @@ project_name: "ml-agents"
 # The first language is the default language and the respective language server will be used as a fallback.
 # Note that when using the JetBrains backend, language servers are not used and this list is correspondingly ignored.
 languages:
-- csharp
+    - csharp
+    - python
+    - typescript
 
 # the encoding used by text files in the project
 # For a list of possible encodings, see https://docs.python.org/3.11/library/codecs.html#standard-encodings
@@ -40,7 +41,7 @@ encoding: "utf-8"
 language_backend:
 
 # whether to use project's .gitignore files to ignore files
-ignore_all_files_in_gitignore: true
+ignore_all_files_in_gitignore: false
 
 # list of additional paths to ignore in this project.
 # Same syntax as gitignore, so you can use * and **.
@@ -54,7 +55,7 @@ read_only: false
 
 # list of tool names to exclude. We recommend not excluding any tools, see the readme for more details.
 # Below is the complete list of tools for convenience.
-# To make sure you have the latest list of tools, and to view their descriptions, 
+# To make sure you have the latest list of tools, and to view their descriptions,
 # execute `uv run scripts/print_tool_overview.py`.
 #
 #  * `activate_project`: Activates a project by name.
@@ -117,7 +118,7 @@ default_modes:
 
 # initial prompt for the project. It will always be given to the LLM upon activating the project
 # (contrary to the memories, which are loaded on demand).
-initial_prompt: ""
+initial_prompt: "This is a dev ml-agents project that contains our Unity game project that are testing ml-agents for training models to improve unity games development. We also use local llm models accessed at lmstudio local server. Always keep documentation memories updated."
 
 # time budget (seconds) per tool call for the retrieval of additional symbol information
 # such as docstrings or parameter information.

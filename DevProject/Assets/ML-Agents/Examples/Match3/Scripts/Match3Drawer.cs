@@ -8,7 +8,7 @@ namespace Unity.MLAgentsExamples
     {
         public int DebugMoveIndex = -1;
 
-        static Color[] s_Colors = new[]
+        static readonly Color[] s_Colors = new[]
         {
             Color.red,
             Color.green,
@@ -20,7 +20,7 @@ namespace Unity.MLAgentsExamples
             Color.black,
         };
 
-        private static Color s_EmptyColor = new Color(0.5f, 0.5f, 0.5f, .25f);
+        private static readonly Color s_EmptyColor = new Color(0.5f, 0.5f, 0.5f, .25f);
 
         public Dictionary<(int, int), Match3TileSelector> tilesDict = new Dictionary<(int, int), Match3TileSelector>();
         public float CubeSpacing = 1.25f;

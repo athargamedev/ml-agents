@@ -10,6 +10,8 @@ namespace Unity.MLAgents
     /// </summary>
     public class Monitor : MonoBehaviour
     {
+        private const float kDefaultVerticalOffset = 3f;
+
         /// <summary>
         /// The type of monitor the information must be displayed in.
         /// <slider> corresponds to a single rectangle whose width is given
@@ -29,7 +31,7 @@ namespace Unity.MLAgents
         /// <summary>
         /// Represents how high above the target the monitors will be.
         /// </summary>
-        public static float verticalOffset = 3f;
+        public static float verticalOffset = kDefaultVerticalOffset;
 
         static bool s_IsInstantiated;
         static GameObject s_Canvas;
@@ -67,6 +69,23 @@ namespace Unity.MLAgents
         static GUIStyle s_RedStyle;
         static GUIStyle[] s_ColorStyle;
         static bool s_Initialized;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetStaticState()
+        {
+            verticalOffset = kDefaultVerticalOffset;
+            s_IsInstantiated = false;
+            s_Canvas = null;
+            s_DisplayTransformValues = new Dictionary<Transform, Dictionary<string, DisplayValue>>();
+            s_TransformCamera = new Dictionary<Transform, Camera>();
+            s_BarColors = null;
+            s_KeyStyle = null;
+            s_ValueStyle = null;
+            s_GreenStyle = null;
+            s_RedStyle = null;
+            s_ColorStyle = null;
+            s_Initialized = false;
+        }
 
         /// <summary>
         /// Use the Monitor.Log static function to attach information to a transform.

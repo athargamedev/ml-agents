@@ -19,6 +19,12 @@
     padding: var(--padding-xl);
 }
 
+.hud-login-modal {
+    flex-direction: column;
+    width: 372px;
+    height: 591px;
+}
+
 .blocks-login-input-group {
     width: 100%;
     margin-bottom: var(--margin-md);
@@ -33,6 +39,45 @@
 .blocks-login-button {
     margin-top: var(--margin-md);
     width: 100%;
+}
+
+.hud-login-title {
+    width: 90%;
+    height: auto;
+    padding: 10px;
+    margin-bottom: 0;
+    font-size: 20px;
+    letter-spacing: 1px;
+}
+
+.hud-login-name-group {
+    width: 319px;
+    height: 87px;
+}
+
+.hud-login-name-input {
+    min-width: 100px;
+    min-height: 30px;
+    margin-top: 1px;
+    margin-right: 0;
+    margin-bottom: 1px;
+    margin-left: 0;
+    font-size: 16px;
+}
+
+.hud-login-bio-input {
+    width: auto;
+    height: auto;
+    margin-right: 1px;
+    margin-left: 1px;
+    font-size: 15px;
+}
+
+.hud-login-status {
+    border-width: 0;
+    margin-top: 10px;
+    color: rgba(255, 255, 255, 0.5);
+    -unity-text-align: middle-center;
 }
 
 .blocks-profile-card {
@@ -62,6 +107,65 @@
     overflow: hidden;
 }
 
+.hud-profile-card {
+    max-width: 250px;
+    max-height: none;
+    padding: 1px;
+    font-size: 15px;
+    letter-spacing: 1px;
+    background-color: rgba(16, 16, 16, 0.59);
+}
+
+.hud-profile-header {
+    width: 90%;
+    height: 20px;
+    padding-top: 1px;
+    padding-bottom: 2px;
+    border-bottom-width: 1px;
+}
+
+.hud-profile-name {
+    font-size: 14px;
+}
+
+.hud-profile-minimize {
+    width: 15px;
+    min-width: auto;
+    height: 15px;
+    opacity: 1;
+}
+
+.hud-profile-status {
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+.hud-profile-bio {
+    border-width: 0;
+    font-size: 14px;
+    color: rgb(199, 199, 199);
+}
+
+.hud-profile-client-row {
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 5px;
+}
+
+.hud-profile-client-label {
+    font-size: 10px;
+}
+
+.hud-profile-client-id {
+    margin-right: 10px;
+    padding-top: 2px;
+    padding-right: 1px;
+    padding-bottom: 2px;
+    font-size: 14px;
+    color: rgb(255, 255, 255);
+    -unity-font-style: bold;
+}
+
 .blocks-profile-card--minimized {
     height: 60px;
 }
@@ -71,4 +175,121 @@
 }
 
 .blocks-header {
+}
+
+.hud-dialogue-shell {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 900px;
+    height: 220px;
+    padding: 0;
+    overflow: hidden;
+    border-radius: 16px;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    background-color: rgba(16, 16, 16, 0.81);
+    opacity: 0.85;
+    letter-spacing: 1px;
+}
+
+.hud-dialogue-header {
+    height: 50px;
+    padding: 0 20px;
+    margin-bottom: 0;
+    background-color: rgba(255, 255, 255, 0.05);
+    flex-shrink: 0;
+}
+
+.hud-dialogue-camera-button {
+    width: 80px;
+    min-width: 44px;
+    height: 25px;
+    margin-right: 6px;
+    font-size: 16px;
+}
+
+.hud-dialogue-title {
+    font-size: 16px;
+    opacity: 1;
+    height: 25px;
+    width: 400px;
+}
+
+.hud-dialogue-header-actions {
+    flex-direction: row;
+    align-items: center;
+}
+
+.hud-dialogue-listener {
+    font-size: 12px;
+    margin-right: 15px;
+    height: 25px;
+    width: 300px;
+    -unity-font-style: bold;
+}
+
+.hud-dialogue-close {
+    width: 25px;
+    min-width: 20px;
+    height: 25px;
+    font-size: 16px;
+}
+
+.hud-dialogue-transcript {
+    flex-grow: 1;
+    flex-shrink: 1;
+    padding: 1px;
+    font-size: 14px;
+    letter-spacing: 1px;
+}
+
+.hud-dialogue-input-row {
+    flex-direction: row;
+    align-items: center;
+    flex-shrink: 0;
+    flex-grow: 0;
+    padding-top: 1px;
+    padding-right: 5px;
+    padding-bottom: 1px;
+    padding-left: 5px;
+    border-top-width: 1px;
+    border-top-color: rgb(66, 66, 66);
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.hud-dialogue-input {
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-width: 150px;
+    min-height: 25px;
+    height: 50px;
+    margin-top: 1px;
+    margin-right: 5px;
+    margin-bottom: 1px;
+    margin-left: 1px;
+    font-size: 12px;
+    letter-spacing: 1px;
+    border-top-width: 0;
+    border-right-width: 1px;
+    border-bottom-width: 0;
+    border-left-width: 1px;
+}
+
+.hud-dialogue-send {
+    width: 80px;
+    min-width: auto;
+    height: 40px;
+    margin-left: 1px;
+    margin-right: 1px;
+    padding-left: 1px;
+    padding-right: 1px;
+    font-size: 15px;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    border-bottom-left-radius: 16px;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
 }

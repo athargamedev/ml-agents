@@ -87,25 +87,6 @@ namespace Network_Game.Behavior
         public void DisableLlmAgent(UnityEngine.GameObject target);
     }
 
-    [UnityEngine.AddComponentMenu(@"Network Game/Behavior/NPC Flight Chase State Machine")] [UnityEngine.DisallowMultipleComponent] [UnityEngine.RequireComponent(typeof(Unity.Netcode.NetworkObject))] public sealed class NpcFlightChaseStateMachine : Unity.Netcode.NetworkBehaviour
-    {
-        public Unity.Netcode.NetworkObject CurrentTarget { get; }
-        public NpcFlightChaseStateMachine.ChaseState State { get; }
-        public NpcFlightChaseStateMachine() {}
-        protected override string __getTypeName();
-        protected override void __initializeRpcs();
-        protected override void __initializeVariables();
-        public override void OnNetworkDespawn();
-        public override void OnNetworkSpawn();
-        public enum ChaseState
-        {
-            Disabled = 0,
-            Idle = 1,
-            AcquireTarget = 2,
-            Chase = 3,
-        }
-    }
-
     public class SceneCameraManager : UnityEngine.MonoBehaviour
     {
         public SceneCameraManager() {}
@@ -288,6 +269,8 @@ namespace Network_Game.Dialogue
         public static event System.Action<DialogueEffectFeedbackPrompt.FeedbackSubmission> OnFeedbackSubmitted;
         public static bool IsBlockingPromptActive { get; }
         public DialogueEffectFeedbackPrompt() {}
+        public static DialogueEffectFeedbackPrompt EnsureForAutomation();
+        public void ForceEnablePrompt(bool enabled = true);
         public struct FeedbackSubmission
         {
             public string Comment;
@@ -481,6 +464,53 @@ namespace Network_Game.Dialogue
         public DialogueSemanticTag() {}
         public string[] GetCompactAliases(int max = 3);
         public string ResolveDisplayName(UnityEngine.GameObject fallbackObject);
+    }
+
+    public class EffectDispatcher
+    {
+        public EffectDispatcher(DialogueSceneEffectsController sceneEffects, Effects.EffectCatalog catalog, bool enableContextSceneEffects = true, bool logDebug = false) {}
+        public void Dispatch(EffectDispatcher.DispatchContext context);
+        public void Dispatch(EffectDispatcher.DispatchContext context, System.Collections.Generic.List<Effects.EffectIntent> catalogIntents);
+        public struct DispatchContext
+        {
+            public NpcDialogueActor Actor;
+            public string EffectAnchorLabel;
+            public UnityEngine.Vector3 EffectForward;
+            public UnityEngine.Vector3 EffectOrigin;
+            public ulong ListenerNetworkId;
+            public UnityEngine.GameObject ListenerObject;
+            public EffectDispatcher.EffectModifier Modifier;
+            public NpcDialogueProfile Profile;
+            public string Prompt;
+            public ulong RequestingClientId;
+            public string ResponseText;
+            public ulong SpeakerNetworkId;
+            public UnityEngine.GameObject SpeakerObject;
+        }
+        public struct EffectModifier
+        {
+            public float DamageScaleReceived;
+            public float EffectDurationScale;
+            public float EffectSizeScale;
+            public bool IsShielded;
+            public System.Nullable<UnityEngine.Color> PreferredColor;
+            public string PreferredElement;
+            public static EffectDispatcher.EffectModifier Neutral { get; }
+        }
+        public enum PlayerSpecialEffectMode
+        {
+            None = 0,
+            Dissolve = 1,
+            Respawn = 2,
+        }
+    }
+
+    public class EffectIntentBuilder
+    {
+        public EffectIntentBuilder(Effects.EffectCatalog catalog, bool enableDynamicParameters = true) {}
+        public Effects.EffectIntent[] Build(string responseText, NpcDialogueProfile profile, string prompt = default(string));
+        public Effects.EffectIntent[] BuildWithCache(string responseText, NpcDialogueProfile profile, string prompt = default(string));
+        public void ClearCache();
     }
 
     public interface IDialogueInferenceClient
@@ -681,9 +711,12 @@ namespace Network_Game.Dialogue
         public string ProfileId { get; }
         public string SystemPrompt { get; }
         public NpcDialogueProfile() {}
+        public string BuildCompressedEffectGuide(string listenerName, int maxPowers = 5);
         public static NpcDialogueProfile[] GetAllProfiles();
+        public System.Collections.Generic.HashSet<string> GetKeywordIndex();
         public string[] GetKeywords();
         public static NpcDialogueProfile GetProfile(string profileId);
+        public bool HasKeyword(string keyword, System.Collections.Generic.HashSet<string> cachedIndex);
     }
 
     public class OpenAIChatClient : IDialogueInferenceClient, System.IDisposable
@@ -804,6 +837,7 @@ namespace Network_Game.Dialogue.Effects
         [UnityEngine.Header(@"Settings")] [UnityEngine.Tooltip(@"Log warnings when LLM uses unknown effect tags")] public bool logUnknownTags = true;
         public static EffectCatalog Instance { get; }
         public EffectCatalog() {}
+        public System.Collections.Generic.IEnumerable<EffectDefinition> GetAllRegisteredEffects();
         public string GetPromptCatalog();
         public void Initialize();
         public static EffectCatalog Load();
@@ -1146,6 +1180,58 @@ namespace Network_Game.ThirdPersonController.Debug
 
 namespace Network_Game.UI
 {
+    [UnityEngine.DefaultExecutionOrder(-520)] [UnityEngine.DisallowMultipleComponent] [UnityEngine.ExecuteAlways] public sealed class ModernHudController : UnityEngine.MonoBehaviour
+    {
+        public static ModernHudController Active { get; }
+        public UnityEngine.UIElements.UIDocument DialogueDocument { get; }
+        public ModernHudLayoutProfile LayoutProfile { get; }
+        public UnityEngine.UIElements.UIDocument LoginDocument { get; }
+        public ModernUISetup ModernUiSetup { get; }
+        public UnityEngine.UIElements.UIDocument ProfileDocument { get; }
+        public UnityEngine.Transform RuntimeServicesRoot { get; }
+        public ModernHudController() {}
+        [UnityEngine.ContextMenu(@"Refresh HUD Bindings")] public void RefreshBindings();
+        public static bool SetFeedbackVisible(bool visible);
+        public void SetLayoutProfile(ModernHudLayoutProfile profile);
+        public static bool SetPanelVisible(ModernHudController.HudPanel panel, bool visible);
+        public static bool TryAcquireUiCursor(UnityEngine.Object owner);
+        public static bool TryApplyBottomBarLayout(UnityEngine.UIElements.VisualElement element);
+        public static UnityEngine.UIElements.VisualElement TryGetZone(ModernHudController.HudZone zone);
+        public static bool TryReleaseUiCursor(UnityEngine.Object owner);
+        public enum HudPanel
+        {
+            Login = 0,
+            Profile = 1,
+            Dialogue = 2,
+        }
+        public enum HudZone
+        {
+            TopBar = 0,
+            TopLeft = 1,
+            RightDock = 2,
+            BottomBar = 3,
+            ModalOverlay = 4,
+        }
+    }
+
+    [UnityEngine.CreateAssetMenu(fileName = @"ModernHudLayoutProfile", menuName = @"Network Game/UI/Modern HUD Layout Profile")] public sealed class ModernHudLayoutProfile : UnityEngine.ScriptableObject
+    {
+        [UnityEngine.Header(@"Bottom Bar")] [UnityEngine.Range(0.12f, 0.4f)] public float BottomBarHeightPercent = 0.24f;
+        [UnityEngine.Range(0f, 0.05f)] public float DockGapPercent = 0.008f;
+        [UnityEngine.Range(0.1f, 0.7f)] public float FeedbackActionsRowPercent = 0.31f;
+        [UnityEngine.Range(0.1f, 0.7f)] public float FeedbackNotesRowPercent = 0.35f;
+        [UnityEngine.Header(@"Feedback Bar Internal Rows")] [UnityEngine.Range(0.15f, 0.7f)] public float FeedbackSummaryRowPercent = 0.34f;
+        [UnityEngine.Header(@"Side Docks")] [UnityEngine.Range(0.15f, 0.45f)] public float LeftDockWidthPercent = 0.28f;
+        [UnityEngine.Min(180f)] public float MinDockWidthPx = 260f;
+        [UnityEngine.Header(@"Outer Frame")] [UnityEngine.Range(0f, 0.05f)] public float OuterMarginPercent = 0.0125f;
+        [UnityEngine.Range(0.18f, 0.5f)] public float RightDockWidthPercent = 0.36f;
+        [UnityEngine.Min(72f)] public float TopBarMinHeightPx = 118f;
+        [UnityEngine.Range(0.08f, 0.35f)] public float TopBarReservedHeightPercent = 0.18f;
+        [UnityEngine.Header(@"Top Bar")] [UnityEngine.Range(0f, 0.05f)] public float TopBarTopPercent = 0.008f;
+        public ModernHudLayoutProfile() {}
+        public void GetNormalizedFeedbackRowWeights(out float summary, out float actions, out float notes);
+    }
+
     [UnityEngine.DisallowMultipleComponent] [UnityEngine.ExecuteAlways] public class ModernUISetup : UnityEngine.MonoBehaviour
     {
         public UnityEngine.UIElements.UIDocument DialogueDoc;
@@ -1165,6 +1251,14 @@ namespace Network_Game.UI.Dialogue
     [UnityEngine.AddComponentMenu(@"Network Game/UI/Modern Dialogue Controller")] [UnityEngine.DefaultExecutionOrder(-55)] [UnityEngine.DisallowMultipleComponent] [UnityEngine.RequireComponent(typeof(UnityEngine.UIElements.UIDocument))] public sealed class ModernDialogueController : UnityEngine.MonoBehaviour
     {
         public ModernDialogueController() {}
+    }
+}
+
+namespace Network_Game.UI.Editor
+{
+    public sealed class ModernHudLayoutBuilderWindow : UnityEditor.EditorWindow
+    {
+        public ModernHudLayoutBuilderWindow() {}
     }
 }
 

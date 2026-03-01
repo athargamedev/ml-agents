@@ -1,0 +1,15 @@
+{
+  "job_id": "07",
+  "title": "DebugWatchdog Threshold Calibration",
+  "generated_utc": "2026-03-01T05:55:42.819063+00:00",
+  "result": {
+    "timeout_verdict": "too_long",
+    "suggested_request_timeout_s": 5,
+    "suggested_warmup_timeout_s": 10,
+    "suggested_poll_interval_s": 1.0,
+    "ttft_risk": "TTFT: 0.26s (time to first token)",
+    "concurrent_request_verdict": "too_many",
+    "summary_log_verdict": "not_needed",
+    "notes": "The current timeout of 120 seconds is too long for a responsive game experience, especially considering the expected response time of 1-2 seconds. A suggested timeout of 5 seconds would be more suitable."
+  }
+}

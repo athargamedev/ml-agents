@@ -66,6 +66,13 @@ namespace Unity.MLAgentsExamples
         static int s_PreviousAgentCompletedEpisodes;
         static int s_PreviousNumSteps;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetStaticCounters()
+        {
+            s_PreviousAgentCompletedEpisodes = 0;
+            s_PreviousNumSteps = 0;
+        }
+
         int TotalCompletedEpisodes
         {
             get { return m_PreviousAgentCompletedEpisodes + (m_Agent == null ? 0 : m_Agent.CompletedEpisodes); }

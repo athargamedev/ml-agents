@@ -1,20 +1,20 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
     <Style src="project://database/Assets/Network_Game/UI/BlocksShared.uss?fileID=7433441132597879392&amp;guid=5b446a577d2cebf4d8d926d521552982&amp;type=3#BlocksShared"/>
-    <ui:VisualElement name="chat-container" enabled="true" focusable="true" class="blocks-modal" style="position: absolute; bottom: 0; left: 0; width: 900px; height: 220px; padding: 0; overflow: hidden; border-radius: 16px; flex-direction: column; align-items: stretch; justify-content: flex-start; font-size: 13px; top: auto; right: auto; aspect-ratio: 1.777778; -unity-text-generator: standard; background-color: rgba(16, 16, 16, 0.81); flex-grow: 0; flex-shrink: 0; align-content: auto; opacity: 0.85; display: flex; letter-spacing: 1px; -unity-text-auto-size: none; transform-origin: left bottom;">
-        <ui:VisualElement class="blocks-profile-card__header" style="height: 50px; padding: 0 20px; margin-bottom: 0; background-color: rgba(255, 255, 255, 0.05); flex-shrink: 0; font-size: 15px;">
-            <ui:Button name="camera-switch" text="CAM" class="blocks-button--xs blocks-button" style="width: 80px; min-width: 44px; height: 25px; margin-right: 6px; font-size: 16px; display: flex;"/>
-            <ui:Label name="dialogue-header" text="LLM DIALOGUE SYSTEM" parse-escape-sequences="false" double-click-selects-word="false" triple-click-selects-line="false" display-tooltip-when-elided="false" class="blocks-header" style="font-size: 16px; opacity: 1; height: 25px; width: 400px;"/>
-            <ui:VisualElement style="flex-direction: row; align-items: center;">
-                <ui:Label name="listener-status" text="NO TARGET" class="blocks-login-label" style="font-size: 12px; margin-right: 15px; height: 25px; width: 300px; -unity-font-style: bold;"/>
-                <ui:Button name="close-chat" text="✕" class="blocks-button--xs blocks-button" style="width: 25px; min-width: 20px; height: 25px; font-size: 16px;"/>
+    <ui:VisualElement name="chat-container" enabled="true" focusable="true" class="blocks-modal hud-dialogue-shell">
+        <ui:VisualElement class="blocks-profile-card__header hud-dialogue-header" style="height: 30px; padding-left: 10px; padding-right: 10px; font-size: 15px;">
+            <ui:Button name="camera-switch" text="CAM" emoji-fallback-support="false" class="blocks-button--xs blocks-button hud-dialogue-camera-button" style="font-size: 12px; -unity-text-generator: standard; transition-timing-function: ease-in-out; transition-duration: 1s; -unity-background-scale-mode: stretch-to-fill; letter-spacing: 2px;"/>
+            <ui:Label name="dialogue-header" text="LLM DIALOGUE SYSTEM" parse-escape-sequences="false" double-click-selects-word="false" triple-click-selects-line="false" display-tooltip-when-elided="false" class="blocks-header hud-dialogue-title" style="height: 20px; font-size: 14px; padding-left: 10px; padding-right: 10px; letter-spacing: 1px;"/>
+            <ui:VisualElement class="hud-dialogue-header-actions">
+                <ui:Label name="listener-status" text="NO TARGET" class="blocks-login-label hud-dialogue-listener" style="-unity-text-align: middle-left; margin-right: 0;"/>
+                <ui:Button name="close-chat" text="✕" class="blocks-button--xs blocks-button hud-dialogue-close"/>
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:ScrollView name="transcript-scroll" mouse-wheel-scroll-size="15" enabled="true" focusable="true" class="blocks-scroll-view" style="padding: 15px; flex-grow: 1; flex-shrink: 1; min-height: auto; font-size: 14px; -unity-text-auto-size: none; letter-spacing: 1px; padding-left: 1px; padding-right: 1px; padding-top: 1px; padding-bottom: 1px;">
+        <ui:ScrollView name="transcript-scroll" mouse-wheel-scroll-size="15" enabled="true" focusable="true" class="blocks-scroll-view hud-dialogue-transcript" style="opacity: 0.61; font-size: 12px; -unity-text-align: middle-left; align-items: auto; align-content: auto; border-top-width: 1px; border-left-width: 1px; border-bottom-width: 1px; border-right-width: 1px;">
             <ui:VisualElement name="transcript-content"/>
         </ui:ScrollView>
-        <ui:VisualElement name="input-row" style="flex-direction: row; align-items: center; flex-shrink: 0; flex-grow: 0; padding: 15px; border-top-width: 1px; border-top-color: rgb(66, 66, 66); background-color: rgba(0, 0, 0, 0.2); font-size: 15px; color: rgb(255, 255, 255); -unity-text-auto-size: none; display: flex; visibility: visible; overflow: visible; height: auto; width: auto; padding-top: 1px; padding-bottom: 1px; padding-left: 5px; padding-right: 5px;">
-            <ui:TextField name="chat-input" placeholder-text="Enter message... (Enter to send)" auto-correction="false" class="blocks-textfield" style="flex-grow: 1; flex-shrink: 1; margin-right: 5px; min-height: 25px; font-size: 12px; overflow: hidden; min-width: 150px; height: 50px; letter-spacing: 1px; border-top-width: 0; border-bottom-width: 0; -unity-font-style: normal; border-left-width: 1px; border-right-width: 1px; margin-top: 1px; margin-bottom: 1px; margin-left: 1px;"/>
-            <ui:Button name="send-button" text="SEND" selectable="true" parse-escape-sequences="true" class="blocks-button" style="height: 40px; min-width: auto; width: 80px; font-size: 15px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-left-radius: 16px; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; align-content: auto; align-items: auto; padding-left: 1px; padding-right: 1px; margin-left: 1px; margin-right: 1px;"/>
+        <ui:VisualElement name="input-row" focusable="true" class="hud-dialogue-input-row" style="align-items: auto; align-content: auto; font-size: 12px; -unity-text-align: middle-left; border-top-width: 0;">
+            <ui:TextField name="chat-input" placeholder-text="Enter message... (Enter to send)" auto-correction="false" class="blocks-textfield hud-dialogue-input" style="align-items: auto; align-content: auto; height: 30px;"/>
+            <ui:Button name="send-button" text="SEND" selectable="true" parse-escape-sequences="true" class="blocks-button hud-dialogue-send" style="height: 30px; width: 60px; font-size: 12px; border-bottom-right-radius: 16px;"/>
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

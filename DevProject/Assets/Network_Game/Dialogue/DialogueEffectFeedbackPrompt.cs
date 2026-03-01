@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using Network_Game.Diagnostics;
 using Network_Game.ThirdPersonController;
+using Network_Game.UI;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -113,7 +114,7 @@ namespace Network_Game.Dialogue
         private string m_ResolvedOutputPath = string.Empty;
         private string m_ResolvedUnifiedOutputPath = string.Empty;
         private string m_Comment = string.Empty;
-        private Rect m_WindowRect = new Rect(40f, 96f, 400f, 250f);
+        private Rect m_WindowRect = new Rect(12f, 12f, 1220f, 86f);
         private VisualElement m_UiHostRoot;
         private VisualElement m_UiOverlayRoot;
         private Label m_UiTitleLabel;
@@ -140,6 +141,7 @@ namespace Network_Game.Dialogue
         private bool m_RuntimeCaptureInputWhenNotPaused;
         private bool m_InteractionCaptureActive;
         private bool m_InputStateCaptured;
+        private bool m_UsingHudCursorRouter;
         private bool m_PrePromptInputsCursorLocked = true;
         private bool m_PrePromptInputsCursorInputForLook = true;
 #if ENABLE_INPUT_SYSTEM
@@ -164,6 +166,22 @@ namespace Network_Game.Dialogue
             var go = new GameObject("DialogueEffectFeedbackPrompt");
             DontDestroyOnLoad(go);
             go.AddComponent<DialogueEffectFeedbackPrompt>();
+        }
+
+        public static DialogueEffectFeedbackPrompt EnsureForAutomation()
+        {
+            EnsureRuntimePrompt();
+            return FindExistingInstance();
+        }
+
+        public void ForceEnablePrompt(bool enabled = true)
+        {
+            m_EnablePrompt = enabled;
+            if (!enabled)
+            {
+                ClearPendingPrompts("disabled_by_automation");
+            }
+            RefreshPromptUiState();
         }
 
         private static DialogueEffectFeedbackPrompt FindExistingInstance()
@@ -364,21 +382,29 @@ namespace Network_Game.Dialogue
                 DestroyUiToolkitOverlay();
             }
 
+            VisualElement topBarZone = ModernHudController.TryGetZone(
+                ModernHudController.HudZone.TopBar
+            );
+            if (topBarZone != null)
+            {
+                BuildUiToolkitOverlay(topBarZone, true);
+                RefreshPromptUiState();
+                return;
+            }
+
             UIDocument hostDocument = FindUiToolkitHostDocument();
             if (hostDocument == null || hostDocument.rootVisualElement == null)
             {
                 return;
             }
 
-            BuildUiToolkitOverlay(hostDocument.rootVisualElement);
+            BuildUiToolkitOverlay(hostDocument.rootVisualElement, false);
             RefreshPromptUiState();
         }
 
         private UIDocument FindUiToolkitHostDocument()
         {
-            UIDocument[] docs = FindObjectsByType<UIDocument>(
-                FindObjectsInactive.Exclude
-            );
+            UIDocument[] docs = FindObjectsByType<UIDocument>(FindObjectsInactive.Exclude);
             if (docs == null || docs.Length == 0)
             {
                 return null;
@@ -423,7 +449,7 @@ namespace Network_Game.Dialogue
             return hostRoot.resolvedStyle.display != DisplayStyle.None;
         }
 
-        private void BuildUiToolkitOverlay(VisualElement hostRoot)
+        private void BuildUiToolkitOverlay(VisualElement hostRoot, bool useHudTopBarZone)
         {
             if (hostRoot == null)
             {
@@ -433,35 +459,36 @@ namespace Network_Game.Dialogue
             m_UiHostRoot = hostRoot;
 
             var overlay = new VisualElement { name = "dialogue-effect-feedback-overlay" };
-            overlay.style.position = Position.Absolute;
-            overlay.style.left = 0f;
-            overlay.style.right = 0f;
-            overlay.style.top = 0f;
-            overlay.style.bottom = 0f;
-            overlay.style.justifyContent = Justify.FlexStart;
-            overlay.style.alignItems = Align.FlexEnd;
-            overlay.style.paddingRight = 12f;
-            overlay.style.paddingBottom = 14f;
-            overlay.style.paddingLeft = 0f;
-            overlay.style.paddingTop = 96f;
             overlay.style.display = DisplayStyle.None;
             overlay.style.backgroundColor = new Color(0f, 0f, 0f, 0f);
             overlay.pickingMode = PickingMode.Ignore;
 
+            if (!useHudTopBarZone)
+            {
+                overlay.style.position = Position.Absolute;
+                overlay.style.left = 0f;
+                overlay.style.right = 0f;
+                overlay.style.top = 0f;
+                overlay.style.bottom = 0f;
+            }
+            else
+            {
+                overlay.style.flexGrow = 1f;
+                overlay.style.flexDirection = FlexDirection.Column;
+                overlay.style.alignItems = Align.Stretch;
+            }
+
             var card = new VisualElement { name = "dialogue-effect-feedback-card" };
             card.AddToClassList("blocks-profile-card");
-            card.style.width = 400f;
-            card.style.minWidth = 360f;
-            card.style.maxWidth = 420f;
             card.style.backgroundColor = new Color(16f / 255f, 16f / 255f, 16f / 255f, 0.80f);
-            card.style.borderTopLeftRadius = 16f;
-            card.style.borderTopRightRadius = 16f;
-            card.style.borderBottomLeftRadius = 16f;
-            card.style.borderBottomRightRadius = 16f;
-            card.style.paddingTop = 0f;
-            card.style.paddingBottom = 8f;
-            card.style.paddingLeft = 8f;
-            card.style.paddingRight = 8f;
+            card.style.borderTopLeftRadius = 12f;
+            card.style.borderTopRightRadius = 12f;
+            card.style.borderBottomLeftRadius = 12f;
+            card.style.borderBottomRightRadius = 12f;
+            card.style.paddingTop = 6f;
+            card.style.paddingBottom = 6f;
+            card.style.paddingLeft = 10f;
+            card.style.paddingRight = 10f;
             card.style.borderTopWidth = 1f;
             card.style.borderBottomWidth = 1f;
             card.style.borderLeftWidth = 1f;
@@ -470,110 +497,157 @@ namespace Network_Game.Dialogue
             card.style.borderBottomColor = new Color(0.26f, 0.26f, 0.26f, 1f);
             card.style.borderLeftColor = new Color(0.26f, 0.26f, 0.26f, 1f);
             card.style.borderRightColor = new Color(0.26f, 0.26f, 0.26f, 1f);
+            card.style.flexDirection = FlexDirection.Column;
+            card.style.alignItems = Align.Stretch;
+            card.style.justifyContent = Justify.FlexStart;
+            card.style.minHeight = 78f;
 
-            var header = new VisualElement { name = "feedback-header" };
-            header.AddToClassList("blocks-profile-card__header");
-            header.style.marginBottom = 6f;
-            header.style.paddingLeft = 10f;
-            header.style.paddingRight = 10f;
-            header.style.paddingTop = 6f;
-            header.style.paddingBottom = 6f;
-            header.style.backgroundColor = new Color(1f, 1f, 1f, 0.03f);
-            header.style.alignItems = Align.Center;
+            if (!useHudTopBarZone)
+            {
+                card.style.position = Position.Absolute;
+                card.style.left = 12f;
+                card.style.right = 12f;
+                card.style.top = 10f;
+            }
+            else
+            {
+                card.style.width = new Length(100f, LengthUnit.Percent);
+                card.style.flexGrow = 1f;
+            }
+
+            var summaryRow = new VisualElement();
+            summaryRow.style.flexDirection = FlexDirection.Row;
+            summaryRow.style.alignItems = Align.Center;
+            summaryRow.style.marginBottom = 3f;
 
             var titleBlock = new VisualElement();
+            titleBlock.style.width = 138f;
+            titleBlock.style.flexShrink = 0f;
             titleBlock.style.flexDirection = FlexDirection.Column;
-            titleBlock.style.flexGrow = 1f;
-            titleBlock.style.marginRight = 8f;
+            titleBlock.style.alignItems = Align.FlexStart;
+            titleBlock.style.marginRight = 10f;
 
             m_UiTitleLabel = new Label("EFFECT FEEDBACK");
             m_UiTitleLabel.AddToClassList("blocks-header");
-            m_UiTitleLabel.style.fontSize = 13f;
+            m_UiTitleLabel.style.fontSize = 11f;
             m_UiTitleLabel.style.unityFontStyleAndWeight = FontStyle.Bold;
-            m_UiTitleLabel.style.letterSpacing = 0.8f;
+            m_UiTitleLabel.style.letterSpacing = 0.3f;
             titleBlock.Add(m_UiTitleLabel);
 
             m_UiQueueLabel = new Label("Queue: 0");
             m_UiQueueLabel.AddToClassList("blocks-login-label");
-            m_UiQueueLabel.style.fontSize = 10f;
-            m_UiQueueLabel.style.marginTop = 1f;
+            m_UiQueueLabel.style.fontSize = 9f;
+            m_UiQueueLabel.style.opacity = 0.8f;
             titleBlock.Add(m_UiQueueLabel);
 
-            header.Add(titleBlock);
+            summaryRow.Add(titleBlock);
 
-            var submitNoteButton = new Button(() => SubmitCurrent("note_only", m_Comment))
-            {
-                text = "NOTE ONLY",
-            };
-            submitNoteButton.AddToClassList("blocks-button");
-            submitNoteButton.style.height = 24f;
-            submitNoteButton.style.minWidth = 92f;
-            submitNoteButton.style.marginLeft = 6f;
-            submitNoteButton.style.fontSize = 10f;
-            header.Add(submitNoteButton);
+            var infoColumn = new VisualElement();
+            infoColumn.style.flexGrow = 1f;
+            infoColumn.style.flexShrink = 1f;
+            infoColumn.style.minWidth = 0f;
 
-            card.Add(header);
-
-            var body = new VisualElement { name = "feedback-body" };
-            body.style.flexDirection = FlexDirection.Column;
-            body.style.paddingLeft = 6f;
-            body.style.paddingRight = 6f;
-            body.style.paddingBottom = 4f;
-
-            m_UiEffectLabel = CreateInfoLabel(body);
-            m_UiSourceLabel = CreateInfoLabel(body);
-            m_UiTargetLabel = CreateInfoLabel(body);
+            m_UiEffectLabel = CreateInfoLabel(infoColumn);
+            m_UiSourceLabel = CreateInfoLabel(infoColumn);
+            m_UiTargetLabel = CreateInfoLabel(infoColumn);
             m_UiTargetLabel.style.display = DisplayStyle.None;
-            m_UiMetricsLabel = CreateInfoLabel(body);
-            m_UiModeLabel = CreateInfoLabel(body);
+            m_UiMetricsLabel = CreateInfoLabel(infoColumn);
+            summaryRow.Add(infoColumn);
+            card.Add(summaryRow);
+
+            m_UiModeLabel = new Label(string.Empty);
+            m_UiModeLabel.AddToClassList("blocks-login-label");
+            m_UiModeLabel.style.fontSize = 8f;
             m_UiModeLabel.style.color = new Color(0.72f, 0.96f, 0.76f, 1f);
-            m_UiModeLabel.style.marginBottom = 6f;
+            m_UiModeLabel.style.marginBottom = 4f;
+            m_UiModeLabel.style.whiteSpace = WhiteSpace.NoWrap;
+            m_UiModeLabel.style.overflow = Overflow.Hidden;
+            m_UiModeLabel.style.textOverflow = TextOverflow.Ellipsis;
+            card.Add(m_UiModeLabel);
 
-            var outcomesHeader = new Label("QUICK OUTCOMES");
-            outcomesHeader.AddToClassList("blocks-login-label");
-            outcomesHeader.style.fontSize = 10f;
-            outcomesHeader.style.unityFontStyleAndWeight = FontStyle.Bold;
-            outcomesHeader.style.marginBottom = 3f;
-            body.Add(outcomesHeader);
+            var actionsRow = new VisualElement();
+            actionsRow.style.flexDirection = FlexDirection.Row;
+            actionsRow.style.alignItems = Align.Center;
+            actionsRow.style.marginBottom = 4f;
 
-            body.Add(
-                BuildOutcomeRow(
-                    ("LOOKS CORRECT", "looks_correct"),
-                    ("NOT VISIBLE", "not_visible"),
-                    ("WRONG TARGET", "wrong_target")
-                )
-            );
-            body.Add(
-                BuildOutcomeRow(
-                    ("WRONG PLACEMENT", "wrong_placement"),
-                    ("WRONG MESH FIT", "wrong_mesh_fit"),
-                    ("SKIP", "skipped")
-                )
-            );
+            var actionsWrap = new VisualElement { name = "dialogue-effect-feedback-actions" };
+            actionsWrap.style.flexDirection = FlexDirection.Row;
+            actionsWrap.style.flexWrap = Wrap.Wrap;
+            actionsWrap.style.alignItems = Align.Center;
+            actionsWrap.style.justifyContent = Justify.FlexStart;
+            actionsWrap.style.flexGrow = 1f;
+            actionsWrap.style.flexShrink = 1f;
+            actionsWrap.Add(CreateOutcomeButton("CORRECT", "looks_correct", "Looks Correct"));
+            actionsWrap.Add(CreateOutcomeButton("HIDDEN", "not_visible", "Not Visible"));
+            actionsWrap.Add(CreateOutcomeButton("TARGET", "wrong_target", "Wrong Target"));
+            actionsWrap.Add(CreateOutcomeButton("PLACE", "wrong_placement", "Wrong Placement"));
+            actionsWrap.Add(CreateOutcomeButton("MESH", "wrong_mesh_fit", "Wrong Mesh Fit"));
+            actionsWrap.Add(CreateOutcomeButton("SKIP", "skipped", "Skip"));
+            actionsRow.Add(actionsWrap);
+            card.Add(actionsRow);
 
-            var notesLabel = new Label("NOTES");
-            notesLabel.AddToClassList("blocks-login-label");
-            notesLabel.style.fontSize = 10f;
-            notesLabel.style.unityFontStyleAndWeight = FontStyle.Bold;
-            notesLabel.style.marginTop = 6f;
-            notesLabel.style.marginBottom = 3f;
-            body.Add(notesLabel);
+            var notesRow = new VisualElement();
+            notesRow.style.flexDirection = FlexDirection.Row;
+            notesRow.style.alignItems = Align.Center;
+
+            if (useHudTopBarZone)
+            {
+                ModernHudLayoutProfile profile =
+                    ModernHudController.Active != null
+                    ? ModernHudController.Active.LayoutProfile
+                    : null;
+
+                float summaryWeight = 0.34f;
+                float actionsWeight = 0.31f;
+                float notesWeight = 0.35f;
+                if (profile != null)
+                {
+                    profile.GetNormalizedFeedbackRowWeights(
+                        out summaryWeight,
+                        out actionsWeight,
+                        out notesWeight
+                    );
+                }
+
+                ApplyHudTopBarRowLayout(
+                    summaryRow,
+                    actionsRow,
+                    notesRow,
+                    summaryWeight,
+                    actionsWeight,
+                    notesWeight
+                );
+            }
 
             m_UiCommentField = new TextField();
-            m_UiCommentField.multiline = true;
+            m_UiCommentField.multiline = false;
             m_UiCommentField.value = m_Comment ?? string.Empty;
             m_UiCommentField.AddToClassList("blocks-textfield");
-            m_UiCommentField.style.minHeight = 56f;
-            m_UiCommentField.style.maxHeight = 72f;
-            m_UiCommentField.style.height = 60f;
-            m_UiCommentField.style.whiteSpace = WhiteSpace.Normal;
-            m_UiCommentField.style.marginBottom = 4f;
+            m_UiCommentField.style.flexGrow = 1f;
+            m_UiCommentField.style.flexShrink = 1f;
+            m_UiCommentField.style.minWidth = 0f;
+            m_UiCommentField.style.minHeight = 22f;
+            m_UiCommentField.style.maxHeight = 22f;
+            m_UiCommentField.style.height = 22f;
+            m_UiCommentField.style.whiteSpace = WhiteSpace.NoWrap;
+            m_UiCommentField.style.marginRight = 6f;
             m_UiCommentField.RegisterValueChangedCallback(evt =>
                 m_Comment = evt.newValue ?? string.Empty
             );
-            body.Add(m_UiCommentField);
+            notesRow.Add(m_UiCommentField);
 
-            card.Add(body);
+            var submitNoteButton = new Button(() => SubmitCurrent("note_only", m_Comment))
+            {
+                text = "NOTE",
+            };
+            submitNoteButton.AddToClassList("blocks-button");
+            submitNoteButton.style.height = 22f;
+            submitNoteButton.style.minWidth = 56f;
+            submitNoteButton.style.flexShrink = 0f;
+            submitNoteButton.style.fontSize = 9f;
+            notesRow.Add(submitNoteButton);
+
+            card.Add(notesRow);
             overlay.Add(card);
             hostRoot.Add(overlay);
 
@@ -584,40 +658,57 @@ namespace Network_Game.Dialogue
         {
             var label = new Label(string.Empty);
             label.AddToClassList("blocks-login-label");
-            label.style.fontSize = 11f;
+            label.style.fontSize = 9f;
             label.style.marginBottom = 1f;
-            label.style.whiteSpace = WhiteSpace.Normal;
+            label.style.whiteSpace = WhiteSpace.NoWrap;
+            label.style.overflow = Overflow.Hidden;
+            label.style.textOverflow = TextOverflow.Ellipsis;
+            label.style.flexShrink = 1f;
             parent.Add(label);
             return label;
         }
 
-        private VisualElement BuildOutcomeRow(
-            (string label, string outcome) a,
-            (string label, string outcome) b,
-            (string label, string outcome) c
-        )
-        {
-            var row = new VisualElement();
-            row.style.flexDirection = FlexDirection.Row;
-            row.style.marginBottom = 3f;
-            row.Add(CreateOutcomeButton(a.label, a.outcome));
-            row.Add(CreateOutcomeButton(b.label, b.outcome));
-            row.Add(CreateOutcomeButton(c.label, c.outcome));
-            return row;
-        }
-
-        private Button CreateOutcomeButton(string label, string outcome)
+        private Button CreateOutcomeButton(string label, string outcome, string tooltip)
         {
             var button = new Button(() => SubmitCurrent(outcome, m_Comment)) { text = label };
             button.AddToClassList("blocks-button");
-            button.style.flexGrow = 1f;
-            button.style.flexBasis = 0f;
-            button.style.height = 24f;
-            button.style.marginRight = 3f;
+            button.tooltip = tooltip;
+            button.style.height = 19f;
+            button.style.minWidth = 58f;
+            button.style.marginRight = 4f;
+            button.style.marginBottom = 4f;
+            button.style.paddingLeft = 4f;
+            button.style.paddingRight = 4f;
             button.style.unityTextAlign = TextAnchor.MiddleCenter;
-            button.style.fontSize = 10f;
-            button.style.letterSpacing = 0.3f;
+            button.style.fontSize = 8f;
+            button.style.letterSpacing = 0f;
             return button;
+        }
+
+        private static void ApplyHudTopBarRowLayout(
+            VisualElement summaryRow,
+            VisualElement actionsRow,
+            VisualElement notesRow,
+            float summaryWeight,
+            float actionsWeight,
+            float notesWeight
+        )
+        {
+            ConfigureTopBarRow(summaryRow, summaryWeight, 28f);
+            ConfigureTopBarRow(actionsRow, actionsWeight, 24f);
+            ConfigureTopBarRow(notesRow, notesWeight, 24f);
+        }
+
+        private static void ConfigureTopBarRow(VisualElement row, float weight, float minHeight)
+        {
+            if (row == null)
+            {
+                return;
+            }
+
+            row.style.flexGrow = Mathf.Max(0.01f, weight);
+            row.style.flexShrink = 1f;
+            row.style.minHeight = minHeight;
         }
 
         private void DestroyUiToolkitOverlay()
@@ -641,12 +732,14 @@ namespace Network_Game.Dialogue
 
         private void RefreshPromptUiState()
         {
+            bool active = m_EnablePrompt && m_HasCurrent;
+            ModernHudController.SetFeedbackVisible(active);
+
             if (m_UiOverlayRoot == null)
             {
                 return;
             }
 
-            bool active = m_EnablePrompt && m_HasCurrent;
             m_UiOverlayRoot.style.display = active ? DisplayStyle.Flex : DisplayStyle.None;
             m_UiOverlayRoot.pickingMode =
                 active && ShouldCaptureInteraction() ? PickingMode.Position : PickingMode.Ignore;
@@ -675,28 +768,27 @@ namespace Network_Game.Dialogue
             if (m_UiSourceLabel != null)
             {
                 m_UiSourceLabel.text =
-                    $"Scene: {BuildDisplayName(m_Current.SourceName, effect.SourceNetworkObjectId)} -> {BuildDisplayName(m_Current.TargetName, effect.TargetNetworkObjectId)}";
+                    $"{BuildDisplayName(m_Current.SourceName, effect.SourceNetworkObjectId)} -> {BuildDisplayName(m_Current.TargetName, effect.TargetNetworkObjectId)}";
             }
             if (m_UiMetricsLabel != null)
             {
                 m_UiMetricsLabel.text =
-                    $"{effect.Scale:F2}x | {effect.DurationSeconds:F1}s | {(effect.AttachToTarget ? "Attached" : "Free")} | Mesh {(effect.FitToTargetMesh ? "On" : "Off")}";
+                    $"{effect.Scale:F2}x  {effect.DurationSeconds:F1}s  {(effect.AttachToTarget ? "Attached" : "Free")}  Mesh {(effect.FitToTargetMesh ? "On" : "Off")}";
             }
 
             if (m_UiModeLabel != null)
             {
                 if (!ShouldCaptureInteraction())
                 {
-                    m_UiModeLabel.text =
-                        "Hotkeys 1-6, Enter=note, F8=pointer.";
+                    m_UiModeLabel.text = "1-6 submit  •  Enter note  •  F8 pointer";
                 }
                 else if (!m_PauseGameWhilePromptOpen)
                 {
-                    m_UiModeLabel.text = "Pointer mode on (F8).";
+                    m_UiModeLabel.text = "Pointer mode on  •  F8 to exit";
                 }
                 else
                 {
-                    m_UiModeLabel.text = "Modal input capture enabled.";
+                    m_UiModeLabel.text = "Modal input capture enabled";
                 }
             }
         }
@@ -710,68 +802,70 @@ namespace Network_Game.Dialogue
 
             GUILayout.BeginVertical();
 
-            GUILayout.Label(
-                $"{m_Current.Effect.EffectName} | {m_Current.Effect.EffectType}"
-            );
-            GUILayout.Label(
-                $"Scene: {BuildDisplayName(m_Current.SourceName, m_Current.Effect.SourceNetworkObjectId)} -> {BuildDisplayName(m_Current.TargetName, m_Current.Effect.TargetNetworkObjectId)}"
-            );
-            GUILayout.Label(
-                $"{m_Current.Effect.Scale:F2}x  {m_Current.Effect.DurationSeconds:F1}s  {(m_Current.Effect.AttachToTarget ? "Attached" : "Free")}  Mesh {(m_Current.Effect.FitToTargetMesh ? "On" : "Off")}"
-            );
-            if (!ShouldCaptureInteraction())
-            {
-                GUILayout.Label(
-                    "Hotkeys 1-6, Enter=note, F8=pointer."
-                );
-            }
-            else if (!m_PauseGameWhilePromptOpen)
-            {
-                GUILayout.Label("Pointer mode on (F8).");
-            }
-
-            GUILayout.Space(8f);
-            GUILayout.Label("Quick outcomes:");
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Looks Correct", GUILayout.Height(24f)))
+            GUILayout.Label("EFFECT", GUILayout.Width(54f));
+            GUILayout.Label($"Q:{m_Queue.Count + 1}", GUILayout.Width(36f));
+            GUILayout.Label(
+                $"{m_Current.Effect.EffectName} | {m_Current.Effect.EffectType}",
+                GUILayout.Width(220f)
+            );
+            GUILayout.Label(
+                $"{BuildDisplayName(m_Current.SourceName, m_Current.Effect.SourceNetworkObjectId)} -> {BuildDisplayName(m_Current.TargetName, m_Current.Effect.TargetNetworkObjectId)}",
+                GUILayout.ExpandWidth(true)
+            );
+            GUILayout.Label(
+                $"{m_Current.Effect.Scale:F2}x  {m_Current.Effect.DurationSeconds:F1}s  {(m_Current.Effect.AttachToTarget ? "Attached" : "Free")}  Mesh {(m_Current.Effect.FitToTargetMesh ? "On" : "Off")}",
+                GUILayout.Width(220f)
+            );
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("CORRECT", GUILayout.Height(20f), GUILayout.Width(70f)))
             {
                 SubmitCurrent("looks_correct", m_Comment);
             }
-            if (GUILayout.Button("Not Visible", GUILayout.Height(24f)))
+            if (GUILayout.Button("HIDDEN", GUILayout.Height(20f), GUILayout.Width(66f)))
             {
                 SubmitCurrent("not_visible", m_Comment);
             }
-            if (GUILayout.Button("Wrong Target", GUILayout.Height(24f)))
+            if (GUILayout.Button("TARGET", GUILayout.Height(20f), GUILayout.Width(66f)))
             {
                 SubmitCurrent("wrong_target", m_Comment);
             }
-            GUILayout.EndHorizontal();
-
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Wrong Placement", GUILayout.Height(24f)))
+            if (GUILayout.Button("PLACE", GUILayout.Height(20f), GUILayout.Width(62f)))
             {
                 SubmitCurrent("wrong_placement", m_Comment);
             }
-            if (GUILayout.Button("Wrong Mesh Fit", GUILayout.Height(24f)))
+            if (GUILayout.Button("MESH", GUILayout.Height(20f), GUILayout.Width(60f)))
             {
                 SubmitCurrent("wrong_mesh_fit", m_Comment);
             }
-            if (GUILayout.Button("Skip", GUILayout.Height(24f)))
+            if (GUILayout.Button("SKIP", GUILayout.Height(20f), GUILayout.Width(56f)))
             {
                 SubmitCurrent("skipped", m_Comment);
             }
-            GUILayout.EndHorizontal();
-
-            GUILayout.Space(8f);
-            GUILayout.Label("Notes:");
-            m_Comment = GUILayout.TextArea(m_Comment ?? string.Empty, GUILayout.Height(60f));
-
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Note Only", GUILayout.Height(26f)))
+            GUILayout.Space(6f);
+            if (!ShouldCaptureInteraction())
+            {
+                GUILayout.Label("1-6 / Enter / F8", GUILayout.Width(88f));
+            }
+            else if (!m_PauseGameWhilePromptOpen)
+            {
+                GUILayout.Label("F8 exits", GUILayout.Width(60f));
+            }
+            else
+            {
+                GUILayout.Label("Modal", GUILayout.Width(60f));
+            }
+            m_Comment = GUILayout.TextField(
+                m_Comment ?? string.Empty,
+                GUILayout.Height(22f),
+                GUILayout.ExpandWidth(true)
+            );
+            if (GUILayout.Button("NOTE", GUILayout.Height(22f), GUILayout.Width(56f)))
             {
                 SubmitCurrent("note_only", m_Comment);
             }
-            GUILayout.Label($"Queue: {m_Queue.Count}", GUILayout.Width(90f));
             GUILayout.EndHorizontal();
 
             GUILayout.EndVertical();
@@ -841,14 +935,9 @@ namespace Network_Game.Dialogue
 
             if (!m_UseUiToolkitOverlay)
             {
-                float width = Mathf.Clamp(m_WindowRect.width, 360f, Screen.width - 20f);
-                float height = Mathf.Clamp(m_WindowRect.height, 220f, Screen.height - 20f);
-                m_WindowRect = new Rect(
-                    Mathf.Max(10f, Screen.width - width - 14f),
-                    Mathf.Clamp(96f, 10f, Mathf.Max(10f, Screen.height - height - 10f)),
-                    width,
-                    height
-                );
+                float width = Mathf.Clamp(Screen.width - 24f, 360f, Screen.width - 20f);
+                float height = Mathf.Clamp(m_WindowRect.height, 72f, 92f);
+                m_WindowRect = new Rect(10f, 10f, width, height);
             }
 
             RefreshPromptUiState();
@@ -1063,15 +1152,9 @@ namespace Network_Game.Dialogue
 
         private void EnsureWindowInView()
         {
-            float width = Mathf.Clamp(m_WindowRect.width, 360f, Screen.width - 20f);
-            float height = Mathf.Clamp(m_WindowRect.height, 220f, Screen.height - 20f);
-            float x = Mathf.Clamp(m_WindowRect.x, 10f, Mathf.Max(10f, Screen.width - width - 10f));
-            float y = Mathf.Clamp(
-                m_WindowRect.y,
-                10f,
-                Mathf.Max(10f, Screen.height - height - 10f)
-            );
-            m_WindowRect = new Rect(x, y, width, height);
+            float width = Mathf.Clamp(Screen.width - 24f, 360f, Screen.width - 20f);
+            float height = Mathf.Clamp(m_WindowRect.height, 72f, 92f);
+            m_WindowRect = new Rect(10f, 10f, width, height);
         }
 
         private void WriteFeedbackRecord(PendingFeedback feedback, string outcome, string comment)
@@ -1290,20 +1373,24 @@ namespace Network_Game.Dialogue
                 }
 
                 m_InteractionCaptureActive = true;
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-                if (inputs != null)
+                m_UsingHudCursorRouter = ModernHudController.TryAcquireUiCursor(this);
+                if (!m_UsingHudCursorRouter)
                 {
-                    if (!m_InputStateCaptured)
+                    Cursor.lockState = CursorLockMode.None;
+                    Cursor.visible = true;
+                    if (inputs != null)
                     {
-                        m_PrePromptInputsCursorLocked = inputs.cursorLocked;
-                        m_PrePromptInputsCursorInputForLook = inputs.cursorInputForLook;
-                        m_InputStateCaptured = true;
-                    }
+                        if (!m_InputStateCaptured)
+                        {
+                            m_PrePromptInputsCursorLocked = inputs.cursorLocked;
+                            m_PrePromptInputsCursorInputForLook = inputs.cursorInputForLook;
+                            m_InputStateCaptured = true;
+                        }
 
-                    inputs.cursorLocked = false;
-                    inputs.cursorInputForLook = false;
-                    inputs.SetCursorState(false);
+                        inputs.cursorLocked = false;
+                        inputs.cursorInputForLook = false;
+                        inputs.SetCursorState(false);
+                    }
                 }
 #if ENABLE_INPUT_SYSTEM
                 if (playerInput != null && m_PauseGameWhilePromptOpen)
@@ -1325,8 +1412,15 @@ namespace Network_Game.Dialogue
             }
 
             m_InteractionCaptureActive = false;
+            bool usedHudCursorRouter = m_UsingHudCursorRouter;
 
-            if (m_CursorStateCaptured)
+            if (usedHudCursorRouter)
+            {
+                ModernHudController.TryReleaseUiCursor(this);
+                m_UsingHudCursorRouter = false;
+                m_CursorStateCaptured = false;
+            }
+            else if (m_CursorStateCaptured)
             {
                 Cursor.lockState = m_PrePromptCursorLockMode;
                 Cursor.visible = m_PrePromptCursorVisible;
@@ -1338,7 +1432,7 @@ namespace Network_Game.Dialogue
                 Cursor.visible = false;
             }
 
-            if (inputs != null)
+            if (!usedHudCursorRouter && inputs != null)
             {
                 if (m_InputStateCaptured)
                 {
@@ -1353,6 +1447,11 @@ namespace Network_Game.Dialogue
                     inputs.cursorLocked = shouldLock;
                     inputs.cursorInputForLook = shouldLock;
                 }
+            }
+
+            if (usedHudCursorRouter)
+            {
+                m_InputStateCaptured = false;
             }
 
 #if ENABLE_INPUT_SYSTEM
@@ -1393,7 +1492,9 @@ namespace Network_Game.Dialogue
             }
 
 #if UNITY_2023_1_OR_NEWER
-            StarterAssetsInputs[] inputs = FindObjectsByType<StarterAssetsInputs>(FindObjectsInactive.Exclude);
+            StarterAssetsInputs[] inputs = FindObjectsByType<StarterAssetsInputs>(
+                FindObjectsInactive.Exclude
+            );
 #else
             StarterAssetsInputs[] inputs = FindObjectsOfType<StarterAssetsInputs>();
 #endif

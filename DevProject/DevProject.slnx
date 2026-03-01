@@ -98,8 +98,8 @@
   <Project Path="Network_Game.csproj" />
   <Project Path="Unity.Multiplayer.Tools.MultiplayerToolsWindow.Tests.Editor.csproj" />
   <Project Path="Unity.Multiplayer.Center.Common.csproj" />
-  <Project Path="Unity.UnifiedRayTracing.Runtime.csproj" />
   <Project Path="Unity.TestTools.CodeCoverage.Editor.csproj" />
+  <Project Path="Unity.UnifiedRayTracing.Runtime.csproj" />
   <Project Path="Unity.TestTools.CodeCoverage.Editor.OpenCover.Mono.Reflection.csproj" />
   <Project Path="Unity.Multiplayer.Tools.DependencyInjection.UIElements.csproj" />
   <Project Path="Unity.Numerics.Linear.Solvers.Lowlevel.csproj" />

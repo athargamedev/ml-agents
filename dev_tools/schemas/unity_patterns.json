@@ -1,0 +1,136 @@
+{
+  "_comment": "Static Unity pattern catalog used as few-shot context for code scanner prompts.",
+  "_version": "1.0",
+
+  "multiplayer_safety": [
+    {
+      "id": "MP001",
+      "pattern": "ClientRpc without ownership check",
+      "severity": "high",
+      "example_bad": "[ClientRpc] void TakeDamageClientRpc(float dmg) { health -= dmg; }",
+      "example_good": "[ClientRpc] void TakeDamageClientRpc(float dmg) { if (!IsOwner) return; health -= dmg; }",
+      "notes": "All NetworkVariable writes must happen on the server or owner. ClientRpc only runs on clients."
+    },
+    {
+      "id": "MP002",
+      "pattern": "NetworkVariable write outside server authority",
+      "severity": "high",
+      "example_bad": "health.Value = 100f; // called from OnActionReceived on any client",
+      "example_good": "if (IsServer) health.Value = 100f;",
+      "notes": "NetworkVariable.Value can only be set by the server (default) or owner depending on write permission."
+    },
+    {
+      "id": "MP003",
+      "pattern": "Missing null check on NetworkObject before RPC",
+      "severity": "medium",
+      "example_bad": "target.GetComponent<PlayerHealth>().TakeDamageServerRpc(10f);",
+      "example_good": "var ph = target.GetComponent<PlayerHealth>(); if (ph != null && ph.IsSpawned) ph.TakeDamageServerRpc(10f);",
+      "notes": "NetworkObjects can be destroyed between frames; always null-check and check IsSpawned."
+    }
+  ],
+
+  "ml_agents": [
+    {
+      "id": "ML001",
+      "pattern": "Reward spike without clamp",
+      "severity": "medium",
+      "example_bad": "AddReward(telemetry.Score * feedbackScale);",
+      "example_good": "AddReward(Mathf.Clamp(telemetry.Score * feedbackScale, -0.5f, 0.5f));",
+      "notes": "Single large reward spikes cause PPO gradient instability. Cap per-component rewards at ±0.5."
+    },
+    {
+      "id": "ML002",
+      "pattern": "Observation not normalised",
+      "severity": "medium",
+      "example_bad": "sensor.AddObservation(transform.position.x); // world space, unbounded",
+      "example_good": "sensor.AddObservation(Mathf.Clamp01(distance / maxDistance));",
+      "notes": "Neural network inputs work best in [0,1] or [-1,1]. Unnormalised observations cause slow convergence."
+    },
+    {
+      "id": "ML003",
+      "pattern": "EndEpisode inside CollectObservations",
+      "severity": "high",
+      "example_bad": "public override void CollectObservations(VectorSensor s) { if (done) EndEpisode(); }",
+      "example_good": "Call EndEpisode() only from OnActionReceived() or Update().",
+      "notes": "Calling EndEpisode() during CollectObservations triggers a double-reset and corrupts episode state."
+    },
+    {
+      "id": "ML004",
+      "pattern": "RequestDecision called manually when DecisionRequester present",
+      "severity": "low",
+      "example_bad": "void Update() { RequestDecision(); }",
+      "example_good": "Let DecisionRequester handle all RequestDecision calls.",
+      "notes": "Double requests per step cause observation-action mismatch in the replay buffer."
+    },
+    {
+      "id": "ML005",
+      "pattern": "StatsRecorder accessed without Academy.Instance null check",
+      "severity": "medium",
+      "example_bad": "Academy.Instance.StatsRecorder.Add(\"metric\", value);",
+      "example_good": "if (Academy.Instance != null) Academy.Instance.StatsRecorder.Add(\"metric\", value);",
+      "notes": "Academy.Instance is null outside of a running ML-Agents session (e.g. during Editor tests)."
+    }
+  ],
+
+  "npc_dialogue": [
+    {
+      "id": "NPC001",
+      "pattern": "Hardcoded effect tag string",
+      "severity": "low",
+      "example_bad": "if (tag == \"[EFFECT:FireBall]\")",
+      "example_good": "if (tag == DialogueConstants.EffectTagPrefix + \"FireBall\" + DialogueConstants.EffectTagSuffix)",
+      "notes": "Tag format changes will silently break all hardcoded comparisons."
+    },
+    {
+      "id": "NPC002",
+      "pattern": "NetworkDialogueService.Instance without null check",
+      "severity": "high",
+      "example_bad": "NetworkDialogueService.Instance.SendDialogue(request);",
+      "example_good": "NetworkDialogueService.Instance?.SendDialogue(request);",
+      "notes": "Service is a scene singleton and may not be initialised during early Awake() calls."
+    },
+    {
+      "id": "NPC003",
+      "pattern": "LLM response text used in UI without sanitisation",
+      "severity": "medium",
+      "example_bad": "dialogueText.text = response.responseText;",
+      "example_good": "dialogueText.text = System.Web.HttpUtility.HtmlEncode(response.responseText);",
+      "notes": "In WebGL builds, unsanitised LLM output in TextMeshPro can inject HTML/Unity rich text tags."
+    }
+  ],
+
+  "unity_best_practices": [
+    {
+      "id": "UP001",
+      "pattern": "GetComponent in Update or hot path",
+      "severity": "medium",
+      "example_bad": "void Update() { GetComponent<Rigidbody>().velocity = ...; }",
+      "example_good": "Cache in Awake/Start: private Rigidbody m_Rb; void Awake() { m_Rb = GetComponent<Rigidbody>(); }",
+      "notes": "GetComponent is a C++ call, ~10x more expensive than cached field access."
+    },
+    {
+      "id": "UP002",
+      "pattern": "FindObjectOfType in hot path",
+      "severity": "high",
+      "example_bad": "void Update() { FindObjectOfType<GameManager>().DoSomething(); }",
+      "example_good": "Use a static singleton pattern or cache the reference in Start().",
+      "notes": "FindObjectOfType iterates all scene objects — O(n) per frame causes severe performance degradation."
+    },
+    {
+      "id": "UP003",
+      "pattern": "String allocation in Update",
+      "severity": "low",
+      "example_bad": "debugLabel.text = $\"Health: {health:F1} / {maxHealth:F1}\"; // every frame",
+      "example_good": "Only update text when value changes: if (health != lastHealth) { debugLabel.text = ...; lastHealth = health; }",
+      "notes": "String interpolation allocates a new string object each call, increasing GC pressure."
+    },
+    {
+      "id": "UP004",
+      "pattern": "Missing [SerializeField] on Inspector-assigned private field",
+      "severity": "low",
+      "example_bad": "private Transform playerTransform; // visible in Inspector? No.",
+      "example_good": "[SerializeField] private Transform m_PlayerTransform;",
+      "notes": "Following this project's m_ prefix convention also makes field ownership clear."
+    }
+  ]
+}

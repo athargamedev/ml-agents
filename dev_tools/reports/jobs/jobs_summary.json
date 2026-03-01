@@ -1,0 +1,33 @@
+{
+  "run_utc": "2026-03-01T05:57:41.072391+00:00",
+  "jobs": {
+    "03": {
+      "status": "ok",
+      "elapsed_s": 23.8
+    },
+    "02": {
+      "status": "ok",
+      "elapsed_s": 83.8
+    },
+    "06": {
+      "status": "ok",
+      "elapsed_s": 19.0
+    },
+    "04": {
+      "status": "ok",
+      "elapsed_s": 59.4
+    },
+    "07": {
+      "status": "ok",
+      "elapsed_s": 29.8
+    },
+    "05": {
+      "status": "ok",
+      "elapsed_s": 93.3
+    },
+    "08": {
+      "status": "ok",
+      "elapsed_s": 25.0
+    }
+  }
+}

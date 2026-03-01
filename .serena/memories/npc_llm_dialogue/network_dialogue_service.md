@@ -20,7 +20,7 @@ Player input → DialogueClientUI.SendPrompt() [~line 392]
 
 ## Static Events (used for ML-Agents reward shaping)
 ```csharp
-// NetworkDialogueService.cs lines 224-225
+// NetworkDialogueService.cs
 public static event Action<DialogueResponse> OnDialogueResponse;
 public static event Action<DialogueResponseTelemetry> OnDialogueResponseTelemetry;
 
@@ -44,6 +44,30 @@ Pending, InProgress, Completed, Failed, Cancelled
 ### FeedbackScoreSummary struct (DialogueFeedbackCollector)
 - RequestId, Score (int), HasEffect (bool), TagValid (bool), TagName, IsUserInitiated
 
+## Full Public API (confirmed by schema extraction 2026-02-28)
+```csharp
+int  EnqueueRequest(DialogueRequest request)
+bool TryEnqueueRequest(DialogueRequest, out int requestId, out string rejectionReason)
+bool TryConsumeResponse(int requestId, out DialogueResponse response)
+bool TryConsumeResponseByClientRequestId(int clientReqId, out DialogueResponse, ulong clientId)
+bool TryGetTerminalResponseByClientRequestId(int clientReqId, out DialogueResponse, ulong clientId)
+bool IsClientRequestInFlight(int clientReqId, ulong clientId)
+bool TryGetPlayerIdentityByClientId(ulong clientId, out PlayerIdentitySnapshot snapshot)
+bool TryGetPlayerIdentityByNetworkId(ulong playerNetworkId, out PlayerIdentitySnapshot snapshot)
+bool SetPlayerPromptContext(ulong playerNetworkId, string nameId, string customizationJson)
+bool ClearPlayerPromptContext(ulong playerNetworkId)
+bool SetPlayerPromptContextForClient(ulong clientId, string nameId, string customizationJson)
+bool ClearPlayerPromptContextForClient(ulong clientId)
+bool RequestSetPlayerPromptContextFromClient(string nameId, string customizationJson)
+bool RequestClearPlayerPromptContextFromClient()
+string[] GetConversationKeys()
+List<ChatMessage> GetHistoryPublic(string conversationKey)
+void ClearHistory(string conversationKey)
+void ClearPendingRequests()
+DialogueStats GetStats()
+void LogPlayerIdentityReport()
+```
+
 ## IDialogueInferenceClient Interface
 ```csharp
 string BackendName { get; }
@@ -66,8 +90,22 @@ public void SetMLAgentsSideChannelClient(IDialogueInferenceClient client)
 In ObserveOnly mode, this is called with null — normal LM Studio path is used.
 In SideChannelOverride mode, this is called with SideChannelDialogueClient.
 
+## Null-Safety Rule (IMPORTANT — confirmed by code scan)
+Always null-check Instance before calling methods:
+```csharp
+NetworkDialogueService.Instance?.DoThing();
+// or:
+if (NetworkDialogueService.Instance != null) NetworkDialogueService.Instance.DoThing();
+```
+WriteDiscreteActionMask in NpcDialogueAgent correctly checks:
+```csharp
+bool serviceAvailable = NetworkDialogueService.Instance != null && (...);
+```
+Other call sites may not — audit before adding new ones.
+
 ## Assembly Info
 - Network_Game.asmdef: autoReferenced=true
 - Unity.ML-Agents.asmdef: autoReferenced=true
 - New scripts go in Assembly-CSharp (no explicit asmdef needed)
 - `using Unity.MLAgents.Policies;` required for BehaviorParameters (not just Unity.MLAgents)
+- `using Network_Game.Dialogue;` for types in this namespace

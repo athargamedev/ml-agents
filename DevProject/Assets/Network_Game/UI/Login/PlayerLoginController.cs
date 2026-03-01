@@ -1,4 +1,5 @@
 using Network_Game.Auth;
+using Network_Game.UI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -12,6 +13,7 @@ namespace Network_Game.UI.Login
         private TextField m_BioInput;
         private Button m_LoginButton;
         private Label m_StatusLabel;
+        private bool m_UsingHudCursorRouter;
 
         private void OnEnable()
         {
@@ -30,12 +32,30 @@ namespace Network_Game.UI.Login
                 m_NameInput.value = LocalPlayerAuthService.Instance.LastLoginNameId;
             }
 
-            // Ensure cursor is unlocked for UI interaction
-            ApplyUiCursorAndLookState();
+            bool hasCurrentPlayer =
+                LocalPlayerAuthService.Instance != null
+                && LocalPlayerAuthService.Instance.HasCurrentPlayer;
+            SetLoginVisible(!hasCurrentPlayer);
+
+            if (hasCurrentPlayer)
+            {
+                RestoreGameplayCursorAndLookState();
+            }
+            else
+            {
+                ApplyUiCursorAndLookState();
+            }
         }
 
         private void ApplyUiCursorAndLookState()
         {
+            if (ModernHudController.TryAcquireUiCursor(this))
+            {
+                m_UsingHudCursorRouter = true;
+                return;
+            }
+
+            m_UsingHudCursorRouter = false;
             UnityEngine.Cursor.lockState = CursorLockMode.None;
             UnityEngine.Cursor.visible = true;
 
@@ -53,6 +73,13 @@ namespace Network_Game.UI.Login
 
         private void RestoreGameplayCursorAndLookState()
         {
+            if (m_UsingHudCursorRouter)
+            {
+                ModernHudController.TryReleaseUiCursor(this);
+                m_UsingHudCursorRouter = false;
+                return;
+            }
+
             // Only restore gameplay look after auth is completed, otherwise login UI loses focus control.
             if (
                 LocalPlayerAuthService.Instance == null
@@ -84,7 +111,8 @@ namespace Network_Game.UI.Login
                 return;
             }
 
-            if (m_Root.style.display != DisplayStyle.None)
+            DisplayStyle effectiveDisplay = m_Root.resolvedStyle.display;
+            if (effectiveDisplay != DisplayStyle.None)
             {
                 ApplyUiCursorAndLookState();
             }
@@ -146,7 +174,7 @@ namespace Network_Game.UI.Login
             m_Root
                 .schedule.Execute(() =>
             {
-                m_Root.style.display = DisplayStyle.None;
+                SetLoginVisible(false);
                 RestoreGameplayCursorAndLookState();
             })
                 .StartingIn(1500);
@@ -154,7 +182,18 @@ namespace Network_Game.UI.Login
 
         public void Show()
         {
-            m_Root.style.display = DisplayStyle.Flex;
+            SetLoginVisible(true);
+        }
+
+        private void SetLoginVisible(bool visible)
+        {
+            if (!ModernHudController.SetPanelVisible(ModernHudController.HudPanel.Login, visible))
+            {
+                if (m_Root != null)
+                {
+                    m_Root.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
+                }
+            }
         }
     }
 }

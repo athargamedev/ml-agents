@@ -28,17 +28,17 @@ namespace Network_Game.Dialogue
 
         [Tooltip(
             "Element type for LLM creative matching (fire, ice, storm, water, earth, nature, mystic, void)."
-        )]
+         )]
         public string Element = "";
 
         [Tooltip(
             "Short visual description injected into LLM prompt for creative effect decisions."
-        )]
+         )]
         public string VisualDescription = "";
 
         [Tooltip(
             "Alternative narrative phrases that can trigger this power beyond exact keyword matches."
-        )]
+         )]
         public string[] CreativeTriggers;
 
         [Header("Gameplay (Optional)")]
@@ -111,7 +111,7 @@ namespace Network_Game.Dialogue
     [CreateAssetMenu(
         fileName = "NpcDialogueProfile",
         menuName = "Network Game/Dialogue/NPC Dialogue Profile"
-    )]
+     )]
     public class NpcDialogueProfile : ScriptableObject
     {
         [Header("Identity")]
@@ -132,7 +132,7 @@ namespace Network_Game.Dialogue
         [TextArea(10, 20)]
         [Tooltip(
             "Comprehensive NPC background and world-building data injected into the system prompt."
-        )]
+         )]
         private string m_Lore = "";
 
         [Header("Context Effects - Bored Lighting")]
@@ -241,6 +241,96 @@ namespace Network_Game.Dialogue
                     return profile;
             }
             return null;
+        }
+
+        /// <summary>
+        /// Get all keywords as a HashSet for O(1) lookup.
+        /// Call this once and cache the result for fast keyword checking.
+        /// </summary>
+        public HashSet<string> GetKeywordIndex()
+        {
+            var index = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            // Add bored keywords
+            if (m_BoredKeywords != null)
+            {
+                foreach (var kw in m_BoredKeywords)
+                {
+                    if (!string.IsNullOrWhiteSpace(kw))
+                        index.Add(kw.Trim().ToLowerInvariant());
+                }
+            }
+
+            // Add power keywords
+            if (m_PrefabPowers != null)
+            {
+                foreach (var power in m_PrefabPowers)
+                {
+                    if (power.Keywords != null)
+                    {
+                        foreach (var kw in power.Keywords)
+                        {
+                            if (!string.IsNullOrWhiteSpace(kw))
+                                index.Add(kw.Trim().ToLowerInvariant());
+                        }
+                    }
+                }
+            }
+
+            return index;
+        }
+
+        /// <summary>
+        /// Fast O(1) keyword containment check using pre-built index.
+        /// </summary>
+        public bool HasKeyword(string keyword, HashSet<string> cachedIndex)
+        {
+            if (cachedIndex == null || string.IsNullOrWhiteSpace(keyword))
+                return false;
+            return cachedIndex.Contains(keyword.Trim().ToLowerInvariant());
+        }
+
+        /// <summary>
+        /// Build a compressed effect guide for the LLM system prompt.
+        /// Limits output to maxPowers to prevent prompt bloat.
+        /// </summary>
+        /// <param name="listenerName">Name of the listener/player</param>
+        /// <param name="maxPowers">Maximum number of powers to include</param>
+        /// <returns>Compressed effect guide string</returns>
+        public string BuildCompressedEffectGuide(string listenerName, int maxPowers = 5)
+        {
+            if (m_PrefabPowers == null || m_PrefabPowers.Length == 0)
+                return string.Empty;
+
+            var sb = new System.Text.StringBuilder();
+            sb.AppendLine("[Effects] You have visual powers. Use them. Append ONE tag at the END of your response.");
+            sb.AppendLine($"Format: [EFFECT: EffectName | Target: {listenerName}]");
+            sb.AppendLine("Include a tag whenever you react with emotion, cast, warn, reward or punish. Skip only for pure exposition.");
+            sb.AppendLine();
+
+            // Limit powers
+            int count = 0;
+            foreach (var power in m_PrefabPowers)
+            {
+                if (power == null || !power.Enabled || count >= maxPowers)
+                    continue;
+
+                string label = string.IsNullOrWhiteSpace(power.PowerName)
+                    ? (power.EffectPrefab?.name ?? $"power_{count + 1}")
+                    : power.PowerName.Trim();
+
+                string desc = !string.IsNullOrWhiteSpace(power.VisualDescription)
+                    ? power.VisualDescription
+                    : $"Particle effect: {label}";
+
+                sb.AppendLine($"- **{label}**: {desc}");
+                if (!string.IsNullOrWhiteSpace(power.Element))
+                    sb.AppendLine($"  Element: {power.Element}");
+                sb.AppendLine($"  → [EFFECT: {label} | Target: {listenerName}]");
+                count++;
+            }
+
+            return sb.ToString().Trim();
         }
     }
 }

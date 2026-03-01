@@ -1,0 +1,14 @@
+{
+  "job_id": "06",
+  "title": "Adaptive Tuner Learning Rate Review",
+  "generated_utc": "2026-03-01T05:54:13.635075+00:00",
+  "result": {
+    "learning_rate_verdict": "under_review",
+    "suggested_learning_rate": 0.05,
+    "clamped_effects": [],
+    "zero_attach_effects": [],
+    "threshold_verdict": "different",
+    "suggested_attach_thresh": 0.4,
+    "suggested_fit_thresh": 0.3
+  }
+}

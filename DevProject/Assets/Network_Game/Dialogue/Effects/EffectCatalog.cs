@@ -185,6 +185,18 @@ namespace Network_Game.Dialogue.Effects
             Initialize();
         }
 
+        /// <summary>
+        /// All effects available at runtime: serialized list + any registered dynamically
+        /// via RegisterRuntimeEffect (e.g. NPC profile PrefabPowers). Use this for LLM
+        /// prompts so the full catalog is visible, not just the serialized asset entries.
+        /// </summary>
+        public IEnumerable<EffectDefinition> GetAllRegisteredEffects()
+        {
+            if (!_isInitialized || _byTag == null)
+                Initialize();
+            return _byTag?.Values ?? (System.Collections.Generic.IEnumerable<EffectDefinition>)allEffects;
+        }
+
         private void OnEnable()
         {
             Instance = this;

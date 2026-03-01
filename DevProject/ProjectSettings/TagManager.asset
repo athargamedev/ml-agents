@@ -43,6 +43,7 @@ TagManager:
   - ex
   - food
   - badFood
+  - switchOn
   layers:
   - Default
   - TransparentFX

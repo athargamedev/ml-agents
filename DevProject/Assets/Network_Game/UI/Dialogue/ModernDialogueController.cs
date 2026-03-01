@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Network_Game.Auth;
 using Network_Game.Diagnostics;
 using Network_Game.Dialogue;
+using Network_Game.UI;
 using Unity.Cinemachine;
 using Unity.Netcode;
 using UnityEngine;
@@ -177,6 +178,7 @@ namespace Network_Game.UI.Dialogue
         private void Update()
         {
             EnsureUiBinding(force: false);
+            ApplyHudDrivenLayout();
 
             float now = Time.unscaledTime;
             if (now >= m_NextInputLegibilityCheckAt)
@@ -286,6 +288,8 @@ namespace Network_Game.UI.Dialogue
                 m_ChatContainer.style.justifyContent = Justify.FlexStart;
                 m_ChatContainer.style.overflow = Overflow.Hidden;
             }
+
+            ApplyHudDrivenLayout();
 
             if (m_TranscriptScroll != null)
             {
@@ -420,6 +424,20 @@ namespace Network_Game.UI.Dialogue
                         m_ChatInputInner.UnregisterCallback<MouseDownEvent>(OnInputMouseDown);
                     }
                 }
+            }
+        }
+
+        private void ApplyHudDrivenLayout()
+        {
+            if (m_ChatContainer == null)
+            {
+                return;
+            }
+
+            if (ModernHudController.TryApplyBottomBarLayout(m_ChatContainer))
+            {
+                m_ChatContainer.style.maxWidth = StyleKeyword.None;
+                m_ChatContainer.style.maxHeight = StyleKeyword.None;
             }
         }
 

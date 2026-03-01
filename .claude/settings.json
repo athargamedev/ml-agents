@@ -13,5 +13,18 @@
       "NotebookEdit",
       "NotebookRead"
     ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/andre_wjgj23f/miniconda3/envs/mlagents/python.exe -c \"import sys,json,os,time; d=json.load(sys.stdin) if not sys.stdin.isatty() else {}; f=d.get('file_path',''); os.makedirs('.codex/tmp',exist_ok=True); open('.codex/tmp/.dev_tools_queue','a').write(f+chr(10)) if f.endswith('.cs') else None\" 2>/dev/null || true"
+          }
+        ]
+      }
+    ]
   }
 }

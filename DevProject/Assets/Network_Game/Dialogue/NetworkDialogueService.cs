@@ -418,7 +418,7 @@ namespace Network_Game.Dialogue
         private float m_MinSecondsBetweenRequests = 0.2f;
 
         [SerializeField]
-        private float m_RequestTimeoutSeconds = 90f;
+        private float m_RequestTimeoutSeconds = 5f;
 
         [Header("Retry")]
         [SerializeField]
@@ -436,7 +436,7 @@ namespace Network_Game.Dialogue
         [Header("Warmup")]
         [SerializeField]
         [Min(0f)]
-        private float m_WarmupTimeoutSeconds = 60f;
+        private float m_WarmupTimeoutSeconds = 10f;
 
         [SerializeField]
         [Min(1)]
@@ -631,6 +631,113 @@ namespace Network_Game.Dialogue
             RebuildPlayerPromptContextLookup();
             RebuildPlayerIdentityLookup();
             SynthesizeIdentityBindingsFromRuntimeBindings();
+        }
+
+        private void EnsureSceneEffectsController()
+        {
+            if (m_SceneEffectsController != null)
+            {
+                return;
+            }
+#if UNITY_2023_1_OR_NEWER
+            m_SceneEffectsController = FindAnyObjectByType<DialogueSceneEffectsController>(
+                FindObjectsInactive.Exclude
+            );
+#else
+            m_SceneEffectsController = FindObjectOfType<DialogueSceneEffectsController>();
+#endif
+        }
+
+        private EffectCatalog EnsureEffectCatalog()
+        {
+            if (m_EffectCatalogLoaded)
+            {
+                return m_EffectCatalog;
+            }
+
+            m_EffectCatalogLoaded = true;
+            m_EffectCatalog = EffectCatalog.Instance ?? EffectCatalog.Load();
+            if (m_EffectCatalog != null)
+            {
+                m_EffectCatalog.Initialize();
+            }
+
+            return m_EffectCatalog;
+        }
+
+        private EffectCatalog BuildFallbackEffectCatalog(NpcDialogueProfile profile)
+        {
+            if (profile == null || profile.PrefabPowers == null || profile.PrefabPowers.Length == 0)
+            {
+                return null;
+            }
+
+            var runtimeCatalog = ScriptableObject.CreateInstance<EffectCatalog>();
+            runtimeCatalog.allEffects = new List<EffectDefinition>();
+            runtimeCatalog.allowUnknownTags = false;
+            runtimeCatalog.logUnknownTags = m_LogDebug;
+
+            PrefabPowerEntry[] powers = profile.PrefabPowers;
+            for (int i = 0; i < powers.Length; i++)
+            {
+                PrefabPowerEntry power = powers[i];
+                if (power == null || !power.Enabled || power.EffectPrefab == null)
+                {
+                    continue;
+                }
+
+                var def = ScriptableObject.CreateInstance<EffectDefinition>();
+                def.effectTag = string.IsNullOrWhiteSpace(power.PowerName)
+                    ? power.EffectPrefab.name
+                    : power.PowerName.Trim();
+                def.description = string.IsNullOrWhiteSpace(power.VisualDescription)
+                    ? $"Particle effect: {def.effectTag}"
+                    : power.VisualDescription;
+                def.effectPrefab = power.EffectPrefab;
+                def.defaultScale = Mathf.Max(0.1f, power.Scale);
+                def.defaultDuration = Mathf.Max(0.1f, power.DurationSeconds);
+                def.defaultColor = power.UseColorOverride ? power.ColorOverride : Color.white;
+                def.enableGameplayDamage = power.EnableGameplayDamage;
+                def.enableHoming = power.EnableHoming;
+                def.projectileSpeed = Mathf.Max(0.1f, power.ProjectileSpeed);
+                def.homingTurnRateDegrees = Mathf.Max(0f, power.HomingTurnRateDegrees);
+                def.damageAmount = Mathf.Max(0f, power.DamageAmount);
+                def.damageRadius = Mathf.Max(0.1f, power.DamageRadius);
+                def.affectPlayerOnly = power.AffectPlayerOnly;
+                def.damageType = string.IsNullOrWhiteSpace(power.DamageType)
+                    ? "effect"
+                    : power.DamageType;
+
+                var altTags = new List<string>();
+                if (power.Keywords != null)
+                {
+                    for (int k = 0; k < power.Keywords.Length; k++)
+                    {
+                        string kw = power.Keywords[k];
+                        if (!string.IsNullOrWhiteSpace(kw))
+                        {
+                            altTags.Add(kw.Trim());
+                        }
+                    }
+                }
+                if (power.CreativeTriggers != null)
+                {
+                    for (int k = 0; k < power.CreativeTriggers.Length; k++)
+                    {
+                        string trigger = power.CreativeTriggers[k];
+                        if (!string.IsNullOrWhiteSpace(trigger))
+                        {
+                            altTags.Add(trigger.Trim());
+                        }
+                    }
+                }
+                def.alternativeTags = altTags.Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
+
+                runtimeCatalog.allEffects.Add(def);
+            }
+
+            runtimeCatalog.Initialize();
+            return runtimeCatalog;
         }
 
         private void NormalizeRemoteRuntimeTuning()
@@ -2221,6 +2328,178 @@ namespace Network_Game.Dialogue
             return rewritten;
         }
 
+        private enum PlayerSpecialEffectMode
+        {
+            None,
+            Dissolve,
+            Respawn
+        }
+
+        private PlayerSpecialEffectMode ResolvePlayerSpecialEffectMode(
+            string promptText,
+            string responseText,
+            List<EffectIntent> intents
+        )
+        {
+            // 1) Prefer structured effect intents from parser.
+            if (intents != null)
+            {
+                for (int i = 0; i < intents.Count; i++)
+                {
+                    string tag = intents[i].rawTagName;
+                    if (string.IsNullOrWhiteSpace(tag))
+                    {
+                        continue;
+                    }
+
+                    string normalized = tag.Trim().ToLowerInvariant();
+                    if (normalized.Contains("dissolve") || normalized.Contains("vanish"))
+                    {
+                        return PlayerSpecialEffectMode.Dissolve;
+                    }
+
+                    if (normalized.Contains("respawn") || normalized.Contains("revive"))
+                    {
+                        return PlayerSpecialEffectMode.Respawn;
+                    }
+                }
+            }
+
+            // 2) Fallback to response text only (never prompt text, which contains probe directives).
+            if (string.IsNullOrWhiteSpace(responseText))
+            {
+                return PlayerSpecialEffectMode.None;
+            }
+
+            string lower = responseText.ToLowerInvariant();
+            bool hasDissolveTag = lower.Contains("[effect:")
+                && (lower.Contains("dissolve") || lower.Contains("vanish"));
+            if (hasDissolveTag)
+            {
+                return PlayerSpecialEffectMode.Dissolve;
+            }
+
+            bool hasRespawnTag = lower.Contains("[effect:")
+                && (lower.Contains("respawn") || lower.Contains("revive"));
+            if (hasRespawnTag)
+            {
+                return PlayerSpecialEffectMode.Respawn;
+            }
+
+            return PlayerSpecialEffectMode.None;
+        }
+
+        private void AdjustIntentsForProbeMode(
+            DialogueRequest request,
+            EffectCatalog catalog,
+            ref List<EffectIntent> catalogIntents,
+            ref bool hasCatalogIntents
+        )
+        {
+            if (catalogIntents == null || catalogIntents.Count == 0)
+            {
+                hasCatalogIntents = false;
+                return;
+            }
+
+            catalogIntents = catalogIntents
+                .Where(intent => intent != null && !LooksLikePlaceholderEffectTag(intent.rawTagName))
+                .ToList();
+
+            if (catalogIntents.Count == 0)
+            {
+                NGLog.Info(
+                    "DialogueFX",
+                    NGLog.Format(
+                        "Probe intents filtered out (placeholder/example tags)",
+                        ("requestId", request.ClientRequestId)
+                    )
+                );
+                hasCatalogIntents = false;
+                return;
+            }
+
+            if (catalogIntents.Count > 1)
+            {
+                catalogIntents = new List<EffectIntent>(1) { catalogIntents[0] };
+            }
+
+            hasCatalogIntents = true;
+        }
+
+        private bool ApplyPlayerSpecialEffects(
+            DialogueRequest request,
+            ParticleParameterExtractor.ParticleParameterIntent parameterIntent,
+            PlayerSpecialEffectMode specialEffectMode
+        )
+        {
+            if (specialEffectMode == PlayerSpecialEffectMode.None)
+            {
+                return false;
+            }
+
+            ulong targetNetworkObjectId = request.ListenerNetworkId;
+            if (targetNetworkObjectId == 0)
+            {
+                if (m_LogDebug)
+                {
+                    NGLog.Warn(
+                        "DialogueFX",
+                        NGLog.Format(
+                            "Special effect skipped (invalid listener target)",
+                            ("mode", specialEffectMode.ToString()),
+                            ("requestId", request.ClientRequestId)
+                        )
+                    );
+                }
+                return false;
+            }
+
+            switch (specialEffectMode)
+            {
+                case PlayerSpecialEffectMode.Dissolve:
+                {
+                    float durationSeconds = 5f;
+                    if (parameterIntent.HasExplicitDurationSeconds)
+                    {
+                        durationSeconds = Mathf.Clamp(parameterIntent.ExplicitDurationSeconds, 0.4f, 20f);
+                    }
+                    else
+                    {
+                        float durationMul = Mathf.Clamp(parameterIntent.DurationMultiplier, 0.35f, 3f);
+                        durationSeconds = Mathf.Clamp(durationSeconds * durationMul, 0.4f, 20f);
+                    }
+
+                    ApplyDissolveEffectClientRpc(targetNetworkObjectId, durationSeconds);
+                    NGLog.Info(
+                        "DialogueFX",
+                        NGLog.Format(
+                            "Special effect applied",
+                            ("mode", "dissolve"),
+                            ("target", targetNetworkObjectId),
+                            ("duration", durationSeconds.ToString("F2"))
+                        )
+                    );
+                    return true;
+                }
+                case PlayerSpecialEffectMode.Respawn:
+                {
+                    ApplyRespawnEffectClientRpc(targetNetworkObjectId);
+                    NGLog.Info(
+                        "DialogueFX",
+                        NGLog.Format(
+                            "Special effect applied",
+                            ("mode", "respawn"),
+                            ("target", targetNetworkObjectId)
+                        )
+                    );
+                    return true;
+                }
+                default:
+                    return false;
+            }
+        }
+
         private static bool LooksLikeModelRefusal(string text)
         {
             if (string.IsNullOrWhiteSpace(text))
@@ -2560,7 +2839,7 @@ namespace Network_Game.Dialogue
                 }
                 else if (m_LogDebug)
                 {
-                    NGLog.Warn("Dialogue", "LLM not found in scene.");
+                    NGLog.Warn(category: "Dialogue", message: "LLM not found in scene.");
                 }
             }
         }
@@ -2578,9 +2857,9 @@ namespace Network_Game.Dialogue
                 string agentName =
                     m_LlmAgent.gameObject != null ? m_LlmAgent.gameObject.name : "unknown";
                 NGLog.Info(
-                    "Dialogue",
-                    NGLog.Format(
-                        "Enabled LLMAgent component",
+                    category: "Dialogue",
+                    message: NGLog.Format(
+                        message: "Enabled LLMAgent component",
                         ("context", context ?? string.Empty),
                         ("agent", agentName)
                     )
@@ -5108,95 +5387,30 @@ namespace Network_Game.Dialogue
                 );
             }
 
-            if (m_LogDebug)
-            {
-                ulong resolvedPlayerNetworkId = ResolvePlayerNetworkIdForRequest(normalizedRequest);
-                PlayerIdentityBinding resolvedIdentity = ResolvePlayerIdentityForRequest(
-                    normalizedRequest
-                );
-                NGLog.Debug(
-                    "DialogueFX",
-                    NGLog.Format(
-                        "Effect dispatch player identity",
-                        ("senderClientId", normalizedRequest.RequestingClientId),
-                        ("resolvedPlayerNetId", resolvedPlayerNetworkId),
-                        (
-                            "name_id",
-                            string.IsNullOrWhiteSpace(resolvedIdentity?.NameId)
-                                ? "<unknown>"
-                                : resolvedIdentity.NameId
-                        ),
-                        ("speaker", normalizedRequest.SpeakerNetworkId),
-                        ("listener", normalizedRequest.ListenerNetworkId)
-                    )
-                );
-            }
-
             string effectContext = BuildEffectContextText(request.Prompt, responseText);
-            string keywordContext = isGameplayProbe
-                ? (responseText ?? string.Empty)
-                : effectContext;
-            Color boredColor = Color.blue;
-            float boredIntensity = 1f;
-            float transitionSeconds = 0.35f;
-            bool hasBoredLighting =
-                actor != null
-                && profile != null
-                && actor.TryGetBoredLighting(
-                    keywordContext,
-                    out boredColor,
-                    out boredIntensity,
-                    out transitionSeconds
-                );
-            if (isGameplayProbe)
-            {
-                // Probe runs validate one requested power per step. Avoid ambient side-effects.
-                hasBoredLighting = false;
-            }
 
             ParticleParameterExtractor.ParticleParameterIntent parameterIntent =
-                isGameplayProbe || (profile != null && profile.EnableDynamicEffectParameters)
-                    ? ParticleParameterExtractor.Extract(
-                        isGameplayProbe ? (responseText ?? string.Empty) : effectContext
-                    )
+                profile != null && profile.EnableDynamicEffectParameters
+                    ? ParticleParameterExtractor.Extract(effectContext)
                     : ParticleParameterExtractor.ParticleParameterIntent.Default;
-            if (parameterIntent.HasAnyOverride && hasBoredLighting)
-            {
-                float intensityMultiplier = ClampDynamicMultiplier(
-                    parameterIntent.IntensityMultiplier,
-                    profile
-                );
-                if (parameterIntent.HasExplicitIntensityMultiplier)
-                {
-                    intensityMultiplier = ClampDynamicMultiplier(
-                        parameterIntent.ExplicitIntensityMultiplier,
-                        profile
-                    );
-                }
-                float durationMultiplier = ClampDynamicMultiplier(
-                    parameterIntent.DurationMultiplier,
-                    profile
-                );
-                float emotionalMul = parameterIntent.EmotionalMultiplier;
-                if (!Mathf.Approximately(emotionalMul, 1f))
-                {
-                    intensityMultiplier = ClampDynamicMultiplier(
-                        intensityMultiplier * emotionalMul,
-                        profile
-                    );
-                }
-
-                boredColor = ApplyDynamicColorOverride(boredColor, parameterIntent, 0.82f);
-                boredIntensity = Mathf.Max(0f, boredIntensity * intensityMultiplier);
-                transitionSeconds = Mathf.Max(0.05f, transitionSeconds * durationMultiplier);
-            }
 
             EffectCatalog catalog = EnsureEffectCatalog();
+            if (catalog == null && profile != null)
+            {
+                catalog = BuildFallbackEffectCatalog(profile);
+            }
+            if (catalog == null)
+            {
+                NGLog.Warn("DialogueFX", "Skip effects (effect catalog missing).");
+                return;
+            }
+
             List<EffectIntent> catalogIntents = EffectParser.ExtractIntents(
                 responseText,
                 catalog,
                 stripTags: false
             );
+
             bool hasCatalogIntents = catalogIntents != null && catalogIntents.Count > 0;
             if (isGameplayProbe)
             {
@@ -5207,28 +5421,19 @@ namespace Network_Game.Dialogue
                     ref hasCatalogIntents
                 );
             }
+
             PlayerSpecialEffectMode specialEffectMode = ResolvePlayerSpecialEffectMode(
-                isGameplayProbe ? string.Empty : request.Prompt,
-                isGameplayProbe ? string.Empty : responseText,
-                catalogIntents
+                promptText: request.Prompt,
+                responseText: responseText,
+                intents: catalogIntents
             );
 
-            // Resolve per-player effect modifier from the target player's customization data
-            PlayerIdentityBinding targetPlayerIdentity = ResolvePlayerIdentityForRequest(
-                normalizedRequest
-            );
+            PlayerIdentityBinding targetPlayerIdentity = ResolvePlayerIdentityForRequest(normalizedRequest);
             PlayerEffectModifier playerMod = BuildPlayerEffectModifier(targetPlayerIdentity);
 
             bool hasPlayerSpecialEffect = specialEffectMode != PlayerSpecialEffectMode.None;
-            bool shouldApplyFloorFreezeMaterial =
-                !isGameplayProbe
-                && ShouldApplyFloorFreezeSurfaceMaterial(normalizedRequest, catalogIntents);
-            if (
-                !hasBoredLighting
-                && !hasCatalogIntents
-                && !hasPlayerSpecialEffect
-                && !shouldApplyFloorFreezeMaterial
-            )
+
+            if (!hasCatalogIntents && !hasPlayerSpecialEffect)
             {
                 if (m_LogDebug)
                 {
@@ -5258,7 +5463,6 @@ namespace Network_Game.Dialogue
                 );
                 if (specialApplied && specialEffectMode == PlayerSpecialEffectMode.Dissolve)
                 {
-                    // Prioritize true invisibility over cosmetic smoke/projectiles.
                     hasCatalogIntents = false;
                     if (m_LogDebug)
                     {
@@ -5280,17 +5484,6 @@ namespace Network_Game.Dialogue
                 out Vector3 effectForward,
                 out string effectAnchorLabel
             );
-            if (m_LogDebug)
-            {
-                NGLog.Debug(
-                    "DialogueFX",
-                    NGLog.Format(
-                        "Resolved effect anchor",
-                        ("anchor", effectAnchorLabel),
-                        ("origin", effectOrigin)
-                    )
-                );
-            }
 
             EnsureSceneEffectsController();
             if (m_SceneEffectsController == null)
@@ -5298,39 +5491,12 @@ namespace Network_Game.Dialogue
                 NGLog.Warn(
                     "DialogueFX",
                     NGLog.Format(
-                        "Skip effects (controller missing)",
-                        ("speaker", request.SpeakerNetworkId)
+                        "Skip effects (scene effects controller missing)",
+                        ("speaker", normalizedRequest.SpeakerNetworkId),
+                        ("listener", normalizedRequest.ListenerNetworkId)
                     )
                 );
                 return;
-            }
-
-            if (shouldApplyFloorFreezeMaterial)
-            {
-                TryApplyFloorFreezeSurfaceMaterial(
-                    normalizedRequest,
-                    catalogIntents,
-                    parameterIntent
-                );
-            }
-
-            if (hasBoredLighting)
-            {
-                float explicitDuration = ResolveExplicitDurationSeconds(
-                    parameterIntent,
-                    0.05f,
-                    10f
-                );
-                if (explicitDuration > 0f)
-                {
-                    transitionSeconds = explicitDuration;
-                }
-
-                ApplyBoredLightingClientRpc(
-                    new Vector4(boredColor.r, boredColor.g, boredColor.b, boredColor.a),
-                    boredIntensity,
-                    transitionSeconds
-                );
             }
 
             if (hasCatalogIntents)
@@ -5340,696 +5506,11 @@ namespace Network_Game.Dialogue
                     normalizedRequest,
                     effectOrigin,
                     effectForward,
-                    (PlayerEffectModifier?)playerMod,
-                    isGameplayProbe
-                );
-            }
-        }
-
-        private static bool ShouldApplyFloorFreezeSurfaceMaterial(
-            DialogueRequest request,
-            List<EffectIntent> intents
-        )
-        {
-            if (IsGroundFreezePrompt(request.Prompt))
-            {
-                return true;
-            }
-
-            if (intents == null || intents.Count == 0)
-            {
-                return false;
-            }
-
-            for (int i = 0; i < intents.Count; i++)
-            {
-                EffectIntent intent = intents[i];
-                if (intent == null)
-                {
-                    continue;
-                }
-
-                EffectDefinition def = intent.definition;
-                if (ShouldForceGroundFreezeForIntent(request, intent, def))
-                {
-                    return true;
-                }
-
-                if (!LooksLikeFreezeIntent(intent, def))
-                {
-                    continue;
-                }
-
-                string requestedTarget = !string.IsNullOrWhiteSpace(intent.anchor)
-                    ? intent.anchor
-                    : intent.target;
-                if (string.IsNullOrWhiteSpace(requestedTarget))
-                {
-                    continue;
-                }
-
-                string lowerTarget = requestedTarget.Trim().ToLowerInvariant();
-                if (IsGroundAlias(lowerTarget))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        private void TryApplyFloorFreezeSurfaceMaterial(
-            DialogueRequest request,
-            List<EffectIntent> intents,
-            ParticleParameterExtractor.ParticleParameterIntent parameterIntent
-        )
-        {
-            EnsureSceneEffectsController();
-            if (m_SceneEffectsController == null)
-            {
-                return;
-            }
-
-            ulong playerNetworkId = ResolvePlayerNetworkIdForRequest(request);
-            if (playerNetworkId == 0)
-            {
-                TryResolveSingleConnectedPlayerFallback(out playerNetworkId);
-            }
-
-            if (playerNetworkId == 0)
-            {
-                NGLog.Warn(
-                    "DialogueFX",
-                    "Floor freeze material skipped (no unambiguous player target resolved)."
-                );
-                return;
-            }
-
-            GameObject playerObject = ResolveSpawnedObject(playerNetworkId);
-            if (playerObject == null)
-            {
-                NGLog.Warn(
-                    "DialogueFX",
-                    NGLog.Format(
-                        "Floor freeze material skipped (player object missing)",
-                        ("player", playerNetworkId)
-                    )
-                );
-                return;
-            }
-
-            NetworkObject playerNetworkObject = playerObject.GetComponent<NetworkObject>();
-            var playerTarget = new EffectTargetResolverService.PlayerTarget
-            {
-                NetworkObject = playerNetworkObject,
-                Transform = playerObject.transform,
-            };
-
-            if (
-                !EffectTargetResolverService.TryResolveFloorUnderPlayer(
-                    playerTarget,
-                    rayDistance: 8f,
-                    layerMask: Physics.DefaultRaycastLayers,
-                    out EffectTargetResolverService.SurfaceTarget surfaceTarget,
-                    out string resolveReason
-                )
-            )
-            {
-                NGLog.Warn(
-                    "DialogueFX",
-                    NGLog.Format(
-                        "Floor freeze material skipped (floor unresolved)",
-                        ("player", playerNetworkId),
-                        ("reason", resolveReason ?? string.Empty)
-                    )
-                );
-                return;
-            }
-
-            Renderer targetRenderer = surfaceTarget?.Renderer;
-            if (targetRenderer == null)
-            {
-                NGLog.Warn(
-                    "DialogueFX",
-                    NGLog.Format(
-                        "Floor freeze material skipped (surface renderer missing)",
-                        ("player", playerNetworkId),
-                        ("surfaceType", surfaceTarget?.Classification ?? string.Empty)
-                    )
-                );
-                return;
-            }
-
-            EffectSurface effectSurface = surfaceTarget.EffectSurface;
-            if (effectSurface != null && !effectSurface.AllowFreeze)
-            {
-                NGLog.Warn(
-                    "DialogueFX",
-                    NGLog.Format(
-                        "Floor freeze material skipped (surface disallows freeze)",
-                        ("surfaceId", effectSurface.SurfaceId),
-                        ("surfaceType", effectSurface.SurfaceType.ToString())
-                    )
-                );
-                return;
-            }
-
-            int materialSlotIndex =
-                effectSurface != null
-                    ? effectSurface.ResolveMaterialSlot(
-                        targetRenderer,
-                        surfaceTarget.MaterialSlotIndex
-                    )
-                    : Mathf.Clamp(
-                        surfaceTarget.MaterialSlotIndex,
-                        0,
-                        Mathf.Max(0, (targetRenderer.sharedMaterials?.Length ?? 1) - 1)
-                    );
-
-            float durationSeconds = ResolveFloorFreezeSurfaceDurationSeconds(
-                request,
-                intents,
-                parameterIntent
-            );
-            string surfaceId = effectSurface != null ? effectSurface.SurfaceId : string.Empty;
-            string rendererPath = EffectTargetResolverService.GetHierarchyPath(
-                targetRenderer.transform
-            );
-
-            try
-            {
-                ApplyFloorFreezeSurfaceMaterialClientRpc(
-                    surfaceId,
-                    rendererPath,
-                    materialSlotIndex,
-                    durationSeconds,
-                    request.SpeakerNetworkId,
-                    playerNetworkId
-                );
-            }
-            catch (Exception ex)
-            {
-                NGLog.Warn(
-                    "DialogueFX",
-                    NGLog.Format(
-                        "Floor freeze material RPC failed; attempting local fallback",
-                        ("surfaceId", surfaceId),
-                        ("rendererPath", rendererPath),
-                        ("slot", materialSlotIndex),
-                        ("error", ex.Message ?? string.Empty)
-                    )
-                );
-                Debug.LogException(ex);
-                m_SceneEffectsController?.ApplyFloorFreezeSurfaceMaterial(
-                    surfaceId,
-                    rendererPath,
-                    materialSlotIndex,
-                    durationSeconds,
-                    request.SpeakerNetworkId,
-                    playerNetworkId
+                    playerModOverride: playerMod,
+                    probeTrace: isGameplayProbe
                 );
             }
 
-            NGLog.Info(
-                "DialogueFX",
-                NGLog.Format(
-                    "Floor freeze material dispatch",
-                    ("surfaceId", surfaceId),
-                    ("renderer", targetRenderer.name),
-                    ("slot", materialSlotIndex),
-                    ("duration", durationSeconds.ToString("F2")),
-                    ("player", playerNetworkId),
-                    ("reason", surfaceTarget.ResolverReason ?? string.Empty)
-                )
-            );
-        }
-
-        private static float ResolveFloorFreezeSurfaceDurationSeconds(
-            DialogueRequest request,
-            List<EffectIntent> intents,
-            ParticleParameterExtractor.ParticleParameterIntent parameterIntent
-        )
-        {
-            float durationSeconds = 8f;
-            if (intents != null)
-            {
-                for (int i = 0; i < intents.Count; i++)
-                {
-                    EffectIntent intent = intents[i];
-                    if (intent == null)
-                    {
-                        continue;
-                    }
-
-                    if (!ShouldForceGroundFreezeForIntent(request, intent, intent.definition))
-                    {
-                        continue;
-                    }
-
-                    if (intent.duration > 0f)
-                    {
-                        return Mathf.Clamp(intent.duration, 0.25f, 60f);
-                    }
-                }
-            }
-
-            if (parameterIntent.HasExplicitDurationSeconds)
-            {
-                durationSeconds = parameterIntent.ExplicitDurationSeconds;
-            }
-            else if (!Mathf.Approximately(parameterIntent.DurationMultiplier, 1f))
-            {
-                durationSeconds *= parameterIntent.DurationMultiplier;
-            }
-
-            return Mathf.Clamp(durationSeconds, 0.25f, 60f);
-        }
-
-        private static readonly string[] DissolveKeywords = new[]
-        {
-            "dissolve",
-            "invisible",
-            "fade away",
-            "vanish",
-            "disappear",
-            "make me invisible",
-            "turn invisible",
-            "fade out",
-            "fade to nothing",
-            "invisibility",
-            "hide me",
-            "can't see me",
-            "invisible to",
-            "esvanecer",
-            "invisível",
-            "desaparecer",
-            "oculto",
-        };
-
-        private static readonly string[] RespawnKeywords = new[]
-        {
-            "respawn",
-            "restore",
-            "bring back",
-            "revive",
-            "make visible",
-            "reveal",
-            "restore me",
-            "back to normal",
-            "ressuscitar",
-            "restaurar",
-            "reaparecer",
-            "visível",
-        };
-
-        private static readonly string[] DissolvePromptCommands = new[]
-        {
-            "make me invisible",
-            "turn me invisible",
-            "turn invisible",
-            "hide me",
-            "make player invisible",
-            "make the player invisible",
-            "fade me out",
-            "vanish me",
-        };
-
-        private static readonly string[] RespawnPromptCommands = new[]
-        {
-            "respawn me",
-            "revive me",
-            "bring me back",
-            "restore me",
-            "make me visible",
-            "make me visible again",
-            "reveal me",
-            "show me again",
-        };
-
-        private enum PlayerSpecialEffectMode
-        {
-            None,
-            Dissolve,
-            Respawn,
-        }
-
-        private static PlayerSpecialEffectMode ResolvePlayerSpecialEffectMode(
-            string promptText,
-            string responseText,
-            List<EffectIntent> intents
-        )
-        {
-            if (
-                IntentMatchesKeywords(intents, DissolveKeywords)
-                || ContainsAnyKeyword(promptText, DissolvePromptCommands)
-                || ContainsAnyKeyword(
-                    responseText,
-                    new[] { "make you invisible", "you are invisible" }
-                )
-            )
-            {
-                return PlayerSpecialEffectMode.Dissolve;
-            }
-
-            if (
-                IntentMatchesKeywords(intents, RespawnKeywords)
-                || ContainsAnyKeyword(promptText, RespawnPromptCommands)
-                || ContainsAnyKeyword(
-                    responseText,
-                    new[] { "make you visible", "you are visible again" }
-                )
-            )
-            {
-                return PlayerSpecialEffectMode.Respawn;
-            }
-
-            return PlayerSpecialEffectMode.None;
-        }
-
-        private static bool IntentMatchesKeywords(List<EffectIntent> intents, string[] keywords)
-        {
-            if (intents == null || intents.Count == 0 || keywords == null || keywords.Length == 0)
-            {
-                return false;
-            }
-
-            for (int i = 0; i < intents.Count; i++)
-            {
-                EffectIntent intent = intents[i];
-                if (intent == null)
-                {
-                    continue;
-                }
-
-                if (
-                    ContainsAnyKeyword(intent.rawTagName, keywords)
-                    || ContainsAnyKeyword(intent.target, keywords)
-                    || ContainsAnyKeyword(intent.anchor, keywords)
-                )
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        private bool ApplyPlayerSpecialEffects(
-            DialogueRequest request,
-            ParticleParameterExtractor.ParticleParameterIntent parameterIntent,
-            PlayerSpecialEffectMode mode
-        )
-        {
-            if (mode == PlayerSpecialEffectMode.None)
-            {
-                return false;
-            }
-
-            // Get the player NetworkObjectId from the request
-            ulong playerNetworkId = ResolvePlayerNetworkIdForRequest(request);
-            if (playerNetworkId == 0)
-            {
-                // Safe fallback only when exactly one player can be resolved.
-                TryResolveSingleConnectedPlayerFallback(out playerNetworkId);
-            }
-
-            if (playerNetworkId == 0)
-            {
-                NGLog.Debug(
-                    "DialogueFX",
-                    "Skip player special effects - no unambiguous player target found"
-                );
-                return false;
-            }
-
-            EnsureSceneEffectsController();
-            if (m_SceneEffectsController == null)
-            {
-                NGLog.Warn("DialogueFX", "Skip player special effects - controller missing");
-                return false;
-            }
-
-            if (mode == PlayerSpecialEffectMode.Dissolve)
-            {
-                float durationSeconds = 5f;
-                if (parameterIntent.HasExplicitDurationSeconds)
-                {
-                    durationSeconds = Mathf.Clamp(parameterIntent.ExplicitDurationSeconds, 1f, 30f);
-                }
-                else if (parameterIntent.DurationMultiplier != 1f)
-                {
-                    durationSeconds = Mathf.Clamp(parameterIntent.DurationMultiplier * 5f, 1f, 30f);
-                }
-
-                if (m_LogDebug)
-                {
-                    NGLog.Debug(
-                        "DialogueFX",
-                        NGLog.Format(
-                            "Player special effect request",
-                            ("mode", "dissolve"),
-                            ("player", playerNetworkId),
-                            ("speaker", request.SpeakerNetworkId),
-                            ("listener", request.ListenerNetworkId),
-                            ("duration", durationSeconds),
-                            ("explicitDuration", parameterIntent.HasExplicitDurationSeconds),
-                            ("intensityMul", parameterIntent.IntensityMultiplier)
-                        )
-                    );
-                }
-
-                try
-                {
-                    ApplyDissolveEffectClientRpc(playerNetworkId, durationSeconds);
-                }
-                catch (Exception ex)
-                {
-                    NGLog.Warn(
-                        "DialogueFX",
-                        NGLog.Format(
-                            "Dissolve RPC failed; attempting local fallback",
-                            ("player", playerNetworkId),
-                            ("duration", durationSeconds),
-                            ("error", ex.Message ?? string.Empty)
-                        )
-                    );
-                    Debug.LogException(ex);
-                    m_SceneEffectsController?.ApplyDissolveEffect(playerNetworkId, durationSeconds);
-                }
-                NGLog.Info(
-                    "DialogueFX",
-                    NGLog.Format(
-                        "Player dissolve effect",
-                        ("player", playerNetworkId),
-                        ("duration", durationSeconds)
-                    )
-                );
-                return true;
-            }
-
-            if (mode == PlayerSpecialEffectMode.Respawn)
-            {
-                if (m_LogDebug)
-                {
-                    NGLog.Debug(
-                        "DialogueFX",
-                        NGLog.Format(
-                            "Player special effect request",
-                            ("mode", "respawn"),
-                            ("player", playerNetworkId),
-                            ("speaker", request.SpeakerNetworkId),
-                            ("listener", request.ListenerNetworkId)
-                        )
-                    );
-                }
-
-                try
-                {
-                    ApplyRespawnEffectClientRpc(playerNetworkId);
-                }
-                catch (Exception ex)
-                {
-                    NGLog.Warn(
-                        "DialogueFX",
-                        NGLog.Format(
-                            "Respawn RPC failed; attempting local fallback",
-                            ("player", playerNetworkId),
-                            ("error", ex.Message ?? string.Empty)
-                        )
-                    );
-                    Debug.LogException(ex);
-                    m_SceneEffectsController?.ApplyRespawnEffect(playerNetworkId);
-                }
-                NGLog.Info(
-                    "DialogueFX",
-                    NGLog.Format("Player respawn effect", ("player", playerNetworkId))
-                );
-                return true;
-            }
-
-            return false;
-        }
-
-        private void EnsureSceneEffectsController()
-        {
-            if (m_SceneEffectsController != null)
-            {
-                return;
-            }
-
-#if UNITY_2023_1_OR_NEWER
-            m_SceneEffectsController = FindAnyObjectByType<DialogueSceneEffectsController>();
-#else
-            m_SceneEffectsController = FindObjectOfType<DialogueSceneEffectsController>();
-#endif
-
-            if (m_SceneEffectsController == null)
-            {
-                var go = new GameObject("DialogueSceneEffectsController");
-                m_SceneEffectsController = go.AddComponent<DialogueSceneEffectsController>();
-            }
-        }
-
-        private EffectCatalog EnsureEffectCatalog()
-        {
-            if (m_EffectCatalogLoaded)
-                return m_EffectCatalog;
-
-            m_EffectCatalogLoaded = true;
-            try
-            {
-                m_EffectCatalog = EffectCatalog.Load();
-            }
-            catch (System.Exception ex)
-            {
-                NGLog.Warn("DialogueFX", $"EffectCatalog.Load() failed: {ex.Message}");
-                m_EffectCatalog = null;
-            }
-
-            if (m_EffectCatalog != null)
-            {
-                RegisterAllProfilePowers(m_EffectCatalog);
-
-                if (m_LogDebug)
-                {
-                    NGLog.Debug(
-                        "DialogueFX",
-                        $"EffectCatalog loaded with {m_EffectCatalog.allEffects.Count} definitions."
-                    );
-                }
-            }
-
-            return m_EffectCatalog;
-        }
-
-        private void RegisterAllProfilePowers(EffectCatalog catalog)
-        {
-            NpcDialogueActor[] actors = FindObjectsByType<NpcDialogueActor>(
-                FindObjectsInactive.Exclude
-            );
-            int registeredCount = 0;
-            foreach (NpcDialogueActor actor in actors)
-            {
-                if (actor?.Profile?.PrefabPowers == null)
-                    continue;
-                foreach (PrefabPowerEntry entry in actor.Profile.PrefabPowers)
-                {
-                    if (
-                        entry == null
-                        || !entry.Enabled
-                        || string.IsNullOrWhiteSpace(entry.PowerName)
-                    )
-                        continue;
-                    catalog.RegisterRuntimeEffect(entry.ToEffectDefinition());
-                    registeredCount++;
-                }
-            }
-            if (m_LogDebug)
-            {
-                NGLog.Debug(
-                    "DialogueFX",
-                    $"Registered {registeredCount} profile powers with EffectCatalog."
-                );
-            }
-        }
-
-        private void AdjustIntentsForProbeMode(
-            DialogueRequest request,
-            EffectCatalog catalog,
-            ref List<EffectIntent> catalogIntents,
-            ref bool hasCatalogIntents
-        )
-        {
-            // Probe mode is deterministic: execute the step tag from the probe prompt
-            // rather than whatever tag the NPC response emits.
-            List<EffectIntent> requestedIntents = EffectParser.ExtractIntents(
-                request.Prompt,
-                catalog,
-                stripTags: false
-            );
-            if (requestedIntents == null || requestedIntents.Count == 0)
-            {
-                if (!hasCatalogIntents)
-                {
-                    NGLog.Warn(
-                        "DialogueFX",
-                        NGLog.Format(
-                            "Probe step had no parsable [EFFECT:] tag",
-                            ("requestId", request.ClientRequestId)
-                        )
-                    );
-                }
-                return;
-            }
-
-            requestedIntents = requestedIntents
-                .Where(intent =>
-                    intent != null && !LooksLikePlaceholderEffectTag(intent.rawTagName)
-                )
-                .ToList();
-
-            if (requestedIntents.Count == 0)
-            {
-                NGLog.Info(
-                    "DialogueFX",
-                    NGLog.Format(
-                        "Probe intents filtered out (placeholder/example tags)",
-                        ("requestId", request.ClientRequestId)
-                    )
-                );
-                return;
-            }
-
-            if (requestedIntents.Count > 1)
-            {
-                EffectIntent selected =
-                    requestedIntents.FirstOrDefault(intent =>
-                        intent != null && !LooksLikePlaceholderEffectTag(intent.rawTagName)
-                    ) ?? requestedIntents[0];
-                requestedIntents = new List<EffectIntent>(1) { selected };
-            }
-
-            catalogIntents = requestedIntents;
-            hasCatalogIntents = true;
-
-            if (m_LogDebug)
-            {
-                NGLog.Debug(
-                    "DialogueFX",
-                    NGLog.Format(
-                        "Probe intent selected",
-                        ("requestId", request.ClientRequestId),
-                        ("tag", requestedIntents[0].rawTagName ?? string.Empty),
-                        ("valid", requestedIntents[0].isValid),
-                        (
-                            "definition",
-                            requestedIntents[0].definition != null
-                                ? requestedIntents[0].definition.effectTag
-                                : "<none>"
-                        )
-                    )
-                );
-            }
         }
 
         private void ApplyEffectParserIntents(
@@ -6044,13 +5525,13 @@ namespace Network_Game.Dialogue
             PlayerEffectModifier playerMod = playerModOverride ?? PlayerEffectModifier.Neutral;
             for (int i = 0; i < intents.Count; i++)
             {
-                EffectIntent intent = intents[i];
+                EffectIntent intent = intents[index: i];
                 if (probeTrace)
                 {
                     NGLog.Info(
-                        "DialogueFX",
-                        NGLog.Format(
-                            "Probe intent evaluate",
+                        category: "DialogueFX",
+                        message: NGLog.Format(
+                            message: "Probe intent evaluate",
                             ("requestId", request.ClientRequestId),
                             ("index", i),
                             ("tag", intent.rawTagName ?? string.Empty),
@@ -6195,12 +5676,23 @@ namespace Network_Game.Dialogue
                     scale,
                     def.affectPlayerOnly
                 );
+                string collisionPolicyHint = intent.collisionPolicy;
+                bool? groundSnapHint = intent.groundSnap;
+                bool? requireLineOfSightHint = intent.requireLineOfSight;
+                if (probeTrace)
+                {
+                    // Probe runs should validate effect spawning capability even when strict LoS
+                    // would reject a placement in crowded scenes.
+                    collisionPolicyHint = "relaxed";
+                    requireLineOfSightHint = false;
+                }
+
                 EffectSpatialPolicy intentSpatialPolicy = BuildEffectSpatialPolicy(
                     intentSpatialType,
                     def.enableGameplayDamage,
-                    intent.collisionPolicy,
-                    intent.groundSnap,
-                    intent.requireLineOfSight
+                    collisionPolicyHint,
+                    groundSnapHint,
+                    requireLineOfSightHint
                 );
                 DialogueEffectSpatialResolver.ResolveResult spatial =
                     ResolveSpatialPlacementForPower(
