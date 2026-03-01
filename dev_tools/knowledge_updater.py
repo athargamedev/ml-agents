@@ -3,8 +3,8 @@ dev_tools/knowledge_updater.py — Auto-updates Claude memory files with insight
 extracted from code scan reports, training logs, and effect feedback data.
 
 Memory files written:
-  C:\\Users\\andre_wjgj23f\\.claude\\projects\\D--GithubRepos-ml-agents\\memory\\code_quality.md
-  C:\\Users\\andre_wjgj23f\\.claude\\projects\\D--GithubRepos-ml-agents\\memory\\project_patterns.md
+  <CLAUDE_MEMORY_DIR or repo-scoped default>\\code_quality.md
+  <CLAUDE_MEMORY_DIR or repo-scoped default>\\project_patterns.md
 
 Usage (via run_dev_tools.py):
     python dev_tools/run_dev_tools.py update
@@ -16,17 +16,30 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
-from dev_tools.lm_client import LmClient as LmStudioClient
+from dev_tools.lm_client import LmClient as LmStudioClient, TEXT_MODEL
 
 # ── Paths ──────────────────────────────────────────────────────────────────────
 REPO_ROOT   = Path(__file__).parent.parent.resolve()
-MEMORY_DIR  = Path(r"C:\Users\andre_wjgj23f\.claude\projects\D--GithubRepos-ml-agents\memory")
 PROMPT_FILE = Path(__file__).parent / "prompts" / "knowledge_synthesis.txt"
+
+
+def _default_memory_dir() -> str:
+    repo_path = str(REPO_ROOT)
+    if len(repo_path) >= 2 and repo_path[1] == ":":
+        repo_path = repo_path[0].upper() + repo_path[1:]
+    slug = repo_path.replace(":", "").replace("\\", "-").replace("/", "-")
+    return str(Path.home() / ".claude" / "projects" / slug / "memory")
+
+
+MEMORY_DIR  = Path(os.environ.get("CLAUDE_MEMORY_DIR", _default_memory_dir()))
 
 # Inputs
 SCAN_SUMMARY  = Path(__file__).parent / "reports" / "latest_scan_summary.md"
 TRAINING_LOG  = REPO_ROOT / ".codex" / "tmp" / "run_training.log"
-EFFECT_JSON   = REPO_ROOT / "output" / "effect_feedback_tuning.json"
+EFFECT_JSON_CANDIDATES = [
+    REPO_ROOT / "DevProject" / "output" / "effect_feedback_tuning.json",
+    REPO_ROOT / "output" / "effect_feedback_tuning.json",
+]
 
 # Output memory files
 CODE_QUALITY_MD     = MEMORY_DIR / "code_quality.md"
@@ -35,6 +48,36 @@ PROJECT_PATTERNS_MD = MEMORY_DIR / "project_patterns.md"
 
 MAX_LOG_CHARS   = 3000   # last N chars of training log
 MAX_EFFECT_CHARS = 2000
+
+_SYNTHESIS_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "new_insights": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "category": {"type": "string"},
+                    "title": {"type": "string"},
+                    "insight": {"type": "string"},
+                    "evidence": {"type": "string"},
+                },
+                "required": ["category", "title", "insight", "evidence"],
+                "additionalProperties": False,
+            },
+        },
+        "patterns_confirmed": {
+            "type": "array",
+            "items": {"type": "string"},
+        },
+        "patterns_invalidated": {
+            "type": "array",
+            "items": {"type": "string"},
+        },
+    },
+    "required": ["new_insights", "patterns_confirmed", "patterns_invalidated"],
+    "additionalProperties": False,
+}
 
 
 def _read_tail(path: Path, max_chars: int) -> str:
@@ -58,6 +101,13 @@ def _read_json_summary(path: Path, max_chars: int) -> str:
         return text[:max_chars]
     except Exception as ex:
         return f"[Error reading {path.name}: {ex}]"
+
+
+def _resolve_first_existing(paths: list[Path]) -> Optional[Path]:
+    for path in paths:
+        if path.exists():
+            return path
+    return None
 
 
 def _load_existing_memory(path: Path) -> str:
@@ -145,10 +195,15 @@ def run_update_cli(client: Optional[LmStudioClient] = None) -> bool:
         print("[Update] ERROR: LM Studio is not reachable. Start LM Studio and load a model first.")
         return False
 
+    if not client.ensure_models_loaded([TEXT_MODEL], context_length=4096):
+        print(f"[Update] ERROR: Could not load required model: {TEXT_MODEL}")
+        return False
+
     # ── Gather inputs ──────────────────────────────────────────────────────────
+    effect_path    = _resolve_first_existing(EFFECT_JSON_CANDIDATES)
     scan_summary   = _read_tail(SCAN_SUMMARY, 4000)
     training_log   = _read_tail(TRAINING_LOG, MAX_LOG_CHARS)
-    effect_summary = _read_json_summary(EFFECT_JSON, MAX_EFFECT_CHARS)
+    effect_summary = _read_json_summary(effect_path, MAX_EFFECT_CHARS) if effect_path else ""
     existing_code  = _load_existing_memory(CODE_QUALITY_MD)
     existing_patt  = _load_existing_memory(PROJECT_PATTERNS_MD)
 
@@ -174,10 +229,17 @@ def run_update_cli(client: Optional[LmStudioClient] = None) -> bool:
     user_msg = "\n\n".join(user_msg_parts)
 
     print("[Update] Synthesising insights with LM Studio...")
-    result = client.ask_json(sys_prompt, user_msg, max_tokens=800)
+    result = client.ask_schema(
+        system=sys_prompt,
+        user=user_msg,
+        schema=_SYNTHESIS_SCHEMA,
+        schema_name="knowledge_synthesis",
+        model=TEXT_MODEL,
+        max_tokens=800,
+    )
 
-    if not result or "raw" in result:
-        print(f"[Update] LLM returned non-JSON response: {result.get('raw', '')[:200]}")
+    if not result or "error" in result:
+        print(f"[Update] LLM request failed: {result.get('error', 'unknown error')}")
         return False
 
     date_str       = datetime.now().strftime("%Y-%m-%d")

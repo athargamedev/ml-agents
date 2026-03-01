@@ -36,7 +36,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from dev_tools.lm_client import LmClient, CODE_MODEL, TEXT_MODEL, FAST_MODEL
+from dev_tools.lm_client import LmClient, TEXT_MODEL
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
 REPO_ROOT    = Path(__file__).parent.parent.resolve()
@@ -178,7 +178,9 @@ Identify all inconsistencies across the 3 NPCs. Look at:
 - Profile data that could improve scene snapshot quality for the LLM
 """
     _log("01", "Turn 1 — reading context")
-    r1 = client.ask_stateful(system, history, context_msg, model=TEXT_MODEL, max_tokens=400)
+    from dev_tools.lm_client import LLAMA_STOP
+    r1 = client.ask_stateful(system, history, context_msg, model=TEXT_MODEL, max_tokens=400,
+                             profile="analysis", stop_sequences=LLAMA_STOP)
     _log("01", f"Turn 1 done ({len(r1)} chars)")
 
     # Turn 2: generate structured patch
@@ -330,11 +332,11 @@ Feedback data (last 30 sessions):
 def job_03_llm_config(client: LmClient) -> dict:
     _log("03", "Starting LLM stop sequence + system prompt audit")
 
-    config = """
+    config = f"""
 Model in use:
   Name:       llama-3.2-3b-instruct@q4_k_s
   Format:     Llama 3 Instruct (uses <|begin_of_text|>, <|eot_id|>, <|end_of_text|>)
-  Host:       100.80.22.49:7002 (LM Studio, Tailscale)
+  Host:       {client.host}:{client.port} (LM Studio endpoint used by dev_tools)
 
 Current LLMAgent stop sequences in Unity Inspector:
   ["</s>", "[INST]", "User:", "Assistant:"]
@@ -856,21 +858,28 @@ def run_jobs(job_ids: list[str] | None = None) -> dict[str, Any]:
     """
     client = LmClient()
     if not client.is_available():
-        print("[scene_jobs] ERROR: LM Studio unreachable at 100.80.22.49:7002")
+        print(f"[scene_jobs] ERROR: LM Studio unreachable at {client.base_url}")
         return {}
 
-    loaded = client.list_loaded_models()
-    print(f"[scene_jobs] Loaded models: {loaded}")
-
-    # Load code model if not already present
-    if CODE_MODEL not in loaded:
-        print(f"[scene_jobs] Loading {CODE_MODEL} via lms...")
-        client.load_model(CODE_MODEL)
+    requested_ids = set(job_ids or [])
+    invalid_ids = sorted(requested_ids - set(ALL_JOBS))
+    if invalid_ids:
+        print(f"[scene_jobs] WARNING: Unknown job id(s): {', '.join(invalid_ids)}")
 
     targets = {
         k: v for k, v in ALL_JOBS.items()
         if job_ids is None or k in job_ids
     }
+    if not targets:
+        print("[scene_jobs] ERROR: No valid jobs selected.")
+        return {}
+
+    loaded = client.list_loaded_models()
+    print(f"[scene_jobs] Loaded models: {loaded}")
+
+    if not client.ensure_models_loaded([TEXT_MODEL], context_length=4096):
+        print(f"[scene_jobs] ERROR: Could not load required model: {TEXT_MODEL}")
+        return {}
 
     summary: dict[str, Any] = {}
     t0 = time.monotonic()

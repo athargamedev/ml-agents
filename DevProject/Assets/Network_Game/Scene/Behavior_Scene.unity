@@ -1732,6 +1732,9 @@ MonoBehaviour:
   m_LoginVisible: 1
   m_ProfileVisible: 1
   m_DialogueVisible: 1
+  m_LoginToggleKey: 282
+  m_ProfileToggleKey: 283
+  m_DialogueToggleKey: 284
 --- !u!1 &275345367 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1029230104914618, guid: 21617474d5ac06548b6020406dbe6e6b, type: 3}
@@ -8906,6 +8909,9 @@ MonoBehaviour:
   m_RemoteStopSequences:
   - <|eot_id|>
   - <|end_of_text|>
+  - <|start_header_id|>
+  - <|im_end|>
+  - <|endoftext|>
   m_RemoteMinRequestTimeoutSeconds: 240
   m_RemoteSystemPromptCharBudget: 5000
   m_RemoteMaxHistoryMessages: 6

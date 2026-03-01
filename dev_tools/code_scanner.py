@@ -26,6 +26,9 @@ REPO_ROOT = Path(__file__).parent.parent.resolve()
 SCAN_DIRS = [
     REPO_ROOT / "DevProject" / "Assets" / "ML-Agents" / "Scripts",
     REPO_ROOT / "DevProject" / "Assets" / "Network_Game" / "Dialogue",
+    REPO_ROOT / "DevProject" / "Assets" / "Network_Game" / "UI",
+    REPO_ROOT / "DevProject" / "Assets" / "Network_Game" / "Auth",
+    REPO_ROOT / "DevProject" / "Assets" / "Network_Game" / "Combat",
 ]
 PROMPT_FILE   = Path(__file__).parent / "prompts" / "unity_code_review.txt"
 PATTERNS_FILE = Path(__file__).parent / "schemas" / "unity_patterns.json"
@@ -170,7 +173,10 @@ def _collect_cs_files(paths: Optional[List[Path]] = None) -> List[Path]:
             for fname in sorted(fnames):
                 if fname.endswith(".cs"):
                     files.append(Path(root) / fname)
-    return sorted(set(files), key=lambda p: p.name)
+    return sorted(
+        set(files),
+        key=lambda p: str(p.relative_to(REPO_ROOT) if p.is_relative_to(REPO_ROOT) else p),
+    )
 
 
 class CodeScanner:
@@ -357,7 +363,11 @@ def run_scan_cli(
     client = LmStudioClient()
     if not client.is_available():
         print("[Scan] ERROR: LM Studio is not reachable at "
-              f"http://{client.base_url}. Start LM Studio and load a model first.")
+              f"{client.base_url}. Start LM Studio first.")
+        return None
+
+    if not client.ensure_models_loaded([TEXT_MODEL], context_length=4096):
+        print(f"[Scan] ERROR: Could not load required model: {TEXT_MODEL}")
         return None
 
     scanner = CodeScanner(client)

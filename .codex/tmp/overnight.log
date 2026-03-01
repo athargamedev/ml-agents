@@ -1,6 +1,6 @@
-[05:11:23] Watch mode: running full pipeline every 120 minutes. Ctrl+C to stop.
-[05:11:23] --- Watch run #1 ---
-[05:11:23] === Phase 1/3: Schema extraction + Assembly map (no LM Studio needed) ===
+[06:10:10] Watch mode: running full pipeline every 120 minutes. Ctrl+C to stop.
+[06:10:10] --- Watch run #1 ---
+[06:10:10] === Phase 1/3: Schema extraction + Assembly map (no LM Studio needed) ===
 [Schema] Extracting: NpcDialogueAgent from NpcDialogueAgent.cs... OK (2 fields, 7 methods)
 [Schema] Extracting: NetworkDialogueService from NetworkDialogueService.cs... OK (2 fields, 20 methods)
 [Schema] Extracting: EffectDefinition from EffectDefinition.cs... OK (28 fields, 0 methods)
@@ -118,4 +118,554 @@
 
 [AsmDef] WARNING: 1 unresolved reference(s):
   Unity.ProBuilder.Examples -> MISSING: Unity.ugui
-[05:11:24] === Phase 2/3: Code scan ===
+[06:10:11] === Phase 2/3: Code scan ===
+[Scan] Starting full project scan...
+[Scan] [ 1/44] AcademyStepperTest.cs
+[Scan] [ 2/44] DialogueClientUI.cs
+[Scan] [ 3/44] DialogueConstants.cs
+[Scan] [ 4/44] DialogueDebugPanel.cs
+[Scan] [ 5/44] DialogueEffectAutoTestMenu.cs
+[Scan] [ 6/44] DialogueEffectBulkImporter.cs
+[Scan] [ 7/44] DialogueEffectFeedbackPrompt.cs
+[Scan] [ 8/44] DialogueEffectFeedbackRuntimeTuner.cs
+[Scan] [ 9/44] DialogueEffectProjectile.cs
+[Scan] [10/44] DialogueEffectSpatialResolver.cs
+[Scan] [11/44] DialogueFeedbackCollector.cs
+[Scan] [12/44] DialogueFxSmokeTestMenu.cs
+[Scan] [13/44] DialogueInferenceTypes.cs
+[Scan] [14/44] DialogueMCPBridge.cs
+[Scan] [15/44] DialogueParticleCollisionDamage.cs
+[Scan] [16/44] DialogueSceneEffectsController.cs
+[Scan] [17/44] DialogueSemanticTag.cs
+[Scan] [18/44] DialogueSpawnedMarker.cs
+[Scan] [19/44] EffectCatalog.cs
+[Scan] [20/44] EffectDefinition.cs
+[Scan] [21/44] EffectDispatcher.cs
+[Scan] [22/44] EffectEditorWindow.cs
+[Scan] [23/44] EffectIntent.cs
+[Scan] [24/44] EffectIntentBuilder.cs
+[Scan] [25/44] EffectParser.cs
+[Scan] [26/44] EffectSandboxRunner.cs
+[Scan] [27/44] EffectSurface.cs
+[Scan] [28/44] EffectTargetResolverService.cs
+[Scan] [29/44] GameStateProvider.cs
+[Scan] [30/44] LlmAgentInferenceClient.cs
+[Scan] [31/44] LlmDialogueChannel.cs
+[Scan] [32/44] MCPShowcasePolishController.cs
+[Scan] [33/44] MLAgentsSettingsTests.cs
+[Scan] [34/44] NetworkDialogueService.cs
+[Scan] [35/44] NpcDialogueActor.cs
+[Scan] [36/44] NpcDialogueAgent.cs
+[Scan] [37/44] NpcDialogueAgentPlayModeTests.cs
+[Scan] [38/44] NpcDialogueConfigEditModeTests.cs
+[Scan] [39/44] NpcDialogueProfile.cs
+[Scan] [40/44] NpcDialogueTrainingLauncherWindow.cs
+[Scan] [41/44] OpenAIChatClient.cs
+[Scan] [42/44] ParticleParameterExtractor.cs
+[Scan] [43/44] SideChannelDialogueClient.cs
+[Scan] [44/44] SpatialResolverConstants.cs
+
+[Scan] Done. 44 files, 181 issues (High=62 Med=73 Low=46)
+[Scan] Report: D:\GithubRepos\ml-agents\dev_tools\reports\code_scan_2026-03-01.md
+[Scan] Summary: D:\GithubRepos\ml-agents\dev_tools\reports\latest_scan_summary.md
+[06:50:16] === Phase 3/3: Knowledge base update ===
+[Update] Synthesising insights with LM Studio...
+[06:50:16] Pipeline error: AttributeError: 'LmClient' object has no attribute 'ask_json'
+[06:50:16] Sleeping 120m until next run...
+[08:50:16] --- Watch run #2 ---
+[08:50:16] === Phase 1/3: Schema extraction + Assembly map (no LM Studio needed) ===
+[Schema] Extracting: NpcDialogueAgent from NpcDialogueAgent.cs... OK (2 fields, 7 methods)
+[Schema] Extracting: NetworkDialogueService from NetworkDialogueService.cs... OK (2 fields, 20 methods)
+[Schema] Extracting: EffectDefinition from EffectDefinition.cs... OK (28 fields, 0 methods)
+[Schema] Extracting: EffectCatalog from EffectCatalog.cs... OK (4 fields, 7 methods)
+[Schema] Extracting: NpcDialogueProfile from NpcDialogueProfile.cs... OK (0 fields, 7 methods)
+
+[Schema] Extracted 5 class schemas -> D:\GithubRepos\ml-agents\dev_tools\schemas\project_api_schema.json
+[AsmDef] Scanning .asmdef files in Assets/ and Packages/...
+[AsmDef] WARNING: could not parse D:\GithubRepos\ml-agents\DevProject\Packages\com.unity.multiplayer.tools\NetworkSimulator\Runtime\Unity.Multiplayer.Tools.NetworkSimulator.Runtime.asmdef: Unexpected UTF-8 BOM (decode using utf-8-sig): line 1 column 1 (char 0)
+[AsmDef] Project assemblies: 17, Package assemblies: 50
+[AsmDef] Written -> D:\GithubRepos\ml-agents\dev_tools\schemas\assembly_map.json
+
+[AsmDef] Project assembly dependency graph (17 assemblies):
+  MCPForUnityTests.EditMode [EDITOR, TEST, no-autoref]
+    -> (project)  Network_Game.Editor, TestAsmdef
+    -> (builtin)  MCPForUnity.Editor, MCPForUnity.Runtime, UnityEngine.TestRunner, UnityEditor.TestRunner
+  MCPForUnityTests.PlayMode [TEST, no-autoref]
+    -> (builtin)  UnityEngine.TestRunner, UnityEditor.TestRunner
+  Network_Game
+    -> (project)  undream.llmunity.Runtime
+    -> (package)  Unity.Netcode.Runtime, Unity.Networking.Transport, Unity.Cinemachine
+    -> (builtin)  Unity.AI.Navigation, Unity.InputSystem, Unity.TextMeshPro, UnityEngine.UI, Unity.Addressables, Unity.ResourceManager
+    <- (used by)  Network_Game.Dialogue.Editor, Network_Game.Editor, Network_Game.ParticlePack.Ramps.Editor, NpcDialogue.Tests.Runtime
+  Network_Game.Dialogue.Editor [EDITOR]
+    -> (project)  Network_Game, undream.llmunity.Runtime
+    -> (package)  Unity.Netcode.Runtime
+    -> (builtin)  MCPForUnity.Editor
+  Network_Game.Editor [EDITOR]
+    -> (project)  Network_Game
+    -> (package)  Unity.Netcode.Runtime
+    -> (builtin)  Unity.RenderPipelines.Core.Runtime, Unity.RenderPipelines.Universal.Runtime, MCPForUnity.Editor
+    <- (used by)  MCPForUnityTests.EditMode
+  Network_Game.ParticlePack.Ramps.Editor [EDITOR]
+    -> (project)  Network_Game
+  NpcDialogue.Tests.Editor [EDITOR, TEST, no-autoref]
+    -> (builtin)  Unity.ML-Agents, UnityEngine.TestRunner, UnityEditor.TestRunner
+  NpcDialogue.Tests.Runtime [TEST, no-autoref]
+    -> (project)  Network_Game
+    -> (builtin)  Unity.ML-Agents, UnityEngine.TestRunner, UnityEditor.TestRunner
+  TestAsmdef [no-autoref]
+    <- (used by)  MCPForUnityTests.EditMode
+  Unity.ML-Agents.DevTests.Editor [EDITOR, TEST, no-autoref]
+    -> (builtin)  Unity.ML-Agents.Editor, Unity.ML-Agents, Unity.InferenceEngine, Unity.ML-Agents.CommunicatorObjects, Unity.PerformanceTesting, UnityEngine.TestRunner, UnityEditor.TestRunner
+  Unity.ML-Agents.DevTests.Runtime [TEST, no-autoref]
+    -> (builtin)  Unity.ML-Agents, UnityEngine.TestRunner, UnityEditor.TestRunner
+  Unity.ProBuilder.Examples
+    -> (builtin)  Unity.ProBuilder, Unity.ugui
+  Unity.ProBuilder.Examples.Editor [EDITOR]
+    -> (builtin)  Unity.ProBuilder.Editor, Unity.ProBuilder
+  VFXGraph.OutputEventHandlers
+    -> (package)  Unity.Cinemachine
+    -> (builtin)  Unity.VisualEffectGraph.Runtime, Unity.RenderPipelines.Core.Runtime
+    <- (used by)  VFXGraph.OutputEventHandlers.Editor
+  VFXGraph.OutputEventHandlers.Editor [EDITOR]
+    -> (project)  VFXGraph.OutputEventHandlers
+    -> (package)  Unity.Cinemachine
+    -> (builtin)  Unity.VisualEffectGraph.Runtime
+  undream.llmunity.Editor [EDITOR]
+    -> (project)  undream.llmunity.Runtime
+  undream.llmunity.Runtime
+    -> (builtin)  UnityEngine.UI, Unity.InputSystem
+    <- (used by)  Network_Game, Network_Game.Dialogue.Editor, undream.llmunity.Editor
+
+[AsmDef] Packages assembly dependency graph (50 assemblies):
+  Unity.Cinemachine  refs=[Unity.Timeline, Unity.Postprocessing.Runtime, Unity.RenderPipelines.Core.Runtime...]  used-by=[Network_Game, Unity.Cinemachine.Editor...]
+  Unity.Cinemachine.Editor [EDITOR]  refs=[Unity.Timeline, Unity.Timeline.Editor, Unity.Postprocessing.Runtime...]
+  Unity.Multiplayer.Tools.Adapters  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.NetStats]  used-by=[Unity.Multiplayer.Tools.Adapters.MockNgo, Unity.Multiplayer.Tools.Adapters.Ngo1...]
+  Unity.Multiplayer.Tools.Adapters.MockNgo  refs=[Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.Common]
+  Unity.Multiplayer.Tools.Adapters.Ngo1 [no-autoref]  refs=[com.unity.netcode.runtime, Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.Common...]  used-by=[Unity.Multiplayer.Tools.Adapters.Tests.Editor]
+  Unity.Multiplayer.Tools.Adapters.Ngo1WithUtp2 [no-autoref]  refs=[Unity.Multiplayer.Tools.Adapters, Unity.Networking.Transport, Unity.Netcode.Runtime...]  used-by=[Unity.Multiplayer.Tools.Adapters.Tests.Editor]
+  Unity.Multiplayer.Tools.Adapters.Tests.Editor [TEST, no-autoref]  refs=[Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.Adapters.Ngo1, Unity.Multiplayer.Tools.Adapters.Utp2...]
+  Unity.Multiplayer.Tools.Adapters.Utp2 [no-autoref]  refs=[Unity.Multiplayer.Tools.Adapters, Unity.Networking.Transport]  used-by=[Unity.Multiplayer.Tools.Adapters.Ngo1WithUtp2, Unity.Multiplayer.Tools.Adapters.Tests.Editor...]
+  Unity.Multiplayer.Tools.Common  used-by=[Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.Adapters.MockNgo...]
+  Unity.Multiplayer.Tools.Common.Tests.Editor [EDITOR, TEST, no-autoref]  refs=[UnityEngine.TestRunner, UnityEditor.TestRunner, Unity.Multiplayer.Tools.Common]
+  Unity.Multiplayer.Tools.DependencyInjection [EDITOR]  used-by=[Unity.Multiplayer.Tools.DependencyInjection.UIElements, Unity.Multiplayer.Tools.NetVis.Editor.UI]
+  Unity.Multiplayer.Tools.DependencyInjection.UIElements [EDITOR]  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.Editor, Unity.Multiplayer.Tools.DependencyInjection]  used-by=[Unity.Multiplayer.Tools.NetVis.Editor.UI]
+  Unity.Multiplayer.Tools.Editor [EDITOR]  refs=[Unity.Multiplayer.Tools.Common]  used-by=[Unity.Multiplayer.Tools.DependencyInjection.UIElements, Unity.Multiplayer.Tools.NetVis.Editor.UI]
+  Unity.Multiplayer.Tools.GameObjects.Tests [TEST, no-autoref]  refs=[Unity.Netcode.Runtime, Unity.Collections, Unity.Multiplayer.Tools.MetricTypes...]
+  Unity.Multiplayer.Tools.Initialization  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.NetVis.Configuration, Unity.Multiplayer.Tools.NetVis.Editor.UI...]
+  Unity.Multiplayer.Tools.MetricEvents  refs=[Unity.Collections, Unity.Multiplayer.Tools.MetricTypes, Unity.Multiplayer.Tools.NetStats]  used-by=[Unity.Multiplayer.Tools.Adapters.Ngo1, Unity.Multiplayer.Tools.MetricTestData...]
+  Unity.Multiplayer.Tools.MetricTestData  refs=[Unity.Collections, Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.MetricEvents...]  used-by=[Unity.Multiplayer.Tools.NetStatsMonitor.Implementation.Tests.Editor]
+  Unity.Multiplayer.Tools.MetricTypes  refs=[Unity.Collections, Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.NetStats]  used-by=[Unity.Multiplayer.Tools.Adapters.Ngo1, Unity.Multiplayer.Tools.GameObjects.Tests...]
+  Unity.Multiplayer.Tools.MetricTypes.Tests.Editor [EDITOR, TEST, no-autoref]  refs=[Unity.Multiplayer.Tools.MetricTypes, UnityEngine.TestRunner, UnityEditor.TestRunner...]
+  Unity.Multiplayer.Tools.MultiplayerToolsWindow.Tests.Editor [EDITOR, TEST]  refs=[com.unity.multiplayer.tools.window, UnityEngine.TestRunner, UnityEditor.TestRunner]
+  Unity.Multiplayer.Tools.NetStats  refs=[Unity.Collections, Unity.Multiplayer.Tools.Common]  used-by=[Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.Adapters.Ngo1...]
+  Unity.Multiplayer.Tools.NetStats.CodeGen [EDITOR, no-autoref]  refs=[Unity.Multiplayer.Tools.NetStats]
+  Unity.Multiplayer.Tools.NetStats.Tests.Editor [EDITOR, TEST, no-autoref]  refs=[Unity.Multiplayer.Tools.NetStats, Unity.Multiplayer.Tools.MetricTypes, UnityEngine.TestRunner...]  used-by=[Unity.Multiplayer.Tools.NetStatsMonitor.Implementation.Tests.Editor, Unity.Multiplayer.Tools.NetworkProfiler.Tests.Editor]
+  Unity.Multiplayer.Tools.NetStatsMonitor.Component  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.NetStats, Unity.Multiplayer.Tools.NetStatsMonitor.Configuration...]  used-by=[Unity.Multiplayer.Tools.NetStatsMonitor.Editor, Unity.Multiplayer.Tools.NetStatsMonitor.Implementation.Tests.Editor...]
+  Unity.Multiplayer.Tools.NetStatsMonitor.Configuration  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.MetricTypes, Unity.Multiplayer.Tools.NetStats]  used-by=[Unity.Multiplayer.Tools.NetStatsMonitor.Component, Unity.Multiplayer.Tools.NetStatsMonitor.Editor...]
+  Unity.Multiplayer.Tools.NetStatsMonitor.Editor [EDITOR]  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.NetStats, Unity.Multiplayer.Tools.NetStatsMonitor.Configuration...]
+  Unity.Multiplayer.Tools.NetStatsMonitor.Implementation  refs=[Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.MetricTypes...]  used-by=[Unity.Multiplayer.Tools.NetStatsMonitor.Component, Unity.Multiplayer.Tools.NetStatsMonitor.Implementation.Tests.Editor]
+  Unity.Multiplayer.Tools.NetStatsMonitor.Implementation.Tests.Editor [EDITOR, TEST, no-autoref]  refs=[UnityEngine.TestRunner, UnityEditor.TestRunner, Unity.Multiplayer.Tools.Adapters...]
+  Unity.Multiplayer.Tools.NetStatsMonitor.Interface.Tests.Editor [EDITOR, TEST, no-autoref]  refs=[UnityEngine.TestRunner, UnityEditor.TestRunner, Unity.Multiplayer.Tools.MetricTypes...]
+  Unity.Multiplayer.Tools.NetStatsReporting  refs=[Unity.Collections, Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.MetricTypes...]  used-by=[Unity.Netcode.Runtime]
+  Unity.Multiplayer.Tools.NetVis.Configuration  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.Adapters, Unity.Burst...]  used-by=[Unity.Multiplayer.Tools.Initialization, Unity.Multiplayer.Tools.NetVis.Editor.UI...]
+  Unity.Multiplayer.Tools.NetVis.Editor.UI [EDITOR]  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.Editor, Unity.Multiplayer.Tools.NetVis.Configuration...]  used-by=[Unity.Multiplayer.Tools.Initialization, Unity.Multiplayer.Tools.NetVis.Tests.Editor]
+  Unity.Multiplayer.Tools.NetVis.Editor.Visualization [EDITOR]  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.NetStats...]  used-by=[Unity.Multiplayer.Tools.Initialization, Unity.Multiplayer.Tools.NetVis.Editor.UI]
+  Unity.Multiplayer.Tools.NetVis.Tests.Editor [EDITOR, TEST]  refs=[Unity.Multiplayer.Tools.NetVis.Configuration, Unity.Multiplayer.Tools.NetVis.Editor.UI, Unity.Multiplayer.Tools.Common...]
+  Unity.Multiplayer.Tools.NetworkProfiler.Editor [EDITOR]  refs=[Unity.Profiling.Core, Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.NetworkProfiler.Runtime...]  used-by=[Unity.Multiplayer.Tools.NetworkProfiler.Tests.Editor]
+  Unity.Multiplayer.Tools.NetworkProfiler.Runtime  refs=[Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.MetricTypes, Unity.Multiplayer.Tools.NetStats...]  used-by=[Unity.Multiplayer.Tools.NetworkProfiler.Editor, Unity.Multiplayer.Tools.NetworkProfiler.Tests.Editor]
+  Unity.Multiplayer.Tools.NetworkProfiler.Tests.Editor [EDITOR, TEST, no-autoref]  refs=[Unity.Multiplayer.Tools.NetworkProfiler.Editor, Unity.Multiplayer.Tools.NetworkProfiler.Runtime, UnityEngine.TestRunner...]
+  Unity.Multiplayer.Tools.NetworkSimulator.Editor [EDITOR]  refs=[Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.Adapters.Utp2, Unity.Multiplayer.Tools.Common...]
+  Unity.Multiplayer.Tools.NetworkSimulator.Tests.Runtime [TEST, no-autoref]  refs=[Unity.Multiplayer.Tools.NetworkSimulator.Runtime, UnityEngine.TestRunner, Unity.Multiplayer.Tools.Adapters...]
+  Unity.Multiplayer.Tools.NetworkSolutionInterface  used-by=[Unity.Multiplayer.Tools.NetworkProfiler.Editor, Unity.Multiplayer.Tools.NetworkSolutionInterface.Tests.Editor...]
+  Unity.Multiplayer.Tools.NetworkSolutionInterface.Tests.Editor [EDITOR, TEST, no-autoref]  refs=[Unity.Multiplayer.Tools.NetworkSolutionInterface, UnityEngine.TestRunner, UnityEditor.TestRunner]
+  Unity.Netcode.Editor [EDITOR]  refs=[Unity.Netcode.Runtime, Unity.Networking.Transport, Unity.Multiplayer.Tools.NetVis.Configuration]  used-by=[Unity.Netcode.Editor.Tests]
+  Unity.Netcode.Editor.CodeGen [EDITOR, no-autoref]  refs=[Unity.Netcode.Runtime, Unity.Collections]
+  Unity.Netcode.Editor.Tests [EDITOR, TEST, no-autoref]  refs=[Unity.Collections, Unity.Netcode.Runtime, Unity.Netcode.Editor...]
+  Unity.Netcode.PackageChecker.Editor [EDITOR]
+  Unity.Netcode.Runtime  refs=[Unity.Networking.Transport, Unity.Collections, Unity.Burst...]  used-by=[Network_Game, Network_Game.Dialogue.Editor...]
+  Unity.Netcode.Runtime.Tests [TEST, no-autoref]  refs=[Unity.Netcode.Runtime, Unity.Collections, Unity.Multiplayer.MetricTypes...]  used-by=[Unity.Multiplayer.Tools.GameObjects.Tests, Unity.Netcode.Editor.Tests]
+  Unity.Networking.Editor [EDITOR]
+  Unity.Networking.Transport  refs=[Unity.Burst, Unity.Collections, Unity.Mathematics]  used-by=[Network_Game, Unity.Multiplayer.Tools.Adapters.Ngo1WithUtp2...]
+  com.unity.multiplayer.tools.window [EDITOR]  refs=[GUID:c2f37c48e057342cda1e4b53ad30d616, GUID:2c360f3794ebc41388fc11424ddbfdd0, GUID:2406edb708fb4de7b412856af92595c9...]  used-by=[Unity.Multiplayer.Tools.MultiplayerToolsWindow.Tests.Editor]
+
+[AsmDef] WARNING: 1 unresolved reference(s):
+  Unity.ProBuilder.Examples -> MISSING: Unity.ugui
+[08:50:17] === Phase 2/3: Code scan ===
+[Scan] Starting full project scan...
+[Scan] [ 1/44] AcademyStepperTest.cs
+[Scan] [ 2/44] DialogueClientUI.cs
+[Scan] [ 3/44] DialogueConstants.cs
+[Scan] [ 4/44] DialogueDebugPanel.cs
+[Scan] [ 5/44] DialogueEffectAutoTestMenu.cs
+[Scan] [ 6/44] DialogueEffectBulkImporter.cs
+[Scan] [ 7/44] DialogueEffectFeedbackPrompt.cs
+[Scan] [ 8/44] DialogueEffectFeedbackRuntimeTuner.cs
+[Scan] [ 9/44] DialogueEffectProjectile.cs
+[Scan] [10/44] DialogueEffectSpatialResolver.cs
+[Scan] [11/44] DialogueFeedbackCollector.cs
+[Scan] [12/44] DialogueFxSmokeTestMenu.cs
+[Scan] [13/44] DialogueInferenceTypes.cs
+[Scan] [14/44] DialogueMCPBridge.cs
+[Scan] [15/44] DialogueParticleCollisionDamage.cs
+[Scan] [16/44] DialogueSceneEffectsController.cs
+[Scan] [17/44] DialogueSemanticTag.cs
+[Scan] [18/44] DialogueSpawnedMarker.cs
+[Scan] [19/44] EffectCatalog.cs
+[Scan] [20/44] EffectDefinition.cs
+[Scan] [21/44] EffectDispatcher.cs
+[Scan] [22/44] EffectEditorWindow.cs
+[Scan] [23/44] EffectIntent.cs
+[Scan] [24/44] EffectIntentBuilder.cs
+[Scan] [25/44] EffectParser.cs
+[Scan] [26/44] EffectSandboxRunner.cs
+[Scan] [27/44] EffectSurface.cs
+[Scan] [28/44] EffectTargetResolverService.cs
+[Scan] [29/44] GameStateProvider.cs
+[Scan] [30/44] LlmAgentInferenceClient.cs
+[Scan] [31/44] LlmDialogueChannel.cs
+[Scan] [32/44] MCPShowcasePolishController.cs
+[Scan] [33/44] MLAgentsSettingsTests.cs
+[Scan] [34/44] NetworkDialogueService.cs
+[Scan] [35/44] NpcDialogueActor.cs
+[Scan] [36/44] NpcDialogueAgent.cs
+[Scan] [37/44] NpcDialogueAgentPlayModeTests.cs
+[Scan] [38/44] NpcDialogueConfigEditModeTests.cs
+[Scan] [39/44] NpcDialogueProfile.cs
+[Scan] [40/44] NpcDialogueTrainingLauncherWindow.cs
+[Scan] [41/44] OpenAIChatClient.cs
+[Scan] [42/44] ParticleParameterExtractor.cs
+[Scan] [43/44] SideChannelDialogueClient.cs
+[Scan] [44/44] SpatialResolverConstants.cs
+
+[Scan] Done. 44 files, 178 issues (High=62 Med=74 Low=42)
+[Scan] Report: D:\GithubRepos\ml-agents\dev_tools\reports\code_scan_2026-03-01.md
+[Scan] Summary: D:\GithubRepos\ml-agents\dev_tools\reports\latest_scan_summary.md
+[09:24:05] === Phase 3/3: Knowledge base update ===
+[Update] Synthesising insights with LM Studio...
+[09:24:05] Pipeline error: AttributeError: 'LmClient' object has no attribute 'ask_json'
+[09:24:05] Sleeping 120m until next run...
+[11:24:05] --- Watch run #3 ---
+[11:24:05] === Phase 1/3: Schema extraction + Assembly map (no LM Studio needed) ===
+[Schema] Extracting: NpcDialogueAgent from NpcDialogueAgent.cs... OK (2 fields, 7 methods)
+[Schema] Extracting: NetworkDialogueService from NetworkDialogueService.cs... OK (2 fields, 20 methods)
+[Schema] Extracting: EffectDefinition from EffectDefinition.cs... OK (28 fields, 0 methods)
+[Schema] Extracting: EffectCatalog from EffectCatalog.cs... OK (4 fields, 7 methods)
+[Schema] Extracting: NpcDialogueProfile from NpcDialogueProfile.cs... OK (0 fields, 7 methods)
+
+[Schema] Extracted 5 class schemas -> D:\GithubRepos\ml-agents\dev_tools\schemas\project_api_schema.json
+[AsmDef] Scanning .asmdef files in Assets/ and Packages/...
+[AsmDef] WARNING: could not parse D:\GithubRepos\ml-agents\DevProject\Packages\com.unity.multiplayer.tools\NetworkSimulator\Runtime\Unity.Multiplayer.Tools.NetworkSimulator.Runtime.asmdef: Unexpected UTF-8 BOM (decode using utf-8-sig): line 1 column 1 (char 0)
+[AsmDef] Project assemblies: 17, Package assemblies: 50
+[AsmDef] Written -> D:\GithubRepos\ml-agents\dev_tools\schemas\assembly_map.json
+
+[AsmDef] Project assembly dependency graph (17 assemblies):
+  MCPForUnityTests.EditMode [EDITOR, TEST, no-autoref]
+    -> (project)  Network_Game.Editor, TestAsmdef
+    -> (builtin)  MCPForUnity.Editor, MCPForUnity.Runtime, UnityEngine.TestRunner, UnityEditor.TestRunner
+  MCPForUnityTests.PlayMode [TEST, no-autoref]
+    -> (builtin)  UnityEngine.TestRunner, UnityEditor.TestRunner
+  Network_Game
+    -> (project)  undream.llmunity.Runtime
+    -> (package)  Unity.Netcode.Runtime, Unity.Networking.Transport, Unity.Cinemachine
+    -> (builtin)  Unity.AI.Navigation, Unity.InputSystem, Unity.TextMeshPro, UnityEngine.UI, Unity.Addressables, Unity.ResourceManager
+    <- (used by)  Network_Game.Dialogue.Editor, Network_Game.Editor, Network_Game.ParticlePack.Ramps.Editor, NpcDialogue.Tests.Runtime
+  Network_Game.Dialogue.Editor [EDITOR]
+    -> (project)  Network_Game, undream.llmunity.Runtime
+    -> (package)  Unity.Netcode.Runtime
+    -> (builtin)  MCPForUnity.Editor
+  Network_Game.Editor [EDITOR]
+    -> (project)  Network_Game
+    -> (package)  Unity.Netcode.Runtime
+    -> (builtin)  Unity.RenderPipelines.Core.Runtime, Unity.RenderPipelines.Universal.Runtime, MCPForUnity.Editor
+    <- (used by)  MCPForUnityTests.EditMode
+  Network_Game.ParticlePack.Ramps.Editor [EDITOR]
+    -> (project)  Network_Game
+  NpcDialogue.Tests.Editor [EDITOR, TEST, no-autoref]
+    -> (builtin)  Unity.ML-Agents, UnityEngine.TestRunner, UnityEditor.TestRunner
+  NpcDialogue.Tests.Runtime [TEST, no-autoref]
+    -> (project)  Network_Game
+    -> (builtin)  Unity.ML-Agents, UnityEngine.TestRunner, UnityEditor.TestRunner
+  TestAsmdef [no-autoref]
+    <- (used by)  MCPForUnityTests.EditMode
+  Unity.ML-Agents.DevTests.Editor [EDITOR, TEST, no-autoref]
+    -> (builtin)  Unity.ML-Agents.Editor, Unity.ML-Agents, Unity.InferenceEngine, Unity.ML-Agents.CommunicatorObjects, Unity.PerformanceTesting, UnityEngine.TestRunner, UnityEditor.TestRunner
+  Unity.ML-Agents.DevTests.Runtime [TEST, no-autoref]
+    -> (builtin)  Unity.ML-Agents, UnityEngine.TestRunner, UnityEditor.TestRunner
+  Unity.ProBuilder.Examples
+    -> (builtin)  Unity.ProBuilder, Unity.ugui
+  Unity.ProBuilder.Examples.Editor [EDITOR]
+    -> (builtin)  Unity.ProBuilder.Editor, Unity.ProBuilder
+  VFXGraph.OutputEventHandlers
+    -> (package)  Unity.Cinemachine
+    -> (builtin)  Unity.VisualEffectGraph.Runtime, Unity.RenderPipelines.Core.Runtime
+    <- (used by)  VFXGraph.OutputEventHandlers.Editor
+  VFXGraph.OutputEventHandlers.Editor [EDITOR]
+    -> (project)  VFXGraph.OutputEventHandlers
+    -> (package)  Unity.Cinemachine
+    -> (builtin)  Unity.VisualEffectGraph.Runtime
+  undream.llmunity.Editor [EDITOR]
+    -> (project)  undream.llmunity.Runtime
+  undream.llmunity.Runtime
+    -> (builtin)  UnityEngine.UI, Unity.InputSystem
+    <- (used by)  Network_Game, Network_Game.Dialogue.Editor, undream.llmunity.Editor
+
+[AsmDef] Packages assembly dependency graph (50 assemblies):
+  Unity.Cinemachine  refs=[Unity.Timeline, Unity.Postprocessing.Runtime, Unity.RenderPipelines.Core.Runtime...]  used-by=[Network_Game, Unity.Cinemachine.Editor...]
+  Unity.Cinemachine.Editor [EDITOR]  refs=[Unity.Timeline, Unity.Timeline.Editor, Unity.Postprocessing.Runtime...]
+  Unity.Multiplayer.Tools.Adapters  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.NetStats]  used-by=[Unity.Multiplayer.Tools.Adapters.MockNgo, Unity.Multiplayer.Tools.Adapters.Ngo1...]
+  Unity.Multiplayer.Tools.Adapters.MockNgo  refs=[Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.Common]
+  Unity.Multiplayer.Tools.Adapters.Ngo1 [no-autoref]  refs=[com.unity.netcode.runtime, Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.Common...]  used-by=[Unity.Multiplayer.Tools.Adapters.Tests.Editor]
+  Unity.Multiplayer.Tools.Adapters.Ngo1WithUtp2 [no-autoref]  refs=[Unity.Multiplayer.Tools.Adapters, Unity.Networking.Transport, Unity.Netcode.Runtime...]  used-by=[Unity.Multiplayer.Tools.Adapters.Tests.Editor]
+  Unity.Multiplayer.Tools.Adapters.Tests.Editor [TEST, no-autoref]  refs=[Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.Adapters.Ngo1, Unity.Multiplayer.Tools.Adapters.Utp2...]
+  Unity.Multiplayer.Tools.Adapters.Utp2 [no-autoref]  refs=[Unity.Multiplayer.Tools.Adapters, Unity.Networking.Transport]  used-by=[Unity.Multiplayer.Tools.Adapters.Ngo1WithUtp2, Unity.Multiplayer.Tools.Adapters.Tests.Editor...]
+  Unity.Multiplayer.Tools.Common  used-by=[Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.Adapters.MockNgo...]
+  Unity.Multiplayer.Tools.Common.Tests.Editor [EDITOR, TEST, no-autoref]  refs=[UnityEngine.TestRunner, UnityEditor.TestRunner, Unity.Multiplayer.Tools.Common]
+  Unity.Multiplayer.Tools.DependencyInjection [EDITOR]  used-by=[Unity.Multiplayer.Tools.DependencyInjection.UIElements, Unity.Multiplayer.Tools.NetVis.Editor.UI]
+  Unity.Multiplayer.Tools.DependencyInjection.UIElements [EDITOR]  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.Editor, Unity.Multiplayer.Tools.DependencyInjection]  used-by=[Unity.Multiplayer.Tools.NetVis.Editor.UI]
+  Unity.Multiplayer.Tools.Editor [EDITOR]  refs=[Unity.Multiplayer.Tools.Common]  used-by=[Unity.Multiplayer.Tools.DependencyInjection.UIElements, Unity.Multiplayer.Tools.NetVis.Editor.UI]
+  Unity.Multiplayer.Tools.GameObjects.Tests [TEST, no-autoref]  refs=[Unity.Netcode.Runtime, Unity.Collections, Unity.Multiplayer.Tools.MetricTypes...]
+  Unity.Multiplayer.Tools.Initialization  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.NetVis.Configuration, Unity.Multiplayer.Tools.NetVis.Editor.UI...]
+  Unity.Multiplayer.Tools.MetricEvents  refs=[Unity.Collections, Unity.Multiplayer.Tools.MetricTypes, Unity.Multiplayer.Tools.NetStats]  used-by=[Unity.Multiplayer.Tools.Adapters.Ngo1, Unity.Multiplayer.Tools.MetricTestData...]
+  Unity.Multiplayer.Tools.MetricTestData  refs=[Unity.Collections, Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.MetricEvents...]  used-by=[Unity.Multiplayer.Tools.NetStatsMonitor.Implementation.Tests.Editor]
+  Unity.Multiplayer.Tools.MetricTypes  refs=[Unity.Collections, Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.NetStats]  used-by=[Unity.Multiplayer.Tools.Adapters.Ngo1, Unity.Multiplayer.Tools.GameObjects.Tests...]
+  Unity.Multiplayer.Tools.MetricTypes.Tests.Editor [EDITOR, TEST, no-autoref]  refs=[Unity.Multiplayer.Tools.MetricTypes, UnityEngine.TestRunner, UnityEditor.TestRunner...]
+  Unity.Multiplayer.Tools.MultiplayerToolsWindow.Tests.Editor [EDITOR, TEST]  refs=[com.unity.multiplayer.tools.window, UnityEngine.TestRunner, UnityEditor.TestRunner]
+  Unity.Multiplayer.Tools.NetStats  refs=[Unity.Collections, Unity.Multiplayer.Tools.Common]  used-by=[Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.Adapters.Ngo1...]
+  Unity.Multiplayer.Tools.NetStats.CodeGen [EDITOR, no-autoref]  refs=[Unity.Multiplayer.Tools.NetStats]
+  Unity.Multiplayer.Tools.NetStats.Tests.Editor [EDITOR, TEST, no-autoref]  refs=[Unity.Multiplayer.Tools.NetStats, Unity.Multiplayer.Tools.MetricTypes, UnityEngine.TestRunner...]  used-by=[Unity.Multiplayer.Tools.NetStatsMonitor.Implementation.Tests.Editor, Unity.Multiplayer.Tools.NetworkProfiler.Tests.Editor]
+  Unity.Multiplayer.Tools.NetStatsMonitor.Component  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.NetStats, Unity.Multiplayer.Tools.NetStatsMonitor.Configuration...]  used-by=[Unity.Multiplayer.Tools.NetStatsMonitor.Editor, Unity.Multiplayer.Tools.NetStatsMonitor.Implementation.Tests.Editor...]
+  Unity.Multiplayer.Tools.NetStatsMonitor.Configuration  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.MetricTypes, Unity.Multiplayer.Tools.NetStats]  used-by=[Unity.Multiplayer.Tools.NetStatsMonitor.Component, Unity.Multiplayer.Tools.NetStatsMonitor.Editor...]
+  Unity.Multiplayer.Tools.NetStatsMonitor.Editor [EDITOR]  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.NetStats, Unity.Multiplayer.Tools.NetStatsMonitor.Configuration...]
+  Unity.Multiplayer.Tools.NetStatsMonitor.Implementation  refs=[Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.MetricTypes...]  used-by=[Unity.Multiplayer.Tools.NetStatsMonitor.Component, Unity.Multiplayer.Tools.NetStatsMonitor.Implementation.Tests.Editor]
+  Unity.Multiplayer.Tools.NetStatsMonitor.Implementation.Tests.Editor [EDITOR, TEST, no-autoref]  refs=[UnityEngine.TestRunner, UnityEditor.TestRunner, Unity.Multiplayer.Tools.Adapters...]
+  Unity.Multiplayer.Tools.NetStatsMonitor.Interface.Tests.Editor [EDITOR, TEST, no-autoref]  refs=[UnityEngine.TestRunner, UnityEditor.TestRunner, Unity.Multiplayer.Tools.MetricTypes...]
+  Unity.Multiplayer.Tools.NetStatsReporting  refs=[Unity.Collections, Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.MetricTypes...]  used-by=[Unity.Netcode.Runtime]
+  Unity.Multiplayer.Tools.NetVis.Configuration  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.Adapters, Unity.Burst...]  used-by=[Unity.Multiplayer.Tools.Initialization, Unity.Multiplayer.Tools.NetVis.Editor.UI...]
+  Unity.Multiplayer.Tools.NetVis.Editor.UI [EDITOR]  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.Editor, Unity.Multiplayer.Tools.NetVis.Configuration...]  used-by=[Unity.Multiplayer.Tools.Initialization, Unity.Multiplayer.Tools.NetVis.Tests.Editor]
+  Unity.Multiplayer.Tools.NetVis.Editor.Visualization [EDITOR]  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.NetStats...]  used-by=[Unity.Multiplayer.Tools.Initialization, Unity.Multiplayer.Tools.NetVis.Editor.UI]
+  Unity.Multiplayer.Tools.NetVis.Tests.Editor [EDITOR, TEST]  refs=[Unity.Multiplayer.Tools.NetVis.Configuration, Unity.Multiplayer.Tools.NetVis.Editor.UI, Unity.Multiplayer.Tools.Common...]
+  Unity.Multiplayer.Tools.NetworkProfiler.Editor [EDITOR]  refs=[Unity.Profiling.Core, Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.NetworkProfiler.Runtime...]  used-by=[Unity.Multiplayer.Tools.NetworkProfiler.Tests.Editor]
+  Unity.Multiplayer.Tools.NetworkProfiler.Runtime  refs=[Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.MetricTypes, Unity.Multiplayer.Tools.NetStats...]  used-by=[Unity.Multiplayer.Tools.NetworkProfiler.Editor, Unity.Multiplayer.Tools.NetworkProfiler.Tests.Editor]
+  Unity.Multiplayer.Tools.NetworkProfiler.Tests.Editor [EDITOR, TEST, no-autoref]  refs=[Unity.Multiplayer.Tools.NetworkProfiler.Editor, Unity.Multiplayer.Tools.NetworkProfiler.Runtime, UnityEngine.TestRunner...]
+  Unity.Multiplayer.Tools.NetworkSimulator.Editor [EDITOR]  refs=[Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.Adapters.Utp2, Unity.Multiplayer.Tools.Common...]
+  Unity.Multiplayer.Tools.NetworkSimulator.Tests.Runtime [TEST, no-autoref]  refs=[Unity.Multiplayer.Tools.NetworkSimulator.Runtime, UnityEngine.TestRunner, Unity.Multiplayer.Tools.Adapters...]
+  Unity.Multiplayer.Tools.NetworkSolutionInterface  used-by=[Unity.Multiplayer.Tools.NetworkProfiler.Editor, Unity.Multiplayer.Tools.NetworkSolutionInterface.Tests.Editor...]
+  Unity.Multiplayer.Tools.NetworkSolutionInterface.Tests.Editor [EDITOR, TEST, no-autoref]  refs=[Unity.Multiplayer.Tools.NetworkSolutionInterface, UnityEngine.TestRunner, UnityEditor.TestRunner]
+  Unity.Netcode.Editor [EDITOR]  refs=[Unity.Netcode.Runtime, Unity.Networking.Transport, Unity.Multiplayer.Tools.NetVis.Configuration]  used-by=[Unity.Netcode.Editor.Tests]
+  Unity.Netcode.Editor.CodeGen [EDITOR, no-autoref]  refs=[Unity.Netcode.Runtime, Unity.Collections]
+  Unity.Netcode.Editor.Tests [EDITOR, TEST, no-autoref]  refs=[Unity.Collections, Unity.Netcode.Runtime, Unity.Netcode.Editor...]
+  Unity.Netcode.PackageChecker.Editor [EDITOR]
+  Unity.Netcode.Runtime  refs=[Unity.Networking.Transport, Unity.Collections, Unity.Burst...]  used-by=[Network_Game, Network_Game.Dialogue.Editor...]
+  Unity.Netcode.Runtime.Tests [TEST, no-autoref]  refs=[Unity.Netcode.Runtime, Unity.Collections, Unity.Multiplayer.MetricTypes...]  used-by=[Unity.Multiplayer.Tools.GameObjects.Tests, Unity.Netcode.Editor.Tests]
+  Unity.Networking.Editor [EDITOR]
+  Unity.Networking.Transport  refs=[Unity.Burst, Unity.Collections, Unity.Mathematics]  used-by=[Network_Game, Unity.Multiplayer.Tools.Adapters.Ngo1WithUtp2...]
+  com.unity.multiplayer.tools.window [EDITOR]  refs=[GUID:c2f37c48e057342cda1e4b53ad30d616, GUID:2c360f3794ebc41388fc11424ddbfdd0, GUID:2406edb708fb4de7b412856af92595c9...]  used-by=[Unity.Multiplayer.Tools.MultiplayerToolsWindow.Tests.Editor]
+
+[AsmDef] WARNING: 1 unresolved reference(s):
+  Unity.ProBuilder.Examples -> MISSING: Unity.ugui
+[11:24:08] === Phase 2/3: Code scan ===
+[Scan] Starting full project scan...
+[Scan] [ 1/44] AcademyStepperTest.cs
+[Scan] [ 2/44] DialogueClientUI.cs
+[Scan] [ 3/44] DialogueConstants.cs
+[Scan] [ 4/44] DialogueDebugPanel.cs
+[Scan] [ 5/44] DialogueEffectAutoTestMenu.cs
+[Scan] [ 6/44] DialogueEffectBulkImporter.cs
+[Scan] [ 7/44] DialogueEffectFeedbackPrompt.cs
+[Scan] [ 8/44] DialogueEffectFeedbackRuntimeTuner.cs
+[Scan] [ 9/44] DialogueEffectProjectile.cs
+[Scan] [10/44] DialogueEffectSpatialResolver.cs
+[Scan] [11/44] DialogueFeedbackCollector.cs
+[Scan] [12/44] DialogueFxSmokeTestMenu.cs
+[Scan] [13/44] DialogueInferenceTypes.cs
+[Scan] [14/44] DialogueMCPBridge.cs
+[Scan] [15/44] DialogueParticleCollisionDamage.cs
+[Scan] [16/44] DialogueSceneEffectsController.cs
+[Scan] [17/44] DialogueSemanticTag.cs
+[Scan] [18/44] DialogueSpawnedMarker.cs
+[Scan] [19/44] EffectCatalog.cs
+[Scan] [20/44] EffectDefinition.cs
+[Scan] [21/44] EffectDispatcher.cs
+[Scan] [22/44] EffectEditorWindow.cs
+[Scan] [23/44] EffectIntent.cs
+[Scan] [24/44] EffectIntentBuilder.cs
+[Scan] [25/44] EffectParser.cs
+[Scan] [26/44] EffectSandboxRunner.cs
+[Scan] [27/44] EffectSurface.cs
+[Scan] [28/44] EffectTargetResolverService.cs
+[Scan] [29/44] GameStateProvider.cs
+[Scan] [30/44] LlmAgentInferenceClient.cs
+[Scan] [31/44] LlmDialogueChannel.cs
+[Scan] [32/44] MCPShowcasePolishController.cs
+[Scan] [33/44] MLAgentsSettingsTests.cs
+[Scan] [34/44] NetworkDialogueService.cs
+[Scan] [35/44] NpcDialogueActor.cs
+[Scan] [36/44] NpcDialogueAgent.cs
+[Scan] [37/44] NpcDialogueAgentPlayModeTests.cs
+[Scan] [38/44] NpcDialogueConfigEditModeTests.cs
+[Scan] [39/44] NpcDialogueProfile.cs
+[Scan] [40/44] NpcDialogueTrainingLauncherWindow.cs
+[Scan] [41/44] OpenAIChatClient.cs
+[Scan] [42/44] ParticleParameterExtractor.cs
+[Scan] [43/44] SideChannelDialogueClient.cs
+[Scan] [44/44] SpatialResolverConstants.cs
+
+[Scan] Done. 44 files, 179 issues (High=60 Med=75 Low=44)
+[Scan] Report: D:\GithubRepos\ml-agents\dev_tools\reports\code_scan_2026-03-01.md
+[Scan] Summary: D:\GithubRepos\ml-agents\dev_tools\reports\latest_scan_summary.md
+[11:57:55] === Phase 3/3: Knowledge base update ===
+[Update] Synthesising insights with LM Studio...
+[11:57:55] Pipeline error: AttributeError: 'LmClient' object has no attribute 'ask_json'
+[11:57:55] Sleeping 120m until next run...
+[13:57:55] --- Watch run #4 ---
+[13:57:55] === Phase 1/3: Schema extraction + Assembly map (no LM Studio needed) ===
+[Schema] Extracting: NpcDialogueAgent from NpcDialogueAgent.cs... OK (2 fields, 7 methods)
+[Schema] Extracting: NetworkDialogueService from NetworkDialogueService.cs... OK (2 fields, 20 methods)
+[Schema] Extracting: EffectDefinition from EffectDefinition.cs... OK (28 fields, 0 methods)
+[Schema] Extracting: EffectCatalog from EffectCatalog.cs... OK (4 fields, 7 methods)
+[Schema] Extracting: NpcDialogueProfile from NpcDialogueProfile.cs... OK (0 fields, 7 methods)
+
+[Schema] Extracted 5 class schemas -> D:\GithubRepos\ml-agents\dev_tools\schemas\project_api_schema.json
+[AsmDef] Scanning .asmdef files in Assets/ and Packages/...
+[AsmDef] WARNING: could not parse D:\GithubRepos\ml-agents\DevProject\Packages\com.unity.multiplayer.tools\NetworkSimulator\Runtime\Unity.Multiplayer.Tools.NetworkSimulator.Runtime.asmdef: Unexpected UTF-8 BOM (decode using utf-8-sig): line 1 column 1 (char 0)
+[AsmDef] Project assemblies: 17, Package assemblies: 50
+[AsmDef] Written -> D:\GithubRepos\ml-agents\dev_tools\schemas\assembly_map.json
+
+[AsmDef] Project assembly dependency graph (17 assemblies):
+  MCPForUnityTests.EditMode [EDITOR, TEST, no-autoref]
+    -> (project)  Network_Game.Editor, TestAsmdef
+    -> (builtin)  MCPForUnity.Editor, MCPForUnity.Runtime, UnityEngine.TestRunner, UnityEditor.TestRunner
+  MCPForUnityTests.PlayMode [TEST, no-autoref]
+    -> (builtin)  UnityEngine.TestRunner, UnityEditor.TestRunner
+  Network_Game
+    -> (project)  undream.llmunity.Runtime
+    -> (package)  Unity.Netcode.Runtime, Unity.Networking.Transport, Unity.Cinemachine
+    -> (builtin)  Unity.AI.Navigation, Unity.InputSystem, Unity.TextMeshPro, UnityEngine.UI, Unity.Addressables, Unity.ResourceManager
+    <- (used by)  Network_Game.Dialogue.Editor, Network_Game.Editor, Network_Game.ParticlePack.Ramps.Editor, NpcDialogue.Tests.Runtime
+  Network_Game.Dialogue.Editor [EDITOR]
+    -> (project)  Network_Game, undream.llmunity.Runtime
+    -> (package)  Unity.Netcode.Runtime
+    -> (builtin)  MCPForUnity.Editor
+  Network_Game.Editor [EDITOR]
+    -> (project)  Network_Game
+    -> (package)  Unity.Netcode.Runtime
+    -> (builtin)  Unity.RenderPipelines.Core.Runtime, Unity.RenderPipelines.Universal.Runtime, MCPForUnity.Editor
+    <- (used by)  MCPForUnityTests.EditMode
+  Network_Game.ParticlePack.Ramps.Editor [EDITOR]
+    -> (project)  Network_Game
+  NpcDialogue.Tests.Editor [EDITOR, TEST, no-autoref]
+    -> (builtin)  Unity.ML-Agents, UnityEngine.TestRunner, UnityEditor.TestRunner
+  NpcDialogue.Tests.Runtime [TEST, no-autoref]
+    -> (project)  Network_Game
+    -> (builtin)  Unity.ML-Agents, UnityEngine.TestRunner, UnityEditor.TestRunner
+  TestAsmdef [no-autoref]
+    <- (used by)  MCPForUnityTests.EditMode
+  Unity.ML-Agents.DevTests.Editor [EDITOR, TEST, no-autoref]
+    -> (builtin)  Unity.ML-Agents.Editor, Unity.ML-Agents, Unity.InferenceEngine, Unity.ML-Agents.CommunicatorObjects, Unity.PerformanceTesting, UnityEngine.TestRunner, UnityEditor.TestRunner
+  Unity.ML-Agents.DevTests.Runtime [TEST, no-autoref]
+    -> (builtin)  Unity.ML-Agents, UnityEngine.TestRunner, UnityEditor.TestRunner
+  Unity.ProBuilder.Examples
+    -> (builtin)  Unity.ProBuilder, Unity.ugui
+  Unity.ProBuilder.Examples.Editor [EDITOR]
+    -> (builtin)  Unity.ProBuilder.Editor, Unity.ProBuilder
+  VFXGraph.OutputEventHandlers
+    -> (package)  Unity.Cinemachine
+    -> (builtin)  Unity.VisualEffectGraph.Runtime, Unity.RenderPipelines.Core.Runtime
+    <- (used by)  VFXGraph.OutputEventHandlers.Editor
+  VFXGraph.OutputEventHandlers.Editor [EDITOR]
+    -> (project)  VFXGraph.OutputEventHandlers
+    -> (package)  Unity.Cinemachine
+    -> (builtin)  Unity.VisualEffectGraph.Runtime
+  undream.llmunity.Editor [EDITOR]
+    -> (project)  undream.llmunity.Runtime
+  undream.llmunity.Runtime
+    -> (builtin)  UnityEngine.UI, Unity.InputSystem
+    <- (used by)  Network_Game, Network_Game.Dialogue.Editor, undream.llmunity.Editor
+
+[AsmDef] Packages assembly dependency graph (50 assemblies):
+  Unity.Cinemachine  refs=[Unity.Timeline, Unity.Postprocessing.Runtime, Unity.RenderPipelines.Core.Runtime...]  used-by=[Network_Game, Unity.Cinemachine.Editor...]
+  Unity.Cinemachine.Editor [EDITOR]  refs=[Unity.Timeline, Unity.Timeline.Editor, Unity.Postprocessing.Runtime...]
+  Unity.Multiplayer.Tools.Adapters  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.NetStats]  used-by=[Unity.Multiplayer.Tools.Adapters.MockNgo, Unity.Multiplayer.Tools.Adapters.Ngo1...]
+  Unity.Multiplayer.Tools.Adapters.MockNgo  refs=[Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.Common]
+  Unity.Multiplayer.Tools.Adapters.Ngo1 [no-autoref]  refs=[com.unity.netcode.runtime, Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.Common...]  used-by=[Unity.Multiplayer.Tools.Adapters.Tests.Editor]
+  Unity.Multiplayer.Tools.Adapters.Ngo1WithUtp2 [no-autoref]  refs=[Unity.Multiplayer.Tools.Adapters, Unity.Networking.Transport, Unity.Netcode.Runtime...]  used-by=[Unity.Multiplayer.Tools.Adapters.Tests.Editor]
+  Unity.Multiplayer.Tools.Adapters.Tests.Editor [TEST, no-autoref]  refs=[Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.Adapters.Ngo1, Unity.Multiplayer.Tools.Adapters.Utp2...]
+  Unity.Multiplayer.Tools.Adapters.Utp2 [no-autoref]  refs=[Unity.Multiplayer.Tools.Adapters, Unity.Networking.Transport]  used-by=[Unity.Multiplayer.Tools.Adapters.Ngo1WithUtp2, Unity.Multiplayer.Tools.Adapters.Tests.Editor...]
+  Unity.Multiplayer.Tools.Common  used-by=[Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.Adapters.MockNgo...]
+  Unity.Multiplayer.Tools.Common.Tests.Editor [EDITOR, TEST, no-autoref]  refs=[UnityEngine.TestRunner, UnityEditor.TestRunner, Unity.Multiplayer.Tools.Common]
+  Unity.Multiplayer.Tools.DependencyInjection [EDITOR]  used-by=[Unity.Multiplayer.Tools.DependencyInjection.UIElements, Unity.Multiplayer.Tools.NetVis.Editor.UI]
+  Unity.Multiplayer.Tools.DependencyInjection.UIElements [EDITOR]  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.Editor, Unity.Multiplayer.Tools.DependencyInjection]  used-by=[Unity.Multiplayer.Tools.NetVis.Editor.UI]
+  Unity.Multiplayer.Tools.Editor [EDITOR]  refs=[Unity.Multiplayer.Tools.Common]  used-by=[Unity.Multiplayer.Tools.DependencyInjection.UIElements, Unity.Multiplayer.Tools.NetVis.Editor.UI]
+  Unity.Multiplayer.Tools.GameObjects.Tests [TEST, no-autoref]  refs=[Unity.Netcode.Runtime, Unity.Collections, Unity.Multiplayer.Tools.MetricTypes...]
+  Unity.Multiplayer.Tools.Initialization  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.NetVis.Configuration, Unity.Multiplayer.Tools.NetVis.Editor.UI...]
+  Unity.Multiplayer.Tools.MetricEvents  refs=[Unity.Collections, Unity.Multiplayer.Tools.MetricTypes, Unity.Multiplayer.Tools.NetStats]  used-by=[Unity.Multiplayer.Tools.Adapters.Ngo1, Unity.Multiplayer.Tools.MetricTestData...]
+  Unity.Multiplayer.Tools.MetricTestData  refs=[Unity.Collections, Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.MetricEvents...]  used-by=[Unity.Multiplayer.Tools.NetStatsMonitor.Implementation.Tests.Editor]
+  Unity.Multiplayer.Tools.MetricTypes  refs=[Unity.Collections, Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.NetStats]  used-by=[Unity.Multiplayer.Tools.Adapters.Ngo1, Unity.Multiplayer.Tools.GameObjects.Tests...]
+  Unity.Multiplayer.Tools.MetricTypes.Tests.Editor [EDITOR, TEST, no-autoref]  refs=[Unity.Multiplayer.Tools.MetricTypes, UnityEngine.TestRunner, UnityEditor.TestRunner...]
+  Unity.Multiplayer.Tools.MultiplayerToolsWindow.Tests.Editor [EDITOR, TEST]  refs=[com.unity.multiplayer.tools.window, UnityEngine.TestRunner, UnityEditor.TestRunner]
+  Unity.Multiplayer.Tools.NetStats  refs=[Unity.Collections, Unity.Multiplayer.Tools.Common]  used-by=[Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.Adapters.Ngo1...]
+  Unity.Multiplayer.Tools.NetStats.CodeGen [EDITOR, no-autoref]  refs=[Unity.Multiplayer.Tools.NetStats]
+  Unity.Multiplayer.Tools.NetStats.Tests.Editor [EDITOR, TEST, no-autoref]  refs=[Unity.Multiplayer.Tools.NetStats, Unity.Multiplayer.Tools.MetricTypes, UnityEngine.TestRunner...]  used-by=[Unity.Multiplayer.Tools.NetStatsMonitor.Implementation.Tests.Editor, Unity.Multiplayer.Tools.NetworkProfiler.Tests.Editor]
+  Unity.Multiplayer.Tools.NetStatsMonitor.Component  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.NetStats, Unity.Multiplayer.Tools.NetStatsMonitor.Configuration...]  used-by=[Unity.Multiplayer.Tools.NetStatsMonitor.Editor, Unity.Multiplayer.Tools.NetStatsMonitor.Implementation.Tests.Editor...]
+  Unity.Multiplayer.Tools.NetStatsMonitor.Configuration  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.MetricTypes, Unity.Multiplayer.Tools.NetStats]  used-by=[Unity.Multiplayer.Tools.NetStatsMonitor.Component, Unity.Multiplayer.Tools.NetStatsMonitor.Editor...]
+  Unity.Multiplayer.Tools.NetStatsMonitor.Editor [EDITOR]  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.NetStats, Unity.Multiplayer.Tools.NetStatsMonitor.Configuration...]
+  Unity.Multiplayer.Tools.NetStatsMonitor.Implementation  refs=[Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.MetricTypes...]  used-by=[Unity.Multiplayer.Tools.NetStatsMonitor.Component, Unity.Multiplayer.Tools.NetStatsMonitor.Implementation.Tests.Editor]
+  Unity.Multiplayer.Tools.NetStatsMonitor.Implementation.Tests.Editor [EDITOR, TEST, no-autoref]  refs=[UnityEngine.TestRunner, UnityEditor.TestRunner, Unity.Multiplayer.Tools.Adapters...]
+  Unity.Multiplayer.Tools.NetStatsMonitor.Interface.Tests.Editor [EDITOR, TEST, no-autoref]  refs=[UnityEngine.TestRunner, UnityEditor.TestRunner, Unity.Multiplayer.Tools.MetricTypes...]
+  Unity.Multiplayer.Tools.NetStatsReporting  refs=[Unity.Collections, Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.MetricTypes...]  used-by=[Unity.Netcode.Runtime]
+  Unity.Multiplayer.Tools.NetVis.Configuration  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.Adapters, Unity.Burst...]  used-by=[Unity.Multiplayer.Tools.Initialization, Unity.Multiplayer.Tools.NetVis.Editor.UI...]
+  Unity.Multiplayer.Tools.NetVis.Editor.UI [EDITOR]  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.Editor, Unity.Multiplayer.Tools.NetVis.Configuration...]  used-by=[Unity.Multiplayer.Tools.Initialization, Unity.Multiplayer.Tools.NetVis.Tests.Editor]
+  Unity.Multiplayer.Tools.NetVis.Editor.Visualization [EDITOR]  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.NetStats...]  used-by=[Unity.Multiplayer.Tools.Initialization, Unity.Multiplayer.Tools.NetVis.Editor.UI]
+  Unity.Multiplayer.Tools.NetVis.Tests.Editor [EDITOR, TEST]  refs=[Unity.Multiplayer.Tools.NetVis.Configuration, Unity.Multiplayer.Tools.NetVis.Editor.UI, Unity.Multiplayer.Tools.Common...]
+  Unity.Multiplayer.Tools.NetworkProfiler.Editor [EDITOR]  refs=[Unity.Profiling.Core, Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.NetworkProfiler.Runtime...]  used-by=[Unity.Multiplayer.Tools.NetworkProfiler.Tests.Editor]
+  Unity.Multiplayer.Tools.NetworkProfiler.Runtime  refs=[Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.MetricTypes, Unity.Multiplayer.Tools.NetStats...]  used-by=[Unity.Multiplayer.Tools.NetworkProfiler.Editor, Unity.Multiplayer.Tools.NetworkProfiler.Tests.Editor]
+  Unity.Multiplayer.Tools.NetworkProfiler.Tests.Editor [EDITOR, TEST, no-autoref]  refs=[Unity.Multiplayer.Tools.NetworkProfiler.Editor, Unity.Multiplayer.Tools.NetworkProfiler.Runtime, UnityEngine.TestRunner...]
+  Unity.Multiplayer.Tools.NetworkSimulator.Editor [EDITOR]  refs=[Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.Adapters.Utp2, Unity.Multiplayer.Tools.Common...]
+  Unity.Multiplayer.Tools.NetworkSimulator.Tests.Runtime [TEST, no-autoref]  refs=[Unity.Multiplayer.Tools.NetworkSimulator.Runtime, UnityEngine.TestRunner, Unity.Multiplayer.Tools.Adapters...]
+  Unity.Multiplayer.Tools.NetworkSolutionInterface  used-by=[Unity.Multiplayer.Tools.NetworkProfiler.Editor, Unity.Multiplayer.Tools.NetworkSolutionInterface.Tests.Editor...]
+  Unity.Multiplayer.Tools.NetworkSolutionInterface.Tests.Editor [EDITOR, TEST, no-autoref]  refs=[Unity.Multiplayer.Tools.NetworkSolutionInterface, UnityEngine.TestRunner, UnityEditor.TestRunner]
+  Unity.Netcode.Editor [EDITOR]  refs=[Unity.Netcode.Runtime, Unity.Networking.Transport, Unity.Multiplayer.Tools.NetVis.Configuration]  used-by=[Unity.Netcode.Editor.Tests]
+  Unity.Netcode.Editor.CodeGen [EDITOR, no-autoref]  refs=[Unity.Netcode.Runtime, Unity.Collections]
+  Unity.Netcode.Editor.Tests [EDITOR, TEST, no-autoref]  refs=[Unity.Collections, Unity.Netcode.Runtime, Unity.Netcode.Editor...]
+  Unity.Netcode.PackageChecker.Editor [EDITOR]
+  Unity.Netcode.Runtime  refs=[Unity.Networking.Transport, Unity.Collections, Unity.Burst...]  used-by=[Network_Game, Network_Game.Dialogue.Editor...]
+  Unity.Netcode.Runtime.Tests [TEST, no-autoref]  refs=[Unity.Netcode.Runtime, Unity.Collections, Unity.Multiplayer.MetricTypes...]  used-by=[Unity.Multiplayer.Tools.GameObjects.Tests, Unity.Netcode.Editor.Tests]
+  Unity.Networking.Editor [EDITOR]
+  Unity.Networking.Transport  refs=[Unity.Burst, Unity.Collections, Unity.Mathematics]  used-by=[Network_Game, Unity.Multiplayer.Tools.Adapters.Ngo1WithUtp2...]
+  com.unity.multiplayer.tools.window [EDITOR]  refs=[GUID:c2f37c48e057342cda1e4b53ad30d616, GUID:2c360f3794ebc41388fc11424ddbfdd0, GUID:2406edb708fb4de7b412856af92595c9...]  used-by=[Unity.Multiplayer.Tools.MultiplayerToolsWindow.Tests.Editor]
+
+[AsmDef] WARNING: 1 unresolved reference(s):
+  Unity.ProBuilder.Examples -> MISSING: Unity.ugui
+[13:57:56] === Phase 2/3: Code scan ===
+[Scan] Starting full project scan...
+[Scan] [ 1/44] AcademyStepperTest.cs
+[Scan] [ 2/44] DialogueClientUI.cs
+[Scan] [ 3/44] DialogueConstants.cs
+[Scan] [ 4/44] DialogueDebugPanel.cs
+[Scan] [ 5/44] DialogueEffectAutoTestMenu.cs
+[Scan] [ 6/44] DialogueEffectBulkImporter.cs
+[Scan] [ 7/44] DialogueEffectFeedbackPrompt.cs
+[Scan] [ 8/44] DialogueEffectFeedbackRuntimeTuner.cs
+[Scan] [ 9/44] DialogueEffectProjectile.cs
+[Scan] [10/44] DialogueEffectSpatialResolver.cs
+[Scan] [11/44] DialogueFeedbackCollector.cs
+[Scan] [12/44] DialogueFxSmokeTestMenu.cs
+[Scan] [13/44] DialogueInferenceTypes.cs
+[Scan] [14/44] DialogueMCPBridge.cs
+[Scan] [15/44] DialogueParticleCollisionDamage.cs
+[Scan] [16/44] DialogueSceneEffectsController.cs
+[Scan] [17/44] DialogueSemanticTag.cs
+[Scan] [18/44] DialogueSpawnedMarker.cs
+[Scan] [19/44] EffectCatalog.cs
+[Scan] [20/44] EffectDefinition.cs
+[Scan] [21/44] EffectDispatcher.cs
+[Scan] [22/44] EffectEditorWindow.cs
+[Scan] [23/44] EffectIntent.cs
+[Scan] [24/44] EffectIntentBuilder.cs
+[Scan] [25/44] EffectParser.cs
+[Scan] [26/44] EffectSandboxRunner.cs
+[Scan] [27/44] EffectSurface.cs
+[Scan] [28/44] EffectTargetResolverService.cs
+[Scan] [29/44] GameStateProvider.cs
+[Scan] [30/44] LlmAgentInferenceClient.cs

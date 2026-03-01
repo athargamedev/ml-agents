@@ -1,6 +1,6 @@
 {
     "schemaVersion": 1,
-    "updatedUtc": "2026-03-01T07:52:55.9098616Z",
+    "updatedUtc": "2026-03-01T16:40:14.8446005Z",
     "entries": [
         {
             "key": "dissolve",
@@ -113,26 +113,26 @@
         {
             "key": "bigexplosion",
             "effectType": "prefab_power",
-            "scaleMultiplier": 1.132788062095642,
-            "durationMultiplier": 1.094397783279419,
+            "scaleMultiplier": 1.1088862419128419,
+            "durationMultiplier": 1.0774061679840088,
             "attachScore": 0.0,
             "fitScore": 0.0,
-            "sampleCount": 13,
-            "looksCorrectCount": 8,
+            "sampleCount": 14,
+            "looksCorrectCount": 9,
             "lastOutcome": "looks_correct",
-            "lastUpdatedUtc": "2026-03-01T07:05:48.4825727Z"
+            "lastUpdatedUtc": "2026-03-01T09:00:59.7491848Z"
         },
         {
             "key": "smokeeffect",
             "effectType": "prefab_power",
-            "scaleMultiplier": 1.2442691326141358,
-            "durationMultiplier": 1.1577180624008179,
-            "attachScore": 0.17472898960113526,
+            "scaleMultiplier": 1.200300693511963,
+            "durationMultiplier": 1.1293288469314576,
+            "attachScore": 0.1590033769607544,
             "fitScore": 0.0,
-            "sampleCount": 17,
-            "looksCorrectCount": 8,
+            "sampleCount": 18,
+            "looksCorrectCount": 9,
             "lastOutcome": "looks_correct",
-            "lastUpdatedUtc": "2026-03-01T07:45:02.2945724Z"
+            "lastUpdatedUtc": "2026-03-01T09:02:34.3065350Z"
         },
         {
             "key": "flamestream",

@@ -5,6 +5,9 @@ using Network_Game.ThirdPersonController;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Cursor = UnityEngine.Cursor;
+#if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+#endif
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -90,6 +93,19 @@ namespace Network_Game.UI
         [SerializeField]
         private bool m_DialogueVisible = true;
 
+        [Header("Panel Toggle Keys")]
+        [Tooltip("Keyboard shortcut to show/hide the Login panel. None = disabled.")]
+        [SerializeField]
+        private KeyCode m_LoginToggleKey = KeyCode.F1;
+
+        [Tooltip("Keyboard shortcut to show/hide the Profile panel. None = disabled.")]
+        [SerializeField]
+        private KeyCode m_ProfileToggleKey = KeyCode.F2;
+
+        [Tooltip("Keyboard shortcut to show/hide the Dialogue panel. None = disabled.")]
+        [SerializeField]
+        private KeyCode m_DialogueToggleKey = KeyCode.F3;
+
         private readonly HashSet<int> m_UiCursorOwners = new HashSet<int>();
         private bool m_IsUiCursorMode;
         private bool m_FeedbackVisible;
@@ -124,6 +140,91 @@ namespace Network_Game.UI
         public ModernUISetup ModernUiSetup => m_ModernUiSetup;
         public ModernHudLayoutProfile LayoutProfile => m_LayoutProfile;
         public Transform RuntimeServicesRoot => m_RuntimeServicesRoot;
+
+        private void Update()
+        {
+            if (!Application.isPlaying)
+                return;
+
+            // Don't fire panel shortcuts while any text field has keyboard focus.
+            if (IsAnyInputFieldFocused())
+                return;
+
+            if (IsPanelKeyPressed(m_LoginToggleKey))
+                SetPanelVisibleInternal(HudPanel.Login, !m_LoginVisible);
+
+            if (IsPanelKeyPressed(m_ProfileToggleKey))
+                SetPanelVisibleInternal(HudPanel.Profile, !m_ProfileVisible);
+
+            if (IsPanelKeyPressed(m_DialogueToggleKey))
+                SetPanelVisibleInternal(HudPanel.Dialogue, !m_DialogueVisible);
+        }
+
+        private static bool IsPanelKeyPressed(KeyCode keyCode)
+        {
+            if (keyCode == KeyCode.None)
+                return false;
+
+#if ENABLE_INPUT_SYSTEM
+            Keyboard kb = Keyboard.current;
+            if (kb == null)
+                return false;
+
+            return keyCode switch
+            {
+                KeyCode.F1    => kb.f1Key.wasPressedThisFrame,
+                KeyCode.F2    => kb.f2Key.wasPressedThisFrame,
+                KeyCode.F3    => kb.f3Key.wasPressedThisFrame,
+                KeyCode.F4    => kb.f4Key.wasPressedThisFrame,
+                KeyCode.F5    => kb.f5Key.wasPressedThisFrame,
+                KeyCode.F6    => kb.f6Key.wasPressedThisFrame,
+                KeyCode.F7    => kb.f7Key.wasPressedThisFrame,
+                KeyCode.F8    => kb.f8Key.wasPressedThisFrame,
+                KeyCode.Escape    => kb.escapeKey.wasPressedThisFrame,
+                KeyCode.BackQuote => kb.backquoteKey.wasPressedThisFrame,
+                KeyCode.Tab       => kb.tabKey.wasPressedThisFrame,
+                KeyCode.Alpha1    => kb.digit1Key.wasPressedThisFrame,
+                KeyCode.Alpha2    => kb.digit2Key.wasPressedThisFrame,
+                KeyCode.Alpha3    => kb.digit3Key.wasPressedThisFrame,
+                KeyCode.Alpha4    => kb.digit4Key.wasPressedThisFrame,
+                _ => false,
+            };
+#else
+            return Input.GetKeyDown(keyCode);
+#endif
+        }
+
+        /// <summary>
+        /// Returns true when any UIToolkit text field in the panel documents currently
+        /// holds keyboard focus. Used to suppress panel toggle keys while typing.
+        /// </summary>
+        private bool IsAnyInputFieldFocused()
+        {
+            return IsDocumentFocusingInput(m_LoginDocument)
+                || IsDocumentFocusingInput(m_ProfileDocument)
+                || IsDocumentFocusingInput(m_DialogueDocument);
+        }
+
+        private static bool IsDocumentFocusingInput(UIDocument doc)
+        {
+            if (doc == null || doc.rootVisualElement == null || doc.rootVisualElement.panel == null)
+                return false;
+
+            var focused = doc.rootVisualElement.panel.focusController?.focusedElement as VisualElement;
+            if (focused == null)
+                return false;
+
+            // Walk up the visual tree — the focused element is often the inner
+            // TextElement child, not the TextField wrapper itself.
+            VisualElement node = focused;
+            while (node != null)
+            {
+                if (node is TextField)
+                    return true;
+                node = node.parent;
+            }
+            return false;
+        }
 
         private void Reset()
         {

@@ -2066,10 +2066,24 @@ namespace Network_Game.Dialogue
 
             return keyCode switch
             {
-                KeyCode.Escape => keyboard.escapeKey.wasPressedThisFrame,
-                KeyCode.BackQuote => keyboard.backquoteKey.wasPressedThisFrame,
-                KeyCode.Backspace => keyboard.backspaceKey.wasPressedThisFrame,
-                KeyCode.Tab => keyboard.tabKey.wasPressedThisFrame,
+                KeyCode.Escape     => keyboard.escapeKey.wasPressedThisFrame,
+                KeyCode.BackQuote  => keyboard.backquoteKey.wasPressedThisFrame,
+                KeyCode.Backspace  => keyboard.backspaceKey.wasPressedThisFrame,
+                KeyCode.Tab        => keyboard.tabKey.wasPressedThisFrame,
+                KeyCode.Return     => keyboard.enterKey.wasPressedThisFrame,
+                KeyCode.Space      => keyboard.spaceKey.wasPressedThisFrame,
+                KeyCode.F1         => keyboard.f1Key.wasPressedThisFrame,
+                KeyCode.F2         => keyboard.f2Key.wasPressedThisFrame,
+                KeyCode.F3         => keyboard.f3Key.wasPressedThisFrame,
+                KeyCode.F4         => keyboard.f4Key.wasPressedThisFrame,
+                KeyCode.F5         => keyboard.f5Key.wasPressedThisFrame,
+                KeyCode.F6         => keyboard.f6Key.wasPressedThisFrame,
+                KeyCode.F7         => keyboard.f7Key.wasPressedThisFrame,
+                KeyCode.F8         => keyboard.f8Key.wasPressedThisFrame,
+                KeyCode.Alpha1     => keyboard.digit1Key.wasPressedThisFrame,
+                KeyCode.Alpha2     => keyboard.digit2Key.wasPressedThisFrame,
+                KeyCode.Alpha3     => keyboard.digit3Key.wasPressedThisFrame,
+                KeyCode.Alpha4     => keyboard.digit4Key.wasPressedThisFrame,
                 _ => false,
             };
 #else

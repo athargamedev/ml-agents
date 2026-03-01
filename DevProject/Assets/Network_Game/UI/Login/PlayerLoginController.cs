@@ -14,6 +14,7 @@ namespace Network_Game.UI.Login
         private Button m_LoginButton;
         private Label m_StatusLabel;
         private bool m_UsingHudCursorRouter;
+        private DisplayStyle m_LastDisplayStyle = DisplayStyle.None;
 
         private void OnEnable()
         {
@@ -107,19 +108,18 @@ namespace Network_Game.UI.Login
         private void Update()
         {
             if (m_Root == null)
-            {
                 return;
-            }
 
-            DisplayStyle effectiveDisplay = m_Root.resolvedStyle.display;
-            if (effectiveDisplay != DisplayStyle.None)
-            {
+            DisplayStyle current = m_Root.resolvedStyle.display;
+            if (current == m_LastDisplayStyle)
+                return;
+
+            m_LastDisplayStyle = current;
+
+            if (current != DisplayStyle.None)
                 ApplyUiCursorAndLookState();
-            }
             else
-            {
                 RestoreGameplayCursorAndLookState();
-            }
         }
 
         private void OnDisable()

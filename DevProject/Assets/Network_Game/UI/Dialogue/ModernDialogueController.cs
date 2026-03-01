@@ -407,10 +407,14 @@ namespace Network_Game.UI.Dialogue
                     m_ChatInput.RegisterCallback<KeyDownEvent>(OnInputKeyDown);
                     m_ChatInput.RegisterCallback<PointerDownEvent>(OnInputPointerDown);
                     m_ChatInput.RegisterCallback<MouseDownEvent>(OnInputMouseDown);
+                    m_ChatInput.RegisterCallback<FocusInEvent>(OnChatInputFocusIn);
+                    m_ChatInput.RegisterCallback<FocusOutEvent>(OnChatInputFocusOut);
                     if (m_ChatInputInner != null)
                     {
                         m_ChatInputInner.RegisterCallback<PointerDownEvent>(OnInputPointerDown);
                         m_ChatInputInner.RegisterCallback<MouseDownEvent>(OnInputMouseDown);
+                        m_ChatInputInner.RegisterCallback<FocusInEvent>(OnChatInputFocusIn);
+                        m_ChatInputInner.RegisterCallback<FocusOutEvent>(OnChatInputFocusOut);
                     }
                 }
                 else
@@ -418,10 +422,14 @@ namespace Network_Game.UI.Dialogue
                     m_ChatInput.UnregisterCallback<KeyDownEvent>(OnInputKeyDown);
                     m_ChatInput.UnregisterCallback<PointerDownEvent>(OnInputPointerDown);
                     m_ChatInput.UnregisterCallback<MouseDownEvent>(OnInputMouseDown);
+                    m_ChatInput.UnregisterCallback<FocusInEvent>(OnChatInputFocusIn);
+                    m_ChatInput.UnregisterCallback<FocusOutEvent>(OnChatInputFocusOut);
                     if (m_ChatInputInner != null)
                     {
                         m_ChatInputInner.UnregisterCallback<PointerDownEvent>(OnInputPointerDown);
                         m_ChatInputInner.UnregisterCallback<MouseDownEvent>(OnInputMouseDown);
+                        m_ChatInputInner.UnregisterCallback<FocusInEvent>(OnChatInputFocusIn);
+                        m_ChatInputInner.UnregisterCallback<FocusOutEvent>(OnChatInputFocusOut);
                     }
                 }
             }
@@ -459,6 +467,21 @@ namespace Network_Game.UI.Dialogue
             }
 
             m_ChatInput.Focus();
+        }
+
+        private void OnChatInputFocusIn(FocusInEvent _)
+        {
+            // Claim the UI cursor so gameplay look/movement is suppressed while typing.
+            ModernHudController.TryAcquireUiCursor(this);
+        }
+
+        private void OnChatInputFocusOut(FocusOutEvent _)
+        {
+            // Release cursor only when the dialogue panel itself is also hidden;
+            // if it's still visible we keep input suppressed so the player doesn't
+            // accidentally start moving the moment they submit a message.
+            if (!m_ChatVisible)
+                ModernHudController.TryReleaseUiCursor(this);
         }
 
         private void OnInputKeyDown(KeyDownEvent evt)
