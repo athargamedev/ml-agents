@@ -40,6 +40,7 @@ namespace Network_Game.Dialogue
         }
 
         private const int GameplayProbeClientRequestIdMin = 99400;
+        private const int EffectProbeMaxResponseTokens = 96;
 
         public enum DialogueStatus
         {
@@ -225,11 +226,12 @@ namespace Network_Game.Dialogue
         public static event Action<DialogueResponseTelemetry> OnDialogueResponseTelemetry;
 
         public LLMAgent LlmAgent => m_LlmAgent;
+        public bool UsesRemoteInference => UseOpenAIRemote;
 
         /// <summary>
         /// Check if LLM agent is ready for requests
         /// </summary>
-        public bool IsLLMReady => m_LlmAgent != null;
+        public bool IsLLMReady => UseOpenAIRemote || m_LlmAgent != null;
 
         /// <summary>
         /// Check if warmup is in degraded mode
@@ -333,6 +335,10 @@ namespace Network_Game.Dialogue
         /// </summary>
         public Dictionary<string, int> GetRejectionReasons() =>
             new Dictionary<string, int>(m_RejectionReasonCounts);
+
+        [Header("Dialogue Backend")]
+        [SerializeField]
+        private DialogueBackendConfig m_DialogueBackendConfig;
 
         [Header("LLMUnity")]
         [SerializeField]
@@ -595,25 +601,18 @@ namespace Network_Game.Dialogue
             }
 
             Instance = this;
+            CacheDialogueBackendConfig();
             NormalizeRemoteRuntimeTuning();
             NGLog.Info("Dialogue", $"NetworkDialogueService initialized. ({this})");
-            {
-                m_LlmAgent = GetComponent<LLMAgent>();
-                if (m_LlmAgent == null)
-                {
-#if UNITY_2023_1_OR_NEWER
-                    m_LlmAgent = FindAnyObjectByType<LLMAgent>(FindObjectsInactive.Exclude);
-#else
-                    m_LlmAgent = FindObjectOfType<LLMAgent>();
-#endif
-                }
-            }
+            m_LlmAgent = ResolveLegacyLlmAgent(allowSceneSearch: !UseOpenAIRemote);
 
             if (m_LlmAgent != null)
             {
                 EnsureLlmAgentEnabled("Awake");
-                m_DefaultSystemPrompt = m_LlmAgent.systemPrompt ?? string.Empty;
             }
+
+            SyncDialogueBackendConfigFromLegacyAgent();
+            m_DefaultSystemPrompt = GetConfiguredSystemPrompt();
 
             ValidateLlmConfiguration();
 
@@ -631,6 +630,108 @@ namespace Network_Game.Dialogue
             RebuildPlayerPromptContextLookup();
             RebuildPlayerIdentityLookup();
             SynthesizeIdentityBindingsFromRuntimeBindings();
+        }
+
+        private void CacheDialogueBackendConfig()
+        {
+            GetDialogueBackendConfig();
+        }
+
+        private DialogueBackendConfig GetDialogueBackendConfig()
+        {
+            if (m_DialogueBackendConfig == null)
+            {
+                m_DialogueBackendConfig = GetComponent<DialogueBackendConfig>();
+            }
+
+            return m_DialogueBackendConfig;
+        }
+
+        private LLMAgent ResolveLegacyLlmAgent(bool allowSceneSearch)
+        {
+            LLMAgent agent = GetComponent<LLMAgent>();
+            if (agent != null || !allowSceneSearch)
+            {
+                return agent;
+            }
+
+#if UNITY_2023_1_OR_NEWER
+            return FindAnyObjectByType<LLMAgent>(FindObjectsInactive.Exclude);
+#else
+            return FindObjectOfType<LLMAgent>();
+#endif
+        }
+
+        private void SyncDialogueBackendConfigFromLegacyAgent()
+        {
+            DialogueBackendConfig backendConfig = GetDialogueBackendConfig();
+            if (backendConfig == null)
+            {
+                return;
+            }
+
+            backendConfig.ApplyLegacyDefaults(m_LlmAgent, m_RemoteModelName, m_RemoteStopSequences);
+        }
+
+        private string GetConfiguredSystemPrompt()
+        {
+            DialogueBackendConfig backendConfig = GetDialogueBackendConfig();
+            if (
+                UseOpenAIRemote
+                && backendConfig != null
+                && !string.IsNullOrWhiteSpace(backendConfig.SystemPrompt)
+            )
+            {
+                return backendConfig.SystemPrompt;
+            }
+
+            if (m_LlmAgent != null && !string.IsNullOrWhiteSpace(m_LlmAgent.systemPrompt))
+            {
+                return m_LlmAgent.systemPrompt;
+            }
+
+            return backendConfig != null ? backendConfig.SystemPrompt : string.Empty;
+        }
+
+        private void SetConfiguredSystemPrompt(string prompt)
+        {
+            string resolvedPrompt = prompt ?? string.Empty;
+            DialogueBackendConfig backendConfig = GetDialogueBackendConfig();
+            if (UseOpenAIRemote && backendConfig != null)
+            {
+                backendConfig.SetSystemPrompt(resolvedPrompt);
+                return;
+            }
+
+            if (m_LlmAgent != null)
+            {
+                m_LlmAgent.systemPrompt = resolvedPrompt;
+                return;
+            }
+
+            if (backendConfig != null)
+            {
+                backendConfig.SetSystemPrompt(resolvedPrompt);
+            }
+        }
+
+        private string GetRemoteEndpointLabel()
+        {
+            DialogueBackendConfig backendConfig = GetDialogueBackendConfig();
+            if (backendConfig != null)
+            {
+                return $"{backendConfig.Host}:{backendConfig.Port}";
+            }
+
+            if (m_LlmAgent != null)
+            {
+                string host = string.IsNullOrWhiteSpace(m_LlmAgent.host)
+                    ? "127.0.0.1"
+                    : m_LlmAgent.host.Trim();
+                return $"{host}:{m_LlmAgent.port}";
+            }
+
+            return "remote backend";
         }
 
         private void EnsureSceneEffectsController()
@@ -775,11 +876,23 @@ namespace Network_Game.Dialogue
         {
             if (m_LlmAgent == null)
             {
+                if (UseOpenAIRemote)
+                {
+                    if (m_LogDebug)
+                    {
+                        NGLog.Info(
+                            "Dialogue",
+                            "LLMAgent missing; remote dialogue will use DialogueBackendConfig."
+                        );
+                    }
+                    return;
+                }
+
                 NGLog.Warn("Dialogue", "LLMAgent missing on NetworkDialogueService.");
                 return;
             }
 
-            if (m_LlmAgent.remote)
+            if (UseOpenAIRemote)
             {
                 if (m_LogDebug)
                 {
@@ -1833,10 +1946,10 @@ namespace Network_Game.Dialogue
                     state.FirstAttemptAt = now;
                 }
 
-                if (m_LlmAgent == null)
+                if (m_LlmAgent == null && !UseOpenAIRemote)
                 {
                     state.Status = DialogueStatus.Failed;
-                    state.Error = "LLMAgent not assigned.";
+                    state.Error = "Local LLMAgent not assigned.";
                     terminal = true;
                     return;
                 }
@@ -1940,12 +2053,13 @@ namespace Network_Game.Dialogue
                     ? ApplyRemoteUserPromptBudget(state.Request.Prompt ?? string.Empty)
                     : (state.Request.Prompt ?? string.Empty);
                 ApplyPersonaForRequest(state.Request);
+                string systemPromptForRequest = GetConfiguredSystemPrompt();
                 CancellationTokenSource openAiTimeoutCts = null;
                 try
                 {
                     float effectiveRequestTimeoutSeconds = GetEffectiveRequestTimeoutSeconds(
                         useOpenAI,
-                        m_LlmAgent.systemPrompt,
+                        systemPromptForRequest,
                         promptForRequest
                     );
                     state.EffectiveTimeoutSeconds = effectiveRequestTimeoutSeconds;
@@ -1953,7 +2067,7 @@ namespace Network_Game.Dialogue
                     if (m_LogDebug)
                     {
                         UnityEngine.Debug.Log(
-                            $"[Dialogue][DEBUG] Starting chat | id={requestId} | key={key} | target={inferenceClient.BackendName} | promptLen={promptForRequest.Length} | systemLen={m_LlmAgent.systemPrompt?.Length ?? 0} | historyCount={requestHistory?.Count ?? 0} | timeoutSec={effectiveRequestTimeoutSeconds}"
+                            $"[Dialogue][DEBUG] Starting chat | id={requestId} | key={key} | target={inferenceClient.BackendName} | promptLen={promptForRequest.Length} | systemLen={systemPromptForRequest?.Length ?? 0} | historyCount={requestHistory?.Count ?? 0} | timeoutSec={effectiveRequestTimeoutSeconds}"
                         );
                     }
 
@@ -1967,20 +2081,39 @@ namespace Network_Game.Dialogue
 
                     if (useOpenAI)
                     {
-                        chatTask = inferenceClient.ChatAsync(
-                            m_LlmAgent.systemPrompt,
-                            inferenceHistory,
-                            promptForRequest,
-                            addToHistory: false,
-                            openAiTimeoutCts != null
-                                ? openAiTimeoutCts.Token
-                                : CancellationToken.None
-                        );
+                        DialogueInferenceRequestOptions requestOptions =
+                            BuildInferenceRequestOptions(state.Request, promptForRequest);
+                        OpenAIChatClient openAiClient = inferenceClient as OpenAIChatClient;
+                        if (openAiClient != null)
+                        {
+                            chatTask = openAiClient.ChatWithOptionsAsync(
+                                systemPromptForRequest,
+                                inferenceHistory,
+                                promptForRequest,
+                                requestOptions,
+                                addToHistory: false,
+                                openAiTimeoutCts != null
+                                    ? openAiTimeoutCts.Token
+                                    : CancellationToken.None
+                            );
+                        }
+                        else
+                        {
+                            chatTask = inferenceClient.ChatAsync(
+                                systemPromptForRequest,
+                                inferenceHistory,
+                                promptForRequest,
+                                addToHistory: false,
+                                openAiTimeoutCts != null
+                                    ? openAiTimeoutCts.Token
+                                    : CancellationToken.None
+                            );
+                        }
                     }
                     else
                     {
                         chatTask = inferenceClient.ChatAsync(
-                            m_LlmAgent.systemPrompt,
+                            systemPromptForRequest,
                             inferenceHistory,
                             promptForRequest,
                             addToHistory: true,
@@ -2276,7 +2409,7 @@ namespace Network_Game.Dialogue
         {
             // Local inference timeouts are usually deterministic throughput limits.
             // Retrying them extends in-flight stalls and blocks new requests.
-            return m_LlmAgent != null && m_LlmAgent.remote;
+            return UseOpenAIRemote;
         }
 
         private string BuildRetryExhaustedError(string code, string friendlyMessage)
@@ -2794,7 +2927,7 @@ namespace Network_Game.Dialogue
 
         private void EnsureLlmAgentReady()
         {
-            if (m_LlmAgent == null || m_LlmAgent.remote)
+            if (m_LlmAgent == null || UseOpenAIRemote)
             {
                 return;
             }
@@ -2846,7 +2979,7 @@ namespace Network_Game.Dialogue
 
         private void EnsureLlmAgentEnabled(string context)
         {
-            if (m_LlmAgent == null || m_LlmAgent.remote || m_LlmAgent.enabled)
+            if (m_LlmAgent == null || UseOpenAIRemote || m_LlmAgent.enabled)
             {
                 return;
             }
@@ -2871,7 +3004,7 @@ namespace Network_Game.Dialogue
         {
             failureReason = string.Empty;
 
-            if (m_LlmAgent == null || m_LlmAgent.remote)
+            if (m_LlmAgent == null || UseOpenAIRemote)
             {
                 return true;
             }
@@ -2914,9 +3047,9 @@ namespace Network_Game.Dialogue
 
         private async Task<bool> EnsureWarmup()
         {
-            if (m_LlmAgent == null)
+            if (m_LlmAgent == null && !UseOpenAIRemote)
             {
-                m_LastWarmupFailureReason = "LLMAgent not assigned.";
+                m_LastWarmupFailureReason = "Local LLMAgent not assigned.";
                 return false;
             }
 
@@ -2982,7 +3115,7 @@ namespace Network_Game.Dialogue
                         bool ok = await inferenceClient.CheckConnectionAsync(warmupCts.Token);
                         if (!ok)
                             throw new Exception(
-                                $"OpenAI-compatible warmup probe failed at {m_LlmAgent.host}:{m_LlmAgent.port}"
+                                $"OpenAI-compatible warmup probe failed at {GetRemoteEndpointLabel()}"
                             );
                     });
                 }
@@ -3103,13 +3236,13 @@ namespace Network_Game.Dialogue
         {
             if (m_OpenAIChatClient != null)
             {
-                if (m_LlmAgent != null && m_LlmAgent.remote)
+                if (UseOpenAIRemote)
                 {
                     SyncOpenAIChatClientParams();
                 }
                 return;
             }
-            if (m_LlmAgent == null || !m_LlmAgent.remote)
+            if (!UseOpenAIRemote)
                 return;
 
             m_OpenAIChatClient = new OpenAIChatClient();
@@ -3133,6 +3266,11 @@ namespace Network_Game.Dialogue
 
         private LlmAgentInferenceClient EnsureLlmAgentInferenceClient()
         {
+            if (m_LlmAgent == null)
+            {
+                return null;
+            }
+
             if (m_LlmAgentInferenceClient == null)
             {
                 m_LlmAgentInferenceClient = new LlmAgentInferenceClient();
@@ -3168,7 +3306,7 @@ namespace Network_Game.Dialogue
 
         private void SyncOpenAIChatClientParams()
         {
-            if (m_OpenAIChatClient == null || m_LlmAgent == null)
+            if (m_OpenAIChatClient == null)
                 return;
 
             m_OpenAIChatClient.ApplyConfig(BuildInferenceRuntimeConfig());
@@ -3176,6 +3314,49 @@ namespace Network_Game.Dialogue
 
         private DialogueInferenceRuntimeConfig BuildInferenceRuntimeConfig()
         {
+            DialogueBackendConfig backendConfig = GetDialogueBackendConfig();
+            if (backendConfig != null)
+            {
+                return new DialogueInferenceRuntimeConfig
+                {
+                    Host = backendConfig.Host,
+                    Port = backendConfig.Port,
+                    ApiKey = ResolveRemoteApiKey(),
+                    Model = ResolveConfiguredRemoteModelName(),
+                    Temperature = backendConfig.Temperature,
+                    MaxTokens = backendConfig.MaxTokens,
+                    TopP = backendConfig.TopP,
+                    FrequencyPenalty = backendConfig.FrequencyPenalty,
+                    PresencePenalty = backendConfig.PresencePenalty,
+                    Seed = backendConfig.Seed,
+                    TopK = backendConfig.TopK,
+                    RepeatPenalty = backendConfig.RepeatPenalty,
+                    MinP = backendConfig.MinP,
+                    TypicalP = backendConfig.TypicalP,
+                    RepeatLastN = backendConfig.RepeatLastN,
+                    Mirostat = backendConfig.Mirostat,
+                    MirostatTau = backendConfig.MirostatTau,
+                    MirostatEta = backendConfig.MirostatEta,
+                    NProbs = backendConfig.NProbs,
+                    IgnoreEos = backendConfig.IgnoreEos,
+                    CachePrompt = backendConfig.CachePrompt,
+                    Grammar = string.IsNullOrWhiteSpace(backendConfig.Grammar)
+                        ? null
+                        : backendConfig.Grammar,
+                    StopSequences = ResolveConfiguredRemoteStopSequences(),
+                };
+            }
+
+            if (m_LlmAgent == null)
+            {
+                return new DialogueInferenceRuntimeConfig
+                {
+                    ApiKey = ResolveRemoteApiKey(),
+                    Model = ResolveConfiguredRemoteModelName(),
+                    StopSequences = ResolveConfiguredRemoteStopSequences(),
+                };
+            }
+
             var config = new DialogueInferenceRuntimeConfig
             {
                 Host = string.IsNullOrWhiteSpace(m_LlmAgent.host)
@@ -3202,10 +3383,7 @@ namespace Network_Game.Dialogue
                 IgnoreEos = m_LlmAgent.ignoreEos,
                 CachePrompt = m_LlmAgent.cachePrompt,
                 Grammar = string.IsNullOrWhiteSpace(m_LlmAgent.grammar) ? null : m_LlmAgent.grammar,
-                StopSequences =
-                    m_RemoteStopSequences != null && m_RemoteStopSequences.Length > 0
-                        ? m_RemoteStopSequences
-                        : null,
+                StopSequences = ResolveConfiguredRemoteStopSequences(),
             };
 
             return config;
@@ -3213,6 +3391,24 @@ namespace Network_Game.Dialogue
 
         private string ResolveConfiguredRemoteModelName()
         {
+            DialogueBackendConfig backendConfig = GetDialogueBackendConfig();
+            if (backendConfig != null)
+            {
+                string backendModel = backendConfig.Model;
+                if (!string.IsNullOrWhiteSpace(backendModel))
+                {
+                    if (
+                        string.Equals(backendModel, "auto", StringComparison.OrdinalIgnoreCase)
+                        || string.Equals(backendModel, "(auto)", StringComparison.OrdinalIgnoreCase)
+                    )
+                    {
+                        return string.Empty;
+                    }
+
+                    return backendModel;
+                }
+            }
+
             string configured = m_RemoteModelName == null ? string.Empty : m_RemoteModelName.Trim();
             if (string.IsNullOrWhiteSpace(configured))
             {
@@ -3251,7 +3447,32 @@ namespace Network_Game.Dialogue
                 return apiKey;
             }
 
+            if (
+                GetDialogueBackendConfig() != null
+                && !string.IsNullOrWhiteSpace(m_DialogueBackendConfig.ApiKey)
+            )
+            {
+                return m_DialogueBackendConfig.ApiKey;
+            }
+
             return m_LlmAgent != null ? (m_LlmAgent.APIKey ?? string.Empty).Trim() : string.Empty;
+        }
+
+        private string[] ResolveConfiguredRemoteStopSequences()
+        {
+            DialogueBackendConfig backendConfig = GetDialogueBackendConfig();
+            if (backendConfig != null)
+            {
+                string[] configured = backendConfig.GetStopSequences();
+                if (configured != null && configured.Length > 0)
+                {
+                    return configured;
+                }
+            }
+
+            return m_RemoteStopSequences != null && m_RemoteStopSequences.Length > 0
+                ? m_RemoteStopSequences
+                : null;
         }
 
         private static bool TryGetApiKeyFromEnvironment(string varName, out string apiKey)
@@ -3301,11 +3522,14 @@ namespace Network_Game.Dialogue
             }
         }
 
-        private bool UseOpenAIRemote => m_LlmAgent != null && m_LlmAgent.remote;
+        private bool UseOpenAIRemote =>
+            GetDialogueBackendConfig() != null
+                ? m_DialogueBackendConfig.UseRemoteInference
+                : m_LlmAgent != null && m_LlmAgent.remote;
 
         private string BuildWarmupStateLabel()
         {
-            if (m_LlmAgent == null)
+            if (m_LlmAgent == null && !UseOpenAIRemote)
             {
                 return "MissingAgent";
             }
@@ -3897,7 +4121,7 @@ namespace Network_Game.Dialogue
 
         private void ApplyPersonaForRequest(DialogueRequest request)
         {
-            if (m_LlmAgent == null)
+            if (m_LlmAgent == null && GetDialogueBackendConfig() == null)
             {
                 return;
             }
@@ -3912,7 +4136,7 @@ namespace Network_Game.Dialogue
 
             if (!m_EnablePersonaRouting)
             {
-                m_LlmAgent.systemPrompt = ApplyRemoteSystemPromptBudget(basePrompt);
+                SetConfiguredSystemPrompt(ApplyRemoteSystemPromptBudget(basePrompt));
                 return;
             }
 
@@ -3938,7 +4162,7 @@ namespace Network_Game.Dialogue
             }
 
             prompt = ApplyRemoteSystemPromptBudget(prompt);
-            m_LlmAgent.systemPrompt = prompt;
+            SetConfiguredSystemPrompt(prompt);
         }
 
         private float GetEffectiveRequestTimeoutSeconds(
@@ -8411,6 +8635,44 @@ namespace Network_Game.Dialogue
                     >= 0;
         }
 
+        private static DialogueInferenceRequestOptions BuildInferenceRequestOptions(
+            DialogueRequest request,
+            string promptText
+        )
+        {
+            if (
+                !IsGameplayProbeRequest(request, promptText)
+                || !IsEffectValidationProbePrompt(promptText)
+            )
+            {
+                return null;
+            }
+
+            return new DialogueInferenceRequestOptions
+            {
+                MaxTokensOverride = EffectProbeMaxResponseTokens,
+                PreferJsonResponse = true,
+            };
+        }
+
+        private static bool IsEffectValidationProbePrompt(string promptText)
+        {
+            if (string.IsNullOrWhiteSpace(promptText))
+            {
+                return false;
+            }
+
+            return promptText.IndexOf("Effect validation step.", StringComparison.OrdinalIgnoreCase)
+                    >= 0
+                || (
+                    promptText.IndexOf("[EFFECT:", StringComparison.OrdinalIgnoreCase) >= 0
+                    && promptText.IndexOf(
+                            "append exactly one tag",
+                            StringComparison.OrdinalIgnoreCase
+                        ) >= 0
+                );
+        }
+
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
         private void SetPlayerPromptContextServerRpc(
             string nameId,
@@ -8694,7 +8956,7 @@ namespace Network_Game.Dialogue
         /// </summary>
         public async Task<string> AnalyzeDebugLog(string logContext, string errorMessage)
         {
-            if (m_LlmAgent == null)
+            if (!UseOpenAIRemote && m_LlmAgent == null)
                 return "LLM Agent not available.";
 
             string debugSystemPrompt =

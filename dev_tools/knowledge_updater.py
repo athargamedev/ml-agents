@@ -16,7 +16,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
-from dev_tools.lm_client import LmClient as LmStudioClient, TEXT_MODEL
+from dev_tools.lm_client import LmClient as LmStudioClient, DOCS_MODEL
 
 # ── Paths ──────────────────────────────────────────────────────────────────────
 REPO_ROOT   = Path(__file__).parent.parent.resolve()
@@ -27,7 +27,7 @@ def _default_memory_dir() -> str:
     repo_path = str(REPO_ROOT)
     if len(repo_path) >= 2 and repo_path[1] == ":":
         repo_path = repo_path[0].upper() + repo_path[1:]
-    slug = repo_path.replace(":", "").replace("\\", "-").replace("/", "-")
+    slug = repo_path.replace(":", "-").replace("\\", "-").replace("/", "-")
     return str(Path.home() / ".claude" / "projects" / slug / "memory")
 
 
@@ -195,8 +195,8 @@ def run_update_cli(client: Optional[LmStudioClient] = None) -> bool:
         print("[Update] ERROR: LM Studio is not reachable. Start LM Studio and load a model first.")
         return False
 
-    if not client.ensure_models_loaded([TEXT_MODEL], context_length=4096):
-        print(f"[Update] ERROR: Could not load required model: {TEXT_MODEL}")
+    if not client.ensure_models_loaded([DOCS_MODEL], context_length=4096):
+        print(f"[Update] ERROR: Could not load required model: {DOCS_MODEL}")
         return False
 
     # ── Gather inputs ──────────────────────────────────────────────────────────
@@ -226,7 +226,7 @@ def run_update_cli(client: Optional[LmStudioClient] = None) -> bool:
     if existing_combined:
         user_msg_parts.append(f"=== EXISTING KNOWLEDGE BASE (do not duplicate) ===\n{existing_combined[:3000]}")
 
-    user_msg = "\n\n".join(user_msg_parts)
+    user_msg = "/no_think\n" + "\n\n".join(user_msg_parts)
 
     print("[Update] Synthesising insights with LM Studio...")
     result = client.ask_schema(
@@ -234,7 +234,7 @@ def run_update_cli(client: Optional[LmStudioClient] = None) -> bool:
         user=user_msg,
         schema=_SYNTHESIS_SCHEMA,
         schema_name="knowledge_synthesis",
-        model=TEXT_MODEL,
+        model=DOCS_MODEL,
         max_tokens=800,
     )
 
@@ -248,7 +248,8 @@ def run_update_cli(client: Optional[LmStudioClient] = None) -> bool:
     invalidated    = result.get("patterns_invalidated", [])
 
     if not new_insights and not confirmed and not invalidated:
-        print("[Update] No new insights extracted.")
+        existing_count = len([l for l in existing_combined.splitlines() if l.startswith("###")])
+        print(f"[Update] KB up to date ({existing_count} existing entries). No new patterns this run.")
         return True
 
     # ── Split insights into code_quality vs project_patterns ──────────────────

@@ -30,7 +30,7 @@ namespace LLMUnity
             {
                 onLogging(Marshal.PtrToStringUTF8(msg));
             }
-            catch { }
+            catch {}
         }
     }
 
@@ -58,7 +58,7 @@ namespace LLMUnity
             {
                 onCompletion(Marshal.PtrToStringUTF8(msg));
             }
-            catch { }
+            catch {}
         }
     }
 }

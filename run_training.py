@@ -2,11 +2,12 @@
 run_training.py — Unified NpcDialogue training launcher.
 
 Usage:
-    python run_training.py [--fresh] [--run-id NAME] [--no-watchdog]
+    python run_training.py [--fresh] [--run-id NAME] [--no-watchdog] [--unity-check]
 
 What this does (and why):
   - Port 5004 cleanup     → kills orphan Python procs that block mlagents-learn on startup
-  - Unity readiness gate  → warns early if Unity is not in Play mode before spending time waiting
+  - Optional Unity readiness gate
+                         → warns early if Unity HTTP MCP bridge is reachable and Play mode is not ready
   - Auto-resume           → detects last run_id in results/ and passes --resume automatically
                             (never lose progress again from an unexpected crash)
   - Watchdog              → relaunches mlagents-learn if it exits with a non-zero code
@@ -33,7 +34,7 @@ LOG_DIR     = os.path.join(REPO_ROOT, ".codex", "tmp")
 
 # ── Config ────────────────────────────────────────────────────────────────────
 TRAINER_PORT             = 5004
-UNITY_HEALTH_URL         = "http://localhost:8009/mcp"   # Unity MCP bridge health endpoint
+UNITY_HEALTH_URL         = "http://localhost:8009/mcp"   # Unity MCP HTTP bridge endpoint (optional)
 UNITY_HEALTH_TIMEOUT_S   = 120    # max seconds to wait for Unity to be ready
 UNITY_HEALTH_POLL_S      = 3
 MAX_WATCHDOG_RESTARTS    = 10     # stop after this many unexpected crashes
@@ -241,9 +242,19 @@ def main() -> None:
         "--no-watchdog", action="store_true",
         help="Run mlagents-learn exactly once (no restart on crash).",
     )
-    parser.add_argument(
-        "--skip-unity-check", action="store_true",
-        help="Skip the Unity readiness HTTP poll (useful when MCP bridge is not running).",
+    parser.set_defaults(skip_unity_check=True)
+    unity_check_group = parser.add_mutually_exclusive_group()
+    unity_check_group.add_argument(
+        "--unity-check",
+        dest="skip_unity_check",
+        action="store_false",
+        help="Enable the Unity readiness HTTP poll against the MCP HTTP bridge (only use when localhost:8009/mcp is available).",
+    )
+    unity_check_group.add_argument(
+        "--skip-unity-check",
+        dest="skip_unity_check",
+        action="store_true",
+        help=argparse.SUPPRESS,
     )
     args = parser.parse_args()
 
@@ -252,7 +263,11 @@ def main() -> None:
     kill_port_holders(TRAINER_PORT)
 
     # 2 ── Unity readiness gate
-    if not args.skip_unity_check:
+    if args.skip_unity_check:
+        log(
+            "Skipping Unity readiness HTTP poll (disabled by default; pass --unity-check to enable it)."
+        )
+    else:
         wait_for_unity()
 
     # 3 ── Decide run_id + resume flag

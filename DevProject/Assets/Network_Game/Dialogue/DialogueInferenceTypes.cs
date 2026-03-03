@@ -43,6 +43,12 @@ namespace Network_Game.Dialogue
         public string[] StopSequences = null;
     }
 
+    public sealed class DialogueInferenceRequestOptions
+    {
+        public int MaxTokensOverride = -1;
+        public bool PreferJsonResponse;
+    }
+
     public interface IDialogueInferenceClient
     {
         string BackendName { get; }

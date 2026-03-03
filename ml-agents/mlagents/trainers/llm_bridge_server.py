@@ -58,7 +58,7 @@ def make_lmstudio_handler(
 
     Prerequisites:
         pip install openai
-        LM Studio running with llama-3.2-3b-instruct (or any loaded model)
+        LM Studio running with qwen3-8b (or any loaded model — leave model="" to auto-detect)
         Server started in LM Studio on port 7002
 
     Args:
@@ -85,6 +85,23 @@ def make_lmstudio_handler(
         completion = client.chat.completions.create(
             model=effective_model,
             messages=messages,
+            response_format={
+                "type": "json_schema",
+                "json_schema": {
+                    "name": "dialogue_response",
+                    "strict": True,
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "responseText": {"type": "string"},
+                            "emotion": {"type": "string"},
+                            "confidence": {"type": "number"},
+                        },
+                        "required": ["responseText", "emotion", "confidence"],
+                        "additionalProperties": False,
+                    },
+                },
+            },
             timeout=timeout,
         )
         raw = completion.choices[0].message.content or "{}"

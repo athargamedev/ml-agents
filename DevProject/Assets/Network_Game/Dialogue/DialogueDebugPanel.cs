@@ -1,7 +1,7 @@
+using Network_Game.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
-using Network_Game.UI;
 
 namespace Network_Game.Dialogue
 {
@@ -300,7 +300,11 @@ namespace Network_Game.Dialogue
                 DestroyUiToolkitOverlay();
             }
 
-            if (m_UiOverlayRoot != null && m_UiOverlayRoot.parent != null && m_UiOverlayRoot.panel != null)
+            if (
+                m_UiOverlayRoot != null
+                && m_UiOverlayRoot.parent != null
+                && m_UiOverlayRoot.panel != null
+            )
             {
                 return;
             }
@@ -428,9 +432,9 @@ namespace Network_Game.Dialogue
             if (m_UiStatsLabel != null)
             {
                 m_UiStatsLabel.text =
-                    $"Queue {stats.PendingCount}  Active {stats.ActiveCount}  Histories {stats.HistoryCount}  " +
-                    $"Success {stats.SuccessRate:P0}  Timeout {stats.TimeoutRate:P0}  " +
-                    $"Queue p50/p95 {stats.QueueWaitHistogram.P50Ms:F0}/{stats.QueueWaitHistogram.P95Ms:F0} ms";
+                    $"Queue {stats.PendingCount}  Active {stats.ActiveCount}  Histories {stats.HistoryCount}  "
+                    + $"Success {stats.SuccessRate:P0}  Timeout {stats.TimeoutRate:P0}  "
+                    + $"Queue p50/p95 {stats.QueueWaitHistogram.P50Ms:F0}/{stats.QueueWaitHistogram.P95Ms:F0} ms";
             }
 
             if (m_UiLastResponseLabel != null)
@@ -466,7 +470,8 @@ namespace Network_Game.Dialogue
             for (int i = 0; i < showCount; i++)
             {
                 var entry = m_CachedLMLog[m_CachedLMLog.Count - 1 - i];
-                string ts = System.DateTimeOffset.FromUnixTimeMilliseconds(entry.TimestampMs)
+                string ts = System
+                    .DateTimeOffset.FromUnixTimeMilliseconds(entry.TimestampMs)
                     .ToString("HH:mm:ss");
                 m_UiLmList.Add(CreateListLabel($"[{ts}] {entry.Mode.ToUpper()} — {entry.Summary}"));
                 if (!string.IsNullOrWhiteSpace(entry.Detail))
@@ -498,7 +503,9 @@ namespace Network_Game.Dialogue
                 string remaining = fx.TryGetValue("duration_remaining", out object d)
                     ? $"{d:F1}s"
                     : "?";
-                string tag = fx.TryGetValue("effect_tag", out object t) ? t?.ToString() : string.Empty;
+                string tag = fx.TryGetValue("effect_tag", out object t)
+                    ? t?.ToString()
+                    : string.Empty;
                 m_UiVfxList.Add(CreateListLabel($"• {name}  [{tag}]  remaining: {remaining}"));
             }
         }
@@ -529,7 +536,11 @@ namespace Network_Game.Dialogue
             return label;
         }
 
-        private static Label CreateListLabel(string text, float fontSize = 8.5f, float leftMargin = 0f)
+        private static Label CreateListLabel(
+            string text,
+            float fontSize = 8.5f,
+            float leftMargin = 0f
+        )
         {
             var label = new Label(text);
             label.style.fontSize = fontSize;
@@ -581,18 +592,28 @@ namespace Network_Game.Dialogue
                 for (int i = 0; i < preferred.Length; i++)
                 {
                     UIDocument doc = preferred[i];
-                    if (doc != null && doc.isActiveAndEnabled && IsUsableUiToolkitHostRoot(doc.rootVisualElement))
+                    if (
+                        doc != null
+                        && doc.isActiveAndEnabled
+                        && IsUsableUiToolkitHostRoot(doc.rootVisualElement)
+                    )
                     {
                         return doc.rootVisualElement;
                     }
                 }
             }
 
-            UIDocument[] docs = UnityEngine.Object.FindObjectsByType<UIDocument>(FindObjectsInactive.Exclude);
+            UIDocument[] docs = UnityEngine.Object.FindObjectsByType<UIDocument>(
+                FindObjectsInactive.Exclude
+            );
             for (int i = 0; i < docs.Length; i++)
             {
                 UIDocument doc = docs[i];
-                if (doc != null && doc.isActiveAndEnabled && IsUsableUiToolkitHostRoot(doc.rootVisualElement))
+                if (
+                    doc != null
+                    && doc.isActiveAndEnabled
+                    && IsUsableUiToolkitHostRoot(doc.rootVisualElement)
+                )
                 {
                     return doc.rootVisualElement;
                 }

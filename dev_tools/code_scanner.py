@@ -19,7 +19,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Callable, List, Optional
 
-from dev_tools.lm_client import LmClient as LmStudioClient, TEXT_MODEL
+from dev_tools.lm_client import LmClient as LmStudioClient, DOCS_MODEL
+from dev_tools.package_context import PackageContextProvider
 
 # ── Paths ──────────────────────────────────────────────────────────────────────
 REPO_ROOT = Path(__file__).parent.parent.resolve()
@@ -44,6 +45,7 @@ _SCAN_SCHEMA = {
         "severity": {"type": "string", "enum": ["none", "low", "medium", "high"]},
         "issues": {
             "type": "array",
+            "maxItems": 4,
             "items": {
                 "type": "object",
                 "properties": {
@@ -52,10 +54,11 @@ _SCAN_SCHEMA = {
                                              "npc_dialogue", "unity_best_practices"]},
                     "severity":    {"type": "string", "enum": ["low", "medium", "high"]},
                     "line_hint":   {"type": "string"},
+                    "line_quote":  {"type": "string"},
                     "description": {"type": "string"},
                     "fix":         {"type": "string"},
                 },
-                "required": ["category", "severity", "line_hint", "description", "fix"],
+                "required": ["category", "severity", "line_hint", "line_quote", "description", "fix"],
                 "additionalProperties": False,
             },
         },
@@ -73,6 +76,7 @@ class IssueResult:
     category: str
     severity: str
     line_hint: str
+    line_quote: str
     description: str
     fix: str
 
@@ -129,29 +133,84 @@ def _load_few_shot_patterns() -> str:
         return ""
 
 
-def _build_user_message(file_path: Path, content: str, few_shot: str) -> str:
+def _build_user_message(
+    file_path: Path, content: str, few_shot: str, pkg_context: str = ""
+) -> str:
     rel_path = file_path.relative_to(REPO_ROOT) if file_path.is_relative_to(REPO_ROOT) else file_path
     truncated = content[:MAX_FILE_CHARS]
     note = f"\n[...truncated at {MAX_FILE_CHARS} chars]" if len(content) > MAX_FILE_CHARS else ""
+    # few_shot patterns are NOT injected — they caused the LLM to copy pattern IDs
+    # into line_hint instead of real method names. The system prompt is sufficient.
+    prefix = f"{pkg_context}\n\n" if pkg_context else ""
+    return f"{prefix}File: {rel_path}\n\n```csharp\n{truncated}{note}\n```"
 
-    parts = [f"File: {rel_path}\n"]
-    if few_shot:
-        parts.append(f"Reference patterns (use as context, not exhaustive list):\n{few_shot}\n")
-    parts.append(f"```csharp\n{truncated}{note}\n```")
-    return "\n".join(parts)
+
+_SPECULATIVE_PHRASES = (
+    "may involve", "may be", "could be", "could lead", "might be",
+    "if used", "if called", "if this", "appears to", "seems to",
+    "not visible", "not in provided", "not found", "no evidence",
+    "not present", "(not", "n/a", "none", "unknown",
+)
+# Pattern-catalog boilerplate that the LLM copies into line_hint instead of real locations
+_CATALOG_PREFIXES = ("[mp0", "[up0", "[ml0", "[npc0", ">>>", "multiplayer_safety",
+                     "ml_agents", "unity_best_practices", "npc_dialogue")
+
+
+def _is_speculative(text: str) -> bool:
+    t = text.lower()
+    return any(p in t for p in _SPECULATIVE_PHRASES)
+
+
+def _is_catalog_boilerplate(text: str) -> bool:
+    t = text.lower().strip()
+    return any(t.startswith(p) for p in _CATALOG_PREFIXES)
 
 
 def _parse_result(file_path: Path, raw: dict) -> FileScanResult:
     issues = []
+    seen_quotes: set[str] = set()
+
     for item in raw.get("issues", []):
         if not isinstance(item, dict):
             continue
+
+        line_quote = item.get("line_quote", "").strip()
+        description = item.get("description", "").strip()
+        line_hint = item.get("line_hint", "").strip()
+        fix = item.get("fix", "").strip()
+
+        # 1. Discard if no real code was quoted (too short, admitted failure, speculative,
+        #    or LLM quoted its own fix suggestion rather than actual file code)
+        _lq_stripped = line_quote.lstrip("/ \t")
+        if len(line_quote) < 8 or _is_speculative(line_quote):
+            continue
+        if line_quote.lstrip().startswith("//") and any(
+            w in line_quote for w in ("Add this", "Consider", "Replace", "Ensure", "Move", "Use ")
+        ):
+            continue
+
+        # 2. Discard if the LLM pasted pattern-catalog boilerplate into line_hint
+        #    (means it didn't find a real location — just templated the answer)
+        if _is_catalog_boilerplate(line_hint):
+            continue
+
+        # 3. Discard if fix is N/A (LLM admitted there's no real fix needed)
+        if fix.lower() in ("n/a", "none", ""):
+            continue
+
+        # 4. Deduplicate — same quote appearing in multiple issues for the same file
+        quote_key = line_quote[:60]
+        if quote_key in seen_quotes:
+            continue
+        seen_quotes.add(quote_key)
+
         issues.append(IssueResult(
             category=item.get("category", "unknown"),
             severity=item.get("severity", "low"),
-            line_hint=item.get("line_hint", ""),
-            description=item.get("description", ""),
-            fix=item.get("fix", ""),
+            line_hint=line_hint,
+            line_quote=line_quote,
+            description=description,
+            fix=fix,
         ))
 
     return FileScanResult(
@@ -170,9 +229,14 @@ def _collect_cs_files(paths: Optional[List[Path]] = None) -> List[Path]:
         if not base.exists():
             continue
         for root, _, fnames in os.walk(str(base)):
+            root_path = Path(root)
+            # Skip test directories — test code has different patterns and skews results
+            if any(part in ("Tests", "Test", "Editor") for part in root_path.parts
+                   if part not in ("Assets", "Scripts", "ML-Agents", "Network_Game", "Dialogue", "UI", "Auth", "Combat")):
+                continue
             for fname in sorted(fnames):
-                if fname.endswith(".cs"):
-                    files.append(Path(root) / fname)
+                if fname.endswith(".cs") and not fname.endswith("Tests.cs"):
+                    files.append(root_path / fname)
     return sorted(
         set(files),
         key=lambda p: str(p.relative_to(REPO_ROOT) if p.is_relative_to(REPO_ROOT) else p),
@@ -181,9 +245,10 @@ def _collect_cs_files(paths: Optional[List[Path]] = None) -> List[Path]:
 
 class CodeScanner:
     def __init__(self, client: Optional[LmStudioClient] = None):
-        self._client   = client or LmStudioClient()
+        self._client     = client or LmStudioClient()
         self._sys_prompt = _load_system_prompt()
         self._few_shot   = _load_few_shot_patterns()
+        self._pkg_ctx    = PackageContextProvider()
 
     def scan_file(self, file_path: Path) -> FileScanResult:
         """Scan a single C# file and return structured results."""
@@ -196,14 +261,17 @@ class CodeScanner:
                 summary="", error=f"Could not read file: {ex}",
             )
 
-        user_msg = _build_user_message(file_path, content, self._few_shot)
+        pkg_context = self._pkg_ctx.get_context(file_path, content)
+        user_msg = _build_user_message(file_path, content, self._few_shot, pkg_context)
+        # DOCS_MODEL (qwen3-8b) — 8B quality + json_schema grammar sampling for reliable JSON.
+        # qwen2.5-coder-7b collapses in prose mode on large files; TEXT_MODEL (3B) hallucinates.
         raw = self._client.ask_schema(
             system=self._sys_prompt,
             user=user_msg,
             schema=_SCAN_SCHEMA,
             schema_name="code_review",
-            model=TEXT_MODEL,
-            max_tokens=900,
+            model=DOCS_MODEL,
+            max_tokens=1500,
         )
 
         duration = time.monotonic() - t0
@@ -297,12 +365,24 @@ class CodeScanner:
                     lines.append(f"- **[{issue.category}]** {issue.description}")
                     if issue.line_hint:
                         lines.append(f"  - Location: `{issue.line_hint}`")
+                    if issue.line_quote:
+                        lines.append(f"  - Code: `{issue.line_quote}`")
                     if issue.fix:
                         lines.append(f"  - Fix: {issue.fix}")
                 lines.append("")
 
+        # Parse errors — these are silently dropped otherwise
+        errored = [r for r in report.results if r.error]
+        if errored:
+            lines.append("## ⚠ Scan Errors (model output could not be parsed)")
+            lines.append("")
+            for r in errored:
+                rel = r.file_path.relative_to(REPO_ROOT) if r.file_path.is_relative_to(REPO_ROOT) else r.file_path
+                lines.append(f"- `{rel}` — {r.error}: {r.summary[:120]}")
+            lines.append("")
+
         # Clean files
-        clean = [r for r in report.results if r.severity == "none" and not r.issues]
+        clean = [r for r in report.results if r.severity == "none" and not r.issues and not r.error]
         if clean:
             lines.append("## Clean Files (no issues detected)")
             lines.append("")
@@ -366,8 +446,8 @@ def run_scan_cli(
               f"{client.base_url}. Start LM Studio first.")
         return None
 
-    if not client.ensure_models_loaded([TEXT_MODEL], context_length=4096):
-        print(f"[Scan] ERROR: Could not load required model: {TEXT_MODEL}")
+    if not client.ensure_models_loaded([DOCS_MODEL], context_length=4096):
+        print(f"[Scan] ERROR: Could not load required model: {DOCS_MODEL}")
         return None
 
     scanner = CodeScanner(client)

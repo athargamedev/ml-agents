@@ -20,6 +20,8 @@ namespace LLMUnity
     public class LLMAgent : LLMClient
     {
         #region Inspector Fields
+        protected UndreamAI.LlamaLib.LLMAgent llmAgent;
+
         /// <summary>Filename for saving chat history (saved in persistentDataPath)</summary>
         [Tooltip("Filename for saving chat history (saved in persistentDataPath)")]
         [LLM]
@@ -74,30 +76,44 @@ namespace LLMUnity
         }
 
         /// <summary>The underlying LLMAgent instance from LlamaLib</summary>
-        public UndreamAI.LlamaLib.LLMAgent llmAgent { get; protected set; }
-
         /// <summary>Current conversation history as a list of chat messages</summary>
         public List<ChatMessage> chat
         {
             get
             {
                 if (llmAgent == null)
+                {
                     return new List<ChatMessage>();
+                }
 
-                // convert each UndreamAI.LlamaLib.ChatMessage to LLMUnity.ChatMessage
-                return llmAgent.GetHistory().Select(m => new ChatMessage(m)).ToList();
+                List<UndreamAI.LlamaLib.ChatMessage> history = llmAgent.GetHistory();
+                if (history == null || history.Count == 0)
+                {
+                    return new List<ChatMessage>();
+                }
+
+                return history.Select(message => new ChatMessage(message)).ToList();
             }
             set
             {
-                if (llmAgent != null)
+                if (llmAgent == null)
                 {
-                    // convert LLMUnity.ChatMessage back to UndreamAI.LlamaLib.ChatMessage
-                    var history =
-                        value?.Select(m => (UndreamAI.LlamaLib.ChatMessage)m).ToList()
-                        ?? new List<UndreamAI.LlamaLib.ChatMessage>();
-
-                    llmAgent.SetHistory(history);
+                    return;
                 }
+
+                var history = new List<UndreamAI.LlamaLib.ChatMessage>();
+                if (value != null)
+                {
+                    for (int i = 0; i < value.Count; i++)
+                    {
+                        ChatMessage message = value[i];
+                        history.Add(
+                            new UndreamAI.LlamaLib.ChatMessage(message.role, message.content)
+                        );
+                    }
+                }
+
+                llmAgent.SetHistory(history);
             }
         }
         #endregion
@@ -420,9 +436,9 @@ namespace LLMUnity
     public class ChatMessage : UndreamAI.LlamaLib.ChatMessage
     {
         public ChatMessage(string role, string content)
-            : base(role, content) { }
+            : base(role, content) {}
 
         public ChatMessage(UndreamAI.LlamaLib.ChatMessage other)
-            : base(other.role, other.content) { }
+            : base(other.role, other.content) {}
     }
 }

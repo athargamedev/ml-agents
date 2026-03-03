@@ -2,6 +2,8 @@
 dev_tools/run_dev_tools.py — Unified local LLM dev assistant launcher.
 
 Commands:
+    verify                  Check model routing, scene values, and scanner behaviour (fast)
+    verify --live           + run actual LLM calls to confirm no hallucination/collapse
     scan                    Run C# code quality scanner (all project files)
     scan --file path.cs     Scan a single file
     scan --dry-run          List files that would be scanned, no LM Studio needed
@@ -12,6 +14,8 @@ Commands:
     jobs                    Run targeted Behavior_Scene analysis jobs
     all                     Run: schema + asmdef -> scan -> update (full pipeline)
     all --watch N           Repeat full pipeline every N minutes (default: 120)
+    dashboard               Launch web dashboard at http://localhost:8765
+    dashboard --port N      Use a custom port
 
 Examples:
     C:\\...\\mlagents\\python.exe dev_tools/run_dev_tools.py all
@@ -36,8 +40,6 @@ REPO_ROOT = Path(__file__).parent.parent.resolve()
 sys.path.insert(0, str(REPO_ROOT))
 # ──────────────────────────────────────────────────────────────────────────────
 
-from dev_tools.lm_client import LmClient as LmStudioClient  # backward-compat alias
-
 
 def _ts() -> str:
     return datetime.now().strftime("%H:%M:%S")
@@ -45,6 +47,11 @@ def _ts() -> str:
 
 def log(msg: str) -> None:
     print(f"[{_ts()}] {msg}", flush=True)
+
+
+def cmd_verify(args) -> bool:
+    from dev_tools.verify import run_verify_cli
+    return run_verify_cli(live=getattr(args, "live", False))
 
 
 def cmd_scan(args) -> bool:
@@ -68,7 +75,7 @@ def cmd_schema(args) -> bool:
 
 def cmd_asmdef(args) -> bool:
     from dev_tools.asmdef_scanner import run_asmdef_cli
-    return run_asmdef_cli()
+    return run_asmdef_cli(verbose=getattr(args, "verbose", False))
 
 
 def cmd_scan_docs(args) -> bool:
@@ -84,6 +91,19 @@ def cmd_jobs(args) -> bool:
         return False
     failed = [jid for jid, s in summary.items() if s["status"] != "ok"]
     return len(failed) == 0
+
+
+def cmd_check(args) -> bool:
+    from dev_tools.static_checker import run_static_cli
+    run_static_cli()
+    return True
+
+
+def cmd_dashboard(args) -> bool:
+    from dev_tools.dashboard import run_dashboard_cli
+    port = getattr(args, "port", 8765)
+    run_dashboard_cli(port=port)
+    return True
 
 
 def cmd_all(args) -> bool:
@@ -117,6 +137,11 @@ def main() -> None:
     )
     subparsers = parser.add_subparsers(dest="command", metavar="command")
 
+    # ── verify ──
+    verify_p = subparsers.add_parser("verify", help="Check model routing, scene values, scanner behaviour")
+    verify_p.add_argument("--live", action="store_true",
+                          help="Run actual LLM calls to verify no hallucination/collapse (~3 min)")
+
     # ── scan ──
     scan_p = subparsers.add_parser("scan", help="Run C# code quality scanner")
     scan_p.add_argument("--file", metavar="PATH", help="Scan a single file instead of all files")
@@ -129,7 +154,9 @@ def main() -> None:
     subparsers.add_parser("schema", help="Extract project API schemas from C# files")
 
     # ── asmdef ──
-    subparsers.add_parser("asmdef", help="Scan .asmdef files and build assembly dependency map")
+    asmdef_p = subparsers.add_parser("asmdef", help="Scan .asmdef files and build assembly dependency map")
+    asmdef_p.add_argument("--verbose", action="store_true",
+                          help="Print full assembly dependency graph (suppressed by default in pipeline)")
 
     # ── scan-docs ──
     docs_p = subparsers.add_parser("scan-docs", help="Generate project-specific package documentation")
@@ -145,8 +172,15 @@ def main() -> None:
         help="Run a single job by ID (e.g. --job 03). Omit to run all jobs.",
     )
 
+    # ── check ──
+    subparsers.add_parser("check", help="Run fast static checks (no LLM) for ML001/ML002/NET01")
+
+    # ── dashboard ──
+    dash_p = subparsers.add_parser("dashboard", help="Launch web dashboard at http://localhost:8765")
+    dash_p.add_argument("--port", type=int, default=8765, help="Port to serve on (default: 8765)")
+
     # ── all ──
-    all_p = subparsers.add_parser("all", help="Run full pipeline: schema → scan → update")
+    all_p = subparsers.add_parser("all", help="Run full pipeline: schema -> scan -> update")
     all_p.add_argument(
         "--watch", metavar="MINUTES", type=int, nargs="?", const=120,
         help="Repeat every N minutes (default: 120) for overnight operation",
@@ -159,13 +193,16 @@ def main() -> None:
         return
 
     COMMANDS = {
+        "verify":    cmd_verify,
         "scan":      cmd_scan,
         "scan-docs": cmd_scan_docs,
         "update":    cmd_update,
         "schema":    cmd_schema,
         "asmdef":    cmd_asmdef,
         "jobs":      cmd_jobs,
+        "check":     cmd_check,
         "all":       cmd_all,
+        "dashboard": cmd_dashboard,
     }
 
     fn = COMMANDS[args.command]

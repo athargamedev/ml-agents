@@ -121,8 +121,14 @@ def build_map_output(assemblies: Dict[str, dict]) -> dict:
     }
 
 
-def run_asmdef_cli() -> bool:
-    """Entry point called by run_dev_tools.py."""
+def run_asmdef_cli(verbose: bool = False) -> bool:
+    """Entry point called by run_dev_tools.py.
+
+    Args:
+        verbose: If True, print the full assembly dependency graph.
+                 Defaults to False — the map JSON is always written and
+                 can be inspected at dev_tools/schemas/assembly_map.json.
+    """
     print("[AsmDef] Scanning .asmdef files in Assets/ and Packages/...")
 
     assemblies = scan_asmdefs()
@@ -139,8 +145,9 @@ def run_asmdef_cli() -> bool:
     print(f"[AsmDef] Project assemblies: {len(project)}, Package assemblies: {len(packages)}")
     print(f"[AsmDef] Written -> {ASSEMBLY_MAP_OUT}")
 
-    _print_assembly_graph(project, packages, label="Project")
-    _print_assembly_graph(packages, project, label="Packages", compact=True)
+    if verbose:
+        _print_assembly_graph(project, packages, label="Project")
+        _print_assembly_graph(packages, project, label="Packages", compact=True)
 
     # Report any unresolved references
     issues = check_missing_references(assemblies)

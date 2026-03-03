@@ -1,0 +1,29 @@
+{
+    "name": "Network_Game.ML-agents.Editor",
+    "rootNamespace": "Network_Game",
+    "references": [
+        "Network_Game",
+        "Network_Game.ML-agents",
+        "Unity.ML-Agents",
+        "Unity.ML-Agents.Editor",
+        "undream.llmunity.Runtime",
+        "Unity.Netcode.Runtime",
+        "Unity.Networking.Transport",
+        "Unity.Cinemachine",
+        "Unity.AI.Navigation",
+        "Unity.InputSystem",
+        "Unity.TextMeshPro",
+        "UnityEngine.UI",
+        "Unity.Addressables",
+        "Unity.ResourceManager"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

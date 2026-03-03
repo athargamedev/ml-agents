@@ -9,7 +9,8 @@
 :: Before running:
 ::   1. Open Unity Editor → DevProject
 ::   2. Do NOT press Play yet
-::   3. Run this script — it waits for Unity to connect on port 5004
+::   3. Run this script — it delegates to run_training.py, which cleans up
+::      stale port 5004 holders before starting the trainer
 ::   4. Then press Play in Unity
 ::
 :: Results land in:  results\<run_id>\
@@ -20,6 +21,7 @@ setlocal
 set PYTHON=C:\Users\andre_wjgj23f\miniconda3\envs\mlagents\python.exe
 set REPO=D:\GithubRepos\ml-agents
 set CONFIG=%REPO%\config\ppo\NpcDialogue.yaml
+set TRAINER=%REPO%\run_training.py
 
 :: Auto-generate a timestamped run ID if none provided.
 :: Use PowerShell for a locale-independent timestamp with second precision.
@@ -38,6 +40,7 @@ echo  ╚═══════════════════════�
 echo.
 echo  Run ID   : %RUN_ID%
 echo  Config   : %CONFIG%
+echo  Wrapper  : %TRAINER%
 echo  Results  : %REPO%\results\%RUN_ID%
 echo.
 
@@ -49,20 +52,21 @@ echo.
 
 cd /d "%REPO%"
 
-%PYTHON% -m mlagents.trainers.learn ^
-    "%CONFIG%" ^
-    --run-id="%RUN_ID%" ^
-    --torch-device=cuda ^
-    --results-dir="%REPO%\results" ^
-    --time-scale=1
+if not exist "%TRAINER%" (
+    echo  ERROR: Training wrapper not found: %TRAINER%
+    pause
+    exit /b 1
+)
+
+%PYTHON% "%TRAINER%" --run-id "%RUN_ID%"
 
 set EXIT_CODE=%ERRORLEVEL%
 
 echo.
 if not "%EXIT_CODE%"=="0" (
     echo  Training failed with exit code %EXIT_CODE%.
-    echo  The trainer did not start a new run.
-    echo  If the run ID already exists, use a different name or start run_training.py to resume.
+    echo  The training wrapper did not start a new run.
+    echo  If the run ID already exists, use a different name or run run_training.py --resume.
     pause
     exit /b %EXIT_CODE%
 )

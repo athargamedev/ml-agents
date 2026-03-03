@@ -2362,7 +2362,6 @@ GameObject:
   - component: {fileID: 7845196643347166023}
   - component: {fileID: 885369036120448215}
   - component: {fileID: 6080110117549638032}
-  - component: {fileID: -8372322623058600854}
   - component: {fileID: -1847610239723597953}
   m_Layer: 0
   m_Name: PlayerArmature 1 1
@@ -2515,7 +2514,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 274649b0e221539409070ebf6c18918b, type: 3}
   - {fileID: 8300000, guid: a3194b8bbc96ef84fab1f98f4b7dae3e, type: 3}
   FootstepAudioVolume: 0.588
-  JumpHeight: 5
+  JumpHeight: 8
   Gravity: -15
   JumpTimeout: 0.3
   FallTimeout: 0.15
@@ -2532,8 +2531,8 @@ MonoBehaviour:
   CrouchCenterY: 0.5
   CrouchTransitionSpeed: 2
   CinemachineCameraTarget: {fileID: 6391045015849412824}
-  TopClamp: 82
-  BottomClamp: -55
+  TopClamp: 20
+  BottomClamp: -5
   CameraAngleOverride: 0
   LockCameraPosition: 0
   HardLandingFallTime: 0.8
@@ -2891,40 +2890,6 @@ CapsuleCollider:
   m_Height: 1.8
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &-8372322623058600854
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6391045015849412824}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2641d1814dcbf7448980bc6f96fd0607, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Network_Game::Network_Game.Diagnostics.DebugWatchdog
-  m_AnalysisCount: 0
-  m_AnalysisBudgetLeft: 0
-  m_IsAnalyzing: 0
-  m_PendingQueueDepth: 0
-  m_LastAnalysisSuggestion: 
-  m_LastPrompt: 
-  m_LastResponse: 
-  m_LastInferenceMs: 0
-  m_TotalInferenceCalls: 0
-  m_ServicePresent: 0
-  m_PendingDialogueCount: 0
-  m_ActiveDialogueCount: 0
-  m_WarmupState: 
-  m_SuccessRate: 0
-  m_P50QueueWaitMs: 0
-  m_P95ModelMs: 0
-  m_TimeoutCount: 0
-  m_ErrorCount: 0
-  m_WarningCount: 0
-  m_LogCount: 0
-  m_LastError: 
-  m_PollInterval: 0.25
 --- !u!114 &-1847610239723597953
 MonoBehaviour:
   m_ObjectHideFlags: 0

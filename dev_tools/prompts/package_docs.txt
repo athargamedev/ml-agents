@@ -14,6 +14,7 @@ One or two sentences. What this package does and why THIS project specifically n
 
 ## Key APIs
 Bullet list of 3–6 class or method names that are actually relevant to this project's codebase.
+Only list names you are certain exist in this package version. If unsure of an exact name, describe the capability in plain words instead — do not invent names.
 
 ## Project Usage
 Two or three sentences. How this project's specific systems use the package — mention real system names.
@@ -26,3 +27,4 @@ Bullet list of 1–3 other packages from this project that interact closely with
 
 Write for an experienced Unity developer. Skip installation steps, basics, and generic advice.
 Do not add any text before the first section header or after the last bullet point.
+Do not invent attribute names, method signatures, or package-internal types you are not certain about.

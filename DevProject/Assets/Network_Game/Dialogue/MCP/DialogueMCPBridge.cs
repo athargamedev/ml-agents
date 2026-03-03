@@ -78,7 +78,7 @@ namespace Network_Game.Dialogue.MCP
                 ["has_agent"] = agent != null,
                 ["warmup_degraded"] = service.IsWarmupDegraded,
                 ["warmup_failure_count"] = service.WarmupFailureCount,
-                ["remote"] = agent?.remote ?? false,
+                ["remote"] = service.UsesRemoteInference,
             };
         }
 
@@ -1267,7 +1267,6 @@ namespace Network_Game.Dialogue.MCP
         private static bool s_AutomationPlacementMemoryLoaded;
         private static bool s_GameplayProbeSubscribed;
         private static GameplayProbeAutomationRunner s_AutomationRunner;
-        private static bool s_TestPlayerDataSeeded;
 
         [Serializable]
         private sealed class AutomationPlacementMemoryEntry
@@ -1541,7 +1540,6 @@ namespace Network_Game.Dialogue.MCP
                 return;
             }
 
-            s_TestPlayerDataSeeded = false;
             int narrativeStepCount = 0;
             if (includeNarrativePrelude)
             {
@@ -1560,7 +1558,6 @@ namespace Network_Game.Dialogue.MCP
                     auth.SetQuestFlag("met_elder");
                     auth.SetQuestFlag("defeated_dragon");
                     auth.SetLastAction("defeated_boss_unscathed");
-                    s_TestPlayerDataSeeded = true;
                     Debug.Log(
                         $"[DialogueMCP] Seeded test player data: class=berserker, reputation[{testNpcId}]=90, "
                             + "inventory=[cursed_blade,ancient_tome], flags=[met_elder,defeated_dragon], "
@@ -2004,17 +2001,17 @@ namespace Network_Game.Dialogue.MCP
             string listenerInstruction = string.IsNullOrWhiteSpace(listenerLabel)
                 ? string.Empty
                 : $" Address the current listener player ({listenerLabel}) directly.";
-            string spatialGuide =
-                " Think in visible scene results only: attached = on the target body and follows it; "
-                + "area = on the ground near the target; projectile = starts away and travels toward the target; "
-                + "ambient = hangs in nearby world space. Mesh-fit means match the target's visible body size. "
-                + "Do not reason about Unity internals such as GameObjects, meshes, materials, shaders, or animations.";
-
-            // When player data was seeded, embed a brief narrative context so the LLM response
-            // weaves character identity with effect instantiation in a single reply.
-            string playerContext = s_TestPlayerDataSeeded
-                ? " The player you are addressing is a berserker champion who recently defeated a boss; briefly react to this before or after the effect tag."
-                : string.Empty;
+            string spatialGuide = placement switch
+            {
+                "attached" =>
+                    " Think in visible scene results only: place the effect on the target body so it follows the target. Match the target's visible body size.",
+                "area" =>
+                    " Think in visible scene results only: place the effect on the ground close to the target.",
+                "projectile" =>
+                    " Think in visible scene results only: start the effect away from the target and have it travel toward the target.",
+                _ =>
+                    " Think in visible scene results only: keep the effect in nearby world space around the target.",
+            };
 
             return string.Concat(
                     "Effect validation step. Respond in character with one short sentence, then append exactly one tag: [EFFECT: ",
@@ -2028,7 +2025,8 @@ namespace Network_Game.Dialogue.MCP
                     "].",
                     spatialGuide,
                     listenerInstruction,
-                    playerContext,
+                    " Output only the final sentence and tag. No analysis, no extra lines.",
+                    " Do not reason about Unity internals such as GameObjects, meshes, materials, shaders, or animations.",
                     " The effect tag name must match exactly and you must not emit any additional [EFFECT:] tags. ",
                     caution
                 )
@@ -2555,7 +2553,8 @@ namespace Network_Game.Dialogue.MCP
                     return;
                 }
 
-                DialogueEffectFeedbackPrompt prompt = DialogueEffectFeedbackPrompt.EnsureForAutomation();
+                DialogueEffectFeedbackPrompt prompt =
+                    DialogueEffectFeedbackPrompt.EnsureForAutomation();
                 if (prompt != null)
                 {
                     prompt.ForceEnablePrompt(true);
@@ -2963,7 +2962,7 @@ namespace Network_Game.Dialogue.MCP
                     return LocalStepResponseTimeoutSeconds;
                 }
 
-                bool isRemote = service.LlmAgent != null && service.LlmAgent.remote;
+                bool isRemote = service.UsesRemoteInference;
                 return isRemote
                     ? RemoteStepResponseTimeoutSeconds
                     : LocalStepResponseTimeoutSeconds;

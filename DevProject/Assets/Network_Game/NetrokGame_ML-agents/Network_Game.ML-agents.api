@@ -1,0 +1,72 @@
+// This file is generated. Do not modify by hand.
+// XML documentation file not found. To check if public methods have XML comments,
+// make sure the XML doc file is present and located next to the scraped dll
+public class GameStateProvider : UnityEngine.MonoBehaviour
+{
+    public bool IsPlayerInCombat { get; }
+    public float NormalizedPlayerHealth { get; }
+    public UnityEngine.Vector3 PlayerPosition { get; }
+    public GameStateProvider() {}
+    public string BuildDynamicContext();
+    public void SetInCombat(bool inCombat);
+    public void SetPlayerHealth(float current);
+    public void SetPlayerTransform(UnityEngine.Transform t);
+}
+
+[UnityEngine.RequireComponent(typeof(Unity.MLAgents.Policies.BehaviorParameters))] public class NpcDialogueAgent : Unity.MLAgents.Agent
+{
+    public NpcDialogueAgent() {}
+    public override void CollectObservations(Unity.MLAgents.Sensors.VectorSensor sensor);
+    public override void Heuristic(ref readonly Unity.MLAgents.Actuators.ActionBuffers actionsOut);
+    public override void Initialize();
+    public override void OnActionReceived(Unity.MLAgents.Actuators.ActionBuffers actions);
+    public void OnDialogueTurnComplete(bool playerReplied);
+    protected override void OnDisable();
+    protected override void OnEnable();
+    public override void OnEpisodeBegin();
+    public override void WriteDiscreteActionMask(Unity.MLAgents.Actuators.IDiscreteActionMask actionMask);
+}
+
+public class SideChannelDialogueClient : Network_Game.Dialogue.IDialogueInferenceClient
+{
+    public event System.Action<Unity.MLAgents.NpcDialogue.DialogueResponse> OnStructuredDialogueResponseReceived;
+    public string BackendName { get; }
+    public bool ManagesHistoryInternally { get; }
+    public SideChannelDialogueClient(Unity.MLAgents.NpcDialogue.LlmDialogueChannel channel) {}
+    public void ApplyConfig(Network_Game.Dialogue.DialogueInferenceRuntimeConfig config);
+    public System.Threading.Tasks.Task<string> ChatAsync(string systemPrompt, System.Collections.Generic.IReadOnlyList<Network_Game.Dialogue.DialogueInferenceMessage> history, string userPrompt, bool addToHistory = true, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken));
+    public async System.Threading.Tasks.Task<bool> CheckConnectionAsync(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken));
+    public void Dispose();
+    public void SetGameStateProvider(GameStateProvider provider);
+}
+
+namespace Unity.MLAgents.NpcDialogue
+{
+    public class DialogueRequest
+    {
+        public string conversationHistory;
+        public string messageType;
+        public string npcId;
+        public string npcPersonality;
+        public string playerInput;
+        public DialogueRequest() {}
+    }
+
+    public class DialogueResponse
+    {
+        public float confidence;
+        public string emotion;
+        public string npcId;
+        public string responseText;
+        public DialogueResponse() {}
+    }
+
+    public class LlmDialogueChannel : Unity.MLAgents.SideChannels.SideChannel
+    {
+        public static readonly System.Guid k_ChannelId;
+        public event System.Action<DialogueResponse> OnResponseReceived;
+        public LlmDialogueChannel() {}
+        protected override void OnMessageReceived(Unity.MLAgents.SideChannels.IncomingMessage msg);
+        public void SendRequest(DialogueRequest request);
+    }
+}

@@ -139,7 +139,9 @@ namespace Network_Game.Dialogue
 
         [SerializeField]
         [Min(0.25f)]
-        [Tooltip("Default duration for floor-freeze material overrides when no explicit duration is provided.")]
+        [Tooltip(
+            "Default duration for floor-freeze material overrides when no explicit duration is provided."
+         )]
         private float m_FloorFreezeDefaultDurationSeconds = 8f;
 
         [Header("Feedback Prompt Blocking")]
@@ -180,8 +182,12 @@ namespace Network_Game.Dialogue
             new Dictionary<ulong, RendererFadeState[]>();
         private readonly Dictionary<string, Coroutine> m_ActiveSurfaceMaterialRoutines =
             new Dictionary<string, Coroutine>(StringComparer.OrdinalIgnoreCase);
-        private readonly Dictionary<string, SurfaceMaterialOverrideState> m_ActiveSurfaceMaterialStates =
-            new Dictionary<string, SurfaceMaterialOverrideState>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<
+            string,
+            SurfaceMaterialOverrideState
+        > m_ActiveSurfaceMaterialStates = new Dictionary<string, SurfaceMaterialOverrideState>(
+            StringComparer.OrdinalIgnoreCase
+        );
         private readonly Dictionary<string, EffectDefinition> m_EffectDefinitionByPrefabName =
             new Dictionary<string, EffectDefinition>(StringComparer.OrdinalIgnoreCase);
         private bool m_EffectDefinitionLookupBuilt;
@@ -315,9 +321,9 @@ namespace Network_Game.Dialogue
                             ("name", request.EffectName ?? string.Empty),
                             (
                                 "ageSec",
-                                (
-                                    Time.realtimeSinceStartup - request.EnqueuedAtRealtime
-                                ).ToString("F2")
+                                (Time.realtimeSinceStartup - request.EnqueuedAtRealtime).ToString(
+                                    "F2"
+                                )
                             )
                         )
                     );
@@ -1533,7 +1539,9 @@ namespace Network_Game.Dialogue
             int added = 0;
 
 #if UNITY_2023_1_OR_NEWER
-            NpcDialogueActor[] actors = FindObjectsByType<NpcDialogueActor>(FindObjectsInactive.Exclude);
+            NpcDialogueActor[] actors = FindObjectsByType<NpcDialogueActor>(
+                FindObjectsInactive.Exclude
+            );
 #else
             NpcDialogueActor[] actors = FindObjectsOfType<NpcDialogueActor>();
 #endif
@@ -1620,7 +1628,10 @@ namespace Network_Game.Dialogue
             var activeSurfaceKeys = new List<string>(m_ActiveSurfaceMaterialStates.Keys);
             for (int i = 0; i < activeSurfaceKeys.Count; i++)
             {
-                StopActiveSurfaceMaterialOverride(activeSurfaceKeys[i], restoreOriginalMaterial: true);
+                StopActiveSurfaceMaterialOverride(
+                    activeSurfaceKeys[i],
+                    restoreOriginalMaterial: true
+                );
             }
 
             foreach (var handle in m_AddressableHandles.Values)
@@ -2183,7 +2194,11 @@ namespace Network_Game.Dialogue
                 return;
             }
 
-            resolvedMaterialSlot = Mathf.Clamp(resolvedMaterialSlot, 0, workingMaterials.Length - 1);
+            resolvedMaterialSlot = Mathf.Clamp(
+                resolvedMaterialSlot,
+                0,
+                workingMaterials.Length - 1
+            );
             StopActiveSurfaceMaterialOverride(overrideKey, restoreOriginalMaterial: true);
 
             Material[] originalMaterials = (Material[])workingMaterials.Clone();
@@ -2288,7 +2303,10 @@ namespace Network_Game.Dialogue
                         return false;
                     }
 
-                    resolvedMaterialSlot = surface.ResolveMaterialSlot(renderer, requestedMaterialSlot);
+                    resolvedMaterialSlot = surface.ResolveMaterialSlot(
+                        renderer,
+                        requestedMaterialSlot
+                    );
                     overrideKey = "surface:" + surface.SurfaceId;
                     return true;
                 }
@@ -2357,7 +2375,13 @@ namespace Network_Game.Dialogue
                     continue;
                 }
 
-                if (string.Equals(candidate.SurfaceId, normalized, StringComparison.OrdinalIgnoreCase))
+                if (
+                    string.Equals(
+                        candidate.SurfaceId,
+                        normalized,
+                        StringComparison.OrdinalIgnoreCase
+                    )
+                )
                 {
                     return candidate;
                 }
@@ -2386,9 +2410,7 @@ namespace Network_Game.Dialogue
             }
 
 #if UNITY_2023_1_OR_NEWER
-            Renderer[] renderers = FindObjectsByType<Renderer>(
-                FindObjectsInactive.Include
-            );
+            Renderer[] renderers = FindObjectsByType<Renderer>(FindObjectsInactive.Include);
 #else
             Renderer[] renderers = FindObjectsOfType<Renderer>(true);
 #endif
@@ -2421,7 +2443,12 @@ namespace Network_Game.Dialogue
 
             m_ActiveSurfaceMaterialRoutines.Remove(key);
 
-            if (!m_ActiveSurfaceMaterialStates.TryGetValue(key, out SurfaceMaterialOverrideState state))
+            if (
+                !m_ActiveSurfaceMaterialStates.TryGetValue(
+                    key,
+                    out SurfaceMaterialOverrideState state
+                )
+            )
             {
                 yield break;
             }
@@ -2430,10 +2457,7 @@ namespace Network_Game.Dialogue
             m_ActiveSurfaceMaterialStates.Remove(key);
         }
 
-        private void StopActiveSurfaceMaterialOverride(
-            string key,
-            bool restoreOriginalMaterial
-        )
+        private void StopActiveSurfaceMaterialOverride(string key, bool restoreOriginalMaterial)
         {
             if (string.IsNullOrWhiteSpace(key))
             {
@@ -2450,7 +2474,12 @@ namespace Network_Game.Dialogue
                 m_ActiveSurfaceMaterialRoutines.Remove(key);
             }
 
-            if (!m_ActiveSurfaceMaterialStates.TryGetValue(key, out SurfaceMaterialOverrideState state))
+            if (
+                !m_ActiveSurfaceMaterialStates.TryGetValue(
+                    key,
+                    out SurfaceMaterialOverrideState state
+                )
+            )
             {
                 return;
             }
@@ -2480,7 +2509,10 @@ namespace Network_Game.Dialogue
                         NGLog.Format(
                             "Floor freeze material restored",
                             ("surfaceId", state.SurfaceId ?? string.Empty),
-                            ("renderer", state.Renderer != null ? state.Renderer.name : string.Empty),
+                            (
+                                "renderer",
+                                state.Renderer != null ? state.Renderer.name : string.Empty
+                            ),
                             ("slot", state.MaterialSlotIndex)
                         )
                     );

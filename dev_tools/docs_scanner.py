@@ -30,12 +30,19 @@ from __future__ import annotations
 import dataclasses
 import os
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from pathlib import Path
+from threading import Lock
 from typing import Optional
 import json
 
-from dev_tools.lm_client import LmClient, TEXT_MODEL, LLAMA_STOP
+from dev_tools.lm_client import LmClient, TEXT_MODEL, LLAMA_STOP, DOCS_MODEL, QWEN_STOP
+
+# Qwen3: prepend to the USER message (not system) to skip chain-of-thought block.
+# Without this, qwen3 emits a <think>…</think> preamble that wastes tokens.
+_NO_THINK = "/no_think\n"
+_PRINT_LOCK = Lock()  # serialise progress lines from parallel workers
 
 # ── Paths ──────────────────────────────────────────────────────────────────────
 REPO_ROOT     = Path(__file__).parent.parent.resolve()
@@ -187,31 +194,16 @@ class DocScanner:
 
     def scan_package(self, pkg_id: str, version: str, hint: str) -> PackageDoc:
         t0   = time.monotonic()
-        user = _build_package_user_msg(pkg_id, version, hint)
+        user = _NO_THINK + _build_package_user_msg(pkg_id, version, hint)
 
-        # Use ask_openai_prose() with CODE_MODEL:
-        #   - OpenAI endpoint routes correctly to qwen2.5-coder-7b (Anthropic endpoint returns empty)
-        #   - No json_schema mode — plain markdown output
-        #   - QWEN_STOP prevents runaway generation on qwen2.5-coder models
-        content = self._client.ask_openai_prose(
+        content = self._client.ask(
             system=self._sys_prompt,
             user=user,
-            model=CODE_MODEL,
+            model=DOCS_MODEL,
             max_tokens=700,
             profile="analysis",
             stop_sequences=QWEN_STOP,
         )
-        # Retry once with TEXT_MODEL if CODE_MODEL fails
-        if not content:
-            print(f"  [retry with TEXT_MODEL]  ", end="", flush=True)
-            content = self._client.ask_openai_prose(
-                system=self._sys_prompt,
-                user=user,
-                model=TEXT_MODEL,
-                max_tokens=700,
-                profile="analysis",
-                stop_sequences=LLAMA_STOP,
-            )
         duration = time.monotonic() - t0
 
         if not content:
@@ -225,13 +217,13 @@ class DocScanner:
         if not tool_pkgs:
             return []
         user    = _build_tools_user_msg(tool_pkgs)
-        content = self._client.ask_openai_prose(
+        content = self._client.ask(
             system=self._sys_prompt,
             user=user,
-            model=CODE_MODEL,
+            model=TEXT_MODEL,
             max_tokens=800,
             profile="analysis",
-            stop_sequences=QWEN_STOP,
+            stop_sequences=LLAMA_STOP,
         )
         # Each line is a tool doc — just store the whole block as one ToolDoc
         return [
@@ -273,34 +265,46 @@ class DocScanner:
         if not tool_packages:
             tool_packages = dict(TOOL_PACKAGES)
 
-        core_docs: list[PackageDoc] = []
         total = len(core_packages)
-        for i, (pkg_id, hint) in enumerate(core_packages, 1):
-            version = manifest.get(pkg_id, "unknown")
-            print(f"[DocScan] [{i:>2}/{total}] {pkg_id} v{version}  ", end="", flush=True)
-            doc = self.scan_package(pkg_id, version, hint)
-            status = f"{doc.duration_s:.1f}s" if not doc.error else f"ERROR: {doc.error[:40]}"
-            print(status)
-            core_docs.append(doc)
+        core_docs: list[Optional[PackageDoc]] = [None] * total
 
-        print(f"\n[DocScan] Tool packages batch ({len(tool_packages)} packages)...")
+        def _scan_one(idx: int, pkg_id: str, hint: str) -> None:
+            version = manifest.get(pkg_id, "unknown")
+            with _PRINT_LOCK:
+                print(f"[DocScan] [{idx+1:>2}/{total}] {pkg_id} v{version} ...", flush=True)
+            doc = self.scan_package(pkg_id, version, hint)
+            core_docs[idx] = doc
+            status = f"{doc.duration_s:.1f}s" if not doc.error else f"ERROR: {doc.error[:40]}"
+            with _PRINT_LOCK:
+                print(f"[DocScan]  ✓ {pkg_id} — {status}", flush=True)
+
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            futs = [
+                pool.submit(_scan_one, i, pkg_id, hint)
+                for i, (pkg_id, hint) in enumerate(core_packages)
+            ]
+            for f in as_completed(futs):
+                f.result()  # re-raise any worker exception
+
+        print(f"\n[DocScan] Tool packages batch ({len(tool_packages)} packages)  "
+              f"[{TEXT_MODEL}]...")
         tool_pkgs = {
             pid: (manifest.get(pid, "unknown"), hint)
             for pid, hint in tool_packages.items()
         }
         t0 = time.monotonic()
         tool_user     = _build_tools_user_msg(tool_pkgs)
-        tools_content = self._client.ask_openai_prose(
+        tools_content = self._client.ask(
             system=self._sys_prompt,
             user=tool_user,
-            model=CODE_MODEL,
+            model=TEXT_MODEL,
             max_tokens=800,
             profile="analysis",
-            stop_sequences=QWEN_STOP,
+            stop_sequences=LLAMA_STOP,
         )
         print(f"[DocScan] Tools batch done ({time.monotonic()-t0:.1f}s)")
 
-        return core_docs, tools_content
+        return [d for d in core_docs if d is not None], tools_content
 
     def write_report(
         self,
@@ -318,7 +322,7 @@ class DocScanner:
             "",
             f"Documented {sum(1 for d in core_docs if not d.error)} core packages"
             f" + tool packages batch.",
-            f"Model: {CODE_MODEL}",
+            f"Models: core={DOCS_MODEL} / tools={TEXT_MODEL}",
             "",
             "## Core Packages",
             "",
@@ -341,7 +345,7 @@ class DocScanner:
         # First ~3 sections per package (up to 600 chars), then a tools footer
         summary_lines = [
             f"# Package Docs Summary ({date_str})",
-            f"Generated by docs_scanner using {CODE_MODEL}.",
+            f"Generated by docs_scanner using {DOCS_MODEL} (core) / {TEXT_MODEL} (tools).",
             "",
         ]
         for doc in core_docs:
@@ -387,8 +391,8 @@ def run_docs_cli(package_arg: Optional[str] = None) -> bool:
         print("[DocScan] ERROR: LM Studio not reachable. Start LM Studio and load a model first.")
         return False
 
-    if not client.ensure_models_loaded([CODE_MODEL, TEXT_MODEL], context_length=4096):
-        print(f"[DocScan] ERROR: Could not load required model(s): {CODE_MODEL}, {TEXT_MODEL}")
+    if not client.ensure_models_loaded([DOCS_MODEL, TEXT_MODEL], context_length=4096):
+        print(f"[DocScan] ERROR: Could not load required models.")
         return False
 
     manifest = _load_manifest()
@@ -396,7 +400,8 @@ def run_docs_cli(package_arg: Optional[str] = None) -> bool:
         print("[DocScan] ERROR: Could not load manifest.json.")
         return False
 
-    print(f"[DocScan] Manifest: {len(manifest)} packages  |  Model: {CODE_MODEL}")
+    print(f"[DocScan] Manifest: {len(manifest)} packages  "
+          f"|  Core: {DOCS_MODEL}  |  Tools: {TEXT_MODEL}")
     scanner = DocScanner(client)
     t0      = time.monotonic()
 

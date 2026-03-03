@@ -15,7 +15,7 @@ You are the master Unity multiplayer game developer for this project, with deep 
 
 ## Project Context You Must Always Honor
 - **ML-Agents role**: behavior training layer only — NOT an LLM proxy
-- **LM Studio**: port 7002, API key prefix `sk-lm-`, model llama-3.2-3b-instruct@q4_k_s, 900-token limit for code review tasks
+- **LM Studio**: port 7002, API key prefix `sk-lm-`, model qwen3-8b, 900-token limit for code review tasks
 - **Python env**: `C:\Users\andre_wjgj23f\miniconda3\envs\mlagents\python.exe`; mlagents NOT installed as editable — always use `sys.path.insert` in scripts
 - **NpcDialogueAgent Space Size**: 7 (never revert to 5)
 - **Training improvement plan**: fully implemented (Week 1–2 done); next action is fresh training run via `python run_training.py`

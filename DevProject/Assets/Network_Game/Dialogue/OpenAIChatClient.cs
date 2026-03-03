@@ -30,6 +30,7 @@ namespace Network_Game.Dialogue
     public class OpenAIChatClient : IDialogueInferenceClient, IDisposable
     {
         private static readonly HttpClient s_Http = new HttpClient();
+        private const string StructuredResponseFieldName = "responseText";
         private bool m_ForceAutoModelRouting;
         private string m_LastActiveModelId = string.Empty;
 
@@ -173,10 +174,60 @@ namespace Network_Game.Dialogue
             CancellationToken ct = default
         )
         {
+            return await ChatInternalAsync(
+                systemPrompt,
+                history,
+                userPrompt,
+                null,
+                addToHistory,
+                ct
+            ).ConfigureAwait(false);
+        }
+
+        public async Task<string> ChatWithOptionsAsync(
+            string systemPrompt,
+            IReadOnlyList<DialogueInferenceMessage> history,
+            string userPrompt,
+            DialogueInferenceRequestOptions requestOptions,
+            bool addToHistory = true,
+            CancellationToken ct = default
+        )
+        {
+            return await ChatInternalAsync(
+                systemPrompt,
+                history,
+                userPrompt,
+                requestOptions,
+                addToHistory,
+                ct
+            ).ConfigureAwait(false);
+        }
+
+        private async Task<string> ChatInternalAsync(
+            string systemPrompt,
+            IReadOnlyList<DialogueInferenceMessage> history,
+            string userPrompt,
+            DialogueInferenceRequestOptions requestOptions,
+            bool addToHistory,
+            CancellationToken ct
+        )
+        {
             var messages = new List<MessageDto>();
+            bool preferJsonResponse = requestOptions != null && requestOptions.PreferJsonResponse;
+            int effectiveMaxTokens =
+                requestOptions != null && requestOptions.MaxTokensOverride > 0
+                ? requestOptions.MaxTokensOverride
+                : MaxTokens;
 
             if (!string.IsNullOrWhiteSpace(systemPrompt))
                 messages.Add(new MessageDto { role = "system", content = systemPrompt });
+
+            if (preferJsonResponse)
+            {
+                messages.Add(
+                    new MessageDto { role = "system", content = BuildStructuredResponseInstruction() }
+                );
+            }
 
             if (history != null)
             {
@@ -186,7 +237,7 @@ namespace Network_Game.Dialogue
 
             messages.Add(new MessageDto { role = "user", content = userPrompt });
 
-            JObject requestBody = BuildRequestBody(messages);
+            JObject requestBody = BuildRequestBody(messages, requestOptions);
             string url = $"{BaseUrl}/v1/chat/completions";
             string json = requestBody.ToString(Formatting.None);
 
@@ -195,7 +246,8 @@ namespace Network_Game.Dialogue
                 + $" | temp={Temperature} | topK={TopK} | topP={TopP}"
                 + $" | repeatPenalty={RepeatPenalty} | minP={MinP}"
                 + $" | typicalP={TypicalP} | repeatLastN={RepeatLastN}"
-                + $" | mirostat={Mirostat} | maxTokens={MaxTokens} | seed={Seed}"
+                + $" | mirostat={Mirostat} | maxTokens={effectiveMaxTokens} | seed={Seed}"
+                + $" | structured={(preferJsonResponse ? "json" : "off")}"
             );
 
             HttpResponseMessage response = null;
@@ -275,6 +327,11 @@ namespace Network_Game.Dialogue
             {
                 var obj = JObject.Parse(responseBody);
                 string content = obj ? ["choices"] ? [0] ? ["message"] ? ["content"]?.ToString();
+
+                if (preferJsonResponse)
+                {
+                    content = TryExtractStructuredResponseText(content);
+                }
 
                 if (
                     string.IsNullOrEmpty(content)
@@ -396,8 +453,16 @@ namespace Network_Game.Dialogue
         /// LM Studio-specific extensions (top_k, repeat_penalty, min_p) are always
         /// included — standard OpenAI will ignore unknown fields gracefully.
         /// </summary>
-        private JObject BuildRequestBody(List<MessageDto> messages)
+        private JObject BuildRequestBody(
+            List<MessageDto> messages,
+            DialogueInferenceRequestOptions requestOptions
+        )
         {
+            bool preferJsonResponse = requestOptions != null && requestOptions.PreferJsonResponse;
+            int effectiveMaxTokens =
+                requestOptions != null && requestOptions.MaxTokensOverride > 0
+                ? requestOptions.MaxTokensOverride
+                : MaxTokens;
             var body = new JObject
             {
                 ["messages"] = JArray.FromObject(messages),
@@ -425,8 +490,8 @@ namespace Network_Game.Dialogue
             body["model"] = ResolveModelForRequest();
 
             // max_tokens: -1 means "omit" (let LM Studio use its own default)
-            if (MaxTokens > 0)
-                body["max_tokens"] = MaxTokens;
+            if (effectiveMaxTokens > 0)
+                body["max_tokens"] = effectiveMaxTokens;
             // else omit entirely — avoids capping 3B LoRA responses unexpectedly
 
             // seed: 0 means "random" in llama.cpp, omit to avoid accidentally
@@ -438,8 +503,13 @@ namespace Network_Game.Dialogue
             if (StopSequences != null && StopSequences.Length > 0)
                 body["stop"] = JArray.FromObject(StopSequences);
 
-            if (!string.IsNullOrWhiteSpace(Grammar))
+            if (!preferJsonResponse && !string.IsNullOrWhiteSpace(Grammar))
                 body["grammar"] = Grammar;
+
+            if (preferJsonResponse)
+            {
+                body["response_format"] = BuildStructuredResponseFormat();
+            }
 
             return body;
         }
@@ -547,6 +617,66 @@ namespace Network_Game.Dialogue
             if (string.IsNullOrEmpty(s) || s.Length <= max)
                 return s;
             return s.Substring(0, max) + "...";
+        }
+
+        private static JObject BuildStructuredResponseFormat()
+        {
+            return new JObject
+            {
+                ["type"] = "json_schema",
+                ["json_schema"] = new JObject
+                {
+                    ["name"] = "dialogue_response",
+                    ["strict"] = true,
+                    ["schema"] = new JObject
+                    {
+                        ["type"] = "object",
+                        ["properties"] = new JObject
+                        {
+                            [StructuredResponseFieldName] = new JObject
+                            {
+                                ["type"] = "string",
+                            },
+                        },
+                        ["required"] = new JArray(StructuredResponseFieldName),
+                        ["additionalProperties"] = false,
+                    },
+                },
+            };
+        }
+
+        private static string BuildStructuredResponseInstruction()
+        {
+            return
+                "For this request, respond with a valid JSON object only. "
+                + "Use exactly one key named \"responseText\". "
+                + "The responseText value must contain one short in-character sentence followed by exactly one [EFFECT: ...] tag. "
+                + "No analysis. No extra keys.";
+        }
+
+        private static string TryExtractStructuredResponseText(string content)
+        {
+            if (string.IsNullOrWhiteSpace(content))
+            {
+                return content ?? string.Empty;
+            }
+
+            try
+            {
+                var obj = JObject.Parse(content);
+                string responseText = obj[StructuredResponseFieldName]?.ToString();
+                if (!string.IsNullOrWhiteSpace(responseText))
+                {
+                    return responseText;
+                }
+            }
+            catch (JsonException)
+            {
+                // Fall back to the raw content to keep the request resilient if the
+                // backend ignores response_format or returns plain text.
+            }
+
+            return content;
         }
 
         private static void LogInfo(string msg) => NGLog.Info("OpenAI", msg);

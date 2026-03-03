@@ -212,6 +212,38 @@ namespace Network_Game.Diagnostics
 
 namespace Network_Game.Dialogue
 {
+    [UnityEngine.DisallowMultipleComponent] public sealed class DialogueBackendConfig : UnityEngine.MonoBehaviour
+    {
+        public string ApiKey { get; }
+        public bool CachePrompt { get; }
+        public float FrequencyPenalty { get; }
+        public string Grammar { get; }
+        public string Host { get; }
+        public bool IgnoreEos { get; }
+        public int MaxTokens { get; }
+        public float MinP { get; }
+        public int Mirostat { get; }
+        public float MirostatEta { get; }
+        public float MirostatTau { get; }
+        public string Model { get; }
+        public int NProbs { get; }
+        public int Port { get; }
+        public float PresencePenalty { get; }
+        public int RepeatLastN { get; }
+        public float RepeatPenalty { get; }
+        public int Seed { get; }
+        public string SystemPrompt { get; }
+        public float Temperature { get; }
+        public int TopK { get; }
+        public float TopP { get; }
+        public float TypicalP { get; }
+        public bool UseRemoteInference { get; }
+        public DialogueBackendConfig() {}
+        public void ApplyLegacyDefaults(LLMUnity.LLMAgent legacyAgent, string configuredModel, string[] stopSequences);
+        public string[] GetStopSequences();
+        public void SetSystemPrompt(string value);
+    }
+
     [UnityEngine.DefaultExecutionOrder(-60)] public class DialogueClientUI : UnityEngine.MonoBehaviour
     {
         public static event System.Action<bool> OnDialogueVisibilityChanged;
@@ -366,6 +398,13 @@ namespace Network_Game.Dialogue
         public readonly string Content;
         public readonly string Role = @"user";
         public DialogueInferenceMessage(string role, string content) {}
+    }
+
+    public sealed class DialogueInferenceRequestOptions
+    {
+        public int MaxTokensOverride = -1;
+        public bool PreferJsonResponse;
+        public DialogueInferenceRequestOptions() {}
     }
 
     public sealed class DialogueInferenceRuntimeConfig
@@ -548,6 +587,7 @@ namespace Network_Game.Dialogue
         public int TotalFailed { get; }
         public int TotalRequestsEnqueued { get; }
         public int TotalRequestsFinished { get; }
+        public bool UsesRemoteInference { get; }
         public int WarmupFailureCount { get; }
         public NetworkDialogueService() {}
         protected override string __getTypeName();
@@ -749,6 +789,7 @@ namespace Network_Game.Dialogue
         public OpenAIChatClient() {}
         public void ApplyConfig(DialogueInferenceRuntimeConfig config);
         public async System.Threading.Tasks.Task<string> ChatAsync(string systemPrompt, System.Collections.Generic.IReadOnlyList<DialogueInferenceMessage> history, string userPrompt, bool addToHistory = true, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken));
+        public async System.Threading.Tasks.Task<string> ChatWithOptionsAsync(string systemPrompt, System.Collections.Generic.IReadOnlyList<DialogueInferenceMessage> history, string userPrompt, DialogueInferenceRequestOptions requestOptions, bool addToHistory = true, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken));
         public async System.Threading.Tasks.Task<bool> CheckConnectionAsync(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken));
         public void Dispose();
     }
@@ -1186,7 +1227,6 @@ namespace Network_Game.UI
         public UnityEngine.UIElements.UIDocument DialogueDocument { get; }
         public ModernHudLayoutProfile LayoutProfile { get; }
         public UnityEngine.UIElements.UIDocument LoginDocument { get; }
-        public ModernUISetup ModernUiSetup { get; }
         public UnityEngine.UIElements.UIDocument ProfileDocument { get; }
         public UnityEngine.Transform RuntimeServicesRoot { get; }
         public ModernHudController() {}
@@ -1230,19 +1270,6 @@ namespace Network_Game.UI
         [UnityEngine.Header(@"Top Bar")] [UnityEngine.Range(0f, 0.05f)] public float TopBarTopPercent = 0.008f;
         public ModernHudLayoutProfile() {}
         public void GetNormalizedFeedbackRowWeights(out float summary, out float actions, out float notes);
-    }
-
-    [UnityEngine.DisallowMultipleComponent] [UnityEngine.ExecuteAlways] public class ModernUISetup : UnityEngine.MonoBehaviour
-    {
-        public UnityEngine.UIElements.UIDocument DialogueDoc;
-        public UnityEngine.UIElements.VisualTreeAsset DialogueUxml;
-        [UnityEngine.Header(@"Components")] public UnityEngine.UIElements.UIDocument LoginDoc;
-        public UnityEngine.UIElements.VisualTreeAsset LoginUxml;
-        [UnityEngine.Header(@"Assets")] public UnityEngine.UIElements.PanelSettings PanelSettings;
-        public UnityEngine.UIElements.UIDocument ProfileDoc;
-        public UnityEngine.UIElements.VisualTreeAsset ProfileUxml;
-        public ModernUISetup() {}
-        [UnityEngine.ContextMenu(@"Apply UI Assets")] public void Apply();
     }
 }
 

@@ -19,13 +19,19 @@ Two endpoints, one client:
       catalog, semantic tag patches, watchdog thresholds)
 
 Model routing (confirmed by benchmark):
-  CODE_MODEL  — qwen2.5-coder-7b-instruct@q4_k_m   ask() only (Anthropic)
-  TEXT_MODEL  — llama-3.2-3b-instruct@q8_0          ask() + ask_schema() (reliable, ~5s)
-  FAST_MODEL  — llama-3.2-3b-instruct@q4_k_s        quick single-fact lookups
+  DOCS_MODEL  — qwen3-8b                             ask_schema() + ask() — 8B quality, no hallucination
+                                                     prepend /no_think to user msg; use QWEN_STOP
+                                                     ✅ code scan (ask_schema, ~96s/file, 2026-03-01)
+                                                     ✅ docs scan core packages (ask, 2026-02-28)
+  CODE_MODEL  — qwen2.5-coder-7b-instruct@q4_k_m   ask_openai_prose() only — collapses in prose on large files
+                                                     ⚠ FAILS json_schema mode (garbled, 2026-02-28)
+                                                     ⚠ repetition collapse in prose on complex files (2026-03-01)
+  TEXT_MODEL  — llama-3.2-3b-instruct@q8_0          ask_schema() — fast/reliable JSON, but 3B hallucinates
+  FAST_MODEL  — llama-3.2-3b-instruct@q4_k_s        quick single-fact lookups only
 
-  ⚠ qwen2.5-coder-7b FAILS json_schema mode (136s + garbled, 2026-02-28 test).
-  ⚠ qwen3-8b too slow for batch schema (46s/call, 2026-02-28 test).
-  → Always use TEXT_MODEL for ask_schema().
+  → Use DOCS_MODEL (qwen3-8b) for ask_schema() when quality matters.
+  → Use TEXT_MODEL for ask_schema() only when speed > quality (batch tools, watchdog).
+  → DOCS_MODEL and CODE_MODEL both use QWEN_STOP (Qwen2.x/3 chat template family).
 
 Sampling profiles (pass profile="name" to any ask*() method):
   analysis  — low temp, high repeat_penalty, top_k=20 — deterministic code review
@@ -66,6 +72,7 @@ LMS_API_KEY = os.environ.get("LM_STUDIO_API_KEY", "lm-studio")
 CODE_MODEL = "qwen2.5-coder-7b-instruct@q4_k_m"   # ask() only — fails json_schema
 TEXT_MODEL = "llama-3.2-3b-instruct@q8_0"          # ask() + ask_schema() — reliable
 FAST_MODEL = "llama-3.2-3b-instruct@q4_k_s"        # fastest — quick lookups only
+DOCS_MODEL = "qwen3-8b"                             # factual docs — ask() + QWEN_STOP
 
 DEFAULT_MAX_TOKENS  = 900    # safe upper bound — 600 causes JSON truncation
 DEFAULT_TEMPERATURE = 0.15   # deterministic analysis output
@@ -415,8 +422,8 @@ class LmClient:
         profile:  defaults to "schema" — applies top_k=20, repeat_penalty=1.15,
                   min_p=0.03 via extra_body for maximum grammar-sampling stability.
 
-        ⚠ Use only TEXT_MODEL (llama-3.2-3b@q8_0) — qwen2.5-coder-7b produces
-          garbled output in json_schema mode (confirmed 2026-02-28).
+        Use DOCS_MODEL (qwen3-8b) for quality, TEXT_MODEL for speed.
+        ⚠ qwen2.5-coder-7b produces garbled output in json_schema mode (confirmed 2026-02-28).
         """
         if self._openai is None:
             return {"error": "openai SDK not available"}
@@ -566,7 +573,7 @@ class LmClient:
         if ttl > 0:
             cmd += ["--ttl", str(ttl)]
         try:
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+            result = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", timeout=120)
             if result.returncode == 0:
                 print(f"[LmClient] Loaded model: {model}")
                 return True
@@ -582,7 +589,7 @@ class LmClient:
         try:
             result = subprocess.run(
                 ["lms", "unload", model],
-                capture_output=True, text=True, timeout=30,
+                capture_output=True, text=True, encoding="utf-8", timeout=30,
             )
             return result.returncode == 0
         except Exception as ex:
@@ -595,7 +602,7 @@ class LmClient:
         try:
             result = subprocess.run(
                 ["lms", "ps"],
-                capture_output=True, text=True, timeout=10,
+                capture_output=True, text=True, encoding="utf-8", timeout=10,
             )
             if result.returncode != 0:
                 return []

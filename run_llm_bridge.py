@@ -37,7 +37,7 @@ ENABLE_DIALOGUE_SIDECHANNEL = False  # False = observer-only ML-Agents run (no c
 USE_MOCK   = False          # True = echo responses (no LM Studio needed)
 LMS_HOST   = "127.0.0.1"
 LMS_PORT   = 7002
-LMS_MODEL  = ""             # empty = use whatever model is loaded in LM Studio
+LMS_MODEL  = "qwen3-8b"     # NPC dialogue model — best 8B for roleplay/instruction following
 LMS_API_KEY = "sk-lm-Li2oVsHm:wNxCcCTjZM4PFuNC0RnH"  # LM Studio API key
 MAX_STEPS  = 100_000        # run until stopped with Ctrl+C
 UNITY_TIMEOUT_SECONDS = 300 # Covers slow Editor startup/reset on heavy scenes.

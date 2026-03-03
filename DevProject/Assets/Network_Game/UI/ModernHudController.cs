@@ -59,9 +59,6 @@ namespace Network_Game.UI
 
         [Header("Visual Components")]
         [SerializeField]
-        private ModernUISetup m_ModernUiSetup;
-
-        [SerializeField]
         private ModernHudLayoutProfile m_LayoutProfile;
 
         [SerializeField]
@@ -137,7 +134,6 @@ namespace Network_Game.UI
         public UIDocument LoginDocument => m_LoginDocument;
         public UIDocument ProfileDocument => m_ProfileDocument;
         public UIDocument DialogueDocument => m_DialogueDocument;
-        public ModernUISetup ModernUiSetup => m_ModernUiSetup;
         public ModernHudLayoutProfile LayoutProfile => m_LayoutProfile;
         public Transform RuntimeServicesRoot => m_RuntimeServicesRoot;
 
@@ -172,21 +168,21 @@ namespace Network_Game.UI
 
             return keyCode switch
             {
-                KeyCode.F1    => kb.f1Key.wasPressedThisFrame,
-                KeyCode.F2    => kb.f2Key.wasPressedThisFrame,
-                KeyCode.F3    => kb.f3Key.wasPressedThisFrame,
-                KeyCode.F4    => kb.f4Key.wasPressedThisFrame,
-                KeyCode.F5    => kb.f5Key.wasPressedThisFrame,
-                KeyCode.F6    => kb.f6Key.wasPressedThisFrame,
-                KeyCode.F7    => kb.f7Key.wasPressedThisFrame,
-                KeyCode.F8    => kb.f8Key.wasPressedThisFrame,
-                KeyCode.Escape    => kb.escapeKey.wasPressedThisFrame,
+                KeyCode.F1 => kb.f1Key.wasPressedThisFrame,
+                KeyCode.F2 => kb.f2Key.wasPressedThisFrame,
+                KeyCode.F3 => kb.f3Key.wasPressedThisFrame,
+                KeyCode.F4 => kb.f4Key.wasPressedThisFrame,
+                KeyCode.F5 => kb.f5Key.wasPressedThisFrame,
+                KeyCode.F6 => kb.f6Key.wasPressedThisFrame,
+                KeyCode.F7 => kb.f7Key.wasPressedThisFrame,
+                KeyCode.F8 => kb.f8Key.wasPressedThisFrame,
+                KeyCode.Escape => kb.escapeKey.wasPressedThisFrame,
                 KeyCode.BackQuote => kb.backquoteKey.wasPressedThisFrame,
-                KeyCode.Tab       => kb.tabKey.wasPressedThisFrame,
-                KeyCode.Alpha1    => kb.digit1Key.wasPressedThisFrame,
-                KeyCode.Alpha2    => kb.digit2Key.wasPressedThisFrame,
-                KeyCode.Alpha3    => kb.digit3Key.wasPressedThisFrame,
-                KeyCode.Alpha4    => kb.digit4Key.wasPressedThisFrame,
+                KeyCode.Tab => kb.tabKey.wasPressedThisFrame,
+                KeyCode.Alpha1 => kb.digit1Key.wasPressedThisFrame,
+                KeyCode.Alpha2 => kb.digit2Key.wasPressedThisFrame,
+                KeyCode.Alpha3 => kb.digit3Key.wasPressedThisFrame,
+                KeyCode.Alpha4 => kb.digit4Key.wasPressedThisFrame,
                 _ => false,
             };
 #else
@@ -210,7 +206,8 @@ namespace Network_Game.UI
             if (doc == null || doc.rootVisualElement == null || doc.rootVisualElement.panel == null)
                 return false;
 
-            var focused = doc.rootVisualElement.panel.focusController?.focusedElement as VisualElement;
+            var focused =
+                doc.rootVisualElement.panel.focusController?.focusedElement as VisualElement;
             if (focused == null)
                 return false;
 
@@ -292,7 +289,6 @@ namespace Network_Game.UI
             m_ProfileDocument = ResolveChildDocument(m_ProfileDocument, kProfileName);
             m_DialogueDocument = ResolveChildDocument(m_DialogueDocument, kDialogueName);
 
-            m_ModernUiSetup = ResolveLocalComponent(m_ModernUiSetup);
             m_FeedbackPrompt = ResolveLocalComponent(m_FeedbackPrompt);
             m_CombatOverlay = ResolveLocalComponent(m_CombatOverlay);
             m_DebugPanel = ResolveLocalComponent(m_DebugPanel);
@@ -496,7 +492,9 @@ namespace Network_Game.UI
             ApplyDocumentVisibility(m_DialogueDocument, m_DialogueVisible);
 
             HudLayoutMetrics layout = ResolveLayoutMetrics(m_ZoneHostRoot);
-            float dockTop = m_FeedbackVisible ? layout.DockTopWithFeedback : layout.DockTopWithoutFeedback;
+            float dockTop = m_FeedbackVisible
+                ? layout.DockTopWithFeedback
+                : layout.DockTopWithoutFeedback;
             if (m_TopLeftZone != null)
             {
                 m_TopLeftZone.style.top = dockTop;
@@ -688,12 +686,14 @@ namespace Network_Game.UI
 
         private HudLayoutMetrics ResolveLayoutMetrics(VisualElement hostRoot)
         {
-            float width = hostRoot != null && hostRoot.resolvedStyle.width > 1f
-                ? hostRoot.resolvedStyle.width
-                : Mathf.Max(1280f, Screen.width);
-            float height = hostRoot != null && hostRoot.resolvedStyle.height > 1f
-                ? hostRoot.resolvedStyle.height
-                : Mathf.Max(720f, Screen.height);
+            float width =
+                hostRoot != null && hostRoot.resolvedStyle.width > 1f
+                    ? hostRoot.resolvedStyle.width
+                    : Mathf.Max(1280f, Screen.width);
+            float height =
+                hostRoot != null && hostRoot.resolvedStyle.height > 1f
+                    ? hostRoot.resolvedStyle.height
+                    : Mathf.Max(720f, Screen.height);
 
             ModernHudLayoutProfile profile = m_LayoutProfile;
             float margin = Mathf.Max(
@@ -704,10 +704,7 @@ namespace Network_Game.UI
                 6f,
                 height * (profile != null ? profile.TopBarTopPercent : 0.008f)
             );
-            float gap = Mathf.Max(
-                6f,
-                width * (profile != null ? profile.DockGapPercent : 0.008f)
-            );
+            float gap = Mathf.Max(6f, width * (profile != null ? profile.DockGapPercent : 0.008f));
             float topBarHeight = Mathf.Max(
                 profile != null ? profile.TopBarMinHeightPx : 118f,
                 height * (profile != null ? profile.TopBarReservedHeightPercent : 0.18f)
@@ -718,12 +715,10 @@ namespace Network_Game.UI
             );
 
             float centerReserve = Mathf.Max(280f, width * 0.20f);
-            float availableDockWidth = Mathf.Max(
-                320f,
-                width - centerReserve - (margin * 2f) - gap
-            );
+            float availableDockWidth = Mathf.Max(320f, width - centerReserve - (margin * 2f) - gap);
             float leftDockWidth = width * (profile != null ? profile.LeftDockWidthPercent : 0.28f);
-            float rightDockWidth = width * (profile != null ? profile.RightDockWidthPercent : 0.36f);
+            float rightDockWidth =
+                width * (profile != null ? profile.RightDockWidthPercent : 0.36f);
             FitDockWidths(
                 ref leftDockWidth,
                 ref rightDockWidth,
@@ -835,9 +830,8 @@ namespace Network_Game.UI
                 return m_RuntimeServicesRoot;
             }
 
-            Transform sibling = transform.parent != null
-                ? transform.parent.Find(kRuntimeServicesName)
-                : null;
+            Transform sibling =
+                transform.parent != null ? transform.parent.Find(kRuntimeServicesName) : null;
             if (sibling != null)
             {
                 return sibling;
