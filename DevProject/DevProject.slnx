@@ -193,13 +193,11 @@
   <Project Path="Unity.ProBuilder.Stl.csproj" />
   <Project Path="Unity.AppUI.InternalAPIBridge.csproj" />
   <Project Path="Unity.Multiplayer.Tools.NetStatsReporting.csproj" />
-  <Project Path="undream.llmunity.Editor.csproj" />
   <Project Path="Unity.Deformations.csproj" />
   <Project Path="Unity.Multiplayer.Tools.Adapters.Utp2.csproj" />
   <Project Path="Unity.ML-Agents.Runtime.Tests.csproj" />
   <Project Path="Unity.Mathematics.Extensions.Hybrid.csproj" />
   <Project Path="Unity.ML-Agents.Editor.Tests.PublicAPI.csproj" />
-  <Project Path="undream.llmunity.Runtime.csproj" />
   <Project Path="Unity.PlatformToolkit.LocalSaving.Editor.csproj" />
   <Project Path="Unity.Multiplayer.Tools.NetworkSolutionInterface.Tests.Editor.csproj" />
   <Project Path="Autodesk.Fbx.Editor.csproj" />

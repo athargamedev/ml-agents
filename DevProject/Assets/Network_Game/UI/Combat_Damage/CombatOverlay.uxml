@@ -1,0 +1,20 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uix="UnityEngine.UIElements" editor-extension-mode="True">
+    <Style src="project://database/Assets/Network_Game/UI/BlocksShared.uss?fileID=7433441132597879392&amp;guid=5b446a577d2cebf4d8d926d521552982&amp;type=3#BlocksShared"/>
+    
+    <!-- Combat Overlay - Full UI Builder control -->
+    <ui:VisualElement name="combat-overlay" class="combat-runtime-overlay">
+        <ui:Label name="combat-title" text="COMBAT RUNTIME" class="combat-runtime-overlay__title"/>
+        <ui:Label name="combat-net" text="Net: offline | Players: 0" class="combat-runtime-overlay__net"/>
+        
+        <!-- Health List -->
+        <ui:VisualElement name="combat-health-list" class="combat-runtime-overlay__health-list"/>
+        
+        <!-- Effects Section -->
+        <ui:Label name="combat-effects-header" text="Recent effects:" class="combat-runtime-overlay__section-header"/>
+        <ui:VisualElement name="combat-effects-list" class="combat-runtime-overlay__log-list"/>
+        
+        <!-- Damage Section -->
+        <ui:Label name="combat-damage-header" text="Recent damage:" class="combat-runtime-overlay__section-header"/>
+        <ui:VisualElement name="combat-damage-list" class="combat-runtime-overlay__log-list"/>
+    </ui:VisualElement>
+</ui:UXML>

@@ -447,3 +447,91 @@
 .hud-feedback-notes {
     flex-direction: column;
 }
+
+.combat-runtime-overlay__health-list, .combat-runtime-overlay__log-list {
+    flex-direction: column;
+    margin-bottom: 4px;
+}
+
+/* ==================== FEEDBACK OVERLAY ==================== */
+
+.feedback-overlay {
+    background-color: rgba(16, 16, 20, 0.92);
+    border-radius: 8px;
+    padding: 12px;
+    min-width: 400px;
+}
+
+.feedback-overlay__header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    border-bottom-width: 1px;
+    border-bottom-color: rgba(100, 100, 120, 0.5);
+    padding-bottom: 6px;
+}
+
+.feedback-overlay__title {
+    font-size: 11px;
+    font-weight: bold;
+    color: rgba(200, 220, 255, 1);
+}
+
+.feedback-overlay__queue {
+    font-size: 9px;
+    color: rgba(180, 180, 200, 1);
+}
+
+.feedback-overlay__mode {
+    font-size: 9px;
+    color: rgba(150, 150, 170, 1);
+}
+
+.feedback-overlay__row {
+    flex-direction: row;
+    margin-bottom: 6px;
+}
+
+.feedback-overlay__summary {
+    flex-direction: column;
+    gap: 2px;
+}
+
+.feedback-overlay__info-label {
+    font-size: 9px;
+    color: rgba(200, 200, 220, 1);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.feedback-overlay__actions {
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.feedback-overlay__action-btn {
+    height: 19px;
+    min-width: 58px;
+    font-size: 8px;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+.feedback-overlay__notes {
+    align-items: center;
+    gap: 6px;
+}
+
+.feedback-overlay__comment {
+    flex-grow: 1;
+    height: 22px;
+    font-size: 9px;
+}
+
+.feedback-overlay__note-btn {
+    height: 22px;
+    min-width: 56px;
+    font-size: 9px;
+}

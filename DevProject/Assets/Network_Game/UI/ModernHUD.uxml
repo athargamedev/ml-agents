@@ -1,20 +1,47 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uiie="UnityEngine.UIElements" xmlns:ex="UnityEngine.UIElements" editor-extension-mode="True">
     <Style src="project://database/Assets/Network_Game/UI/BlocksShared.uss?fileID=7433441132597879392&amp;guid=5b446a577d2cebf4d8d926d521552982&amp;type=3#BlocksShared"/>
-    <ui:VisualElement name="hud-root" class="hud-root" style="width: 100%; height: 100%; position: absolute; font-size: 14px;">
-        <ui:VisualElement name="zone-top-bar" class="hud-zone hud-zone--top-bar" style="position: absolute; left: 12px; right: 12px; top: 10px; flex-direction: column; align-items: stretch; height: 195px;">
-            <ui:VisualElement name="feedback-bar" class="hud-feedback-bar" style="position: absolute; left: 19px; right: 12px; top: 8px; flex-direction: column; height: auto;">
-                <ui:VisualElement name="feedback-summary" class="hud-feedback-summary"/>
-                <ui:VisualElement name="feedback-actions" class="hud-feedback-actions"/>
-                <ui:VisualElement name="feedback-notes" class="hud-feedback-notes"/>
+    
+    <!-- ==================== HUD ROOT ==================== -->
+    <ui:VisualElement name="hud-root" class="hud-root" style="width: 100%; height: 100%; position: absolute;">
+        
+        <!-- ==================== TOP BAR ZONE ==================== -->
+        <ui:VisualElement name="zone-top-bar" class="hud-zone hud-zone--top-bar">
+            <!-- EDITABLE IN UI BUILDER: Add your top bar content here -->
+        </ui:VisualElement>
+        
+        <!-- ==================== TOP LEFT ZONE (Combat Overlay) ==================== -->
+        <ui:VisualElement name="zone-top-left" class="hud-zone hud-zone--top-left">
+            <ui:VisualElement name="combat-overlay" class="combat-runtime-overlay" style="display: none;">
+                <ui:Label name="combat-title" text="COMBAT RUNTIME" class="combat-runtime-overlay__title"/>
+                <ui:Label name="combat-net" text="Net: offline | Players: 0" class="combat-runtime-overlay__net"/>
+                <ui:VisualElement name="combat-health-list" class="combat-runtime-overlay__health-list"/>
+                <ui:Label name="combat-effects-header" text="Recent effects:" class="combat-runtime-overlay__section-header"/>
+                <ui:VisualElement name="combat-effects-list" class="combat-runtime-overlay__log-list"/>
+                <ui:Label name="combat-damage-header" text="Recent damage:" class="combat-runtime-overlay__section-header"/>
+                <ui:VisualElement name="combat-damage-list" class="combat-runtime-overlay__log-list"/>
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="zone-top-left" class="hud-zone hud-zone--top-left" style="position: absolute; left: 12px; top: 12px; width: 343px; flex-direction: column; align-items: flex-start; height: 150px;"/>
-        <ui:VisualElement name="zone-right-dock" class="hud-zone hud-zone--right-dock" style="position: absolute; right: 12px; top: 12px; width: 360px; flex-direction: column; align-items: flex-end; height: 283px;"/>
-        <ui:VisualElement name="zone-modal-overlay" class="hud-zone hud-zone--modal" style="position: absolute; left: 0; right: 0; top: 0; bottom: 0; justify-content: center; align-items: center;"/>
-        <ui:VisualElement name="panel-login" class="hud-panel hud-panel--login" style="display: flex; height: 445px; width: 394px; left: 354px;">
-            <ui:VisualElement class="blocks-login-container" style="align-items: auto; align-content: auto; flex-grow: 0; flex-shrink: 0; font-size: 12px; top: 1px; left: 1px; height: auto; width: auto; right: 25px; bottom: 1px; position: absolute;">
-                <ui:VisualElement class="blocks-modal blocks-login-modal hud-login-modal" style="width: auto; font-size: 12px; padding-left: 20px; padding-right: 20px; padding-bottom: 20px; padding-top: 20px; height: auto; flex-shrink: 0; align-content: auto; align-items: center; justify-content: flex-start;">
-                    <ui:Label text="PLAYER IDENTITY" class="blocks-header blocks-header--space-bottom hud-login-title"/>
+        
+        <!-- ==================== RIGHT DOCK ZONE (Debug Panel) ==================== -->
+        <ui:VisualElement name="zone-right-dock" class="hud-zone hud-zone--right-dock">
+            <!-- EDITABLE IN UI BUILDER: Add debug panel content here -->
+        </ui:VisualElement>
+        
+        <!-- ==================== BOTTOM BAR ZONE (Dialogue) ==================== -->
+        <ui:VisualElement name="zone-bottom-bar" class="hud-zone hud-zone--bottom-bar">
+            <!-- EDITABLE IN UI BUILDER: Add bottom bar content here -->
+        </ui:VisualElement>
+        
+        <!-- ==================== MODAL OVERLAY ZONE ==================== -->
+        <ui:VisualElement name="zone-modal-overlay" class="hud-zone hud-zone--modal">
+            <!-- EDITABLE IN UI BUILDER: Add modal content here -->
+        </ui:VisualElement>
+        
+        <!-- ==================== LOGIN PANEL ==================== -->
+        <ui:VisualElement name="panel-login" class="hud-panel hud-panel--login" style="display: none;">
+            <ui:VisualElement class="blocks-login-container">
+                <ui:VisualElement class="blocks-modal blocks-login-modal hud-login-modal">
+                    <ui:Label text="PLAYER IDENTITY" class="blocks-header hud-login-title"/>
                     <ui:VisualElement class="blocks-login-input-group hud-login-name-group">
                         <ui:Label text="IDENTIFIER (NAME_ID)" class="blocks-login-label"/>
                         <ui:TextField name="name-input" placeholder-text="Enter your name" class="blocks-textfield hud-login-name-input"/>
@@ -28,27 +55,32 @@
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="panel-profile" class="hud-panel hud-panel--profile" style="height: 365px; width: 284px;"/>
-        <ui:VisualElement name="zone-bottom-bar" class="hud-zone hud-zone--bottom-bar" style="position: absolute; left: 1px; right: 1px; bottom: -55px; flex-direction: column; align-items: stretch; height: 200px; top: 378px; font-size: 15px; flex-shrink: 0;">
-            <ui:VisualElement name="panel-dialogue" class="hud-panel hud-panel--dialogue" style="height: auto; width: auto; top: 1px; font-size: 14px; bottom: 1px; left: 1px; right: 1px; flex-shrink: 0;">
-                <ui:VisualElement name="chat-container" class="blocks-modal hud-dialogue-shell">
-                    <ui:VisualElement class="blocks-profile-card__header hud-dialogue-header">
-                        <ui:Button name="camera-switch" text="CAM" class="blocks-button--xs blocks-button hud-dialogue-camera-button"/>
-                        <ui:Label name="dialogue-header" text="LLM DIALOGUE SYSTEM" class="blocks-header hud-dialogue-title"/>
-                        <ui:VisualElement class="hud-dialogue-header-actions">
-                            <ui:Label name="listener-status" text="NO TARGET" class="blocks-login-label hud-dialogue-listener"/>
-                            <ui:Button name="close-chat" text="✕" class="blocks-button--xs blocks-button hud-dialogue-close"/>
-                        </ui:VisualElement>
+        
+        <!-- ==================== PROFILE PANEL ==================== -->
+        <ui:VisualElement name="panel-profile" class="hud-panel hud-panel--profile" style="display: none;">
+            <!-- EDITABLE IN UI BUILDER: Add profile card content here -->
+        </ui:VisualElement>
+        
+        <!-- ==================== DIALOGUE PANEL ==================== -->
+        <ui:VisualElement name="panel-dialogue" class="hud-panel hud-panel--dialogue" style="display: none;">
+            <ui:VisualElement name="chat-container" class="blocks-modal hud-dialogue-shell">
+                <ui:VisualElement class="blocks-profile-card__header hud-dialogue-header">
+                    <ui:Button name="camera-switch" text="CAM" class="blocks-button hud-dialogue-camera-button"/>
+                    <ui:Label name="dialogue-header" text="LLM DIALOGUE SYSTEM" class="blocks-header hud-dialogue-title"/>
+                    <ui:VisualElement class="hud-dialogue-header-actions">
+                        <ui:Label name="listener-status" text="NO TARGET" class="blocks-login-label hud-dialogue-listener"/>
+                        <ui:Button name="close-chat" text="X" class="blocks-button hud-dialogue-close"/>
                     </ui:VisualElement>
-                    <ui:ScrollView name="transcript-scroll" class="blocks-scroll-view hud-dialogue-transcript">
-                        <ui:VisualElement name="transcript-content"/>
-                    </ui:ScrollView>
-                    <ui:VisualElement name="input-row" class="hud-dialogue-input-row">
-                        <ui:TextField name="chat-input" placeholder-text="Enter message... (Enter to send)" auto-correction="false" class="blocks-textfield hud-dialogue-input"/>
-                        <ui:Button name="send-button" text="SEND" class="blocks-button hud-dialogue-send"/>
-                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:ScrollView name="transcript-scroll" class="blocks-scroll-view hud-dialogue-transcript">
+                    <ui:VisualElement name="transcript-content"/>
+                </ui:ScrollView>
+                <ui:VisualElement name="input-row" class="hud-dialogue-input-row">
+                    <ui:TextField name="chat-input" placeholder-text="Enter message... (Enter to send)" auto-correction="false" class="blocks-textfield hud-dialogue-input"/>
+                    <ui:Button name="send-button" text="SEND" class="blocks-button hud-dialogue-send"/>
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
+        
     </ui:VisualElement>
 </ui:UXML>

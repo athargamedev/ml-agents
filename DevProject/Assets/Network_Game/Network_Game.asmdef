@@ -2,7 +2,6 @@
     "name": "Network_Game",
     "rootNamespace": "Network_Game",
     "references": [
-        "undream.llmunity.Runtime",
         "Unity.Netcode.Runtime",
         "Unity.Networking.Transport",
         "Unity.Cinemachine",

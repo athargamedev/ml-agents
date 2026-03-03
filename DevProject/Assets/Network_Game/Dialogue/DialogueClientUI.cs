@@ -974,11 +974,10 @@ namespace Network_Game.Dialogue
             switch (lower)
             {
                 case "llm_component_missing":
-                    friendly =
-                        "LLM component is missing. Add an LLM GameObject to the scene and assign it to the dialogue service.";
+                    friendly = "Dialogue backend is not configured. Check the remote LM Studio settings.";
                     break;
                 case "model_not_set":
-                    friendly = "LLM model is not set. Select a .gguf model in the LLM component.";
+                    friendly = "No remote model is configured. Set the LM Studio model name.";
                     break;
                 case "conversation_in_flight":
                     friendly = "NPC is still responding. Wait a moment and try again.";
@@ -1011,8 +1010,7 @@ namespace Network_Game.Dialogue
                             model = raw.Substring(idx + 1).Trim();
                         }
 
-                        friendly =
-                            $"LLM model file is missing ({model}). Download it in the LLM inspector (or place the .gguf in StreamingAssets) and try again.";
+                        friendly = $"Configured dialogue model is unavailable ({model}). Check LM Studio.";
                         break;
                     }
                     if (lower.Contains("timed out"))

@@ -119,6 +119,87 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &49462518
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 49462519}
+  - component: {fileID: 49462521}
+  - component: {fileID: 49462522}
+  m_Layer: 5
+  m_Name: Feedback_Panel (3)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &49462519
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 49462518}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 1505009557}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &49462521
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 49462518}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 11400000, guid: 9c0c7883b72ce5e4096d5577320c6224, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: ef47a10eb0291a44ea2dbc73cb725039, type: 3}
+  m_SortingOrder: 0
+  m_Position: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
+--- !u!114 &49462522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 49462518}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f66735b4ab683645b7e720e0d68be1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Network_Game::Network_Game.Dialogue.DialogueEffectFeedbackPrompt
+  m_EnablePrompt: 1
+  m_PauseGameWhilePromptOpen: 0
+  m_UseUiToolkitOverlay: 1
+  m_CaptureInputWhenNotPaused: 0
+  m_MaxQueuedPrompts: 12
+  m_OutputPath: output/effect_visual_feedback.jsonl
+  m_WriteUnifiedFeedbackLog: 1
+  m_UnifiedFeedbackPath: output/feedback_log.jsonl
+  m_LogFeedbackSubmissions: 1
+  m_DuplicateSuppressSeconds: 0.75
+  m_KeepOnlyLatestWhilePromptOpen: 1
+  m_ClearQueuedPromptsOnSubmit: 1
+  m_ClearQueueOnSceneChange: 1
 --- !u!43 &49715526
 Mesh:
   m_ObjectHideFlags: 0
@@ -2649,133 +2730,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1160800036022062, guid: 364e3c46cc3cab14190de95b5e46dcfc, type: 3}
   m_PrefabInstance: {fileID: 1395205328}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &272864570
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 272864575}
-  - component: {fileID: 272864574}
-  - component: {fileID: 272864573}
-  - component: {fileID: 272864572}
-  - component: {fileID: 272864579}
-  - component: {fileID: 272864576}
-  m_Layer: 5
-  m_Name: Modern_HUD_Root
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &272864572
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 272864570}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.GraphicRaycaster
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
---- !u!114 &272864573
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 272864570}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
-  m_UiScaleMode: 0
-  m_ReferencePixelsPerUnit: 100
-  m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
-  m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
-  m_PhysicalUnit: 3
-  m_FallbackScreenDPI: 96
-  m_DefaultSpriteDPI: 96
-  m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
---- !u!223 &272864574
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 272864570}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 1
-  m_UseReflectionProbes: 0
-  m_AdditionalShaderChannelsFlag: 0
-  m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
---- !u!224 &272864575
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 272864570}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 0}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0, y: 0}
---- !u!114 &272864576
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 272864570}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
-  m_PanelSettings: {fileID: 11400000, guid: 34f8af425f4594331ac532e00b9e83bf, type: 2}
-  m_ParentUI: {fileID: 0}
-  sourceAsset: {fileID: 9197481963319205126, guid: b23d0fd106c408f4ab92e7c4ded6cd40, type: 3}
-  m_SortingOrder: 0
-  m_Position: 0
-  m_WorldSpaceSizeMode: 1
-  m_WorldSpaceWidth: 1920
-  m_WorldSpaceHeight: 1080
-  m_PivotReferenceSize: 0
-  m_Pivot: 0
-  m_WorldSpaceCollider: {fileID: 0}
 --- !u!114 &272864577
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2816,29 +2770,6 @@ MonoBehaviour:
   m_UserInitiatedOnly: 1
   m_KnownPowerNames:
   - Big_Explosion
---- !u!114 &272864579
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 272864570}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 311f1a9fa9b61eb4181d9777cba3d44c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Network_Game::Network_Game.UI.ModernHudManager
-  m_HudDocument: {fileID: 272864576}
-  m_LayoutProfile: {fileID: 0}
-  m_RuntimeServicesRoot: {fileID: 928640001}
-  m_FeedbackCollector: {fileID: 272864578}
-  m_FeedbackRuntimeTuner: {fileID: 272864577}
-  m_LoginVisible: 1
-  m_ProfileVisible: 1
-  m_DialogueVisible: 1
-  m_LoginToggleKey: 282
-  m_ProfileToggleKey: 283
-  m_DialogueToggleKey: 284
 --- !u!1 &275345367 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1029230104914618, guid: 21617474d5ac06548b6020406dbe6e6b, type: 3}
@@ -6281,6 +6212,74 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4196278371253528, guid: a53fe34087284794dbe0aad895670634, type: 3}
   m_PrefabInstance: {fileID: 541649516}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &567204209
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 567204210}
+  - component: {fileID: 567204212}
+  - component: {fileID: 567204211}
+  m_Layer: 5
+  m_Name: Login_Panel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &567204210
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 567204209}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 1505009557}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &567204211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 567204209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8f854073c3c2924295fabf4e1c3ddaa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Network_Game::Network_Game.UI.Login.PlayerLoginController
+--- !u!114 &567204212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 567204209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 11400000, guid: c094555912aa3574bb7ab1a695635386, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: 55c00b464baf6ac4dac97b7ae646d75c, type: 3}
+  m_SortingOrder: 0
+  m_Position: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
 --- !u!43 &567879080
 Mesh:
   m_ObjectHideFlags: 0
@@ -7023,6 +7022,80 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4217075624832600, guid: 21f4ee7b875c5614bae545ccd6c7652e, type: 3}
   m_PrefabInstance: {fileID: 593833957}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &604478104
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 604478105}
+  - component: {fileID: 604478107}
+  - component: {fileID: 604478108}
+  m_Layer: 5
+  m_Name: Combat_Panel (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &604478105
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 604478104}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 1505009557}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &604478107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 604478104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 11400000, guid: 34bda9ff55e3d074880beb0735e13e23, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: 7d50b162dc60a3246b5a8175d74e16a8, type: 3}
+  m_SortingOrder: 0
+  m_Position: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
+--- !u!114 &604478108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 604478104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a9f35af8fdb457886f3f4d46d9f012e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Network_Game::Network_Game.Combat.CombatRuntimeOverlay
+  m_ShowOverlay: 1
+  m_ToggleKey: 102
+  m_MaxLogEntries: 4
+  m_LogLifetimeSeconds: 14
+  m_PanelPosition: {x: 12, y: 54}
+  m_PanelWidth: 360
 --- !u!43 &613095376
 Mesh:
   m_ObjectHideFlags: 0
@@ -11125,6 +11198,74 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1 &946097853
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 946097854}
+  - component: {fileID: 946097856}
+  - component: {fileID: 946097857}
+  m_Layer: 5
+  m_Name: Profile_Panel (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &946097854
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 946097853}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 1505009557}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &946097856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 946097853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 11400000, guid: fa2330aad496edf4ab9818aa1e64dc83, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: 9c8fc3d7ab9cd2d44b6ccf544b033e28, type: 3}
+  m_SortingOrder: 0
+  m_Position: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
+--- !u!114 &946097857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 946097853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2372eea580563b24fb8cdc8aa37048b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Network_Game::Network_Game.UI.Profile.PlayerProfileController
 --- !u!1001 &964733468
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20977,6 +21118,90 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4104913017772170, guid: c5aa08609f3d9f547aca9af1d6c18070, type: 3}
   m_PrefabInstance: {fileID: 1366864966}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1373578159
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1373578160}
+  - component: {fileID: 1373578162}
+  - component: {fileID: 1373578163}
+  m_Layer: 5
+  m_Name: Dialogue_Panel (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1373578160
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1373578159}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 1505009557}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1373578162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1373578159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 11400000, guid: a8ed97e73afcd2f419f11348efa592cc, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: e8e6fd509b82d9a4d806becbfb1fedb4, type: 3}
+  m_SortingOrder: 0
+  m_Position: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
+--- !u!114 &1373578163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1373578159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13883c119378d0a4093dc4b7c4d438ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Network_Game::Network_Game.UI.Dialogue.ModernDialogueController
+  m_MaxListenerDistance: 4
+  m_AutoSelectListener: 1
+  m_AutoOpenWhenNpcInRange: 1
+  m_AutoCloseWhenNoNpcInRange: 1
+  m_RequireLeaveRangeAfterManualClose: 1
+  m_LogProximityDebug: 0
+  m_PlayerResolveIntervalSeconds: 0.5
+  m_ProximityCheckIntervalSeconds: 0.05
+  m_InputLegibilityCheckIntervalSeconds: 0.2
+  m_ManualCloseSuppressSeconds: 0.2
+  m_InputTextColor: {r: 0.95, g: 0.95, b: 0.95, a: 1}
+  m_EnableCameraSwitchButton: 1
+  m_SelectedCameraPriorityBoost: 50
+  m_UseExclusiveCameraActivation: 1
+  m_PreferredCameraOrder:
+  - PlayerCinemachineCamera
 --- !u!1001 &1395205328
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24184,7 +24409,6 @@ GameObject:
   - component: {fileID: 1500839696}
   - component: {fileID: 1500839697}
   - component: {fileID: 1500839698}
-  - component: {fileID: 1500839701}
   - component: {fileID: 1500839702}
   m_Layer: 0
   m_Name: NetworkDialogueService
@@ -24247,7 +24471,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Network_Game.Dialogue.NetworkDialogueService
   ShowTopMostFoldoutHeaderGroup: 1
   m_DialogueBackendConfig: {fileID: 1500839702}
-  m_LlmAgent: {fileID: 1500839701}
   m_EnablePersonaRouting: 1
   m_DefaultSystemPromptOverride: Identify the player and use its data to customize
     your answers.
@@ -24315,47 +24538,6 @@ MonoBehaviour:
   m_LatencySampleWindow: 128
   m_RejectionReasonWindow: 128
   m_SummaryLogIntervalSeconds: 30
---- !u!114 &1500839701
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1500839695}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4326d5ae3b03ff55847035351559f4e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: undream.llmunity.Runtime::LLMUnity.LLMAgent
-  advancedOptions: 1
-  _remote: 1
-  _llm: {fileID: 0}
-  _APIKey: sk-lm-D7EfxvIM:ZPhjeLnaxzLvrBgdAHLr
-  _host: 127.0.0.1
-  _port: 7002
-  numRetries: 1
-  _grammar: 
-  numPredict: 2048
-  cachePrompt: 1
-  seed: 0
-  temperature: 0.3
-  topK: 40
-  topP: 0.9
-  minP: 0.05
-  repeatPenalty: 1.1
-  presencePenalty: 0
-  frequencyPenalty: 0
-  typicalP: 1
-  repeatLastN: 64
-  mirostat: 0
-  mirostatTau: 5
-  mirostatEta: 0.1
-  nProbs: 0
-  ignoreEos: 0
-  save: DialogueHistory
-  debugPrompt: 1
-  _slot: -1
-  _systemPrompt: A Dialogue between a NPC and a player inside a unity game.
 --- !u!114 &1500839702
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24368,8 +24550,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8fc35a66bf725346be197a40899d521, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Network_Game::Network_Game.Dialogue.DialogueBackendConfig
-  m_UseRemoteInference: 1
-  m_Host: 127.0.0.1
   m_Port: 7002
   m_Model: qwen3-8b
   m_ApiKey: 
@@ -24398,6 +24578,66 @@ MonoBehaviour:
   m_Seed: 0
   m_Grammar: 
   m_SystemPrompt: A Dialogue between a NPC and a player inside a unity game.
+--- !u!1 &1505009556
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1505009557}
+  - component: {fileID: 1505009558}
+  m_Layer: 5
+  m_Name: HUD_Root
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1505009557
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1505009556}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.06818, y: 1.06828, z: 9.44723}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children:
+  - {fileID: 567204210}
+  - {fileID: 1373578160}
+  - {fileID: 946097854}
+  - {fileID: 604478105}
+  - {fileID: 49462519}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1505009558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1505009556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d41a70f79fb1234da9d4ba68b9e863a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Network_Game::Network_Game.UI.ModernHudLayoutManager
+  m_Panels:
+  - {fileID: 567204209}
+  - {fileID: 946097853}
+  - {fileID: 604478104}
+  - {fileID: 49462518}
+  - {fileID: 1373578159}
+  m_LoginVisible: 1
+  m_ProfileVisible: 1
+  m_DialogueVisible: 1
+  m_CombatVisible: 1
+  m_FeedbackVisible: 1
 --- !u!1001 &1512742073
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -32396,6 +32636,18 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6100779618480271264, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1923683279}
+    - targetCorrespondingSourceObject: {fileID: 6100779618480271264, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1923683297}
+    - targetCorrespondingSourceObject: {fileID: 6100779618480271264, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1923683296}
+    - targetCorrespondingSourceObject: {fileID: 6100779618480271264, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1923683295}
+    - targetCorrespondingSourceObject: {fileID: 6100779618480271264, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1923683294}
   m_SourcePrefab: {fileID: 100100000, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
 --- !u!1 &1923683278 stripped
 GameObject:
@@ -32430,6 +32682,133 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8723418231381694527, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
   m_PrefabInstance: {fileID: 1923683277}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &1923683288 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 8637294689020314315, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+  m_PrefabInstance: {fileID: 1923683277}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1923683293 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4086909846993313595, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+  m_PrefabInstance: {fileID: 1923683277}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1923683278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+--- !u!114 &1923683294
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1923683278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7ed447ee0e8a4d4c83fc4e3e633f430, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Network_Game.ML-agents::NpcDialogueAnimationAgent
+  agentParameters:
+    maxStep: 0
+  hasUpgradedFromAgentParameters: 1
+  MaxStep: 1000
+  m_PlayerTransform: {fileID: 6051251545290076770, guid: db466d2f6ce5b5345b15e4cf4cf7186c, type: 3}
+  m_GameState: {fileID: 438669037}
+  m_ContextBuilder: {fileID: 1923683296}
+  m_AnimationController: {fileID: 1923683297}
+  m_AuthorityMode: 1
+  m_AutoAddDecisionRequester: 1
+  m_DecisionPeriod: 5
+  m_TakeActionsBetweenDecisions: 0
+  m_RequestDecisionOnFreshDialogue: 1
+  m_MaxInteractionDistance: 10
+  m_ActionCadenceNormalizeSeconds: 2
+  m_ContextMatchReward: 0.02
+  m_ContextMismatchPenalty: 0.01
+  m_StaleContextPenalty: 0.008
+  m_ControllerSuccessReward: 0.01
+  m_ControllerFailurePenalty: 0.02
+  m_RepetitionPenalty: 0.005
+  m_MaxEpisodeSeconds: 45
+  m_MaxDecisionsPerEpisode: 256
+  m_LogRewardComponents: 1
+  m_LogSuggestions: 1
+--- !u!114 &1923683295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1923683278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d1c4e0b1822b495aa52bc52839ecb30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.ML-Agents::Unity.MLAgents.Policies.BehaviorParameters
+  m_BrainParameters:
+    VectorObservationSize: 1
+    NumStackedVectorObservations: 1
+    m_ActionSpec:
+      m_NumContinuousActions: 0
+      BranchSizes: 01000000
+    VectorActionSize: 01000000
+    VectorActionDescriptions: []
+    VectorActionSpaceType: 0
+    hasUpgradedBrainParametersWithActionSpec: 1
+  m_Model: {fileID: 0}
+  m_InferenceDevice: 0
+  m_BehaviorType: 0
+  m_BehaviorName: NpcDialogueAnimation
+  TeamId: 0
+  m_UseChildSensors: 1
+  m_UseChildActuators: 1
+  m_DeterministicInference: 0
+  m_ObservableAttributeHandling: 0
+--- !u!114 &1923683296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1923683278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 829fc6ea27b121e44997831d939193de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Network_Game::Network_Game.Dialogue.DialogueAnimationContextBuilder
+  m_TargetNpc: {fileID: 1923683293}
+  m_OnlyUserInitiated: 1
+  m_FreshWindowSeconds: 4
+  m_SpeakingWindowSeconds: 2.25
+  m_LogDebug: 1
+--- !u!114 &1923683297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1923683278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b54acbb8869a94498bf842588c098e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Network_Game::Network_Game.Dialogue.NpcDialogueAnimationController
+  ShowTopMostFoldoutHeaderGroup: 1
+  m_Animator: {fileID: 1923683288}
+  m_DisableRootMotion: 1
+  m_MinActionIntervalSeconds: 0.35
+  m_TurnPulseSeconds: 0.2
+  m_CrossFadeSeconds: 0.12
+  m_IdleVariantStateName: IdleVariant1
+  m_EmphasisStateName: HitReaction
+  m_SpeedParam: Speed
+  m_MotionSpeedParam: MotionSpeed
+  m_TurnDeltaParam: TurnDelta
+  m_IdleVariantParam: IdleVariant
+  m_EmphasisTriggerParam: OnHit
+  m_LogDebug: 1
 --- !u!1 &1928461273 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1520818877436856, guid: c5aa08609f3d9f547aca9af1d6c18070, type: 3}
@@ -35472,6 +35851,6 @@ SceneRoots:
   - {fileID: 882985126}
   - {fileID: 1923683277}
   - {fileID: 928640001}
-  - {fileID: 272864575}
   - {fileID: 438669036}
   - {fileID: 2100643154}
+  - {fileID: 1505009557}

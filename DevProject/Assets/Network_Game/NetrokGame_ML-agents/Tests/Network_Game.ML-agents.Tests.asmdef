@@ -5,7 +5,6 @@
         "Network_Game",
         "Network_Game.ML-agents",
         "Unity.ML-Agents",
-        "undream.llmunity.Runtime",
         "Unity.Netcode.Runtime",
         "Unity.Networking.Transport",
         "Unity.Cinemachine",

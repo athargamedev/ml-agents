@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using LLMUnity;
 using Network_Game.Diagnostics;
 using Network_Game.Dialogue;
 using Unity.Netcode;
@@ -23,19 +22,8 @@ namespace Network_Game.Behavior
 
         public void DisableLlmAgent(GameObject target)
         {
-            if (target == null)
-            {
-                return;
-            }
-
-            LLMAgent llm = target.GetComponent<LLMAgent>();
-            if (llm == null || !llm.enabled)
-            {
-                return;
-            }
-
-            NGLog.Info("NPCBootstrap", $"Disabling LLM Agent on '{target.name}' (Player Instance)");
-            llm.enabled = false;
+            // Player-side dialogue components were removed; keep this method as a no-op
+            // so existing bootstrap call sites remain harmless during migration cleanup.
         }
 
         /// <summary>

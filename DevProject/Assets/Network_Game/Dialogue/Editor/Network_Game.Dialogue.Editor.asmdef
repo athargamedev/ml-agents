@@ -3,7 +3,6 @@
     "rootNamespace": "Network_Game.Dialogue.Editor",
     "references": [
         "Network_Game",
-        "undream.llmunity.Runtime",
         "Unity.Netcode.Runtime",
         "MCPForUnity.Editor"
     ],

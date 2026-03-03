@@ -382,6 +382,17 @@ namespace Network_Game.Dialogue
                 DestroyUiToolkitOverlay();
             }
 
+            // Try to find existing feedback overlay in UXML first (UI Builder created)
+            VisualElement existingOverlay = TryFindExistingFeedbackOverlay();
+            if (existingOverlay != null)
+            {
+                m_UiOverlayRoot = existingOverlay;
+                BindExistingFeedbackElements(m_UiOverlayRoot);
+                RefreshPromptUiState();
+                return;
+            }
+
+            // Fallback: try to find via ModernHudManager
             VisualElement topBarZone = Network_Game.UI.ModernHudManager.TryGetZone(Network_Game.UI.ModernHudManager.HudZone.TopBar);
 
             if (topBarZone != null)
@@ -399,6 +410,77 @@ namespace Network_Game.Dialogue
 
             BuildUiToolkitOverlay(hostDocument.rootVisualElement, false);
             RefreshPromptUiState();
+        }
+
+        /// <summary>
+        /// Try to find existing feedback overlay from UXML (created in UI Builder).
+        /// </summary>
+        private VisualElement TryFindExistingFeedbackOverlay()
+        {
+            // Try ModernHudManager first
+            if (Network_Game.UI.ModernHudManager.Active != null)
+            {
+                VisualElement topBar = Network_Game.UI.ModernHudManager.TryGetZone(
+                    Network_Game.UI.ModernHudManager.HudZone.TopBar);
+                if (topBar != null)
+                {
+                    VisualElement overlay = topBar.Q("feedback-overlay");
+                    if (overlay != null)
+                        return overlay;
+                }
+            }
+
+            // Try finding any UIDocument with feedback-overlay
+            UIDocument[] docs = FindObjectsByType<UIDocument>(FindObjectsInactive.Exclude);
+            for (int i = 0; i < docs.Length; i++)
+            {
+                if (docs[i]?.rootVisualElement == null) continue;
+                VisualElement overlay = docs[i].rootVisualElement.Q("feedback-overlay");
+                if (overlay != null) return overlay;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Bind to existing UXML elements for feedback UI.
+        /// </summary>
+        private void BindExistingFeedbackElements(VisualElement root)
+        {
+            // Header elements
+            m_UiTitleLabel = root.Q<Label>("feedback-title");
+            m_UiQueueLabel = root.Q<Label>("feedback-queue");
+            m_UiModeLabel = root.Q<Label>("feedback-mode");
+
+            // Info labels
+            m_UiEffectLabel = root.Q<Label>("feedback-effect");
+            m_UiSourceLabel = root.Q<Label>("feedback-source");
+            m_UiTargetLabel = root.Q<Label>("feedback-target");
+            m_UiMetricsLabel = root.Q<Label>("feedback-metrics");
+
+            // Action buttons - bind click handlers
+            Button btnCorrect = root.Q<Button>("btn-correct");
+            Button btnHidden = root.Q<Button>("btn-hidden");
+            Button btnTarget = root.Q<Button>("btn-target");
+            Button btnPlace = root.Q<Button>("btn-place");
+            Button btnMesh = root.Q<Button>("btn-mesh");
+            Button btnSkip = root.Q<Button>("btn-skip");
+
+            if (btnCorrect != null) btnCorrect.clicked += () => SubmitCurrent("looks_correct", m_Comment);
+            if (btnHidden != null) btnHidden.clicked += () => SubmitCurrent("not_visible", m_Comment);
+            if (btnTarget != null) btnTarget.clicked += () => SubmitCurrent("wrong_target", m_Comment);
+            if (btnPlace != null) btnPlace.clicked += () => SubmitCurrent("wrong_placement", m_Comment);
+            if (btnMesh != null) btnMesh.clicked += () => SubmitCurrent("wrong_mesh_fit", m_Comment);
+            if (btnSkip != null) btnSkip.clicked += () => SubmitCurrent("skipped", m_Comment);
+
+            // Notes row
+            m_UiCommentField = root.Q<TextField>("feedback-comment");
+            Button btnNote = root.Q<Button>("btn-note");
+            if (btnNote != null) btnNote.clicked += () => SubmitCurrent("note_only", m_Comment);
+            if (m_UiCommentField != null)
+            {
+                m_UiCommentField.RegisterValueChangedCallback(evt => m_Comment = evt.newValue ?? string.Empty);
+            }
         }
 
         private UIDocument FindUiToolkitHostDocument()

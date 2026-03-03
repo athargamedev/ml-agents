@@ -30,7 +30,9 @@ namespace Network_Game.UI.Profile
             m_ClientIdLabel = root.Q<Label>("client-id");
             m_MinimizeButton = root.Q<Button>("minimize-button");
 
-            m_MinimizeButton.clicked += ToggleMinimize;
+            if (m_MinimizeButton != null)
+                m_MinimizeButton.clicked += ToggleMinimize;
+
             LocalPlayerAuthService.OnPlayerLoggedIn += UpdateProfile;
             LocalPlayerAuthService.OnPlayerLoggedOut += ClearProfile;
 

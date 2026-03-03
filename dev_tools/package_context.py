@@ -32,10 +32,13 @@ MAX_CONTEXT_CHARS = 2000  # ~500 tokens — room for 2-3 package summaries
 # Only covers packages for which we generate docs.  Add entries here when
 # docs_scanner.py is extended to cover more packages.
 _NS_TO_PKG: dict[str, str] = {
-    "Unity.Netcode":              "com.unity.netcode.gameobjects",
-    "Unity.Networking.Transport": "com.unity.transport",
-    "Cinemachine":                "com.unity.cinemachine",
-    "Unity.Multiplayer.Tools":    "com.unity.multiplayer.tools",
+    "Unity.Netcode":                 "com.unity.netcode.gameobjects",
+    "Unity.Networking.Transport":    "com.unity.transport",
+    "Cinemachine":                   "com.unity.cinemachine",
+    "Unity.Multiplayer.Tools":       "com.unity.multiplayer.tools",
+    "Unity.MLAgents":                "com.unity.ml-agents",
+    "Unity.AI.Navigation":           "com.unity.ai.navigation",
+    "UnityEngine.AddressableAssets": "com.unity.addressables",
 }
 
 

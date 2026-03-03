@@ -441,100 +441,53 @@ namespace Network_Game.Combat
 
         private void TryEnsureUiToolkitOverlay()
         {
-            if (m_UiHostRoot != null && !IsUsableUiToolkitHostRoot(m_UiHostRoot))
-            {
-                DestroyUiToolkitOverlay();
-            }
-
-            if (m_UiOverlayRoot != null && m_UiOverlayRoot.parent != null && m_UiOverlayRoot.panel != null)
-            {
-                return;
-            }
-
+            // Try to find existing combat overlay from UXML (created in UI Builder)
             VisualElement hudZone = Network_Game.UI.ModernHudManager.TryGetZone(
                 Network_Game.UI.ModernHudManager.HudZone.TopLeft
             );
 
             if (hudZone != null)
             {
-                BuildUiToolkitOverlay(hudZone, true);
-                RefreshUiToolkitOverlay();
-                return;
+                // Find existing combat-overlay element in UXML
+                m_UiOverlayRoot = hudZone.Q("combat-overlay");
+                if (m_UiOverlayRoot != null)
+                {
+                    // Cache child elements
+                    m_UiNetLabel = m_UiOverlayRoot.Q<Label>("combat-net");
+                    m_UiHealthList = m_UiOverlayRoot.Q("combat-health-list");
+                    m_UiEffectsList = m_UiOverlayRoot.Q("combat-effects-list");
+                    m_UiDamageList = m_UiOverlayRoot.Q("combat-damage-list");
+
+                    m_UiHostRoot = hudZone;
+                    RefreshUiToolkitOverlay();
+                    return;
+                }
             }
 
+            // Fallback: Find any UIDocument root
             VisualElement hostRoot = FindUiToolkitHostRoot();
             if (hostRoot == null)
             {
                 return;
             }
 
-            BuildUiToolkitOverlay(hostRoot, false);
-            RefreshUiToolkitOverlay();
+            // Try to find in host root
+            m_UiOverlayRoot = hostRoot.Q("combat-overlay");
+            if (m_UiOverlayRoot != null)
+            {
+                m_UiNetLabel = m_UiOverlayRoot.Q<Label>("combat-net");
+                m_UiHealthList = m_UiOverlayRoot.Q("combat-health-list");
+                m_UiEffectsList = m_UiOverlayRoot.Q("combat-effects-list");
+                m_UiDamageList = m_UiOverlayRoot.Q("combat-damage-list");
+                m_UiHostRoot = hostRoot;
+                RefreshUiToolkitOverlay();
+            }
         }
 
         private void BuildUiToolkitOverlay(VisualElement hostRoot, bool useHudZone)
         {
-            m_UiHostRoot = hostRoot;
-
-            var overlay = new VisualElement { name = "combat-runtime-overlay" };
-            overlay.style.display = DisplayStyle.None;
-            overlay.style.backgroundColor = new Color(0.06f, 0.07f, 0.09f, 0.78f);
-            overlay.style.borderTopLeftRadius = 10f;
-            overlay.style.borderTopRightRadius = 10f;
-            overlay.style.borderBottomLeftRadius = 10f;
-            overlay.style.borderBottomRightRadius = 10f;
-            overlay.style.borderTopWidth = 1f;
-            overlay.style.borderRightWidth = 1f;
-            overlay.style.borderBottomWidth = 1f;
-            overlay.style.borderLeftWidth = 1f;
-            overlay.style.borderTopColor = new Color(0.24f, 0.28f, 0.34f, 1f);
-            overlay.style.borderRightColor = new Color(0.24f, 0.28f, 0.34f, 1f);
-            overlay.style.borderBottomColor = new Color(0.24f, 0.28f, 0.34f, 1f);
-            overlay.style.borderLeftColor = new Color(0.24f, 0.28f, 0.34f, 1f);
-            overlay.style.paddingLeft = 10f;
-            overlay.style.paddingRight = 10f;
-            overlay.style.paddingTop = 8f;
-            overlay.style.paddingBottom = 8f;
-            overlay.pickingMode = PickingMode.Ignore;
-
-            if (!useHudZone)
-            {
-                overlay.style.width = Mathf.Clamp(m_PanelWidth, 320f, 760f);
-                overlay.style.position = Position.Absolute;
-                overlay.style.left = m_PanelPosition.x;
-                overlay.style.top = m_PanelPosition.y;
-            }
-            else
-            {
-                overlay.style.width = new Length(100f, LengthUnit.Percent);
-                overlay.style.position = Position.Relative;
-                overlay.style.marginBottom = 8f;
-                overlay.style.alignSelf = Align.FlexStart;
-            }
-
-            var title = new Label($"Combat Runtime  ({m_ToggleKey})");
-            title.style.fontSize = 11f;
-            title.style.unityFontStyleAndWeight = FontStyle.Bold;
-            title.style.color = new Color(0.88f, 0.95f, 1f, 1f);
-            title.style.marginBottom = 4f;
-            overlay.Add(title);
-
-            m_UiNetLabel = CreateOverlayLabel(10f, true);
-            overlay.Add(m_UiNetLabel);
-
-            m_UiHealthList = CreateListContainer(4f);
-            overlay.Add(m_UiHealthList);
-
-            overlay.Add(CreateSectionHeader("Recent effects:"));
-            m_UiEffectsList = CreateListContainer(2f);
-            overlay.Add(m_UiEffectsList);
-
-            overlay.Add(CreateSectionHeader("Recent damage:"));
-            m_UiDamageList = CreateListContainer(0f);
-            overlay.Add(m_UiDamageList);
-
-            hostRoot.Add(overlay);
-            m_UiOverlayRoot = overlay;
+            // No longer needed - UI is in UXML
+            // Kept for backward compatibility but does nothing
         }
 
         private void RefreshUiToolkitOverlay()

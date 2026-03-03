@@ -157,7 +157,24 @@ def check_memory_health(r: Results) -> None:
     # Detect the ghost directory from the old slug bug
     ghost = Path.home() / ".claude" / "projects" / "D-GithubRepos-ml-agents" / "memory"
     r.check("ghost dir D-GithubRepos absent", not ghost.exists(),
-            "Ghost directory found — KB writes are going to the wrong place!")
+            "Ghost directory found — KB writes are going to the wrong place!" if ghost.exists() else "")
+
+
+def check_package_context(r: Results) -> None:
+    """Verify the package context provider loads and has meaningful content."""
+    print("\n── Package context ─────────────────────────────────────────")
+    sys.path.insert(0, str(REPO_ROOT))
+    from dev_tools.package_context import PackageContextProvider, _latest_package_docs
+    docs_path = _latest_package_docs()
+    r.check("package docs file exists", docs_path is not None,
+            "Run: python dev_tools/run_dev_tools.py scan-docs")
+    if docs_path:
+        r.check("package docs non-empty", docs_path.stat().st_size > 500)
+        p = PackageContextProvider()
+        p._load()
+        r.check("package context loads ≥2 packages", len(p._docs) >= 2,
+                f"got {len(p._docs)}")
+        r.check("NGO docs present", "com.unity.netcode.gameobjects" in p._docs)
 
 
 # ── live model checks (LM Studio required) ────────────────────────────────────
@@ -240,6 +257,7 @@ def run_verify_cli(live: bool = False) -> bool:
     check_unity_scene(r)
     check_error_surfacing(r)
     check_memory_health(r)
+    check_package_context(r)
 
     if live:
         print("\n[verify] Running live model checks (requires LM Studio)...")

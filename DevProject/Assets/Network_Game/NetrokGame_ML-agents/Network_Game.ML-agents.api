@@ -27,6 +27,18 @@ public class GameStateProvider : UnityEngine.MonoBehaviour
     public override void WriteDiscreteActionMask(Unity.MLAgents.Actuators.IDiscreteActionMask actionMask);
 }
 
+[UnityEngine.DisallowMultipleComponent] [UnityEngine.RequireComponent(typeof(Unity.MLAgents.Policies.BehaviorParameters))] public class NpcDialogueAnimationAgent : Unity.MLAgents.Agent
+{
+    public NpcDialogueAnimationAgent() {}
+    public override void CollectObservations(Unity.MLAgents.Sensors.VectorSensor sensor);
+    public override void Heuristic(ref readonly Unity.MLAgents.Actuators.ActionBuffers actionsOut);
+    public override void Initialize();
+    public override void OnActionReceived(Unity.MLAgents.Actuators.ActionBuffers actions);
+    protected override void OnDisable();
+    public override void OnEpisodeBegin();
+    public override void WriteDiscreteActionMask(Unity.MLAgents.Actuators.IDiscreteActionMask actionMask);
+}
+
 public class SideChannelDialogueClient : Network_Game.Dialogue.IDialogueInferenceClient
 {
     public event System.Action<Unity.MLAgents.NpcDialogue.DialogueResponse> OnStructuredDialogueResponseReceived;

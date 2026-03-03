@@ -1,14 +1,11 @@
-using System;
-using System.Linq;
-using LLMUnity;
 using UnityEngine;
 
 namespace Network_Game.Dialogue
 {
     /// <summary>
     /// Project-owned runtime config for remote dialogue inference.
-    /// Keeps LM Studio / Qwen-specific transport and sampling settings outside
-    /// the vendor LLMAgent component while we migrate the legacy dependency out.
+    /// Stores LM Studio / Qwen-specific transport and sampling settings for the
+    /// server-authoritative remote dialogue backend.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class DialogueBackendConfig : MonoBehaviour
@@ -23,11 +20,6 @@ namespace Network_Game.Dialogue
         };
 
         [Header("Transport")]
-        [SerializeField]
-        [Tooltip("When enabled, NetworkDialogueService prefers the OpenAI-compatible remote backend.")]
-        private bool m_UseRemoteInference = true;
-
-        [SerializeField]
         private string m_Host = "127.0.0.1";
 
         [SerializeField]
@@ -123,7 +115,6 @@ namespace Network_Game.Dialogue
         [Tooltip("System prompt used by the remote LM Studio / Qwen backend.")]
         private string m_SystemPrompt = string.Empty;
 
-        public bool UseRemoteInference => m_UseRemoteInference;
         public string Host => string.IsNullOrWhiteSpace(m_Host) ? "127.0.0.1" : m_Host.Trim();
         public int Port => Mathf.Clamp(m_Port, 1, 65535);
         public string Model => NormalizeOptionalValue(m_Model);
@@ -161,162 +152,6 @@ namespace Network_Game.Dialogue
             }
 
             return CloneFilteredArray(m_StopSequences);
-        }
-
-        public void ApplyLegacyDefaults(
-            LLMAgent legacyAgent,
-            string configuredModel,
-            string[] stopSequences
-        )
-        {
-            if (legacyAgent == null)
-            {
-                return;
-            }
-
-            if (m_UseRemoteInference)
-            {
-                m_UseRemoteInference = legacyAgent.remote;
-            }
-
-            if (string.IsNullOrWhiteSpace(m_Host) || m_Host.Trim() == "127.0.0.1")
-            {
-                m_Host = string.IsNullOrWhiteSpace(legacyAgent.host) ? m_Host : legacyAgent.host;
-            }
-
-            if (m_Port == 7002 && legacyAgent.port > 0)
-            {
-                m_Port = legacyAgent.port;
-            }
-
-            if (string.IsNullOrWhiteSpace(m_ApiKey))
-            {
-                m_ApiKey = legacyAgent.APIKey ?? string.Empty;
-            }
-
-            if (!string.IsNullOrWhiteSpace(configuredModel))
-            {
-                string trimmedModel = configuredModel.Trim();
-                if (
-                    (string.IsNullOrWhiteSpace(m_Model) || m_Model.Trim() == "qwen3-8b")
-                    &&
-                    !string.Equals(trimmedModel, "auto", StringComparison.OrdinalIgnoreCase)
-                    && !string.Equals(trimmedModel, "(auto)", StringComparison.OrdinalIgnoreCase)
-                )
-                {
-                    m_Model = trimmedModel;
-                }
-            }
-
-            if (Mathf.Approximately(m_Temperature, 0.3f))
-            {
-                m_Temperature = legacyAgent.temperature;
-            }
-
-            if (m_MaxTokens == 2048)
-            {
-                m_MaxTokens = legacyAgent.numPredict;
-            }
-
-            if (Mathf.Approximately(m_TopP, 0.9f))
-            {
-                m_TopP = legacyAgent.topP;
-            }
-
-            if (Mathf.Approximately(m_FrequencyPenalty, 0f))
-            {
-                m_FrequencyPenalty = legacyAgent.frequencyPenalty;
-            }
-
-            if (Mathf.Approximately(m_PresencePenalty, 0f))
-            {
-                m_PresencePenalty = legacyAgent.presencePenalty;
-            }
-
-            if (m_Seed == 0)
-            {
-                m_Seed = legacyAgent.seed;
-            }
-
-            if (m_TopK == 40)
-            {
-                m_TopK = legacyAgent.topK;
-            }
-
-            if (Mathf.Approximately(m_RepeatPenalty, 1.1f))
-            {
-                m_RepeatPenalty = legacyAgent.repeatPenalty;
-            }
-
-            if (Mathf.Approximately(m_MinP, 0.05f))
-            {
-                m_MinP = legacyAgent.minP;
-            }
-
-            if (Mathf.Approximately(m_TypicalP, 1f))
-            {
-                m_TypicalP = legacyAgent.typicalP;
-            }
-
-            if (m_RepeatLastN == 64)
-            {
-                m_RepeatLastN = legacyAgent.repeatLastN;
-            }
-
-            if (m_Mirostat == 0)
-            {
-                m_Mirostat = legacyAgent.mirostat;
-            }
-
-            if (Mathf.Approximately(m_MirostatTau, 5f))
-            {
-                m_MirostatTau = legacyAgent.mirostatTau;
-            }
-
-            if (Mathf.Approximately(m_MirostatEta, 0.1f))
-            {
-                m_MirostatEta = legacyAgent.mirostatEta;
-            }
-
-            if (m_NProbs == 0)
-            {
-                m_NProbs = legacyAgent.nProbs;
-            }
-
-            if (!m_IgnoreEos)
-            {
-                m_IgnoreEos = legacyAgent.ignoreEos;
-            }
-
-            if (m_CachePrompt)
-            {
-                m_CachePrompt = legacyAgent.cachePrompt;
-            }
-
-            if (string.IsNullOrWhiteSpace(m_Grammar))
-            {
-                m_Grammar = legacyAgent.grammar ?? string.Empty;
-            }
-
-            if (string.IsNullOrWhiteSpace(m_SystemPrompt))
-            {
-                m_SystemPrompt = legacyAgent.systemPrompt ?? string.Empty;
-            }
-
-            if (
-                (m_StopSequences == null || m_StopSequences.Length == 0 || UsesDefaultStopSequences())
-                && stopSequences != null
-                && stopSequences.Length > 0
-            )
-            {
-                m_StopSequences = stopSequences
-                    .Where(sequence => !string.IsNullOrWhiteSpace(sequence))
-                    .Select(sequence => sequence.Trim())
-                    .Distinct(StringComparer.Ordinal)
-                    .ToArray();
-            }
-
-            OnValidate();
         }
 
         private void OnValidate()
@@ -360,24 +195,6 @@ namespace Network_Game.Dialogue
             }
 
             return filtered;
-        }
-
-        private bool UsesDefaultStopSequences()
-        {
-            if (m_StopSequences == null || m_StopSequences.Length != s_DefaultStopSequences.Length)
-            {
-                return false;
-            }
-
-            for (int i = 0; i < s_DefaultStopSequences.Length; i++)
-            {
-                if (!string.Equals(m_StopSequences[i], s_DefaultStopSequences[i], StringComparison.Ordinal))
-                {
-                    return false;
-                }
-            }
-
-            return true;
         }
     }
 }

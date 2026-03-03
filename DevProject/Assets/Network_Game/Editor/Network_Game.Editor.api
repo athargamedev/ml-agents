@@ -124,23 +124,6 @@ namespace Network_Game.Editor.CustomTools
         public static object HandleCommand(Newtonsoft.Json.Linq.JObject @params);
     }
 
-    [MCPForUnity.Editor.Tools.McpForUnityTool(@"ng_showcase_scene_mode", Description = @"Apply or manage non-destructive showcase polish for Behavior_Scene: post-processing volume, UI test mode (hide/show HUD panels), camera presets, and runtime showcase shots. Actions: apply, status, hide_ui, show_ui, camera_preset, runtime_shot, stop_runtime_shot, runtime_status.")] public static class ShowcaseSceneModeTool
-    {
-        public static object HandleCommand(Newtonsoft.Json.Linq.JObject @params);
-        public class Parameters
-        {
-            [MCPForUnity.Editor.Tools.ToolParameter(@"Action: apply, status, hide_ui, show_ui, camera_preset, runtime_shot, stop_runtime_shot, runtime_status", Required = false)] public string action { get; set; }
-            [MCPForUnity.Editor.Tools.ToolParameter(@"Shot duration seconds for runtime_shot (default controller value)", Required = false)] public System.Nullable<float> duration_seconds { get; set; }
-            [MCPForUnity.Editor.Tools.ToolParameter(@"Enable showcase camera object on apply (default false)", Required = false)] public System.Nullable<bool> enable_showcase_camera { get; set; }
-            [MCPForUnity.Editor.Tools.ToolParameter(@"Hide UI when applying showcase mode (default true)", Required = false)] public System.Nullable<bool> hide_ui { get; set; }
-            [MCPForUnity.Editor.Tools.ToolParameter(@"Isolate matching NPC polish set during runtime_shot (default true)", Required = false)] public System.Nullable<bool> isolate_polish { get; set; }
-            [MCPForUnity.Editor.Tools.ToolParameter(@"Post-FX volume weight (default 0.9)", Required = false)] public System.Nullable<float> postfx_weight { get; set; }
-            [MCPForUnity.Editor.Tools.ToolParameter(@"Camera preset name for action=camera_preset (wide, storm, forge, archivist)", Required = false)] public string preset { get; set; }
-            [MCPForUnity.Editor.Tools.ToolParameter(@"Runtime shot id for action=runtime_shot (wide, storm, forge, archivist)", Required = false)] public string shot { get; set; }
-            public Parameters() {}
-        }
-    }
-
     [MCPForUnity.Editor.Tools.McpForUnityTool(@"ng_simulate_llm_response", Description = @"Parse a simulated LLM response through the full effect pipeline: extract [EFFECT:] tags, validate against catalog, report intents and parameters. Params: response_text (required), spawn_effects (bool, default false).")] public static class SimulateLlmResponseTool
     {
         public static object HandleCommand(Newtonsoft.Json.Linq.JObject @params);

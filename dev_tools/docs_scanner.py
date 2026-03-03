@@ -56,7 +56,7 @@ def _default_memory_dir() -> str:
     repo_path = str(REPO_ROOT)
     if len(repo_path) >= 2 and repo_path[1] == ":":
         repo_path = repo_path[0].upper() + repo_path[1:]
-    slug = repo_path.replace(":", "").replace("\\", "-").replace("/", "-")
+    slug = repo_path.replace(":", "-").replace("\\", "-").replace("/", "-")
     return str(Path.home() / ".claude" / "projects" / slug / "memory")
 
 
@@ -137,34 +137,6 @@ def _load_system_prompt() -> str:
         "Cover: purpose, key APIs used in this project, project-specific usage, gotchas."
     )
 
-
-def _load_referenced_packages() -> set[str]:
-    """
-    Read assembly_map.json and return package IDs that are referenced by at least
-    one assembly. Falls back to an empty set if the map is missing.
-    """
-    if not ASSEMBLY_MAP.exists():
-        return set()
-    try:
-        data = json.loads(ASSEMBLY_MAP.read_text(encoding="utf-8"))
-    except Exception:
-        return set()
-
-    referenced: set[str] = set()
-    for info in data.get("packages", {}).values():
-        if not isinstance(info, dict):
-            continue
-        if not info.get("referenced_by"):
-            continue
-        rel_path = str(info.get("path", "")).replace("\\", "/")
-        marker = "DevProject/Packages/"
-        if marker not in rel_path:
-            continue
-        pkg_path = rel_path.split(marker, 1)[1]
-        pkg_id = pkg_path.split("/", 1)[0]
-        if pkg_id:
-            referenced.add(pkg_id)
-    return referenced
 
 
 def _build_package_user_msg(pkg_id: str, version: str, hint: str) -> str:
@@ -249,16 +221,15 @@ class DocScanner:
             doc = self.scan_package(target_pkg, version, hint)
             return [doc], ""
 
-        referenced_packages = _load_referenced_packages()
         core_packages = [
             (pkg_id, hint)
             for pkg_id, hint in CORE_PACKAGES.items()
-            if not referenced_packages or pkg_id in referenced_packages
+            if pkg_id in manifest
         ]
         tool_packages = {
             pkg_id: hint
             for pkg_id, hint in TOOL_PACKAGES.items()
-            if not referenced_packages or pkg_id in referenced_packages
+            if pkg_id in manifest
         }
         if not core_packages:
             core_packages = list(CORE_PACKAGES.items())

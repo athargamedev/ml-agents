@@ -131,7 +131,7 @@ namespace Network_Game.Dialogue
             GUI.Label(new Rect(20, 80, 300, 20), $"Histories: {stats.HistoryCount}");
             GUI.Label(
                 new Rect(20, 100, 300, 20),
-                $"LLM Agent: {(stats.HasLlmAgent ? "OK" : "Missing")}, Server: {stats.IsServer}, Client: {stats.IsClient}"
+                $"Backend: Remote LM Studio, Server: {stats.IsServer}, Client: {stats.IsClient}"
             );
             GUI.Label(
                 new Rect(20, 120, 860, 20),

@@ -212,7 +212,7 @@ namespace Network_Game.UI
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (!isActiveAndEnabled)
+            if (this == null || !isActiveAndEnabled)
             {
                 return;
             }

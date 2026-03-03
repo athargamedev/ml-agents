@@ -56,5 +56,9 @@ FALSE POSITIVE GUARDS — do NOT report these:
 - Mathf.Max(0f, x) or Mathf.Clamp() IS validation. Do NOT flag it as "lacks validation".
 - If the code already contains `!= null` for the object before the access point,
   the null check already exists — do NOT flag it as missing.
+- OnNetworkSpawn guard is required for NetworkVariable reads/writes and
+  GetComponent<NetworkObject>()/IsSpawned checks ONLY. Do NOT flag [SerializeField]
+  references to MonoBehaviours, Transforms, CinemachineCamera, or other non-NetworkObject
+  types as needing an OnNetworkSpawn guard — they are Unity references, not network state.
 
 Return ONLY valid JSON — no markdown, no commentary outside the JSON object.

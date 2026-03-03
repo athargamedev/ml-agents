@@ -1,56 +1,45 @@
-# ML-Agents Integration — Implementation Details
+# ML-Agents Integration — Current Implementation
 
-## NpcDialogueAgent.cs
-Scene-level Agent (one per scene on "DialogueBridge" empty GameObject).
+## Design intent
+- ML-Agents is integrated as a training and instrumentation layer on top of the main dialogue system.
+- Normal gameplay remains on the remote LM Studio backend.
+- ML-Agents only replaces the dialogue backend when explicitly put into side-channel override mode.
 
-### DialogueRoutingMode enum
-- `ObserveOnly` (default) — ML-Agents only observes outcomes and shapes rewards.
-  Existing NetworkDialogueService → LM Studio path completely untouched.
-- `SideChannelOverride` — experimental, routes ChatAsync() through Python bridge.
+## NpcDialogueAgent routing modes
+- `ObserveOnly`
+  - Default/safe mode
+  - `NetworkDialogueService` keeps using `OpenAIChatClient`
+  - ML-Agents observes dialogue outcomes and shapes rewards without replacing gameplay inference
+- `SideChannelOverride`
+  - `NpcDialogueAgent` injects `SideChannelDialogueClient`
+  - `NetworkDialogueService.SetMLAgentsSideChannelClient(...)` makes the side-channel backend take precedence
+  - Used for training experiments or explicit bridge-driven tests
 
-### Observations (5 floats — BehaviorParameters Space Size must be 5)
-- [0] player proximity to NPC anchor (0=far, 1=adjacent)
-- [1] player health normalized (0–1)
-- [2] player in combat (0 or 1)
-- [3] turn count / 10 (soft-normalized)
-- [4] episode time / 60 (capped at 1)
+## SideChannelDialogueClient role
+- Implements `IDialogueInferenceClient`
+- Routes `ChatAsync()` over `LlmDialogueChannel`
+- Should be treated as a temporary override backend, not the normal gameplay path
 
-### Actions (discrete branch size 3)
-- 0 = idle
-- 1 = engage / continue dialogue
-- 2 = end conversation → EndEpisode()
+## Training launch knowledge
+- `train_npc_dialogue.bat` now routes to `run_training.py`
+- `run_training.py` is the canonical launcher and handles:
+  - safer startup flow
+  - stale port cleanup
+  - explicit run-id handling
+  - skipping the Unity HTTP MCP poll by default
 
-### Reward signals subscribed via static events
-- `NetworkDialogueService.OnDialogueResponse` → success/fail rewards
-- `NetworkDialogueService.OnDialogueResponseTelemetry` → latency rewards, retry penalty
-- `DialogueFeedbackCollector.OnFeedbackScored` → quality score reward
+## Important runtime caveat
+- If `run_llm_bridge.py` is already connected to Unity through `UnityEnvironment`, it can block a training launch with worker/socket-in-use errors.
+- The trainer and the bridge should not both try to own the same Unity ML-Agents environment connection at the same time.
 
-### Key design features
-- HashSet<int> deduplication per episode to avoid double-rewarding same RequestId
-- `WriteDiscreteActionMask` — engage disabled when player proximity < threshold
-- `DecisionRequester` auto-added at runtime (configurable DecisionPeriod)
-- `StatsRecorder` sends metrics to TensorBoard under `NpcDialogue/` namespace
-- `IsUserInitiated` filter on responses — ignores ambient NPC chatter
+## What changed in the refactor
+- The gameplay stack no longer has a local `LLMUnity` backend to fall back to.
+- ML-Agents override now sits on top of a remote-only gameplay baseline.
+- This makes behavior clearer:
+  - gameplay = LM Studio remote
+  - training override = side-channel bridge
 
-## Inspector Setup
-BehaviorParameters:
-- Behavior Name: NpcDialogue
-- Vector Observations Space Size: **5** (must match exactly)
-- Discrete Branches: 1, Branch 0 Size: **3**
-- Behavior Type: **Heuristic Only** (testing) / **Default** (Python bridge running)
-- Model: empty until trained .onnx exists
-
-## SideChannelDialogueClient.cs
-IDialogueInferenceClient backed by LlmDialogueChannel SideChannel.
-Key features:
-- ConcurrentDictionary<string, PendingRequest> for async GUID-keyed routing
-- Heartbeat protocol: npcId=`__bridge__`, responseText=`__bridge_ready__`
-- Bridge freshness tracking (5s window) for non-blocking CheckConnectionAsync
-- CancellationToken support — properly cancels pending requests on token cancel
-- Non-blocking CheckConnectionAsync — avoids env.reset() deadlock
-- `OnStructuredDialogueResponseReceived` event for confidence-based rewards
-
-## NetworkDialogueService modifications
-- `m_OverrideClient` field (IDialogueInferenceClient, line ~573)
-- `SetMLAgentsSideChannelClient(client)` public method (line ~2847)
-- `ResolveInferenceClient()` checks override first before normal path
+## Validation rule
+- When debugging training issues, first determine which backend is active:
+  - normal runtime: `openai-compatible-remote`
+  - training override: `ml-agents-sidechannel`

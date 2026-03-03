@@ -13,9 +13,9 @@ namespace Network_Game.Dialogue
 {
     /// <summary>
     /// HTTP client for OpenAI-compatible chat completion APIs (LM Studio, Ollama, vLLM, etc.).
-    /// Bypasses LLMUnity's native llama.cpp client which uses incompatible endpoints.
+    /// Used as the primary runtime transport for the project's remote dialogue backend.
     ///
-    /// Parameter mapping from LLMClient inspector fields to OpenAI-compat JSON:
+    /// Parameter mapping from DialogueBackendConfig fields to OpenAI-compat JSON:
     ///   temperature        → temperature
     ///   numPredict         → max_tokens       (-1 → omit, let server decide)
     ///   topP               → top_p

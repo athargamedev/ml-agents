@@ -10,8 +10,8 @@ using Unity.MLAgents.NpcDialogue;
 /// <summary>
 /// IDialogueInferenceClient backed by the ML-Agents LlmDialogueChannel SideChannel.
 ///
-/// Drops into NetworkDialogueService as a third backend alongside LlmAgentInferenceClient
-/// and OpenAIChatClient. Routes each ChatAsync() call through the Python LLM bridge:
+/// Drops into NetworkDialogueService as a training/testing override on top of the
+/// normal OpenAIChatClient path. Routes each ChatAsync() call through the Python LLM bridge:
 ///
 ///   1. ChatAsync() packs the request and calls LlmDialogueChannel.SendRequest().
 ///   2. Python receives it, dispatches to Ollama/OpenAI in a background thread.

@@ -1,65 +1,47 @@
 # ML-Agents Project Overview
 
 ## Purpose
-Unity ML-Agents Toolkit v4.0.x — open-source framework for training intelligent agents in Unity. User is using the **DevProject** to develop and test an **LLM dialogue system for NPCs**.
+This repository contains Unity ML-Agents plus the `DevProject` game, where the active focus is a multiplayer NPC dialogue system that uses LM Studio-hosted Qwen models through a server-authoritative runtime.
 
-## Tech Stack
-- **C#** (Unity 2022.3+) — Unity side (agents, sensors, actuators, policies, inference)
-- **Python** (PyTorch) — training framework (PPO, SAC, POCA, GAIL, BC)
-- **ONNX** — model exchange format between training and Unity inference
-- **Unity Inference Engine** (`com.unity.ai.inference` v2.5.0, formerly Sentis) — runs ONNX models in Unity at runtime
+## Current runtime direction
+- Production dialogue is **remote-only**.
+- NPC dialogue is generated on the game/server side through LM Studio's OpenAI-compatible API.
+- Clients send dialogue intents and render results; they do not run local inference.
+- The old `Assets/Network_Game/LLMUnity` vendor package was removed from the project.
 
-## DevProject Key Packages
-- `com.unity.ai.inference` v2.5.0 — run neural nets (including LLMs) in Unity
-- `com.unity.ml-agents` (local file reference)
-- `com.unity.ai.navigation` v2.0.10 — NavMesh for NPC movement
-- `com.coplaydev.unity-mcp` — MCP server integration for Unity
-- `Unity.InferenceEngine.Tokenization` csproj — text tokenization (key for LLM)
+## Active stack
+- **Unity**: `DevProject` (current editor observed on Unity 6 beta / `6000.4.0b9`)
+- **C#**: gameplay, netcode, dialogue routing, UI
+- **Python**: ML-Agents trainers, side-channel bridge utilities, training launcher
+- **LM Studio**: primary inference gateway, default local endpoint `127.0.0.1:7002`
+- **Qwen models**: default runtime family, with `qwen3-8b` as the main gameplay target
 
-## Project Structure
-```
-com.unity.ml-agents/
-  Runtime/
-    Agent.cs              # Base MonoBehaviour (OnEpisodeBegin, CollectObservations, OnActionReceived, Heuristic)
-    Sensors/              # VectorSensor, BufferSensor, RayPerceptionSensor, CameraSensor, GridSensor
-    Actuators/            # IActuator, VectorActuator, ActionSpec
-    Policies/             # SentisPolicy, HeuristicPolicy, RemotePolicy, BehaviorParameters
-    Inference/            # ModelRunner (wraps Unity Inference Engine), TensorGenerator, TensorApplier
-    SideChannels/         # Bidirectional Python<->Unity comms (SideChannel, RawBytesChannel, FloatPropertiesChannel)
-ml-agents/mlagents/
-  trainers/
-    ppo/, sac/, poca/     # Trainer implementations
-    policy/               # Neural network policies
-    buffer.py             # Experience replay
-    settings.py           # Training config (YAML-driven)
-DevProject/Assets/ML-Agents/Scripts/Tests/  # Dev tests
-config/ppo/, sac/, poca/, imitation/        # YAML training configs
-```
+## Dialogue architecture (current)
+- `DialogueBackendConfig` is the project-owned source of truth for LM Studio host/port/model/sampling/system prompt.
+- `NetworkDialogueService` is the single server-authoritative dialogue router.
+- `OpenAIChatClient` is the default runtime backend for gameplay dialogue.
+- `SideChannelDialogueClient` is a training/testing override used by ML-Agents when explicitly injected.
+- `NpcDialogueActor` + `NpcDialogueProfile` provide per-NPC persona behavior.
 
-## Runtime Environment
-- **LM Studio**: `127.0.0.1:7002`, model `llama-3.2-3b-instruct`, API key prefix `sk-lm-`
-- **Python env**: `C:\Users\andre_wjgj23f\miniconda3\envs\mlagents\python.exe` (conda is NOT in bash PATH — always use full path)
-- **mlagents package**: installed to site-packages (NOT editable). New trainers files need `sys.path.insert` in runner scripts.
-- **UnityMCP**: `com.coplaydev.unity-mcp` — MCP server for Unity Editor automation
+## Important repo state
+- `Behavior_Scene` was migrated off the legacy `LLMAgent` component.
+- `NetworkDialogueService` in-scene now relies on `DialogueBackendConfig`, not `LLMUnity`.
+- The repo no longer has a compile-time dependency on `undream.llmunity.Runtime`.
+- `ModernHudController` was retired; `ModernHudManager` is the active HUD path.
 
-## ML-Agents Integration Status
-The project has a fully integrated NPC dialogue training layer:
-- `DevProject/Assets/ML-Agents/Scripts/NpcDialogueAgent.cs` — scene-level Agent (observer + reward shaper)
-- `DevProject/Assets/ML-Agents/Scripts/SideChannelDialogueClient.cs` — optional Python bridge client
-- `DevProject/Assets/ML-Agents/Scripts/GameStateProvider.cs` — player state capture
-- `DevProject/Assets/ML-Agents/Scripts/LlmDialogueChannel.cs` — SideChannel (GUID: a1b2c3d4-e5f6-7890-abcd-ef1234567890)
-- `ml-agents/mlagents/trainers/llm_dialogue_channel.py` — Python counterpart
-- `ml-agents/mlagents/trainers/llm_bridge_server.py` — LLM handler factories
-- `run_llm_bridge.py` — standalone bridge runner (repo root)
-- `NetworkDialogueService.cs` — has `SetMLAgentsSideChannelClient()` + `m_OverrideClient` hook
+## Training launcher status
+- `train_npc_dialogue.bat` now delegates to `run_training.py`.
+- `run_training.py` performs the safer training launch path (including port cleanup).
+- The old Unity HTTP MCP readiness check is **opt-in** now (`--unity-check`) and skipped by default.
 
-## C# Naming Conventions
-- PascalCase for classes, methods, properties
-- m_ prefix for private member fields (e.g., m_Sensor)
-- k_ prefix for constants
-- Interfaces prefixed with I (ISensor, IActuator, IPolicy)
-- Namespaces: Unity.MLAgents, Unity.MLAgents.Sensors, Unity.MLAgents.Actuators, Unity.MLAgents.Policies
+## Environment notes
+- Use the explicit ML-Agents Python environment path on this machine when needed:
+  `C:\Users\andre_wjgj23f\miniconda3\envs\mlagents\python.exe`
+- LM Studio model availability still matters: the requested model must already be loaded if a specific `model=` is sent.
 
-## Python Conventions
-- Snake_case, type hints used, dataclasses for config (attrs library)
-- Training configs in YAML
+## Key files to read first for dialogue work
+- `DevProject/Assets/Network_Game/Dialogue/NetworkDialogueService.cs`
+- `DevProject/Assets/Network_Game/Dialogue/DialogueBackendConfig.cs`
+- `DevProject/Assets/Network_Game/Dialogue/OpenAIChatClient.cs`
+- `DevProject/Assets/Network_Game/NetrokGame_ML-agents/Scripts/SideChannelDialogueClient.cs`
+- `run_training.py`

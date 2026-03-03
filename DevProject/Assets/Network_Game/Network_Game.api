@@ -212,6 +212,46 @@ namespace Network_Game.Diagnostics
 
 namespace Network_Game.Dialogue
 {
+    public enum DialogueAnimationAction
+    {
+        HoldNeutral = 0,
+        IdleVariant = 1,
+        TurnLeft = 2,
+        TurnRight = 3,
+        EmphasisReact = 4,
+    }
+
+    [UnityEngine.DisallowMultipleComponent] public sealed class DialogueAnimationContextBuilder : UnityEngine.MonoBehaviour
+    {
+        public DialogueAnimationContextSnapshot CurrentSnapshot { get; }
+        public string LastResponsePreview { get; }
+        public DialogueAnimationContextBuilder() {}
+        public void InjectSyntheticContext(string responseText);
+    }
+
+    public struct DialogueAnimationContextSnapshot
+    {
+        public bool HasExclamation;
+        public bool HasQuestion;
+        public float Intensity;
+        public bool IsFresh;
+        public bool IsSpeaking;
+        public float ResponseLengthNormalized;
+        public float SecondsSinceUpdate;
+        public DialogueAnimationTone Tone;
+        public static DialogueAnimationContextSnapshot Empty { get; }
+    }
+
+    public enum DialogueAnimationTone
+    {
+        Neutral = 0,
+        Greeting = 1,
+        Question = 2,
+        Warning = 3,
+        Aggressive = 4,
+        Positive = 5,
+    }
+
     [UnityEngine.DisallowMultipleComponent] public sealed class DialogueBackendConfig : UnityEngine.MonoBehaviour
     {
         public string ApiKey { get; }
@@ -237,9 +277,7 @@ namespace Network_Game.Dialogue
         public int TopK { get; }
         public float TopP { get; }
         public float TypicalP { get; }
-        public bool UseRemoteInference { get; }
         public DialogueBackendConfig() {}
-        public void ApplyLegacyDefaults(LLMUnity.LLMAgent legacyAgent, string configuredModel, string[] stopSequences);
         public string[] GetStopSequences();
         public void SetSystemPrompt(string value);
     }
@@ -391,6 +429,13 @@ namespace Network_Game.Dialogue
             public string TagName;
             public bool TagValid;
         }
+    }
+
+    public sealed class DialogueHistoryEntry
+    {
+        public string content;
+        public string role;
+        public DialogueHistoryEntry(string role, string content) {}
     }
 
     public readonly struct DialogueInferenceMessage
@@ -561,17 +606,6 @@ namespace Network_Game.Dialogue
         public System.Threading.Tasks.Task<bool> CheckConnectionAsync(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken));
     }
 
-    public sealed class LlmAgentInferenceClient : IDialogueInferenceClient
-    {
-        public string BackendName { get; }
-        public bool ManagesHistoryInternally { get; }
-        public LlmAgentInferenceClient() {}
-        public void ApplyConfig(DialogueInferenceRuntimeConfig config);
-        public async System.Threading.Tasks.Task<string> ChatAsync(string systemPrompt, System.Collections.Generic.IReadOnlyList<DialogueInferenceMessage> history, string userPrompt, bool addToHistory = true, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken));
-        public System.Threading.Tasks.Task<bool> CheckConnectionAsync(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken));
-        public void SetAgent(LLMUnity.LLMAgent agent);
-    }
-
     [UnityEngine.DefaultExecutionOrder(-450)] public class NetworkDialogueService : Unity.Netcode.NetworkBehaviour
     {
         public static event System.Action<NetworkDialogueService.DialogueResponse> OnDialogueResponse;
@@ -579,8 +613,6 @@ namespace Network_Game.Dialogue
         public string ActiveInferenceBackendName { get; }
         public int ActiveRequestCount { get; }
         public bool HasDialogueBackendConfig { get; }
-        public bool HasLegacyLlmAgent { get; }
-        public bool HasLegacyLocalLlm { get; }
         public static NetworkDialogueService Instance { get; }
         public bool IsLLMReady { get; }
         public bool IsWarmupDegraded { get; }
@@ -606,9 +638,9 @@ namespace Network_Game.Dialogue
         public bool ClearPlayerPromptContext(ulong playerNetworkId);
         public bool ClearPlayerPromptContextForClient(ulong clientId);
         public int EnqueueRequest(NetworkDialogueService.DialogueRequest request);
-        public System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<LLMUnity.ChatMessage>> GetAllHistory();
+        public System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<DialogueHistoryEntry>> GetAllHistory();
         public string[] GetConversationKeys();
-        public System.Collections.Generic.List<LLMUnity.ChatMessage> GetHistoryPublic(string conversationKey);
+        public System.Collections.Generic.List<DialogueHistoryEntry> GetHistoryPublic(string conversationKey);
         public System.Collections.Generic.Dictionary<string, int> GetRejectionReasons();
         public NetworkDialogueService.DialogueStats GetStats();
         public bool IsClientRequestInFlight(int clientRequestId, ulong requestingClientId = ulong.MaxValue);
@@ -737,6 +769,18 @@ namespace Network_Game.Dialogue
         public void ShowSpeechText(string text, float durationSeconds);
         public bool TryAutoAssignProfileFromName();
         public bool TryGetBoredLighting(string responseText, out UnityEngine.Color color, out float intensity, out float transitionSeconds);
+    }
+
+    [UnityEngine.DisallowMultipleComponent] [UnityEngine.RequireComponent(typeof(Unity.Netcode.NetworkObject))] public sealed class NpcDialogueAnimationController : Unity.Netcode.NetworkBehaviour
+    {
+        public DialogueAnimationAction CurrentAction { get; }
+        public bool IsReadyForAction { get; }
+        public float SecondsSinceLastAction { get; }
+        public NpcDialogueAnimationController() {}
+        protected override string __getTypeName();
+        protected override void __initializeRpcs();
+        protected override void __initializeVariables();
+        public bool TryPlayAction(DialogueAnimationAction action, out string reason);
     }
 
     [UnityEngine.CreateAssetMenu(fileName = @"NpcDialogueProfile", menuName = @"Network Game/Dialogue/NPC Dialogue Profile")] public class NpcDialogueProfile : UnityEngine.ScriptableObject
@@ -1109,16 +1153,6 @@ namespace Network_Game.Dialogue.MCP
         [UnityEngine.HideInInspector] public ulong TargetNetworkObjectId;
         public DialogueSpawnedMarker() {}
     }
-
-    [UnityEngine.AddComponentMenu(@"Network Game/MCP/Showcase Polish Controller")] [UnityEngine.DisallowMultipleComponent] public sealed class MCPShowcasePolishController : UnityEngine.MonoBehaviour
-    {
-        public string ActiveShotId { get; }
-        public MCPShowcasePolishController() {}
-        public string[] GetAvailableShotIds();
-        public void StopActiveShot(bool restoreState = true);
-        public bool TryPlayShot(string shotId, float durationSeconds = -1f, System.Nullable<bool> enableShowcaseCamera = default(System.Nullable<bool>), System.Nullable<bool> isolateNpcPolish = default(System.Nullable<bool>));
-        public bool TrySnapShowcaseCameraToShot(string shotId, bool enableShowcaseCamera = false);
-    }
 }
 
 namespace Network_Game.ThirdPersonController
@@ -1225,6 +1259,14 @@ namespace Network_Game.ThirdPersonController.Debug
 
 namespace Network_Game.UI
 {
+    public sealed class ModernHudLayoutManager : UnityEngine.MonoBehaviour
+    {
+        public ModernHudLayoutManager() {}
+        public UnityEngine.GameObject GetPanel(string panelName);
+        public void SetPanelVisible(string panelName, bool visible);
+        public void TogglePanel(string panelName);
+    }
+
     [UnityEngine.CreateAssetMenu(fileName = @"ModernHudLayoutProfile", menuName = @"Network Game/UI/Modern HUD Layout Profile")] public sealed class ModernHudLayoutProfile : UnityEngine.ScriptableObject
     {
         [UnityEngine.Tooltip(@"Primary accent color value")] public UnityEngine.Color AccentColor;

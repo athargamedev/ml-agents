@@ -24,7 +24,9 @@ namespace Network_Game.UI.Login
             m_LoginButton = m_Root.Q<Button>("login-button");
             m_StatusLabel = m_Root.Q<Label>("status-label");
 
-            m_LoginButton.clicked += OnLoginClicked;
+            if (m_LoginButton != null)
+                m_LoginButton.clicked += OnLoginClicked;
+
             LocalPlayerAuthService.OnPlayerLoggedIn += HandleLoginSuccess;
 
             // Load last used name

@@ -1,111 +1,63 @@
-# NetworkDialogueService — Key Knowledge
+# NetworkDialogueService — Current Knowledge
 
-## Overview
-- ~8569-line NetworkBehaviour singleton in Network_Game.Dialogue namespace
-- `NetworkDialogueService.Instance` — static singleton accessor
-- Manages NPC dialogue queue, LLM inference routing, history, effects, retries
+## Core role
+- `NetworkDialogueService` is the single server-authoritative dialogue router in `Network_Game.Dialogue`.
+- It owns request queueing, retries, history, effect dispatch handoff, telemetry, and response RPC delivery.
+- It is now a **remote-first and remote-only** gameplay path.
 
-## Dialogue Call Chain (Player → LLM)
-```
-Player input → DialogueClientUI.SendPrompt() [~line 392]
-    → ResolveParticipants() [~2497] — selects NPC by raycast/proximity
-    → RequestDialogue() [~1387]
-    → TryEnqueueRequest() [~981]
-    → ProcessQueue() [~1557]
-    → ExecuteRequestWorkerAsync() [~1659]
-    → ResolveInferenceClient(useOpenAI) [~2852]  ← ML-Agents override hook
-    → inferenceClient.ChatAsync(systemPrompt, history, userPrompt)
-    → NpcDialogueActor.ShowSpeechText() [~494]  ← display in UI + speech bubble
-```
+## Current backend model
+- Default runtime backend: `OpenAIChatClient`
+- Optional override backend: `SideChannelDialogueClient` via `SetMLAgentsSideChannelClient(...)`
+- There is no remaining local `LLMUnity` fallback path in the live runtime.
+- Legacy bridge classes (`LegacyLocalLlmRuntime`, `LlmAgentInferenceClient`) were removed.
 
-## Static Events (used for ML-Agents reward shaping)
+## Config source of truth
+- `DialogueBackendConfig` on the same GameObject is the project-owned source of:
+  - host / port
+  - model name
+  - API key override
+  - sampling params
+  - stop sequences
+  - grammar
+  - system prompt
+- `NetworkDialogueService` no longer depends on `LLMAgent` serialized fields.
+
+## Runtime call chain (gameplay)
 ```csharp
-// NetworkDialogueService.cs
+DialogueClientUI.SendPrompt()
+  -> RequestDialogue()
+  -> TryEnqueueRequest()
+  -> ProcessQueue()
+  -> ExecuteRequestWorkerAsync()
+  -> ResolveInferenceClient()         // override or OpenAIChatClient
+  -> inferenceClient.ChatAsync(...)
+  -> NpcDialogueActor.ShowSpeechText()
+```
+
+## Important current behavior
+- `UsesRemoteInference` is effectively always `true` for gameplay.
+- `ActiveInferenceBackendName` is normally `openai-compatible-remote`.
+- If ML-Agents injects an override, `ActiveInferenceBackendName` becomes the override backend name.
+- `RemoteInferenceEndpoint` is derived from `DialogueBackendConfig` (or built-in defaults if missing).
+
+## Effect probe improvements
+- Effect-validation probes use a dedicated low-latency request path.
+- `EffectProbeMaxResponseTokens` is capped at `96`.
+- Effect probes send structured output instructions and use the JSON-schema path in `OpenAIChatClient`.
+- This was added to reduce Qwen overthinking, token waste, and malformed effect-test output.
+
+## Warmup / readiness
+- Warmup is now remote probe based (`CheckConnectionAsync`) and bounded.
+- The service no longer warms or validates any in-process local model runtime.
+- Debug log analysis also uses the same remote backend path.
+
+## Events used elsewhere
+```csharp
 public static event Action<DialogueResponse> OnDialogueResponse;
 public static event Action<DialogueResponseTelemetry> OnDialogueResponseTelemetry;
-
-// DialogueFeedbackCollector.cs line 55
-public static event Action<FeedbackScoreSummary> OnFeedbackScored;
 ```
+- ML-Agents reward shaping still uses these events.
 
-## Key Types
-### DialogueStatus enum
-Pending, InProgress, Completed, Failed, Cancelled
-
-### DialogueResponse struct
-- RequestId (int), Status (DialogueStatus), ResponseText, Error
-- Request (DialogueRequest) — has IsUserInitiated, SpeakerNetworkId, Prompt, etc.
-
-### DialogueResponseTelemetry struct
-- RequestId, Status, Error, Request
-- RetryCount (int)
-- QueueLatencyMs, ModelLatencyMs, TotalLatencyMs (float)
-
-### FeedbackScoreSummary struct (DialogueFeedbackCollector)
-- RequestId, Score (int), HasEffect (bool), TagValid (bool), TagName, IsUserInitiated
-
-## Full Public API (confirmed by schema extraction 2026-02-28)
-```csharp
-int  EnqueueRequest(DialogueRequest request)
-bool TryEnqueueRequest(DialogueRequest, out int requestId, out string rejectionReason)
-bool TryConsumeResponse(int requestId, out DialogueResponse response)
-bool TryConsumeResponseByClientRequestId(int clientReqId, out DialogueResponse, ulong clientId)
-bool TryGetTerminalResponseByClientRequestId(int clientReqId, out DialogueResponse, ulong clientId)
-bool IsClientRequestInFlight(int clientReqId, ulong clientId)
-bool TryGetPlayerIdentityByClientId(ulong clientId, out PlayerIdentitySnapshot snapshot)
-bool TryGetPlayerIdentityByNetworkId(ulong playerNetworkId, out PlayerIdentitySnapshot snapshot)
-bool SetPlayerPromptContext(ulong playerNetworkId, string nameId, string customizationJson)
-bool ClearPlayerPromptContext(ulong playerNetworkId)
-bool SetPlayerPromptContextForClient(ulong clientId, string nameId, string customizationJson)
-bool ClearPlayerPromptContextForClient(ulong clientId)
-bool RequestSetPlayerPromptContextFromClient(string nameId, string customizationJson)
-bool RequestClearPlayerPromptContextFromClient()
-string[] GetConversationKeys()
-List<ChatMessage> GetHistoryPublic(string conversationKey)
-void ClearHistory(string conversationKey)
-void ClearPendingRequests()
-DialogueStats GetStats()
-void LogPlayerIdentityReport()
-```
-
-## IDialogueInferenceClient Interface
-```csharp
-string BackendName { get; }
-bool ManagesHistoryInternally { get; }
-Task<bool> CheckConnectionAsync(CancellationToken ct);
-Task<string> ChatAsync(string systemPrompt,
-    IReadOnlyList<DialogueInferenceMessage> history,
-    string userPrompt, bool addToHistory = true, CancellationToken ct = default);
-void ApplyConfig(DialogueInferenceRuntimeConfig config);
-```
-
-## ML-Agents Hook (SetMLAgentsSideChannelClient)
-```csharp
-// Added to NetworkDialogueService.cs (~line 2847)
-public void SetMLAgentsSideChannelClient(IDialogueInferenceClient client)
-{
-    m_OverrideClient = client;  // null restores normal backend
-}
-```
-In ObserveOnly mode, this is called with null — normal LM Studio path is used.
-In SideChannelOverride mode, this is called with SideChannelDialogueClient.
-
-## Null-Safety Rule (IMPORTANT — confirmed by code scan)
-Always null-check Instance before calling methods:
-```csharp
-NetworkDialogueService.Instance?.DoThing();
-// or:
-if (NetworkDialogueService.Instance != null) NetworkDialogueService.Instance.DoThing();
-```
-WriteDiscreteActionMask in NpcDialogueAgent correctly checks:
-```csharp
-bool serviceAvailable = NetworkDialogueService.Instance != null && (...);
-```
-Other call sites may not — audit before adding new ones.
-
-## Assembly Info
-- Network_Game.asmdef: autoReferenced=true
-- Unity.ML-Agents.asmdef: autoReferenced=true
-- New scripts go in Assembly-CSharp (no explicit asmdef needed)
-- `using Unity.MLAgents.Policies;` required for BehaviorParameters (not just Unity.MLAgents)
-- `using Network_Game.Dialogue;` for types in this namespace
+## Operational rule
+- Always null-check `NetworkDialogueService.Instance` before use from external callers.
+- Do not reintroduce `LLMUnity` or per-player local inference into this service; the intended architecture is dedicated-server LM Studio inference.
