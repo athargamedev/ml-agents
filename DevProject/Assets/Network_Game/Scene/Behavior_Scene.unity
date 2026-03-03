@@ -2661,8 +2661,6 @@ GameObject:
   - component: {fileID: 272864574}
   - component: {fileID: 272864573}
   - component: {fileID: 272864572}
-  - component: {fileID: 272864581}
-  - component: {fileID: 272864580}
   - component: {fileID: 272864579}
   - component: {fileID: 272864576}
   m_Layer: 5
@@ -2747,9 +2745,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 605698503}
-  - {fileID: 380736407}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2766,14 +2762,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 272864570}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 231f1ee7b02ed37498f86840836021d7, type: 3}
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
   m_Name: 
-  m_EditorClassIdentifier: Network_Game::Network_Game.Dialogue.DialogueDebugPanel
-  m_ShowPanel: 1
-  m_ToggleKey: 103
-  m_ShowLastResponse: 1
-  m_ShowLMStudio: 1
-  m_ShowActiveVfx: 1
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 11400000, guid: 34f8af425f4594331ac532e00b9e83bf, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: b23d0fd106c408f4ab92e7c4ded6cd40, type: 3}
+  m_SortingOrder: 0
+  m_Position: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
 --- !u!114 &272864577
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2823,59 +2825,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 272864570}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f66735b4ab683645b7e720e0d68be1f, type: 3}
+  m_Script: {fileID: 11500000, guid: 311f1a9fa9b61eb4181d9777cba3d44c, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Network_Game::Network_Game.Dialogue.DialogueEffectFeedbackPrompt
-  m_EnablePrompt: 1
-  m_PauseGameWhilePromptOpen: 0
-  m_UseUiToolkitOverlay: 1
-  m_CaptureInputWhenNotPaused: 0
-  m_MaxQueuedPrompts: 12
-  m_OutputPath: output/effect_visual_feedback.jsonl
-  m_WriteUnifiedFeedbackLog: 1
-  m_UnifiedFeedbackPath: output/feedback_log.jsonl
-  m_LogFeedbackSubmissions: 1
-  m_DuplicateSuppressSeconds: 0.75
-  m_KeepOnlyLatestWhilePromptOpen: 1
-  m_ClearQueuedPromptsOnSubmit: 1
-  m_ClearQueueOnSceneChange: 1
---- !u!114 &272864580
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 272864570}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a9f35af8fdb457886f3f4d46d9f012e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Network_Game::Network_Game.Combat.CombatRuntimeOverlay
-  m_ShowOverlay: 1
-  m_ToggleKey: 102
-  m_MaxLogEntries: 20
-  m_LogLifetimeSeconds: 30
-  m_PanelPosition: {x: 12, y: 54}
-  m_PanelWidth: 350
---- !u!114 &272864581
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 272864570}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b7a27f125b649d3b4d8c0a2e3fd4129, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Network_Game.UI.ModernHudController
-  m_LoginDocument: {fileID: 605698505}
-  m_ProfileDocument: {fileID: 0}
-  m_DialogueDocument: {fileID: 380736409}
-  m_LayoutProfile: {fileID: 11400000, guid: cd052a203adbf8f41b20cdd0f8637003, type: 2}
-  m_FeedbackPrompt: {fileID: 272864579}
-  m_CombatOverlay: {fileID: 272864580}
-  m_DebugPanel: {fileID: 272864576}
+  m_EditorClassIdentifier: Network_Game::Network_Game.UI.ModernHudManager
+  m_HudDocument: {fileID: 272864576}
+  m_LayoutProfile: {fileID: 0}
   m_RuntimeServicesRoot: {fileID: 928640001}
   m_FeedbackCollector: {fileID: 272864578}
   m_FeedbackRuntimeTuner: {fileID: 272864577}
@@ -3949,90 +3903,6 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
---- !u!1 &380736406
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 380736407}
-  - component: {fileID: 380736409}
-  - component: {fileID: 380736408}
-  m_Layer: 5
-  m_Name: Dialogue_Overlay
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &380736407
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 380736406}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 272864575}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &380736408
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 380736406}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13883c119378d0a4093dc4b7c4d438ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Network_Game.UI.Dialogue.ModernDialogueController
-  m_MaxListenerDistance: 10
-  m_AutoSelectListener: 1
-  m_AutoOpenWhenNpcInRange: 1
-  m_AutoCloseWhenNoNpcInRange: 1
-  m_RequireLeaveRangeAfterManualClose: 0
-  m_LogProximityDebug: 0
-  m_PlayerResolveIntervalSeconds: 1
-  m_ProximityCheckIntervalSeconds: 1
-  m_InputLegibilityCheckIntervalSeconds: 0.2
-  m_ManualCloseSuppressSeconds: 0.2
-  m_InputTextColor: {r: 0.95, g: 0.95, b: 0.95, a: 1}
-  m_EnableCameraSwitchButton: 1
-  m_SelectedCameraPriorityBoost: 50
-  m_UseExclusiveCameraActivation: 0
-  m_PreferredCameraOrder:
-  - PlayerCinemachineCamera
---- !u!114 &380736409
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 380736406}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
-  m_PanelSettings: {fileID: 11400000, guid: 34f8af425f4594331ac532e00b9e83bf, type: 2}
-  m_ParentUI: {fileID: 0}
-  sourceAsset: {fileID: 9197481963319205126, guid: e8e6fd509b82d9a4d806becbfb1fedb4, type: 3}
-  m_SortingOrder: 3
-  m_Position: 0
-  m_WorldSpaceSizeMode: 1
-  m_WorldSpaceWidth: 1920
-  m_WorldSpaceHeight: 1080
-  m_PivotReferenceSize: 0
-  m_Pivot: 0
-  m_WorldSpaceCollider: {fileID: 0}
 --- !u!1001 &381133669
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7153,74 +7023,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4217075624832600, guid: 21f4ee7b875c5614bae545ccd6c7652e, type: 3}
   m_PrefabInstance: {fileID: 593833957}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &605698502
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 605698503}
-  - component: {fileID: 605698505}
-  - component: {fileID: 605698504}
-  m_Layer: 5
-  m_Name: Login_Screen
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &605698503
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 605698502}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 272864575}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &605698504
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 605698502}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b8f854073c3c2924295fabf4e1c3ddaa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Network_Game.UI.Login.PlayerLoginController
---- !u!114 &605698505
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 605698502}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
-  m_PanelSettings: {fileID: 11400000, guid: 34f8af425f4594331ac532e00b9e83bf, type: 2}
-  m_ParentUI: {fileID: 0}
-  sourceAsset: {fileID: 9197481963319205126, guid: 55c00b464baf6ac4dac97b7ae646d75c, type: 3}
-  m_SortingOrder: 3
-  m_Position: 0
-  m_WorldSpaceSizeMode: 1
-  m_WorldSpaceWidth: 1920
-  m_WorldSpaceHeight: 1080
-  m_PivotReferenceSize: 0
-  m_Pivot: 0
-  m_WorldSpaceCollider: {fileID: 0}
 --- !u!43 &613095376
 Mesh:
   m_ObjectHideFlags: 0

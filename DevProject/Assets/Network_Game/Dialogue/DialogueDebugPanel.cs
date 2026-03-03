@@ -309,9 +309,10 @@ namespace Network_Game.Dialogue
                 return;
             }
 
-            VisualElement hudZone = ModernHudController.TryGetZone(
-                ModernHudController.HudZone.RightDock
+            VisualElement hudZone = Network_Game.UI.ModernHudManager.TryGetZone(
+                Network_Game.UI.ModernHudManager.HudZone.RightDock
             );
+
             if (hudZone != null)
             {
                 BuildUiToolkitOverlay(hudZone, true);
@@ -579,27 +580,14 @@ namespace Network_Game.Dialogue
 
         private static VisualElement FindUiToolkitHostRoot()
         {
-            ModernHudController hud = UnityEngine.Object.FindAnyObjectByType<ModernHudController>();
-            if (hud != null)
+            // Try ModernHudManager first (new unified system)
+            Network_Game.UI.ModernHudManager newHud = UnityEngine.Object.FindAnyObjectByType<Network_Game.UI.ModernHudManager>();
+            if (newHud != null && newHud.HudDocument != null)
             {
-                UIDocument[] preferred =
+                UIDocument doc = newHud.HudDocument;
+                if (doc != null && doc.isActiveAndEnabled && IsUsableUiToolkitHostRoot(doc.rootVisualElement))
                 {
-                    hud.DialogueDocument,
-                    hud.ProfileDocument,
-                    hud.LoginDocument,
-                };
-
-                for (int i = 0; i < preferred.Length; i++)
-                {
-                    UIDocument doc = preferred[i];
-                    if (
-                        doc != null
-                        && doc.isActiveAndEnabled
-                        && IsUsableUiToolkitHostRoot(doc.rootVisualElement)
-                    )
-                    {
-                        return doc.rootVisualElement;
-                    }
+                    return doc.rootVisualElement;
                 }
             }
 

@@ -225,8 +225,12 @@ namespace Network_Game.Dialogue
         public static event Action<DialogueResponse> OnDialogueResponse;
         public static event Action<DialogueResponseTelemetry> OnDialogueResponseTelemetry;
 
-        public LLMAgent LlmAgent => m_LlmAgent;
         public bool UsesRemoteInference => UseOpenAIRemote;
+        public bool HasDialogueBackendConfig => GetDialogueBackendConfig() != null;
+        public bool HasLegacyLlmAgent => m_LlmAgent != null;
+        public bool HasLegacyLocalLlm => m_LlmAgent != null && m_LlmAgent.llm != null;
+        public string ActiveInferenceBackendName => ResolveActiveInferenceBackendName();
+        public string RemoteInferenceEndpoint => UseOpenAIRemote ? GetRemoteEndpointLabel() : string.Empty;
 
         /// <summary>
         /// Check if LLM agent is ready for requests
@@ -604,7 +608,12 @@ namespace Network_Game.Dialogue
             CacheDialogueBackendConfig();
             NormalizeRemoteRuntimeTuning();
             NGLog.Info("Dialogue", $"NetworkDialogueService initialized. ({this})");
-            m_LlmAgent = ResolveLegacyLlmAgent(allowSceneSearch: !UseOpenAIRemote);
+            LegacyLocalLlmRuntime.ResolveAgent(
+                ref m_LlmAgent,
+                UseOpenAIRemote,
+                this,
+                allowSceneSearch: !UseOpenAIRemote
+            );
 
             if (m_LlmAgent != null)
             {
@@ -645,21 +654,6 @@ namespace Network_Game.Dialogue
             }
 
             return m_DialogueBackendConfig;
-        }
-
-        private LLMAgent ResolveLegacyLlmAgent(bool allowSceneSearch)
-        {
-            LLMAgent agent = GetComponent<LLMAgent>();
-            if (agent != null || !allowSceneSearch)
-            {
-                return agent;
-            }
-
-#if UNITY_2023_1_OR_NEWER
-            return FindAnyObjectByType<LLMAgent>(FindObjectsInactive.Exclude);
-#else
-            return FindObjectOfType<LLMAgent>();
-#endif
         }
 
         private void SyncDialogueBackendConfigFromLegacyAgent()
@@ -732,6 +726,21 @@ namespace Network_Game.Dialogue
             }
 
             return "remote backend";
+        }
+
+        private string ResolveActiveInferenceBackendName()
+        {
+            if (m_OverrideClient != null)
+            {
+                return m_OverrideClient.BackendName;
+            }
+
+            if (UseOpenAIRemote)
+            {
+                return "openai-compatible-remote";
+            }
+
+            return m_LlmAgent != null ? "llmunity-legacy-local" : "none";
         }
 
         private void EnsureSceneEffectsController()
@@ -1946,7 +1955,15 @@ namespace Network_Game.Dialogue
                     state.FirstAttemptAt = now;
                 }
 
-                if (m_LlmAgent == null && !UseOpenAIRemote)
+                if (
+                    !UseOpenAIRemote
+                    && LegacyLocalLlmRuntime.ResolveAgent(
+                        ref m_LlmAgent,
+                        UseOpenAIRemote,
+                        this,
+                        allowSceneSearch: true
+                    ) == null
+                )
                 {
                     state.Status = DialogueStatus.Failed;
                     state.Error = "Local LLMAgent not assigned.";
@@ -2927,130 +2944,69 @@ namespace Network_Game.Dialogue
 
         private void EnsureLlmAgentReady()
         {
-            if (m_LlmAgent == null || UseOpenAIRemote)
+            if (UseOpenAIRemote)
             {
                 return;
             }
 
-            EnsureLlmAgentEnabled("EnsureLlmAgentReady");
-
-            if (m_LlmAgent.llm == null || !m_LlmAgent.llm.started || m_LlmAgent.llm.failed)
-            {
-#if UNITY_2023_1_OR_NEWER
-                var llm = FindAnyObjectByType<LLM>();
-#else
-                var llm = FindAnyObjectByType<LLM>();
-#endif
-                if (llm != null)
-                {
-                    m_LlmAgent.llm = llm;
-                    NGLog.Info("Dialogue", "LLM assigned to LLMAgent.");
-                    EnsureLlmAgentEnabled("EnsureLlmAgentReady.AssignLlm");
-                }
-                else if (m_LlmAgent.llm != null && !m_LlmAgent.llm.gameObject.scene.IsValid())
-                {
-                    // If the agent references an LLM prefab asset (scene not valid), instantiate it so there is a runtime LLM.
-                    try
-                    {
-                        GameObject instance = Instantiate(m_LlmAgent.llm.gameObject);
-                        instance.name = "LLM";
-                        LLM instanceLlm = instance.GetComponent<LLM>();
-                        if (instanceLlm != null)
-                        {
-                            m_LlmAgent.llm = instanceLlm;
-                            NGLog.Info("Dialogue", "Instantiated LLM prefab for runtime.");
-                            EnsureLlmAgentEnabled("EnsureLlmAgentReady.InstantiatePrefab");
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        NGLog.Warn(
-                            "Dialogue",
-                            NGLog.Format("Failed to instantiate LLM prefab", ("error", ex.Message))
-                        );
-                    }
-                }
-                else if (m_LogDebug)
-                {
-                    NGLog.Warn(category: "Dialogue", message: "LLM not found in scene.");
-                }
-            }
+            m_LlmAgent = LegacyLocalLlmRuntime.EnsureAgentReady(
+                ref m_LlmAgent,
+                UseOpenAIRemote,
+                this,
+                m_LogDebug,
+                "EnsureLlmAgentReady"
+            );
         }
 
         private void EnsureLlmAgentEnabled(string context)
         {
-            if (m_LlmAgent == null || UseOpenAIRemote || m_LlmAgent.enabled)
+            if (UseOpenAIRemote)
             {
                 return;
             }
 
-            m_LlmAgent.enabled = true;
-            if (m_LogDebug)
-            {
-                string agentName =
-                    m_LlmAgent.gameObject != null ? m_LlmAgent.gameObject.name : "unknown";
-                NGLog.Info(
-                    category: "Dialogue",
-                    message: NGLog.Format(
-                        message: "Enabled LLMAgent component",
-                        ("context", context ?? string.Empty),
-                        ("agent", agentName)
-                    )
-                );
-            }
+            m_LlmAgent = LegacyLocalLlmRuntime.EnsureAgentEnabled(
+                ref m_LlmAgent,
+                UseOpenAIRemote,
+                this,
+                m_LogDebug,
+                context
+            );
         }
 
         private bool TryValidateLocalModelReady(out string failureReason)
         {
-            failureReason = string.Empty;
-
-            if (m_LlmAgent == null || UseOpenAIRemote)
+            if (UseOpenAIRemote)
             {
+                failureReason = string.Empty;
                 return true;
             }
 
-            if (m_LlmAgent.llm == null)
-            {
-                failureReason = "llm_component_missing";
-                return false;
-            }
-
-            string model = m_LlmAgent.llm.model;
-            if (string.IsNullOrWhiteSpace(model))
-            {
-                failureReason = "model_not_set";
-                return false;
-            }
-
-            string resolved = LLM.GetLLMManagerAssetRuntime(model);
-            string resolvedFullPath = LLMUnitySetup.GetFullPath(resolved);
-            if (!File.Exists(resolvedFullPath))
-            {
-                string fileName = Path.GetFileName(model);
-                failureReason = string.IsNullOrWhiteSpace(fileName)
-                    ? "model_file_not_found"
-                    : $"model_file_not_found:{fileName}";
-
-                NGLog.Warn(
-                    "Dialogue",
-                    NGLog.Format(
-                        "LLM model file not found",
-                        ("model", model),
-                        ("resolved", resolvedFullPath)
-                    )
-                );
-                return false;
-            }
-
-            return true;
+            bool isReady = LegacyLocalLlmRuntime.TryValidateModelReady(
+                ref m_LlmAgent,
+                UseOpenAIRemote,
+                this,
+                out failureReason
+            );
+            return isReady;
         }
 
         private async Task<bool> EnsureWarmup()
         {
-            if (m_LlmAgent == null && !UseOpenAIRemote)
+            if (!UseOpenAIRemote)
             {
-                m_LastWarmupFailureReason = "Local LLMAgent not assigned.";
-                return false;
+                if (
+                    LegacyLocalLlmRuntime.ResolveAgent(
+                        ref m_LlmAgent,
+                        UseOpenAIRemote,
+                        this,
+                        allowSceneSearch: true
+                    ) == null
+                )
+                {
+                    m_LastWarmupFailureReason = "Local LLMAgent not assigned.";
+                    return false;
+                }
             }
 
             EnsureLlmAgentReady();
@@ -3266,7 +3222,14 @@ namespace Network_Game.Dialogue
 
         private LlmAgentInferenceClient EnsureLlmAgentInferenceClient()
         {
-            if (m_LlmAgent == null)
+            if (
+                LegacyLocalLlmRuntime.ResolveAgent(
+                    ref m_LlmAgent,
+                    UseOpenAIRemote,
+                    this,
+                    allowSceneSearch: true
+                ) == null
+            )
             {
                 return null;
             }
@@ -3529,7 +3492,15 @@ namespace Network_Game.Dialogue
 
         private string BuildWarmupStateLabel()
         {
-            if (m_LlmAgent == null && !UseOpenAIRemote)
+            if (
+                !UseOpenAIRemote
+                && LegacyLocalLlmRuntime.ResolveAgent(
+                    ref m_LlmAgent,
+                    UseOpenAIRemote,
+                    this,
+                    allowSceneSearch: false
+                ) == null
+            )
             {
                 return "MissingAgent";
             }
@@ -8956,7 +8927,15 @@ namespace Network_Game.Dialogue
         /// </summary>
         public async Task<string> AnalyzeDebugLog(string logContext, string errorMessage)
         {
-            if (!UseOpenAIRemote && m_LlmAgent == null)
+            if (
+                !UseOpenAIRemote
+                && LegacyLocalLlmRuntime.ResolveAgent(
+                    ref m_LlmAgent,
+                    UseOpenAIRemote,
+                    this,
+                    allowSceneSearch: true
+                ) == null
+            )
                 return "LLM Agent not available.";
 
             string debugSystemPrompt =

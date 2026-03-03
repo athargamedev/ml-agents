@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Network_Game.UI
 {
@@ -10,7 +11,7 @@ namespace Network_Game.UI
     [CreateAssetMenu(
         fileName = "ModernHudLayoutProfile",
         menuName = "Network Game/UI/Modern HUD Layout Profile"
-    )]
+     )]
     public sealed class ModernHudLayoutProfile : ScriptableObject
     {
         #region Outer Frame
@@ -140,37 +141,16 @@ namespace Network_Game.UI
         /// <summary>
         /// Applies USS custom properties to a VisualElement.
         /// Call this after the VisualElement is created to apply theming.
+        /// Note: USS custom properties should be defined in USS files using --property-name syntax.
+        /// This method is a placeholder for runtime theming if needed.
         /// </summary>
+        [System.Obsolete("USS custom properties should be defined in USS files. This method is deprecated.")]
         public void ApplyUssCustomProperties(VisualElement element)
         {
-            if (element == null)
-                return;
-
-            // Only apply if custom properties are defined
-            if (!string.IsNullOrEmpty(AccentColorProperty))
-            {
-                element.style.SetProperty(AccentColorProperty, AccentColor);
-            }
-
-            if (!string.IsNullOrEmpty(BackgroundOpacityProperty))
-            {
-                element.style.SetProperty(BackgroundOpacityProperty, BackgroundOpacity);
-            }
-
-            if (!string.IsNullOrEmpty(FontScaleProperty))
-            {
-                element.style.SetProperty(FontScaleProperty, FontScale);
-            }
-
-            if (!string.IsNullOrEmpty(BorderRadiusProperty))
-            {
-                element.style.SetProperty(BorderRadiusProperty, BorderRadius);
-            }
-
-            if (!string.IsNullOrEmpty(TransitionDurationProperty))
-            {
-                element.style.SetProperty(TransitionDurationProperty, $"{TransitionDuration}s");
-            }
+            // USS custom properties are defined in .uss files with --property-name syntax
+            // e.g., --hud-accent-color: rgb(50, 150, 255);
+            // To apply at runtime, use element.style.backgroundColor or other standard properties
+            // or modify the USS file directly
         }
     }
 }

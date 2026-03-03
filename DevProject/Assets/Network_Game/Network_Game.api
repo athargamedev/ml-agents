@@ -576,12 +576,16 @@ namespace Network_Game.Dialogue
     {
         public static event System.Action<NetworkDialogueService.DialogueResponse> OnDialogueResponse;
         public static event System.Action<NetworkDialogueService.DialogueResponseTelemetry> OnDialogueResponseTelemetry;
+        public string ActiveInferenceBackendName { get; }
         public int ActiveRequestCount { get; }
+        public bool HasDialogueBackendConfig { get; }
+        public bool HasLegacyLlmAgent { get; }
+        public bool HasLegacyLocalLlm { get; }
         public static NetworkDialogueService Instance { get; }
         public bool IsLLMReady { get; }
         public bool IsWarmupDegraded { get; }
-        public LLMUnity.LLMAgent LlmAgent { get; }
         public int PendingRequestCount { get; }
+        public string RemoteInferenceEndpoint { get; }
         public int TimeoutCount { get; }
         public int TotalCompleted { get; }
         public int TotalFailed { get; }
@@ -1221,22 +1225,55 @@ namespace Network_Game.ThirdPersonController.Debug
 
 namespace Network_Game.UI
 {
-    [UnityEngine.DefaultExecutionOrder(-520)] [UnityEngine.DisallowMultipleComponent] [UnityEngine.ExecuteAlways] public sealed class ModernHudController : UnityEngine.MonoBehaviour
+    [UnityEngine.CreateAssetMenu(fileName = @"ModernHudLayoutProfile", menuName = @"Network Game/UI/Modern HUD Layout Profile")] public sealed class ModernHudLayoutProfile : UnityEngine.ScriptableObject
     {
-        public static ModernHudController Active { get; }
-        public UnityEngine.UIElements.UIDocument DialogueDocument { get; }
+        [UnityEngine.Tooltip(@"Primary accent color value")] public UnityEngine.Color AccentColor;
+        [UnityEngine.Header(@"USS Custom Properties")] [UnityEngine.Tooltip(@"USS custom property name for primary accent color")] public string AccentColorProperty = @"--hud-accent-color";
+        [UnityEngine.Range(0f, 1f)] public float BackgroundOpacity = 0.85f;
+        [UnityEngine.Tooltip(@"USS custom property name for background opacity")] public string BackgroundOpacityProperty = @"--hud-background-opacity";
+        [UnityEngine.Range(0f, 20f)] public float BorderRadius = 10f;
+        [UnityEngine.Tooltip(@"USS custom property name for border radius")] public string BorderRadiusProperty = @"--hud-border-radius";
+        [UnityEngine.Header(@"Bottom Bar")] [UnityEngine.Range(0.12f, 0.4f)] public float BottomBarHeightPercent = 0.24f;
+        [UnityEngine.Range(0f, 0.05f)] public float DockGapPercent = 0.008f;
+        [UnityEngine.Range(0.1f, 0.7f)] public float FeedbackActionsRowPercent = 0.31f;
+        [UnityEngine.Range(0.1f, 0.7f)] public float FeedbackNotesRowPercent = 0.35f;
+        [UnityEngine.Header(@"Feedback Bar Internal Rows")] [UnityEngine.Range(0.15f, 0.7f)] public float FeedbackSummaryRowPercent = 0.34f;
+        [UnityEngine.Range(0.5f, 2f)] public float FontScale = 1f;
+        [UnityEngine.Tooltip(@"USS custom property name for font scale")] public string FontScaleProperty = @"--hud-font-scale";
+        [UnityEngine.Header(@"Side Docks")] [UnityEngine.Range(0.15f, 0.45f)] public float LeftDockWidthPercent = 0.28f;
+        [UnityEngine.Min(180f)] public float MinDockWidthPx = 260f;
+        [UnityEngine.Header(@"Outer Frame")] [UnityEngine.Range(0f, 0.05f)] public float OuterMarginPercent = 0.0125f;
+        [UnityEngine.Range(0.18f, 0.5f)] public float RightDockWidthPercent = 0.36f;
+        [UnityEngine.Min(72f)] public float TopBarMinHeightPx = 118f;
+        [UnityEngine.Range(0.08f, 0.35f)] public float TopBarReservedHeightPercent = 0.18f;
+        [UnityEngine.Header(@"Top Bar")] [UnityEngine.Range(0f, 0.05f)] public float TopBarTopPercent = 0.008f;
+        [UnityEngine.Range(0f, 1f)] public float TransitionDuration = 0.2f;
+        [UnityEngine.Tooltip(@"USS custom property name for transition duration")] public string TransitionDurationProperty = @"--hud-transition-duration";
+        public ModernHudLayoutProfile() {}
+        [System.Obsolete(@"USS custom properties should be defined in USS files. This method is deprecated.")] public void ApplyUssCustomProperties(UnityEngine.UIElements.VisualElement element);
+        public void GetNormalizedFeedbackRowWeights(out float summary, out float actions, out float notes);
+    }
+
+    [UnityEngine.DefaultExecutionOrder(-520)] [UnityEngine.DisallowMultipleComponent] [UnityEngine.ExecuteAlways] public sealed class ModernHudManager : UnityEngine.MonoBehaviour
+    {
+        public static ModernHudManager Active { get; }
+        public UnityEngine.UIElements.UIDocument HudDocument { get; }
+        public UnityEngine.UIElements.VisualElement HudRoot { get; }
         public ModernHudLayoutProfile LayoutProfile { get; }
-        public UnityEngine.UIElements.UIDocument LoginDocument { get; }
-        public UnityEngine.UIElements.UIDocument ProfileDocument { get; }
         public UnityEngine.Transform RuntimeServicesRoot { get; }
-        public ModernHudController() {}
+        public UnityEngine.UIElements.VisualElement ZoneBottomBar { get; }
+        public UnityEngine.UIElements.VisualElement ZoneModalOverlay { get; }
+        public UnityEngine.UIElements.VisualElement ZoneRightDock { get; }
+        public UnityEngine.UIElements.VisualElement ZoneTopBar { get; }
+        public UnityEngine.UIElements.VisualElement ZoneTopLeft { get; }
+        public ModernHudManager() {}
         [UnityEngine.ContextMenu(@"Refresh HUD Bindings")] public void RefreshBindings();
         public static bool SetFeedbackVisible(bool visible);
         public void SetLayoutProfile(ModernHudLayoutProfile profile);
-        public static bool SetPanelVisible(ModernHudController.HudPanel panel, bool visible);
+        public static bool SetPanelVisible(ModernHudManager.HudPanel panel, bool visible);
         public static bool TryAcquireUiCursor(UnityEngine.Object owner);
         public static bool TryApplyBottomBarLayout(UnityEngine.UIElements.VisualElement element);
-        public static UnityEngine.UIElements.VisualElement TryGetZone(ModernHudController.HudZone zone);
+        public static UnityEngine.UIElements.VisualElement TryGetZone(ModernHudManager.HudZone zone);
         public static bool TryReleaseUiCursor(UnityEngine.Object owner);
         public enum HudPanel
         {
@@ -1253,24 +1290,6 @@ namespace Network_Game.UI
             ModalOverlay = 4,
         }
     }
-
-    [UnityEngine.CreateAssetMenu(fileName = @"ModernHudLayoutProfile", menuName = @"Network Game/UI/Modern HUD Layout Profile")] public sealed class ModernHudLayoutProfile : UnityEngine.ScriptableObject
-    {
-        [UnityEngine.Header(@"Bottom Bar")] [UnityEngine.Range(0.12f, 0.4f)] public float BottomBarHeightPercent = 0.24f;
-        [UnityEngine.Range(0f, 0.05f)] public float DockGapPercent = 0.008f;
-        [UnityEngine.Range(0.1f, 0.7f)] public float FeedbackActionsRowPercent = 0.31f;
-        [UnityEngine.Range(0.1f, 0.7f)] public float FeedbackNotesRowPercent = 0.35f;
-        [UnityEngine.Header(@"Feedback Bar Internal Rows")] [UnityEngine.Range(0.15f, 0.7f)] public float FeedbackSummaryRowPercent = 0.34f;
-        [UnityEngine.Header(@"Side Docks")] [UnityEngine.Range(0.15f, 0.45f)] public float LeftDockWidthPercent = 0.28f;
-        [UnityEngine.Min(180f)] public float MinDockWidthPx = 260f;
-        [UnityEngine.Header(@"Outer Frame")] [UnityEngine.Range(0f, 0.05f)] public float OuterMarginPercent = 0.0125f;
-        [UnityEngine.Range(0.18f, 0.5f)] public float RightDockWidthPercent = 0.36f;
-        [UnityEngine.Min(72f)] public float TopBarMinHeightPx = 118f;
-        [UnityEngine.Range(0.08f, 0.35f)] public float TopBarReservedHeightPercent = 0.18f;
-        [UnityEngine.Header(@"Top Bar")] [UnityEngine.Range(0f, 0.05f)] public float TopBarTopPercent = 0.008f;
-        public ModernHudLayoutProfile() {}
-        public void GetNormalizedFeedbackRowWeights(out float summary, out float actions, out float notes);
-    }
 }
 
 namespace Network_Game.UI.Dialogue
@@ -1278,14 +1297,6 @@ namespace Network_Game.UI.Dialogue
     [UnityEngine.AddComponentMenu(@"Network Game/UI/Modern Dialogue Controller")] [UnityEngine.DefaultExecutionOrder(-55)] [UnityEngine.DisallowMultipleComponent] [UnityEngine.RequireComponent(typeof(UnityEngine.UIElements.UIDocument))] public sealed class ModernDialogueController : UnityEngine.MonoBehaviour
     {
         public ModernDialogueController() {}
-    }
-}
-
-namespace Network_Game.UI.Editor
-{
-    public sealed class ModernHudLayoutBuilderWindow : UnityEditor.EditorWindow
-    {
-        public ModernHudLayoutBuilderWindow() {}
     }
 }
 

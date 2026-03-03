@@ -14,23 +14,25 @@ namespace Network_Game.Dialogue
     {
         private LLMAgent m_Agent;
 
-        public string BackendName => "llmunity";
+        private bool IsLegacyLocalAgentAvailable => m_Agent != null && !m_Agent.remote;
+
+        public string BackendName => "llmunity-legacy-local";
         public bool ManagesHistoryInternally => true;
 
         public void SetAgent(LLMAgent agent)
         {
-            m_Agent = agent;
+            m_Agent = agent != null && !agent.remote ? agent : null;
         }
 
         public void ApplyConfig(DialogueInferenceRuntimeConfig config)
         {
-            // LLMAgent inspector/runtime fields are managed directly by NetworkDialogueService.
-            // This adapter only normalizes the call surface.
+            // Legacy local LLMAgent fields are managed directly by NetworkDialogueService.
+            // This adapter only preserves the old local call surface during migration.
         }
 
         public Task<bool> CheckConnectionAsync(CancellationToken ct = default)
         {
-            return Task.FromResult(m_Agent != null);
+            return Task.FromResult(IsLegacyLocalAgentAvailable);
         }
 
         public async Task<string> ChatAsync(
@@ -41,8 +43,12 @@ namespace Network_Game.Dialogue
             CancellationToken ct = default
         )
         {
-            if (m_Agent == null)
+            if (!IsLegacyLocalAgentAvailable)
             {
+                NGLog.Warn(
+                    "Dialogue",
+                    "Legacy local inference requested without an available non-remote LLMAgent."
+                );
                 return string.Empty;
             }
 

@@ -50,7 +50,7 @@ namespace Network_Game.UI.Login
 
         private void ApplyUiCursorAndLookState()
         {
-            if (ModernHudController.TryAcquireUiCursor(this))
+            if (ModernHudManager.TryAcquireUiCursor(this))
             {
                 m_UsingHudCursorRouter = true;
                 return;
@@ -76,7 +76,7 @@ namespace Network_Game.UI.Login
         {
             if (m_UsingHudCursorRouter)
             {
-                ModernHudController.TryReleaseUiCursor(this);
+                ModernHudManager.TryReleaseUiCursor(this);
                 m_UsingHudCursorRouter = false;
                 return;
             }
@@ -187,7 +187,7 @@ namespace Network_Game.UI.Login
 
         private void SetLoginVisible(bool visible)
         {
-            if (!ModernHudController.SetPanelVisible(ModernHudController.HudPanel.Login, visible))
+            if (!ModernHudManager.SetPanelVisible(ModernHudManager.HudPanel.Login, visible))
             {
                 if (m_Root != null)
                 {

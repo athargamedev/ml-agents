@@ -70,15 +70,17 @@ namespace Network_Game.Dialogue.MCP
             if (service == null)
                 return null;
 
-            var agent = service.LlmAgent;
-
             return new Dictionary<string, object>
             {
                 ["is_ready"] = service.IsLLMReady,
-                ["has_agent"] = agent != null,
+                ["backend"] = service.ActiveInferenceBackendName,
+                ["has_backend_config"] = service.HasDialogueBackendConfig,
+                ["has_legacy_agent"] = service.HasLegacyLlmAgent,
+                ["has_local_llm"] = service.HasLegacyLocalLlm,
                 ["warmup_degraded"] = service.IsWarmupDegraded,
                 ["warmup_failure_count"] = service.WarmupFailureCount,
                 ["remote"] = service.UsesRemoteInference,
+                ["remote_endpoint"] = service.RemoteInferenceEndpoint,
             };
         }
 

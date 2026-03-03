@@ -442,7 +442,7 @@ namespace Network_Game.UI.Dialogue
                 return;
             }
 
-            if (ModernHudController.TryApplyBottomBarLayout(m_ChatContainer))
+            if (ModernHudManager.TryApplyBottomBarLayout(m_ChatContainer))
             {
                 m_ChatContainer.style.maxWidth = StyleKeyword.None;
                 m_ChatContainer.style.maxHeight = StyleKeyword.None;
@@ -472,7 +472,7 @@ namespace Network_Game.UI.Dialogue
         private void OnChatInputFocusIn(FocusInEvent _)
         {
             // Claim the UI cursor so gameplay look/movement is suppressed while typing.
-            ModernHudController.TryAcquireUiCursor(this);
+            ModernHudManager.TryAcquireUiCursor(this);
         }
 
         private void OnChatInputFocusOut(FocusOutEvent _)
@@ -481,7 +481,7 @@ namespace Network_Game.UI.Dialogue
             // if it's still visible we keep input suppressed so the player doesn't
             // accidentally start moving the moment they submit a message.
             if (!m_ChatVisible)
-                ModernHudController.TryReleaseUiCursor(this);
+                ModernHudManager.TryReleaseUiCursor(this);
         }
 
         private void OnInputKeyDown(KeyDownEvent evt)

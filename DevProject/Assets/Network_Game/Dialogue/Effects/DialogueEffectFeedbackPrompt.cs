@@ -382,9 +382,8 @@ namespace Network_Game.Dialogue
                 DestroyUiToolkitOverlay();
             }
 
-            VisualElement topBarZone = ModernHudController.TryGetZone(
-                ModernHudController.HudZone.TopBar
-            );
+            VisualElement topBarZone = Network_Game.UI.ModernHudManager.TryGetZone(Network_Game.UI.ModernHudManager.HudZone.TopBar);
+
             if (topBarZone != null)
             {
                 BuildUiToolkitOverlay(topBarZone, true);
@@ -592,9 +591,8 @@ namespace Network_Game.Dialogue
 
             if (useHudTopBarZone)
             {
-                ModernHudLayoutProfile profile =
-                    ModernHudController.Active != null
-                    ? ModernHudController.Active.LayoutProfile
+                ModernHudLayoutProfile profile = Network_Game.UI.ModernHudManager.Active != null
+                    ? Network_Game.UI.ModernHudManager.Active.LayoutProfile
                     : null;
 
                 float summaryWeight = 0.34f;
@@ -733,7 +731,8 @@ namespace Network_Game.Dialogue
         private void RefreshPromptUiState()
         {
             bool active = m_EnablePrompt && m_HasCurrent;
-            ModernHudController.SetFeedbackVisible(active);
+
+            Network_Game.UI.ModernHudManager.SetFeedbackVisible(active);
 
             if (m_UiOverlayRoot == null)
             {
@@ -1373,7 +1372,8 @@ namespace Network_Game.Dialogue
                 }
 
                 m_InteractionCaptureActive = true;
-                m_UsingHudCursorRouter = ModernHudController.TryAcquireUiCursor(this);
+                m_UsingHudCursorRouter = Network_Game.UI.ModernHudManager.TryAcquireUiCursor(this);
+
                 if (!m_UsingHudCursorRouter)
                 {
                     Cursor.lockState = CursorLockMode.None;
@@ -1416,7 +1416,7 @@ namespace Network_Game.Dialogue
 
             if (usedHudCursorRouter)
             {
-                ModernHudController.TryReleaseUiCursor(this);
+                Network_Game.UI.ModernHudManager.TryReleaseUiCursor(this);
                 m_UsingHudCursorRouter = false;
                 m_CursorStateCaptured = false;
             }

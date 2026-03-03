@@ -451,7 +451,10 @@ namespace Network_Game.Combat
                 return;
             }
 
-            VisualElement hudZone = ModernHudController.TryGetZone(ModernHudController.HudZone.TopLeft);
+            VisualElement hudZone = Network_Game.UI.ModernHudManager.TryGetZone(
+                Network_Game.UI.ModernHudManager.HudZone.TopLeft
+            );
+
             if (hudZone != null)
             {
                 BuildUiToolkitOverlay(hudZone, true);
@@ -725,23 +728,14 @@ namespace Network_Game.Combat
 
         private static VisualElement FindUiToolkitHostRoot()
         {
-            ModernHudController hud = FindAnyObjectByType<ModernHudController>();
-            if (hud != null)
+            // Try ModernHudManager first (new unified system)
+            Network_Game.UI.ModernHudManager newHud = FindAnyObjectByType<Network_Game.UI.ModernHudManager>();
+            if (newHud != null && newHud.HudDocument != null)
             {
-                UIDocument[] preferred =
+                UIDocument doc = newHud.HudDocument;
+                if (doc != null && doc.isActiveAndEnabled && IsUsableUiToolkitHostRoot(doc.rootVisualElement))
                 {
-                    hud.DialogueDocument,
-                    hud.ProfileDocument,
-                    hud.LoginDocument,
-                };
-
-                for (int i = 0; i < preferred.Length; i++)
-                {
-                    UIDocument doc = preferred[i];
-                    if (doc != null && doc.isActiveAndEnabled && IsUsableUiToolkitHostRoot(doc.rootVisualElement))
-                    {
-                        return doc.rootVisualElement;
-                    }
+                    return doc.rootVisualElement;
                 }
             }
 

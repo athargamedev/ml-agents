@@ -269,7 +269,7 @@ namespace Network_Game.UI
         /// <summary>
         /// Attempts to acquire UI cursor mode for an owner.
         /// </summary>
-        public static bool TryAcquireUiCursor(Object owner)
+        public static bool TryAcquireUiCursor(UnityEngine.Object owner)
         {
             return Active != null && Active.SetUiCursorOwner(owner, true);
         }
@@ -277,7 +277,7 @@ namespace Network_Game.UI
         /// <summary>
         /// Attempts to release UI cursor mode for an owner.
         /// </summary>
-        public static bool TryReleaseUiCursor(Object owner)
+        public static bool TryReleaseUiCursor(UnityEngine.Object owner)
         {
             return Active != null && Active.SetUiCursorOwner(owner, false);
         }
@@ -301,6 +301,46 @@ namespace Network_Game.UI
             }
 
             return Active.ResolveZone(zone);
+        }
+
+        /// <summary>
+        /// Attempts to apply bottom bar layout to an element.
+        /// </summary>
+        public static bool TryApplyBottomBarLayout(VisualElement element)
+        {
+            return Active != null && Active.ApplyBottomBarLayoutToElement(element);
+        }
+
+        private bool ApplyBottomBarLayoutToElement(VisualElement element)
+        {
+            if (element == null || m_LayoutProfile == null)
+            {
+                return false;
+            }
+
+            element.style.position = Position.Absolute;
+            element.style.left = new Length(12, LengthUnit.Pixel);
+            element.style.right = new Length(12, LengthUnit.Pixel);
+            element.style.bottom = new Length(12, LengthUnit.Pixel);
+            element.style.height = new Length(220, LengthUnit.Pixel);
+            element.style.width = StyleKeyword.Auto;
+            return true;
+        }
+
+        /// <summary>
+        /// Sets the visibility of the feedback prompt.
+        /// </summary>
+        private bool m_FeedbackVisible;
+        public static bool SetFeedbackVisible(bool visible)
+        {
+            return Active != null && Active.SetFeedbackVisibleInternal(visible);
+        }
+
+        private bool SetFeedbackVisibleInternal(bool visible)
+        {
+            bool changed = m_FeedbackVisible != visible;
+            m_FeedbackVisible = visible;
+            return changed;
         }
 
         /// <summary>
@@ -375,7 +415,7 @@ namespace Network_Game.UI
             return false;
         }
 
-        private bool SetUiCursorOwner(Object owner, bool wantsUiCursor)
+        private bool SetUiCursorOwner(UnityEngine.Object owner, bool wantsUiCursor)
         {
             if (!Application.isPlaying || owner == null)
             {
@@ -383,8 +423,8 @@ namespace Network_Game.UI
             }
 
             bool changed = wantsUiCursor
-                ? m_UiCursorOwners.Add(owner.GetInstanceID())
-                : m_UiCursorOwners.Remove(owner.GetInstanceID());
+                ? m_UiCursorOwners.Add(owner.GetHashCode())
+                : m_UiCursorOwners.Remove(owner.GetHashCode());
 
             if (changed)
             {
@@ -430,11 +470,11 @@ namespace Network_Game.UI
             Cursor.visible = wantsUiCursor;
 
 #if UNITY_2023_1_OR_NEWER
-            StarterAssetsInputs[] inputs = Object.FindObjectsByType<StarterAssetsInputs>(
+            StarterAssetsInputs[] inputs = UnityEngine.Object.FindObjectsByType<StarterAssetsInputs>(
                 FindObjectsInactive.Include
             );
 #else
-            StarterAssetsInputs[] inputs = Object.FindObjectsOfType<StarterAssetsInputs>();
+            StarterAssetsInputs[] inputs = UnityEngine.Object.FindObjectsOfType<StarterAssetsInputs>();
 #endif
             bool allowGameplayLook = !wantsUiCursor;
             for (int i = 0; i < inputs.Length; i++)
@@ -502,7 +542,7 @@ namespace Network_Game.UI
             const string kRuntimeServicesName = "Dialogue_RuntimeServices";
 
             // Check parent
-            Transform sibling = transform.parent != null ? transform.parent.Find(kRuntimeServicesName);
+            Transform sibling = transform.parent != null ? transform.parent.Find(kRuntimeServicesName) : null;
             if (sibling != null)
                 return sibling;
 
