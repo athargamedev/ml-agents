@@ -198,6 +198,14 @@ namespace Network_Game.Editor.CustomTools.Services
     }
 }
 
+namespace Network_Game.EditorTools
+{
+    public sealed class MixamoImportAutomation : UnityEditor.AssetPostprocessor
+    {
+        public MixamoImportAutomation() {}
+    }
+}
+
 namespace NetworkGame.Editor
 {
     public class WebGLMaterialAudit : UnityEditor.EditorWindow

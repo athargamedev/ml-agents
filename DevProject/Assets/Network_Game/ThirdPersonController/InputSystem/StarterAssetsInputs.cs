@@ -28,6 +28,12 @@ namespace Network_Game.ThirdPersonController
         public bool cursorLocked = true;
         public bool cursorInputForLook = true;
 
+        /// <summary>
+        /// When true, movement and jump inputs are ignored (e.g. while typing in dialogue UI).
+        /// </summary>
+        [HideInInspector]
+        public bool inputBlocked;
+
         // PlayerInput drives this component via SendMessage (On* callbacks above).
         // No manual Awake wiring needed.
 
@@ -54,7 +60,7 @@ namespace Network_Game.ThirdPersonController
 
         public void MoveInput(Vector2 newMoveDirection)
         {
-            move = newMoveDirection;
+            move = inputBlocked ? Vector2.zero : newMoveDirection;
         }
 
         public void LookInput(Vector2 newLookDirection)
@@ -64,17 +70,20 @@ namespace Network_Game.ThirdPersonController
 
         public void JumpInput(bool newJumpState)
         {
-            jump = newJumpState;
+            if (!inputBlocked)
+                jump = newJumpState;
         }
 
         public void SprintInput(bool newSprintState)
         {
-            sprint = newSprintState;
+            if (!inputBlocked)
+                sprint = newSprintState;
         }
 
         public void CrouchInput(bool newCrouchState)
         {
-            crouch = newCrouchState;
+            if (!inputBlocked)
+                crouch = newCrouchState;
         }
 
         public void InteractInput(bool newInteractState)

@@ -7351,7 +7351,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Transports.UTP.UnityTransport
   m_ProtocolType: 0
-  m_UseWebSockets: 1
+  m_UseWebSockets: 0
   m_UseEncryption: 0
   m_MaxPacketQueueSize: 128
   m_MaxPayloadSize: 6144
@@ -10100,7 +10100,7 @@ MonoBehaviour:
   m_AlignLocalPlayerToSpawnPoint: 1
   m_ForceClientMode: 0
   m_ClientModeTag: Client
-  m_AvoidHostStartWhenPortIsInUse: 0
+  m_AvoidHostStartWhenPortIsInUse: 1
   m_TryHostPortFallbackOnStartFailure: 1
   m_HostFallbackPortStart: 7778
   m_HostFallbackPortAttempts: 8
@@ -29229,6 +29229,19 @@ Transform:
   - {fileID: 163252278}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!134 &1750525410
+PhysicsMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance) (Instance) (Instance)'
+  serializedVersion: 2
+  m_DynamicFriction: 0.6
+  m_StaticFriction: 0.6
+  m_Bounciness: 0
+  m_FrictionCombine: 0
+  m_BounceCombine: 0
 --- !u!43 &1754466018
 Mesh:
   m_ObjectHideFlags: 0
@@ -32558,7 +32571,7 @@ PrefabInstance:
     - target: {fileID: 6634309892908796911, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 1976695942}
+      objectReference: {fileID: 1750525410}
     - target: {fileID: 8593397693932984124, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
       propertyPath: PositionInterpolationType
       value: 1
@@ -32648,6 +32661,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6100779618480271264, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1923683294}
+    - targetCorrespondingSourceObject: {fileID: 6100779618480271264, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1923683298}
   m_SourcePrefab: {fileID: 100100000, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
 --- !u!1 &1923683278 stripped
 GameObject:
@@ -32808,6 +32824,25 @@ MonoBehaviour:
   m_TurnDeltaParam: TurnDelta
   m_IdleVariantParam: IdleVariant
   m_EmphasisTriggerParam: OnHit
+  m_LogDebug: 1
+--- !u!114 &1923683298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1923683278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e748910dd779284bbf7f46800db72d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Network_Game::Network_Game.Dialogue.NpcDialogueAnimationAutoResponder
+  m_TargetNpc: {fileID: 0}
+  m_ContextBuilder: {fileID: 0}
+  m_AnimationController: {fileID: 0}
+  m_OnlyUserInitiated: 1
+  m_SuppressWhenEffectTagPresent: 1
+  m_SkipWhenMlAgentHasAuthority: 1
   m_LogDebug: 1
 --- !u!1 &1928461273 stripped
 GameObject:
@@ -33617,19 +33652,6 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
---- !u!134 &1976695942
-PhysicsMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance) (Instance)'
-  serializedVersion: 2
-  m_DynamicFriction: 0.6
-  m_StaticFriction: 0.6
-  m_Bounciness: 0
-  m_FrictionCombine: 0
-  m_BounceCombine: 0
 --- !u!1 &1982701867
 GameObject:
   m_ObjectHideFlags: 0

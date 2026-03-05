@@ -2363,6 +2363,7 @@ GameObject:
   - component: {fileID: 885369036120448215}
   - component: {fileID: 6080110117549638032}
   - component: {fileID: -1847610239723597953}
+  - component: {fileID: 7504971624162094523}
   m_Layer: 0
   m_Name: PlayerArmature 1 1
   m_TagString: Player
@@ -2424,7 +2425,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 1360569439
+  GlobalObjectIdHash: 2432808455
   InScenePlacedSourceGlobalObjectIdHash: 170955789
   DeferredDespawnTick: 0
   Ownership: 1
@@ -2566,6 +2567,7 @@ MonoBehaviour:
   analogMovement: 0
   cursorLocked: 1
   cursorInputForLook: 1
+  inputBlocked: 0
 --- !u!114 &6391045015849412820
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2902,6 +2904,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 996438ad0589e459b83acb42bc5e5b94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Physics.Hybrid::Unity.Physics.Authoring.DetailedStaticMeshCollisionAuthoring
+--- !u!114 &7504971624162094523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6391045015849412824}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67b61a79b549fd14195c3bd87511fc75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Network_Game::Network_Game.ThirdPersonController.PlayerFaceMapper
+  ShowTopMostFoldoutHeaderGroup: 1
+  m_Renderer: {fileID: 1397329432319482016}
+  m_FaceMaterialIndex: 0
+  m_FaceMaterials:
+  - {fileID: 2100000, guid: eba6913bf77bd744ea1cebb0c7684420, type: 2}
+  - {fileID: 2100000, guid: c0798dfb054feff4bb4eb7de8b20597c, type: 2}
+  - {fileID: 2100000, guid: dcf8420827e4efe4cb432f4979aef8e2, type: 2}
+  - {fileID: 2100000, guid: 2f5f8e67b0f60fe47b49ff7f5cf1c17f, type: 2}
+  - {fileID: 2100000, guid: 0f25152e41f4541419f51fc2ac093e8b, type: 2}
+  - {fileID: 2100000, guid: 31c2ab5677b18d3479ad1b151ae6d4c1, type: 2}
+  - {fileID: 2100000, guid: 117fe0a3bbca8264aa5ad5f5f56ebb85, type: 2}
+  - {fileID: 2100000, guid: 1643a33a5b3151d4dbbcfa7eae8f1e38, type: 2}
+  - {fileID: 2100000, guid: 9a32491b66424224bb99802175713e42, type: 2}
+  - {fileID: 2100000, guid: 1b5ee66e1e444094bbee246c08a0424f, type: 2}
+  - {fileID: 2100000, guid: a1c288b47bc1b0c4baf2a030983e907f, type: 2}
+  m_DefaultFaceIndex: 0
 --- !u!1 &6416604143029282004
 GameObject:
   m_ObjectHideFlags: 0

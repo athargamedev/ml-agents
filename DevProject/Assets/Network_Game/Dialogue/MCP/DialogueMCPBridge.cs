@@ -439,6 +439,117 @@ namespace Network_Game.Dialogue.MCP
         }
 
         /// <summary>
+        /// Send a deterministic animation validation probe to a specific NPC.
+        /// This mirrors the effect validation flow but forces an [ANIM:] response.
+        /// </summary>
+        public static Dictionary<string, object> SendAnimationProbeToNpc(
+            ulong speakerNetworkObjectId,
+            string animationTag = "EmphasisReact",
+            ulong listenerNetworkObjectId = 0
+        )
+        {
+            if (
+                !TryResolveGameplayProbeContext(
+                    out NetworkDialogueService service,
+                    out ulong localClientId,
+                    out ulong listenerNetworkId,
+                    out _,
+                    out string error,
+                    listenerNetworkObjectId
+                )
+            )
+            {
+                return new Dictionary<string, object>
+                {
+                    ["ok"] = false,
+                    ["error"] = error ?? "Unknown probe setup error.",
+                };
+            }
+
+            NpcDialogueActor[] actors = FindNpcActors();
+            if (actors == null || actors.Length == 0)
+            {
+                return new Dictionary<string, object>
+                {
+                    ["ok"] = false,
+                    ["error"] = "No NpcDialogueActor found in scene.",
+                };
+            }
+
+            NpcDialogueActor targetActor = null;
+            for (int i = 0; i < actors.Length; i++)
+            {
+                NpcDialogueActor candidate = actors[i];
+                if (
+                    candidate == null
+                    || candidate.NetworkObject == null
+                    || !candidate.NetworkObject.IsSpawned
+                )
+                {
+                    continue;
+                }
+
+                if (candidate.NetworkObjectId == speakerNetworkObjectId)
+                {
+                    targetActor = candidate;
+                    break;
+                }
+            }
+
+            if (targetActor == null)
+            {
+                return new Dictionary<string, object>
+                {
+                    ["ok"] = false,
+                    ["error"] = $"NPC with NetworkObjectId={speakerNetworkObjectId} not found.",
+                };
+            }
+
+            int requestId = ++s_NextGameplayCopilotRequestId;
+            string key = service.ResolveConversationKey(
+                targetActor.NetworkObjectId,
+                listenerNetworkId,
+                localClientId,
+                null
+            );
+
+            string resolvedTag = string.IsNullOrWhiteSpace(animationTag)
+                ? "EmphasisReact"
+                : animationTag.Trim();
+            string prompt = BuildAnimationProbePrompt(resolvedTag);
+            service.RequestDialogue(
+                new NetworkDialogueService.DialogueRequest
+                {
+                    Prompt = prompt,
+                    ConversationKey = key,
+                    SpeakerNetworkId = targetActor.NetworkObjectId,
+                    ListenerNetworkId = listenerNetworkId,
+                    RequestingClientId = localClientId,
+                    Broadcast = true,
+                    BroadcastDuration = 3f,
+                    NotifyClient = true,
+                    ClientRequestId = requestId,
+                    IsUserInitiated = true,
+                    BlockRepeatedPrompt = false,
+                    MinRepeatDelaySeconds = 0f,
+                    RequireUserReply = false,
+                }
+            );
+
+            return new Dictionary<string, object>
+            {
+                ["ok"] = true,
+                ["sent_count"] = 1,
+                ["request_id"] = requestId,
+                ["speaker_network_id"] = speakerNetworkObjectId,
+                ["npc_name"] = GetNpcDisplayName(targetActor),
+                ["animation_tag"] = resolvedTag,
+                ["listener_network_id"] = listenerNetworkId,
+                ["prompt"] = prompt,
+            };
+        }
+
+        /// <summary>
         /// Return nearby spawned NPC dialogue actors sorted by distance to local player/camera.
         /// </summary>
         public static List<Dictionary<string, object>> GetNearbyNpcActors(int maxNpcs = 6)
@@ -621,6 +732,24 @@ namespace Network_Game.Dialogue.MCP
                 }
             );
             return requestId;
+        }
+
+        private static string BuildAnimationProbePrompt(string animationTag)
+        {
+            string tag = string.IsNullOrWhiteSpace(animationTag)
+                ? "EmphasisReact"
+                : animationTag.Trim();
+
+            return string.Concat(
+                    "Animation validation step. Respond in character with one short sentence, then append exactly one tag: [ANIM: ",
+                    tag,
+                    " | Target: Self].",
+                    " Think in visible scene results only: play the animation on your own body and keep it on yourself.",
+                    " Output only the final sentence and tag. No analysis, no extra lines.",
+                    " Do not emit any [EFFECT:] tags for this step.",
+                    " The animation tag name must match exactly and Target must stay Self."
+                )
+                .Trim();
         }
 
         private static List<SceneElement> CollectSceneElements(int maxCount, float maxDistance)
@@ -1000,6 +1129,7 @@ namespace Network_Game.Dialogue.MCP
             public string PromptSnippet;
             public string ResponseSnippet;
             public string[] EffectTagsParsed;
+            public string[] AnimationTagsParsed;
             public string Status;
         }
 
@@ -1026,6 +1156,12 @@ namespace Network_Game.Dialogue.MCP
                 System.Text.RegularExpressions.RegexOptions.IgnoreCase
                     | System.Text.RegularExpressions.RegexOptions.Compiled
             );
+        private static readonly System.Text.RegularExpressions.Regex s_AnimationTagRegex =
+            new System.Text.RegularExpressions.Regex(
+                @"\[ANIM:\s*([^\]]+)\]",
+                System.Text.RegularExpressions.RegexOptions.IgnoreCase
+                    | System.Text.RegularExpressions.RegexOptions.Compiled
+            );
 
         /// <summary>
         /// Called by NetworkDialogueService after each completed response to populate the ring buffer.
@@ -1037,6 +1173,7 @@ namespace Network_Game.Dialogue.MCP
         )
         {
             string[] effectTags = ExtractEffectTags(responseText);
+            string[] animationTags = ExtractAnimationTags(responseText);
             var entry = new DebugLogEntry
             {
                 TimestampMs = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
@@ -1046,6 +1183,7 @@ namespace Network_Game.Dialogue.MCP
                 PromptSnippet = Truncate(request.Prompt, 200),
                 ResponseSnippet = Truncate(responseText, 300),
                 EffectTagsParsed = effectTags,
+                AnimationTagsParsed = animationTags,
                 Status = status ?? "unknown",
             };
 
@@ -1093,6 +1231,7 @@ namespace Network_Game.Dialogue.MCP
                             ["prompt_snippet"] = e.PromptSnippet,
                             ["response_snippet"] = e.ResponseSnippet,
                             ["effect_tags_parsed"] = e.EffectTagsParsed,
+                            ["animation_tags_parsed"] = e.AnimationTagsParsed,
                             ["status"] = e.Status,
                         }
                     );
@@ -1211,6 +1350,19 @@ namespace Network_Game.Dialogue.MCP
             if (string.IsNullOrEmpty(text))
                 return Array.Empty<string>();
             var matches = s_EffectTagRegex.Matches(text);
+            if (matches.Count == 0)
+                return Array.Empty<string>();
+            var tags = new string[matches.Count];
+            for (int i = 0; i < matches.Count; i++)
+                tags[i] = matches[i].Groups[1].Value.Trim();
+            return tags;
+        }
+
+        private static string[] ExtractAnimationTags(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return Array.Empty<string>();
+            var matches = s_AnimationTagRegex.Matches(text);
             if (matches.Count == 0)
                 return Array.Empty<string>();
             var tags = new string[matches.Count];
@@ -3045,7 +3197,10 @@ namespace Network_Game.Dialogue.MCP
                 if (
                     !service.TryGetTerminalResponseByClientRequestId(
                         m_ActiveRequestId,
-                        out var response
+                        out var response,
+                        NetworkManager.Singleton != null
+                            ? NetworkManager.Singleton.LocalClientId
+                            : ulong.MaxValue
                     )
                 )
                 {

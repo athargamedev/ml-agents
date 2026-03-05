@@ -1853,6 +1853,7 @@ GameObject:
   - component: {fileID: 6396420133140615980}
   - component: {fileID: 8822210966502434851}
   - component: {fileID: 8637294689020314315}
+  - component: {fileID: 6049782765353331312}
   m_Layer: 0
   m_Name: NPCArmature
   m_TagString: NPC
@@ -2109,6 +2110,34 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6049782765353331312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6100779618480271264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67b61a79b549fd14195c3bd87511fc75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Network_Game::Network_Game.ThirdPersonController.PlayerFaceMapper
+  ShowTopMostFoldoutHeaderGroup: 1
+  m_Renderer: {fileID: 8135902664557775400}
+  m_FaceMaterialIndex: 0
+  m_FaceMaterials:
+  - {fileID: 2100000, guid: eba6913bf77bd744ea1cebb0c7684420, type: 2}
+  - {fileID: 2100000, guid: c0798dfb054feff4bb4eb7de8b20597c, type: 2}
+  - {fileID: 2100000, guid: dcf8420827e4efe4cb432f4979aef8e2, type: 2}
+  - {fileID: 2100000, guid: 2f5f8e67b0f60fe47b49ff7f5cf1c17f, type: 2}
+  - {fileID: 2100000, guid: 0f25152e41f4541419f51fc2ac093e8b, type: 2}
+  - {fileID: 2100000, guid: 31c2ab5677b18d3479ad1b151ae6d4c1, type: 2}
+  - {fileID: 2100000, guid: 117fe0a3bbca8264aa5ad5f5f56ebb85, type: 2}
+  - {fileID: 2100000, guid: 1643a33a5b3151d4dbbcfa7eae8f1e38, type: 2}
+  - {fileID: 2100000, guid: 9a32491b66424224bb99802175713e42, type: 2}
+  - {fileID: 2100000, guid: 1b5ee66e1e444094bbee246c08a0424f, type: 2}
+  - {fileID: 2100000, guid: a1c288b47bc1b0c4baf2a030983e907f, type: 2}
+  m_DefaultFaceIndex: 0
 --- !u!1 &6570292277564484180
 GameObject:
   m_ObjectHideFlags: 0

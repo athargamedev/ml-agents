@@ -51,7 +51,7 @@
         "serena",
         "start-mcp-server",
         "--project",
-        "${PROJECT_ROOT}"
+        "ml-agents"
       ]
     },
     "sequentialthinking": {

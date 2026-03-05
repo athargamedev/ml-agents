@@ -38,6 +38,25 @@ experimental mode only, not the default.
 - **Remote/Python bridge**: Use SideChannels to call Python LLM backend
 - **Hybrid RL+LLM**: Use RL for behavior, LLM for dialogue generation
 
+## Animation Training Extension (2026-03-03)
+
+Animation training follows the same dialogue-oriented architecture above — it is NOT a separate agent.
+
+```
+LLM output → EffectDispatcher → EffectCatalog
+                │
+                └── also → DialogueAnimationContextBuilder  ← NEW
+                                    │
+                                    ├── observes: animation state, blend weights, emotion tag
+                                    ├── rewards: animation congruence with dialogue (same FeedbackScore pipeline)
+                                    └── trains: which animation to play for a given dialogue state
+```
+
+**First file**: `DialogueAnimationContextBuilder.cs` (detected by scanner 2026-03-03, has normalization issues)
+**Gotchas**: `CrossFade()` must never be called inside `CollectObservations()`; animation clip index must be normalized.
+
+---
+
 ## Relevant Files
 - `com.unity.ml-agents/Runtime/Inference/ModelRunner.cs` — inference runner pattern
 - `com.unity.ml-agents/Runtime/Policies/SentisPolicy.cs` — local model inference

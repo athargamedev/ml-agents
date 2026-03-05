@@ -206,8 +206,7 @@ public class NpcDialogueAnimationAgent : Agent
         DialogueAnimationAction chosenAction = (DialogueAnimationAction)actionIndex;
         DialogueAnimationContextSnapshot snapshot =
             m_ContextBuilder != null ? m_ContextBuilder.CurrentSnapshot : DialogueAnimationContextSnapshot.Empty;
-        DialogueAnimationAction preferredAction =
-            DialogueAnimationDecisionPolicy.RecommendAction(snapshot, m_LastChosenAction);
+        DialogueAnimationAction preferredAction = RecommendAction(snapshot);
 
         RecordStat("Anim/ChosenAction", actionIndex);
         RecordStat("Anim/PreferredAction", (int)preferredAction);
@@ -286,8 +285,7 @@ public class NpcDialogueAnimationAgent : Agent
     {
         DialogueAnimationContextSnapshot snapshot =
             m_ContextBuilder != null ? m_ContextBuilder.CurrentSnapshot : DialogueAnimationContextSnapshot.Empty;
-        actionsOut.DiscreteActions.Array[0] =
-            (int)DialogueAnimationDecisionPolicy.RecommendAction(snapshot, m_LastChosenAction);
+        actionsOut.DiscreteActions.Array[0] = (int)RecommendAction(snapshot);
     }
 
     private void Update()
@@ -338,6 +336,46 @@ public class NpcDialogueAnimationAgent : Agent
     private bool MatchesSpeaker(ulong speakerNetworkId)
     {
         return m_NetworkObject != null && m_NetworkObject.IsSpawned && m_NetworkObject.NetworkObjectId == speakerNetworkId;
+    }
+
+    private DialogueAnimationAction RecommendAction(DialogueAnimationContextSnapshot snapshot)
+    {
+        if (!snapshot.IsFresh)
+        {
+            return DialogueAnimationAction.HoldNeutral;
+        }
+
+        if (
+            snapshot.Tone == DialogueAnimationTone.Warning
+            || snapshot.Tone == DialogueAnimationTone.Aggressive
+            || snapshot.Intensity >= 0.75f
+            || snapshot.HasExclamation
+        )
+        {
+            return DialogueAnimationAction.EmphasisReact;
+        }
+
+        if (
+            snapshot.Tone == DialogueAnimationTone.Greeting
+            || snapshot.Tone == DialogueAnimationTone.Positive
+        )
+        {
+            return DialogueAnimationAction.IdleVariant;
+        }
+
+        if (snapshot.Tone == DialogueAnimationTone.Question || snapshot.HasQuestion)
+        {
+            return m_LastChosenAction == DialogueAnimationAction.TurnLeft
+                ? DialogueAnimationAction.TurnRight
+                : DialogueAnimationAction.TurnLeft;
+        }
+
+        if (snapshot.Intensity >= 0.35f)
+        {
+            return DialogueAnimationAction.TurnRight;
+        }
+
+        return DialogueAnimationAction.HoldNeutral;
     }
 
     private void EnsureDecisionRequester()

@@ -29,6 +29,7 @@ public class GameStateProvider : UnityEngine.MonoBehaviour
 
 [UnityEngine.DisallowMultipleComponent] [UnityEngine.RequireComponent(typeof(Unity.MLAgents.Policies.BehaviorParameters))] public class NpcDialogueAnimationAgent : Unity.MLAgents.Agent
 {
+    public bool DrivesAnimator { get; }
     public NpcDialogueAnimationAgent() {}
     public override void CollectObservations(Unity.MLAgents.Sensors.VectorSensor sensor);
     public override void Heuristic(ref readonly Unity.MLAgents.Actuators.ActionBuffers actionsOut);

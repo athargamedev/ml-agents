@@ -20,6 +20,14 @@ namespace Network_Game.Dialogue.Effects
             @"(?:^|\n)\s*(?:EFFECT|FX|POWER)\s*:\s*(.+)$",
             RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline
         );
+        private static readonly Regex UnterminatedTagRegex = new Regex(
+            @"\[\s*(?:EFFECT|FX|POWER)\s*:[^\]\r\n]*(?:$|\r?\n)",
+            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline
+        );
+        private static readonly Regex DanglingParameterTailRegex = new Regex(
+            @"(?:\s*\|\s*[A-Za-z][A-Za-z0-9_ ]{0,32}\s*:\s*[^|\r\n\]]+)+\s*$",
+            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline
+        );
         private static readonly Regex NumberRegex = new Regex(
             @"-?\d+(?:[.,]\d+)?",
             RegexOptions.Compiled | RegexOptions.CultureInvariant
@@ -824,8 +832,18 @@ namespace Network_Game.Dialogue.Effects
             if (string.IsNullOrWhiteSpace(text))
                 return text;
 
+            bool hadEffectMarker =
+                text.IndexOf("EFFECT", System.StringComparison.OrdinalIgnoreCase) >= 0
+                || text.IndexOf("FX", System.StringComparison.OrdinalIgnoreCase) >= 0
+                || text.IndexOf("POWER", System.StringComparison.OrdinalIgnoreCase) >= 0;
+
             string stripped = TagRegex.Replace(text, "");
             stripped = BareTagRegex.Replace(stripped, "");
+            stripped = UnterminatedTagRegex.Replace(stripped, "");
+            if (hadEffectMarker)
+            {
+                stripped = DanglingParameterTailRegex.Replace(stripped, "");
+            }
             return stripped.Trim();
         }
 

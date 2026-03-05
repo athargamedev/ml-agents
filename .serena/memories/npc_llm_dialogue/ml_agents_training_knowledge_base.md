@@ -299,6 +299,20 @@ Unity (Inference)
 
 **ML-Agents trains the timing/engagement policy, NOT the LLM itself.** The LLM generates dialogue content; ML-Agents learns when to trigger the LLM.
 
+### 9.3 Animation Training (NEW — 2026-03-03)
+
+A second ML-Agents training type is being added: **NPC animation training**.
+- **Same dialogue-oriented approach** — animations driven by dialogue state/LLM output, same reward pipeline, same SideChannel architecture
+- NOT a separate locomotion agent — animation choices (blend weights, clip selection) are rewards shaped by the same LLM feedback score
+- `DialogueAnimationContextBuilder.cs` is the first file of this system (detected in overnight scan 2026-03-03)
+- **Critical patterns for animation training:**
+  - Animator blend weights fed as observations MUST be normalized to [0,1] — they are already in that range natively, so no division needed, but verify
+  - `Animator.GetFloat()` return value depends on blend tree configuration — confirm range before using as raw observation
+  - `CrossFade()` calls should not happen inside `CollectObservations()` — side effects in observation collection cause non-determinism
+  - Animation clip index as int (0,1,2...) MUST be normalized: `clipIndex / (float)(totalClips - 1)`
+  - Emotion-to-animation mapping reward: same `AddRewardComponent()` clamping convention applies
+- When observation space expands for animation: update `BehaviorParameters` Space Size in Inspector AND update the obs layout table in `unity_code_review.txt` PROJECT CONTEXT
+
 ---
 
 ## 10. Recommended Configuration for Dialogue NPCs

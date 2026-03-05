@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using Network_Game.Auth;
 using Network_Game.Combat;
@@ -100,6 +101,7 @@ namespace Network_Game.Behavior
         [Tooltip("When enabled, clients can also auto-create LlmDebugAssistant.")]
         public bool m_EnableDebugAssistantOnClients;
 
+        private const float EditorClientEndpointWaitSeconds = 5f;
         private bool m_AuthGateSatisfied;
         private SceneCameraManager m_CameraManager;
         private NPCAgentBootstrap m_NpcBootstrap;
@@ -109,6 +111,10 @@ namespace Network_Game.Behavior
         {
             NGLog.Info("Bootstrap", "Awake");
             InitializeModules();
+            if (!IsClientMode())
+            {
+                ClearEditorHostEndpoint();
+            }
         }
 
         private void InitializeModules()
@@ -131,6 +137,11 @@ namespace Network_Game.Behavior
         {
             if (m_CameraManager != null)
                 m_CameraManager.StopMonitoring();
+
+            if (!IsClientMode())
+            {
+                ClearEditorHostEndpoint();
+            }
 
             NetworkManager manager = NetworkManager.Singleton;
             if (manager != null)
@@ -200,29 +211,34 @@ namespace Network_Game.Behavior
             clientMode = true;
 #endif
 
-            if (
-                !clientMode
-                && m_AvoidHostStartWhenPortIsInUse
-                && IsConfiguredListenPortInUse(manager, out int blockedPort)
-            )
-            {
-                clientMode = true;
-                NGLog.Warn(
-                    "Bootstrap",
-                    NGLog.Format(
-                        "Listen port already occupied; starting as Client",
-                        ("port", blockedPort)
-                    )
-                );
-            }
-
             if (clientMode)
             {
+                yield return StartCoroutine(WaitForEditorHostEndpoint(manager));
                 NGLog.Info("Bootstrap", "Starting as Client (MPPM / Manual Force)");
-                manager.StartClient();
+                if (!manager.StartClient())
+                {
+                    NGLog.Error("Bootstrap", "Client startup failed.");
+                    yield break;
+                }
             }
             else
             {
+                ClearEditorHostEndpoint();
+
+                if (
+                    m_AvoidHostStartWhenPortIsInUse
+                    && IsConfiguredListenPortInUse(manager, out int occupiedPort)
+                )
+                {
+                    NGLog.Warn(
+                        "Bootstrap",
+                        NGLog.Format(
+                            "Configured listen port already occupied; trying host fallback ports",
+                            ("port", occupiedPort)
+                        )
+                    );
+                }
+
                 bool hostStarted = TryStartHostWithPortFallback(manager);
                 if (!hostStarted)
                 {
@@ -237,14 +253,31 @@ namespace Network_Game.Behavior
             EnsureDebugAssistant(clientMode);
 
             // Clients need longer: TCP connect + host approval + spawn replication
-            float playerWaitTimeout = clientMode ? 15f : 5f;
+            float playerWaitTimeout = clientMode ? (Application.isEditor ? 25f : 15f) : 5f;
+            // Retry interval for client reconnect (host may not be up when client first connects)
+            float clientRetryInterval = 3f;
+            float nextClientRetry = clientRetryInterval;
             GameObject player = null;
             while (player == null && playerWaitTimeout > 0)
             {
                 player = ResolveLocalPlayer(manager);
-                if (player == null && (manager == null || !manager.IsListening))
+                if (player == null && manager != null && !manager.IsListening)
                 {
-                    player = GameObject.FindGameObjectWithTag(m_PlayerTag);
+                    if (clientMode)
+                    {
+                        // UTP exhausts retries instantly on a closed UDP port — retry StartClient
+                        nextClientRetry -= Time.deltaTime;
+                        if (nextClientRetry <= 0f)
+                        {
+                            NGLog.Info("Bootstrap", "Client not connected; retrying StartClient...");
+                            manager.StartClient();
+                            nextClientRetry = clientRetryInterval;
+                        }
+                    }
+                    else
+                    {
+                        player = GameObject.FindGameObjectWithTag(m_PlayerTag);
+                    }
                 }
 
                 if (player == null)
@@ -329,20 +362,32 @@ namespace Network_Game.Behavior
         }
 
         /// <summary>
-        /// Enables WebSocket transport on the UnityTransport component.
-        /// Required for: Dedicated Server (so WebGL clients can connect) and WebGL clients.
-        /// No-op on non-WebGL standalone/editor builds.
+        /// Configures UnityTransport for the current runtime.
+        /// WebGL and dedicated server use WebSockets; native/editor builds use UDP.
         /// </summary>
         private static void ConfigureWebSocketTransport(NetworkManager manager)
         {
-#if (UNITY_SERVER && !UNITY_EDITOR) || (UNITY_WEBGL && !UNITY_EDITOR)
             var transport = manager.GetComponent<Unity.Netcode.Transports.UTP.UnityTransport>();
             if (transport != null)
             {
-                transport.UseWebSockets = true;
-                NGLog.Info("Bootstrap", "WebSocket transport enabled");
-            }
+                bool shouldUseWebSockets =
+#if (UNITY_SERVER && !UNITY_EDITOR) || (UNITY_WEBGL && !UNITY_EDITOR)
+                    true;
+#else
+                    false;
 #endif
+
+                if (transport.UseWebSockets != shouldUseWebSockets)
+                {
+                    transport.UseWebSockets = shouldUseWebSockets;
+                    NGLog.Info(
+                        "Bootstrap",
+                        shouldUseWebSockets
+                        ? "WebSocket transport enabled"
+                        : "UDP transport enabled"
+                    );
+                }
+            }
         }
 
 #if UNITY_WEBGL && !UNITY_EDITOR
@@ -399,13 +444,173 @@ namespace Network_Game.Behavior
 
 #endif
 
+        private IEnumerator WaitForEditorHostEndpoint(NetworkManager manager)
+        {
+#if UNITY_EDITOR
+            if (!IsEditorVirtualPlayerClone())
+            {
+                yield break;
+            }
+
+            var transport = manager?.GetComponent<Unity.Netcode.Transports.UTP.UnityTransport>();
+            if (transport == null)
+            {
+                yield break;
+            }
+
+            float timeout = EditorClientEndpointWaitSeconds;
+            while (timeout > 0f)
+            {
+                if (TryReadEditorHostEndpoint(out string hostAddress, out ushort hostPort))
+                {
+                    transport.SetConnectionData(hostAddress, hostPort);
+                    NGLog.Info(
+                        "Bootstrap",
+                        NGLog.Format(
+                            "Configured client endpoint from host session",
+                            ("address", hostAddress),
+                            ("port", hostPort)
+                        )
+                    );
+                    yield break;
+                }
+
+                timeout -= Time.unscaledDeltaTime > 0f ? Time.unscaledDeltaTime : 0.1f;
+                yield return null;
+            }
+
+            NGLog.Warn(
+                "Bootstrap",
+                "Host endpoint file not ready; using serialized/default client transport endpoint."
+            );
+#else
+            yield break;
+#endif
+        }
+
+        private static string GetEditorHostEndpointFilePath()
+        {
+#if UNITY_EDITOR
+            string folder = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "NetworkGame"
+            );
+            return Path.Combine(folder, "behavior-scene-host-endpoint.txt");
+#else
+            return string.Empty;
+#endif
+        }
+
+        private static void ClearEditorHostEndpoint()
+        {
+#if UNITY_EDITOR
+            try
+            {
+                string path = GetEditorHostEndpointFilePath();
+                if (!string.IsNullOrWhiteSpace(path) && File.Exists(path))
+                {
+                    File.Delete(path);
+                }
+            }
+            catch
+            {
+                // Best effort cleanup only.
+            }
+#endif
+        }
+
+        private static void PersistEditorHostEndpoint(NetworkManager manager)
+        {
+#if UNITY_EDITOR
+            if (manager == null)
+            {
+                return;
+            }
+
+            try
+            {
+                int port = ResolveConfiguredListenPort(manager);
+                if (port <= 0 || port > 65535)
+                {
+                    return;
+                }
+
+                string path = GetEditorHostEndpointFilePath();
+                if (string.IsNullOrWhiteSpace(path))
+                {
+                    return;
+                }
+
+                string directory = Path.GetDirectoryName(path);
+                if (!string.IsNullOrWhiteSpace(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+
+                File.WriteAllText(path, $"127.0.0.1:{port}");
+            }
+            catch
+            {
+                // Best effort only; client will fall back to serialized transport settings.
+            }
+#endif
+        }
+
+        private static bool TryReadEditorHostEndpoint(out string address, out ushort port)
+        {
+            address = "127.0.0.1";
+            port = 0;
+#if UNITY_EDITOR
+            try
+            {
+                string path = GetEditorHostEndpointFilePath();
+                if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
+                {
+                    return false;
+                }
+
+                string content = File.ReadAllText(path)?.Trim();
+                if (string.IsNullOrWhiteSpace(content))
+                {
+                    return false;
+                }
+
+                string[] parts = content.Split(':');
+                if (parts.Length != 2)
+                {
+                    return false;
+                }
+
+                string parsedAddress = string.IsNullOrWhiteSpace(parts[0])
+                    ? "127.0.0.1"
+                    : parts[0].Trim();
+                if (!ushort.TryParse(parts[1], out ushort parsedPort) || parsedPort == 0)
+                {
+                    return false;
+                }
+
+                address = parsedAddress;
+                port = parsedPort;
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+#else
+            return false;
+#endif
+        }
+
         private IEnumerator EnsureAuthGate()
         {
             m_AuthGateSatisfied = false;
+            bool allowUnauthenticatedStart = ShouldAllowUnauthenticatedNetworkStart();
             LocalPlayerAuthService authService = LocalPlayerAuthService.EnsureInstance();
             if (authService == null)
             {
-                m_AuthGateSatisfied = !m_BlockNetworkStartUntilAuthenticated;
+                m_AuthGateSatisfied =
+                    !m_BlockNetworkStartUntilAuthenticated || allowUnauthenticatedStart;
                 yield break;
             }
 
@@ -432,14 +637,27 @@ namespace Network_Game.Behavior
 
             if (!authService.HasCurrentPlayer && m_BlockNetworkStartUntilAuthenticated)
             {
-                NGLog.Info("Bootstrap", "Waiting for login before starting network...");
-                while (!authService.HasCurrentPlayer)
+                if (allowUnauthenticatedStart)
                 {
-                    yield return null;
+                    NGLog.Warn(
+                        "Bootstrap",
+                        "Continuing network start without login (editor multiplayer/client mode)."
+                    );
+                }
+                else
+                {
+                    NGLog.Info("Bootstrap", "Waiting for login before starting network...");
+                    while (!authService.HasCurrentPlayer)
+                    {
+                        yield return null;
+                    }
                 }
             }
 
-            authService.EnsurePromptContextInitialized();
+            if (authService.HasCurrentPlayer)
+            {
+                authService.EnsurePromptContextInitialized();
+            }
             m_AuthGateSatisfied = true;
         }
 
@@ -726,6 +944,11 @@ namespace Network_Game.Behavior
                 }
             }
 
+            if (IsEditorVirtualPlayerClone())
+            {
+                return true;
+            }
+
 #if UNITY_EDITOR
             try
             {
@@ -747,6 +970,49 @@ namespace Network_Game.Behavior
             catch
             {
                 // CurrentPlayer API unavailable (MPPM not configured); ignore.
+            }
+#endif
+            return false;
+        }
+
+        private bool ShouldAllowUnauthenticatedNetworkStart()
+        {
+            return IsClientMode() || IsEditorMultiplayerSession();
+        }
+
+        private static bool IsEditorMultiplayerSession()
+        {
+#if UNITY_EDITOR
+            if (IsEditorVirtualPlayerClone())
+            {
+                return true;
+            }
+
+            try
+            {
+                var tags = Unity.Multiplayer.PlayMode.CurrentPlayer.Tags;
+                return tags != null && tags.Count > 0;
+            }
+            catch
+            {
+                // MPPM API unavailable or not active.
+            }
+#endif
+            return false;
+        }
+
+        private static bool IsEditorVirtualPlayerClone()
+        {
+#if UNITY_EDITOR
+            try
+            {
+                string normalizedDataPath = Application.dataPath.Replace('\\', '/');
+                return normalizedDataPath.IndexOf("/Library/VP/", StringComparison.OrdinalIgnoreCase)
+                    >= 0;
+            }
+            catch
+            {
+                // Best effort only.
             }
 #endif
             return false;
@@ -872,6 +1138,7 @@ namespace Network_Game.Behavior
             NGLog.Info("Bootstrap", "Attempting to start as Host...");
             if (manager.StartHost())
             {
+                PersistEditorHostEndpoint(manager);
                 NGLog.Info(
                     "Bootstrap",
                     NGLog.Format("Host started", ("port", ResolveConfiguredListenPort(manager)))
@@ -918,6 +1185,7 @@ namespace Network_Game.Behavior
 
                 if (manager.StartHost())
                 {
+                    PersistEditorHostEndpoint(manager);
                     NGLog.Info(
                         "Bootstrap",
                         NGLog.Format("Host started on fallback port", ("port", candidatePort))

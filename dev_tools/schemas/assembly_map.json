@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "generated": "2026-03-02T06:46:51.678109",
-    "total": 67,
-    "project_count": 17,
+    "generated": "2026-03-04T04:02:30.012259",
+    "total": 65,
+    "project_count": 15,
     "package_count": 50,
     "scan_roots": [
       "D:\\GithubRepos\\ml-agents\\DevProject\\Assets",
@@ -10,179 +10,12 @@
     ]
   },
   "project": {
-    "TestAsmdef": {
-      "name": "TestAsmdef",
-      "path": "DevProject/Assets/MCPTests/Scripts/TestAsmdef/TestAsmdef.asmdef",
-      "rootNamespace": "TestNamespace",
-      "references": [],
-      "precompiledReferences": [],
-      "includePlatforms": [],
-      "autoReferenced": false,
-      "allowUnsafeCode": false,
-      "defineConstraints": [],
-      "is_editor_only": false,
-      "is_test": false,
-      "referenced_by": [
-        "MCPForUnityTests.EditMode"
-      ]
-    },
-    "MCPForUnityTests.EditMode": {
-      "name": "MCPForUnityTests.EditMode",
-      "path": "DevProject/Assets/MCPTests/Tests/EditMode/MCPForUnityTests.Editor.asmdef",
-      "rootNamespace": "",
-      "references": [
-        "MCPForUnity.Editor",
-        "MCPForUnity.Runtime",
-        "Network_Game.Editor",
-        "UnityEngine.TestRunner",
-        "UnityEditor.TestRunner",
-        "TestAsmdef"
-      ],
-      "precompiledReferences": [
-        "nunit.framework.dll",
-        "Newtonsoft.Json.dll"
-      ],
-      "includePlatforms": [
-        "Editor"
-      ],
-      "autoReferenced": false,
-      "allowUnsafeCode": false,
-      "defineConstraints": [
-        "UNITY_INCLUDE_TESTS"
-      ],
-      "is_editor_only": true,
-      "is_test": true,
-      "referenced_by": []
-    },
-    "MCPForUnityTests.PlayMode": {
-      "name": "MCPForUnityTests.PlayMode",
-      "path": "DevProject/Assets/MCPTests/Tests/PlayMode/MCPForUnityTests.PlayMode.asmdef",
-      "rootNamespace": "",
-      "references": [
-        "UnityEngine.TestRunner",
-        "UnityEditor.TestRunner"
-      ],
-      "precompiledReferences": [
-        "nunit.framework.dll"
-      ],
-      "includePlatforms": [],
-      "autoReferenced": false,
-      "allowUnsafeCode": false,
-      "defineConstraints": [
-        "UNITY_INCLUDE_TESTS"
-      ],
-      "is_editor_only": false,
-      "is_test": true,
-      "referenced_by": []
-    },
-    "NpcDialogue.Tests.Editor": {
-      "name": "NpcDialogue.Tests.Editor",
-      "path": "DevProject/Assets/ML-Agents/Scripts/Tests/Editor/NpcDialogue/NpcDialogue.Tests.Editor.asmdef",
-      "rootNamespace": "NpcDialogue.Tests.Editor",
-      "references": [
-        "Unity.ML-Agents",
-        "UnityEngine.TestRunner",
-        "UnityEditor.TestRunner"
-      ],
-      "precompiledReferences": [
-        "nunit.framework.dll"
-      ],
-      "includePlatforms": [
-        "Editor"
-      ],
-      "autoReferenced": false,
-      "allowUnsafeCode": false,
-      "defineConstraints": [
-        "UNITY_INCLUDE_TESTS"
-      ],
-      "is_editor_only": true,
-      "is_test": true,
-      "referenced_by": []
-    },
-    "Unity.ML-Agents.DevTests.Editor": {
-      "name": "Unity.ML-Agents.DevTests.Editor",
-      "path": "DevProject/Assets/ML-Agents/Scripts/Tests/Editor/Unity.ML-Agents.DevTests.Editor.asmdef",
-      "rootNamespace": "Unity.ML-Agents",
-      "references": [
-        "Unity.ML-Agents.Editor",
-        "Unity.ML-Agents",
-        "Unity.InferenceEngine",
-        "Unity.ML-Agents.CommunicatorObjects",
-        "Unity.PerformanceTesting",
-        "UnityEngine.TestRunner",
-        "UnityEditor.TestRunner"
-      ],
-      "precompiledReferences": [
-        "System.IO.Abstractions.dll",
-        "System.IO.Abstractions.TestingHelpers.dll",
-        "nunit.framework.dll"
-      ],
-      "includePlatforms": [
-        "Editor"
-      ],
-      "autoReferenced": false,
-      "allowUnsafeCode": false,
-      "defineConstraints": [
-        "UNITY_INCLUDE_TESTS"
-      ],
-      "is_editor_only": true,
-      "is_test": true,
-      "referenced_by": []
-    },
-    "NpcDialogue.Tests.Runtime": {
-      "name": "NpcDialogue.Tests.Runtime",
-      "path": "DevProject/Assets/ML-Agents/Scripts/Tests/Runtime/NpcDialogue/NpcDialogue.Tests.Runtime.asmdef",
-      "rootNamespace": "NpcDialogue.Tests.Runtime",
-      "references": [
-        "Unity.ML-Agents",
-        "Network_Game",
-        "UnityEngine.TestRunner",
-        "UnityEditor.TestRunner"
-      ],
-      "precompiledReferences": [
-        "nunit.framework.dll"
-      ],
-      "includePlatforms": [],
-      "autoReferenced": false,
-      "allowUnsafeCode": false,
-      "defineConstraints": [
-        "UNITY_INCLUDE_TESTS"
-      ],
-      "is_editor_only": false,
-      "is_test": true,
-      "referenced_by": []
-    },
-    "Unity.ML-Agents.DevTests.Runtime": {
-      "name": "Unity.ML-Agents.DevTests.Runtime",
-      "path": "DevProject/Assets/ML-Agents/Scripts/Tests/Runtime/Unity.ML-Agents.DevTests.Runtime.asmdef",
-      "rootNamespace": "Unity.ML-Agents",
-      "references": [
-        "Unity.ML-Agents",
-        "UnityEngine.TestRunner",
-        "UnityEditor.TestRunner"
-      ],
-      "precompiledReferences": [
-        "System.IO.Abstractions.dll",
-        "System.IO.Abstractions.TestingHelpers.dll",
-        "nunit.framework.dll"
-      ],
-      "includePlatforms": [],
-      "autoReferenced": false,
-      "allowUnsafeCode": false,
-      "defineConstraints": [
-        "UNITY_INCLUDE_TESTS"
-      ],
-      "is_editor_only": false,
-      "is_test": true,
-      "referenced_by": []
-    },
     "Network_Game.Dialogue.Editor": {
       "name": "Network_Game.Dialogue.Editor",
       "path": "DevProject/Assets/Network_Game/Dialogue/Editor/Network_Game.Dialogue.Editor.asmdef",
       "rootNamespace": "Network_Game.Dialogue.Editor",
       "references": [
         "Network_Game",
-        "undream.llmunity.Runtime",
         "Unity.Netcode.Runtime",
         "MCPForUnity.Editor"
       ],
@@ -217,35 +50,52 @@
       "defineConstraints": [],
       "is_editor_only": true,
       "is_test": false,
-      "referenced_by": [
-        "MCPForUnityTests.EditMode"
-      ]
+      "referenced_by": []
     },
-    "undream.llmunity.Editor": {
-      "name": "undream.llmunity.Editor",
-      "path": "DevProject/Assets/Network_Game/LLMUnity/Editor/undream.llmunity.Editor.asmdef",
-      "rootNamespace": "LLMUnity",
+    "Network_Game.ML-agents.Editor": {
+      "name": "Network_Game.ML-agents.Editor",
+      "path": "DevProject/Assets/Network_Game/NetrokGame_ML-agents/Editor/Network_Game.ML-agents.Editor.asmdef",
+      "rootNamespace": "Network_Game",
       "references": [
-        "undream.llmunity.Runtime"
+        "Network_Game",
+        "Network_Game.ML-agents",
+        "Unity.ML-Agents",
+        "Unity.ML-Agents.Editor",
+        "Unity.Netcode.Runtime",
+        "Unity.Networking.Transport",
+        "Unity.Cinemachine",
+        "Unity.AI.Navigation",
+        "Unity.InputSystem",
+        "Unity.TextMeshPro",
+        "UnityEngine.UI",
+        "Unity.Addressables",
+        "Unity.ResourceManager"
       ],
       "precompiledReferences": [],
-      "includePlatforms": [
-        "Editor"
-      ],
+      "includePlatforms": [],
       "autoReferenced": true,
       "allowUnsafeCode": false,
       "defineConstraints": [],
-      "is_editor_only": true,
+      "is_editor_only": false,
       "is_test": false,
       "referenced_by": []
     },
-    "undream.llmunity.Runtime": {
-      "name": "undream.llmunity.Runtime",
-      "path": "DevProject/Assets/Network_Game/LLMUnity/Runtime/undream.llmunity.Runtime.asmdef",
-      "rootNamespace": "LLMUnity",
+    "Network_Game.ML-agents": {
+      "name": "Network_Game.ML-agents",
+      "path": "DevProject/Assets/Network_Game/NetrokGame_ML-agents/Network_Game.ML-agents.asmdef",
+      "rootNamespace": "Network_Game",
       "references": [
+        "Network_Game",
+        "Unity.ML-Agents",
+        "Unity.Netcode.Runtime",
+        "Unity.Networking.Transport",
+        "Unity.Cinemachine",
+        "Unity.AI.Navigation",
+        "Unity.InputSystem",
+        "Unity.TextMeshPro",
         "UnityEngine.UI",
-        "Unity.InputSystem"
+        "Unity.Addressables",
+        "Unity.ResourceManager"
       ],
       "precompiledReferences": [],
       "includePlatforms": [],
@@ -255,17 +105,143 @@
       "is_editor_only": false,
       "is_test": false,
       "referenced_by": [
-        "Network_Game",
-        "Network_Game.Dialogue.Editor",
-        "undream.llmunity.Editor"
+        "Network_Game.ML-agents.Editor",
+        "Network_Game.ML-agents.Tests"
       ]
+    },
+    "NpcDialogue.Tests.Editor": {
+      "name": "NpcDialogue.Tests.Editor",
+      "path": "DevProject/Assets/Network_Game/NetrokGame_ML-agents/Tests/Editor/NpcDialogue/NpcDialogue.Tests.Editor.asmdef",
+      "rootNamespace": "NpcDialogue.Tests.Editor",
+      "references": [
+        "Unity.ML-Agents",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+      ],
+      "precompiledReferences": [
+        "nunit.framework.dll"
+      ],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": false,
+      "allowUnsafeCode": false,
+      "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+      ],
+      "is_editor_only": true,
+      "is_test": true,
+      "referenced_by": []
+    },
+    "Unity.ML-Agents.DevTests.Editor": {
+      "name": "Unity.ML-Agents.DevTests.Editor",
+      "path": "DevProject/Assets/Network_Game/NetrokGame_ML-agents/Tests/Editor/Unity.ML-Agents.DevTests.Editor.asmdef",
+      "rootNamespace": "Unity.ML-Agents",
+      "references": [
+        "Unity.ML-Agents.Editor",
+        "Unity.ML-Agents",
+        "Unity.InferenceEngine",
+        "Unity.ML-Agents.CommunicatorObjects",
+        "Unity.PerformanceTesting",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+      ],
+      "precompiledReferences": [
+        "System.IO.Abstractions.dll",
+        "System.IO.Abstractions.TestingHelpers.dll",
+        "nunit.framework.dll"
+      ],
+      "includePlatforms": [
+        "Editor"
+      ],
+      "autoReferenced": false,
+      "allowUnsafeCode": false,
+      "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+      ],
+      "is_editor_only": true,
+      "is_test": true,
+      "referenced_by": []
+    },
+    "Network_Game.ML-agents.Tests": {
+      "name": "Network_Game.ML-agents.Tests",
+      "path": "DevProject/Assets/Network_Game/NetrokGame_ML-agents/Tests/Network_Game.ML-agents.Tests.asmdef",
+      "rootNamespace": "Network_Game",
+      "references": [
+        "Network_Game",
+        "Network_Game.ML-agents",
+        "Unity.ML-Agents",
+        "Unity.Netcode.Runtime",
+        "Unity.Networking.Transport",
+        "Unity.Cinemachine",
+        "Unity.AI.Navigation",
+        "Unity.InputSystem",
+        "Unity.TextMeshPro",
+        "UnityEngine.UI",
+        "Unity.Addressables",
+        "Unity.ResourceManager"
+      ],
+      "precompiledReferences": [],
+      "includePlatforms": [],
+      "autoReferenced": true,
+      "allowUnsafeCode": false,
+      "defineConstraints": [],
+      "is_editor_only": false,
+      "is_test": false,
+      "referenced_by": []
+    },
+    "NpcDialogue.Tests.Runtime": {
+      "name": "NpcDialogue.Tests.Runtime",
+      "path": "DevProject/Assets/Network_Game/NetrokGame_ML-agents/Tests/Runtime/NpcDialogue/NpcDialogue.Tests.Runtime.asmdef",
+      "rootNamespace": "NpcDialogue.Tests.Runtime",
+      "references": [
+        "Unity.ML-Agents",
+        "Network_Game",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+      ],
+      "precompiledReferences": [
+        "nunit.framework.dll"
+      ],
+      "includePlatforms": [],
+      "autoReferenced": false,
+      "allowUnsafeCode": false,
+      "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+      ],
+      "is_editor_only": false,
+      "is_test": true,
+      "referenced_by": []
+    },
+    "Unity.ML-Agents.DevTests.Runtime": {
+      "name": "Unity.ML-Agents.DevTests.Runtime",
+      "path": "DevProject/Assets/Network_Game/NetrokGame_ML-agents/Tests/Runtime/Unity.ML-Agents.DevTests.Runtime.asmdef",
+      "rootNamespace": "Unity.ML-Agents",
+      "references": [
+        "Unity.ML-Agents",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+      ],
+      "precompiledReferences": [
+        "System.IO.Abstractions.dll",
+        "System.IO.Abstractions.TestingHelpers.dll",
+        "nunit.framework.dll"
+      ],
+      "includePlatforms": [],
+      "autoReferenced": false,
+      "allowUnsafeCode": false,
+      "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+      ],
+      "is_editor_only": false,
+      "is_test": true,
+      "referenced_by": []
     },
     "Network_Game": {
       "name": "Network_Game",
       "path": "DevProject/Assets/Network_Game/Network_Game.asmdef",
       "rootNamespace": "Network_Game",
       "references": [
-        "undream.llmunity.Runtime",
         "Unity.Netcode.Runtime",
         "Unity.Networking.Transport",
         "Unity.Cinemachine",
@@ -286,6 +262,9 @@
       "referenced_by": [
         "Network_Game.Dialogue.Editor",
         "Network_Game.Editor",
+        "Network_Game.ML-agents",
+        "Network_Game.ML-agents.Editor",
+        "Network_Game.ML-agents.Tests",
         "Network_Game.ParticlePack.Ramps.Editor",
         "NpcDialogue.Tests.Runtime"
       ]
@@ -445,6 +424,9 @@
       "is_test": false,
       "referenced_by": [
         "Network_Game",
+        "Network_Game.ML-agents",
+        "Network_Game.ML-agents.Editor",
+        "Network_Game.ML-agents.Tests",
         "Unity.Cinemachine.Editor",
         "VFXGraph.OutputEventHandlers",
         "VFXGraph.OutputEventHandlers.Editor"
@@ -1575,6 +1557,9 @@
         "Network_Game",
         "Network_Game.Dialogue.Editor",
         "Network_Game.Editor",
+        "Network_Game.ML-agents",
+        "Network_Game.ML-agents.Editor",
+        "Network_Game.ML-agents.Tests",
         "Unity.Multiplayer.Tools.Adapters.Ngo1",
         "Unity.Multiplayer.Tools.Adapters.Ngo1WithUtp2",
         "Unity.Multiplayer.Tools.Adapters.Tests.Editor",
@@ -1687,6 +1672,9 @@
       "is_test": false,
       "referenced_by": [
         "Network_Game",
+        "Network_Game.ML-agents",
+        "Network_Game.ML-agents.Editor",
+        "Network_Game.ML-agents.Tests",
         "Unity.Multiplayer.Tools.Adapters.Ngo1WithUtp2",
         "Unity.Multiplayer.Tools.Adapters.Utp2",
         "Unity.Multiplayer.Tools.GameObjects.Tests",

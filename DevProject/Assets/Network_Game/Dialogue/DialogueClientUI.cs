@@ -803,6 +803,8 @@ namespace Network_Game.Dialogue
                 normalized = StripMarkdownArtifacts(normalized);
             }
 
+            normalized = DialogueAnimationDecisionPolicy.StripAnimationTags(normalized).Trim();
+
             normalized = s_MultiSpaceRegex.Replace(normalized, " ");
             normalized = Regex.Replace(normalized, @"\n{3,}", "\n\n");
 

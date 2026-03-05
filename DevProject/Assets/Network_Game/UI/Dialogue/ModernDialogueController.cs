@@ -411,6 +411,7 @@ namespace Network_Game.UI.Dialogue
                     m_ChatInput.RegisterCallback<FocusOutEvent>(OnChatInputFocusOut);
                     if (m_ChatInputInner != null)
                     {
+                        m_ChatInputInner.RegisterCallback<KeyDownEvent>(OnInputKeyDown);
                         m_ChatInputInner.RegisterCallback<PointerDownEvent>(OnInputPointerDown);
                         m_ChatInputInner.RegisterCallback<MouseDownEvent>(OnInputMouseDown);
                         m_ChatInputInner.RegisterCallback<FocusInEvent>(OnChatInputFocusIn);
@@ -426,6 +427,7 @@ namespace Network_Game.UI.Dialogue
                     m_ChatInput.UnregisterCallback<FocusOutEvent>(OnChatInputFocusOut);
                     if (m_ChatInputInner != null)
                     {
+                        m_ChatInputInner.UnregisterCallback<KeyDownEvent>(OnInputKeyDown);
                         m_ChatInputInner.UnregisterCallback<PointerDownEvent>(OnInputPointerDown);
                         m_ChatInputInner.UnregisterCallback<MouseDownEvent>(OnInputMouseDown);
                         m_ChatInputInner.UnregisterCallback<FocusInEvent>(OnChatInputFocusIn);
@@ -501,7 +503,8 @@ namespace Network_Game.UI.Dialogue
                 return;
             }
 
-            evt.StopPropagation();
+            evt.PreventDefault();
+            evt.StopImmediatePropagation();
             OnSendClicked();
         }
 
@@ -509,24 +512,28 @@ namespace Network_Game.UI.Dialogue
         {
             if (m_ChatInput == null)
             {
+                LogSendBlocked("chat_input_missing");
                 return;
             }
 
             string prompt = (m_ChatInput.value ?? string.Empty).Trim();
             if (string.IsNullOrEmpty(prompt))
             {
+                LogSendBlocked("prompt_empty");
                 return;
             }
 
             NetworkDialogueService service = NetworkDialogueService.Instance;
             if (service == null)
             {
+                LogSendBlocked("dialogue_service_missing");
                 AppendSystemLine("Dialogue service not available.");
                 return;
             }
 
             if (!TryResolveLocalPlayer(out _, out NetworkObject localPlayer) || localPlayer == null)
             {
+                LogSendBlocked("local_player_unresolved");
                 AppendSystemLine("Local player not resolved.");
                 return;
             }
@@ -539,6 +546,7 @@ namespace Network_Game.UI.Dialogue
                 )
             )
             {
+                LogSendBlocked("npc_out_of_range");
                 AppendSystemLine("No NPC in range.");
                 return;
             }
@@ -562,23 +570,32 @@ namespace Network_Game.UI.Dialogue
                 null
             );
 
-            service.RequestDialogue(
-                new NetworkDialogueService.DialogueRequest
-                {
-                    Prompt = prompt,
-                    ConversationKey = conversationKey,
-                    SpeakerNetworkId = speakerId,
-                    ListenerNetworkId = listenerId,
-                    RequestingClientId = requesterId,
-                    Broadcast = true,
-                    BroadcastDuration = 2f,
-                    NotifyClient = true,
-                    ClientRequestId = requestId,
-                    IsUserInitiated = true,
-                    BlockRepeatedPrompt = false,
-                    MinRepeatDelaySeconds = 0f,
-                    RequireUserReply = false,
-                }
+            var request = new NetworkDialogueService.DialogueRequest
+            {
+                Prompt = prompt,
+                ConversationKey = conversationKey,
+                SpeakerNetworkId = speakerId,
+                ListenerNetworkId = listenerId,
+                RequestingClientId = requesterId,
+                Broadcast = true,
+                BroadcastDuration = 2f,
+                NotifyClient = true,
+                ClientRequestId = requestId,
+                IsUserInitiated = true,
+                BlockRepeatedPrompt = false,
+                MinRepeatDelaySeconds = 0f,
+                RequireUserReply = false,
+            };
+
+            service.RequestDialogue(request);
+            NGLog.Info(
+                "DialogueUI",
+                NGLog.Format(
+                    "Sent prompt via ModernDialogueController",
+                    ("clientRequest", request.ClientRequestId),
+                    ("speaker", request.SpeakerNetworkId),
+                    ("listener", request.ListenerNetworkId)
+                )
             );
 
             AppendTranscript(
@@ -638,7 +655,7 @@ namespace Network_Game.UI.Dialogue
                         Speaker = speaker.ToUpperInvariant(),
                         Message = string.IsNullOrWhiteSpace(response.ResponseText)
                             ? "(empty response)"
-                            : response.ResponseText.Trim(),
+                            : DialogueAnimationDecisionPolicy.StripAnimationTags(response.ResponseText).Trim(),
                         ClientRequestId = response.Request.ClientRequestId,
                         IsPending = false,
                     }
@@ -787,25 +804,117 @@ namespace Network_Game.UI.Dialogue
             {
                 playerTransform = m_LocalPlayerTransform;
                 playerNetObj = m_LocalPlayerNetworkObject;
-                return true;
+                return playerTransform != null && playerNetObj != null;
             }
 
             m_NextPlayerResolveAt =
                 Time.unscaledTime + Mathf.Max(0.1f, m_PlayerResolveIntervalSeconds);
-            GameObject taggedPlayer = GameObject.FindGameObjectWithTag("Player");
-            if (taggedPlayer == null)
+            if (!TryResolveTaggedPlayer(manager, out NetworkObject resolvedPlayer))
+            {
+                resolvedPlayer = null;
+            }
+            if (resolvedPlayer == null && !TryResolveSpawnedLocalPlayer(manager, out resolvedPlayer))
             {
                 m_LocalPlayerTransform = null;
                 m_LocalPlayerNetworkObject = null;
                 return false;
             }
 
-            m_LocalPlayerTransform = taggedPlayer.transform;
-            m_LocalPlayerNetworkObject = taggedPlayer.GetComponent<NetworkObject>();
+            m_LocalPlayerTransform = resolvedPlayer.transform;
+            m_LocalPlayerNetworkObject = resolvedPlayer;
 
             playerTransform = m_LocalPlayerTransform;
             playerNetObj = m_LocalPlayerNetworkObject;
-            return playerTransform != null;
+            return playerTransform != null && playerNetObj != null;
+        }
+
+        private bool TryResolveTaggedPlayer(NetworkManager manager, out NetworkObject playerNetObj)
+        {
+            playerNetObj = null;
+
+            try
+            {
+                GameObject taggedPlayer = GameObject.FindGameObjectWithTag("Player");
+                if (taggedPlayer == null)
+                {
+                    return false;
+                }
+
+                playerNetObj = taggedPlayer.GetComponent<NetworkObject>();
+                if (playerNetObj == null)
+                {
+                    playerNetObj = taggedPlayer.GetComponentInParent<NetworkObject>();
+                }
+
+                if (playerNetObj == null)
+                {
+                    playerNetObj = taggedPlayer.GetComponentInChildren<NetworkObject>();
+                }
+            }
+            catch (UnityException)
+            {
+                // Tag lookup is best-effort only.
+            }
+
+            if (playerNetObj == null || !playerNetObj.IsPlayerObject)
+            {
+                return false;
+            }
+
+            if (
+                manager != null
+                && manager.LocalClient != null
+                && playerNetObj.OwnerClientId != manager.LocalClientId
+            )
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private static bool TryResolveSpawnedLocalPlayer(
+            NetworkManager manager,
+            out NetworkObject playerNetObj
+        )
+        {
+            playerNetObj = null;
+            if (manager == null || manager.SpawnManager == null)
+            {
+                return false;
+            }
+
+            ulong localClientId = manager.LocalClientId;
+            foreach (NetworkObject spawned in manager.SpawnManager.SpawnedObjectsList)
+            {
+                if (spawned == null || !spawned.IsPlayerObject)
+                {
+                    continue;
+                }
+
+                if (manager.LocalClient != null && spawned.OwnerClientId != localClientId)
+                {
+                    continue;
+                }
+
+                playerNetObj = spawned;
+                return true;
+            }
+
+            return false;
+        }
+
+        private void LogSendBlocked(string reason)
+        {
+            NGLog.Warn(
+                "DialogueUI",
+                NGLog.Format(
+                    "Modern dialogue send blocked",
+                    ("reason", reason ?? "unknown"),
+                    ("visible", m_ChatVisible),
+                    ("selectedNpc", m_SelectedNpc != null ? m_SelectedNpc.name : "none")
+                )
+            );
         }
 
         private bool TryResolveNearestNpc(
@@ -1077,6 +1186,10 @@ namespace Network_Game.UI.Dialogue
                     inputs.cursorLocked = false;
                     inputs.cursorInputForLook = false;
                     inputs.SetCursorState(false);
+                    inputs.inputBlocked = true;
+                    inputs.move = Vector2.zero;
+                    inputs.jump = false;
+                    inputs.sprint = false;
                 }
                 m_GameplayInputSuppressed = true;
                 return;
@@ -1098,6 +1211,7 @@ namespace Network_Game.UI.Dialogue
                 inputs.cursorLocked = true;
                 inputs.cursorInputForLook = true;
                 inputs.SetCursorState(true);
+                inputs.inputBlocked = false;
             }
 
             m_GameplayInputSuppressed = false;

@@ -212,8 +212,20 @@ namespace Network_Game.Dialogue
             CancellationToken ct
         )
         {
-            var messages = new List<MessageDto>();
             bool preferJsonResponse = requestOptions != null && requestOptions.PreferJsonResponse;
+            int historyCount = history != null ? history.Count : 0;
+            int messageCapacity = historyCount + 1;
+            if (!string.IsNullOrWhiteSpace(systemPrompt))
+            {
+                messageCapacity++;
+            }
+
+            if (preferJsonResponse)
+            {
+                messageCapacity++;
+            }
+
+            var messages = new List<MessageDto>(messageCapacity);
             int effectiveMaxTokens =
                 requestOptions != null && requestOptions.MaxTokensOverride > 0
                 ? requestOptions.MaxTokensOverride
@@ -225,7 +237,11 @@ namespace Network_Game.Dialogue
             if (preferJsonResponse)
             {
                 messages.Add(
-                    new MessageDto { role = "system", content = BuildStructuredResponseInstruction() }
+                    new MessageDto
+                    {
+                        role = "system",
+                        content = BuildStructuredResponseInstruction(requestOptions),
+                    }
                 );
             }
 
@@ -645,12 +661,22 @@ namespace Network_Game.Dialogue
             };
         }
 
-        private static string BuildStructuredResponseInstruction()
+        private static string BuildStructuredResponseInstruction(
+            DialogueInferenceRequestOptions requestOptions
+        )
         {
+            if (
+                requestOptions != null
+                && !string.IsNullOrWhiteSpace(requestOptions.StructuredResponseInstruction)
+            )
+            {
+                return requestOptions.StructuredResponseInstruction.Trim();
+            }
+
             return
                 "For this request, respond with a valid JSON object only. "
                 + "Use exactly one key named \"responseText\". "
-                + "The responseText value must contain one short in-character sentence followed by exactly one [EFFECT: ...] tag. "
+                + "The responseText value must contain only the final user-facing response, following the exact tag instructions already present in the prompt. "
                 + "No analysis. No extra keys.";
         }
 

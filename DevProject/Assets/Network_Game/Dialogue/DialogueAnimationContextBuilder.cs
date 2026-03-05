@@ -99,6 +99,8 @@ namespace Network_Game.Dialogue
                 // If tag stripping fails, still use the raw response as context.
             }
 
+            stripped = DialogueAnimationDecisionPolicy.StripAnimationTags(stripped);
+
             stripped = stripped.Trim();
             m_LastUpdateTime = Time.time;
             m_LastResponsePreview = BuildPreview(stripped);

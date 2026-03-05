@@ -304,6 +304,38 @@ namespace Network_Game.Dialogue
 
             TryAppendCatalogPowers(sb);
 
+            string animationGuide = BuildAnimationControlGuide();
+            if (!string.IsNullOrWhiteSpace(animationGuide))
+            {
+                if (sb.Length > 0)
+                    sb.AppendLine();
+                sb.AppendLine(animationGuide.Trim());
+            }
+
+            return sb.ToString().Trim();
+        }
+
+        private string BuildAnimationControlGuide()
+        {
+            if (
+                GetComponent<NpcDialogueAnimationController>() == null
+                && GetComponent<NpcDialogueAnimationAutoResponder>() == null
+            )
+            {
+                return string.Empty;
+            }
+
+            var sb = new StringBuilder(256);
+            sb.AppendLine("[Animations] For body language on yourself, use an animation tag instead of an effect.");
+            sb.AppendLine("Decision rule: if the user asks you to animate, gesture, pose, turn, react, or play a clip on yourself, use [ANIM:] and do NOT use [EFFECT:].");
+            sb.AppendLine("Use [EFFECT:] only for powers, particles, projectiles, explosions, or world/player-facing visuals.");
+            sb.AppendLine("Use at most ONE structured tag at the end: either [EFFECT: ...] OR [ANIM: ...].");
+            sb.AppendLine("Do not use [ANIM:] for the player or world. [ANIM:] is for your own model only.");
+            sb.AppendLine("Format: [ANIM: EmphasisReact | Target: Self]");
+            sb.AppendLine("Examples:");
+            sb.AppendLine("  [ANIM: EmphasisReact | Target: Self] for a heavy blow, hit reaction, or forceful emphasis.");
+            sb.AppendLine("  [ANIM: IdleVariant | Target: Self] for a calm flourish or friendly idle shift.");
+            sb.AppendLine("  [ANIM: TurnLeft | Target: Self] or [ANIM: TurnRight | Target: Self] for curious/questioning looks.");
             return sb.ToString().Trim();
         }
 

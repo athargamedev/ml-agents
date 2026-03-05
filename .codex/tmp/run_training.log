@@ -53,3 +53,50 @@
 [20:21:51] [Trainer] Launch: C:\Users\andre_wjgj23f\miniconda3\envs\mlagents\python.exe -m mlagents.trainers.learn D:\GithubRepos\ml-agents\config\ppo\NpcDialogue.yaml --run-id npc_dialogue_20260302_175342 --results-dir D:\GithubRepos\ml-agents\results --torch-device cuda --time-scale 1 --resume
 [20:22:58] [Trainer] mlagents-learn exited with code 1 after 67s.
 [20:22:58] [Trainer] Reached restart limit (10). Exiting.
+[09:17:07] [Trainer] Cleaning up port 5004…
+[09:17:07] [Trainer] Port 5004 is free.
+[09:17:07] [Trainer] Skipping Unity readiness HTTP poll (disabled by default; pass --unity-check to enable it).
+[09:17:07] [Trainer] Explicit run_id 'npc_dialogue_20260304_091701' (fresh start unless --resume passed).
+[09:17:07] [Trainer] Launch: C:\Users\andre_wjgj23f\miniconda3\envs\mlagents\python.exe -m mlagents.trainers.learn D:\GithubRepos\ml-agents\config\ppo\NpcDialogue.yaml --run-id npc_dialogue_20260304_091701 --results-dir D:\GithubRepos\ml-agents\results --torch-device cuda --time-scale 1
+[09:17:29] [Trainer] mlagents-learn exited with code 1 after 22s.
+[09:17:29] [Trainer] Unexpected exit (code=1). Restart 1/10 in 5s…
+[09:17:29] [Trainer] Port 5004 is free.
+[09:17:34] [Trainer] Launch: C:\Users\andre_wjgj23f\miniconda3\envs\mlagents\python.exe -m mlagents.trainers.learn D:\GithubRepos\ml-agents\config\ppo\NpcDialogue.yaml --run-id npc_dialogue_20260304_091701 --results-dir D:\GithubRepos\ml-agents\results --torch-device cuda --time-scale 1 --resume
+[09:17:49] [Trainer] mlagents-learn exited with code 1 after 16s.
+[09:17:49] [Trainer] Unexpected exit (code=1). Restart 2/10 in 5s…
+[09:17:49] [Trainer] Port 5004 is free.
+[09:17:54] [Trainer] Launch: C:\Users\andre_wjgj23f\miniconda3\envs\mlagents\python.exe -m mlagents.trainers.learn D:\GithubRepos\ml-agents\config\ppo\NpcDialogue.yaml --run-id npc_dialogue_20260304_091701 --results-dir D:\GithubRepos\ml-agents\results --torch-device cuda --time-scale 1 --resume
+[09:19:00] [Trainer] mlagents-learn exited with code 1 after 66s.
+[09:19:00] [Trainer] Unexpected exit (code=1). Restart 3/10 in 5s…
+[09:19:00] [Trainer] Port 5004 is free.
+[09:19:05] [Trainer] Launch: C:\Users\andre_wjgj23f\miniconda3\envs\mlagents\python.exe -m mlagents.trainers.learn D:\GithubRepos\ml-agents\config\ppo\NpcDialogue.yaml --run-id npc_dialogue_20260304_091701 --results-dir D:\GithubRepos\ml-agents\results --torch-device cuda --time-scale 1 --resume
+[09:20:12] [Trainer] mlagents-learn exited with code 1 after 67s.
+[09:20:12] [Trainer] Unexpected exit (code=1). Restart 4/10 in 5s…
+[09:20:12] [Trainer] Port 5004 is free.
+[09:20:17] [Trainer] Launch: C:\Users\andre_wjgj23f\miniconda3\envs\mlagents\python.exe -m mlagents.trainers.learn D:\GithubRepos\ml-agents\config\ppo\NpcDialogue.yaml --run-id npc_dialogue_20260304_091701 --results-dir D:\GithubRepos\ml-agents\results --torch-device cuda --time-scale 1 --resume
+[09:21:24] [Trainer] mlagents-learn exited with code 1 after 66s.
+[09:21:24] [Trainer] Unexpected exit (code=1). Restart 5/10 in 5s…
+[09:21:24] [Trainer] Port 5004 is free.
+[09:21:29] [Trainer] Launch: C:\Users\andre_wjgj23f\miniconda3\envs\mlagents\python.exe -m mlagents.trainers.learn D:\GithubRepos\ml-agents\config\ppo\NpcDialogue.yaml --run-id npc_dialogue_20260304_091701 --results-dir D:\GithubRepos\ml-agents\results --torch-device cuda --time-scale 1 --resume
+[09:22:35] [Trainer] mlagents-learn exited with code 1 after 66s.
+[09:22:35] [Trainer] Unexpected exit (code=1). Restart 6/10 in 5s…
+[09:22:35] [Trainer] Port 5004 is free.
+[09:22:40] [Trainer] Launch: C:\Users\andre_wjgj23f\miniconda3\envs\mlagents\python.exe -m mlagents.trainers.learn D:\GithubRepos\ml-agents\config\ppo\NpcDialogue.yaml --run-id npc_dialogue_20260304_091701 --results-dir D:\GithubRepos\ml-agents\results --torch-device cuda --time-scale 1 --resume
+[09:23:47] [Trainer] mlagents-learn exited with code 1 after 67s.
+[09:23:47] [Trainer] Unexpected exit (code=1). Restart 7/10 in 5s…
+[09:23:47] [Trainer] Port 5004 is free.
+[09:23:52] [Trainer] Launch: C:\Users\andre_wjgj23f\miniconda3\envs\mlagents\python.exe -m mlagents.trainers.learn D:\GithubRepos\ml-agents\config\ppo\NpcDialogue.yaml --run-id npc_dialogue_20260304_091701 --results-dir D:\GithubRepos\ml-agents\results --torch-device cuda --time-scale 1 --resume
+[09:24:59] [Trainer] mlagents-learn exited with code 1 after 66s.
+[09:24:59] [Trainer] Unexpected exit (code=1). Restart 8/10 in 5s…
+[09:24:59] [Trainer] Port 5004 is free.
+[09:25:04] [Trainer] Launch: C:\Users\andre_wjgj23f\miniconda3\envs\mlagents\python.exe -m mlagents.trainers.learn D:\GithubRepos\ml-agents\config\ppo\NpcDialogue.yaml --run-id npc_dialogue_20260304_091701 --results-dir D:\GithubRepos\ml-agents\results --torch-device cuda --time-scale 1 --resume
+[09:26:10] [Trainer] mlagents-learn exited with code 1 after 67s.
+[09:26:10] [Trainer] Unexpected exit (code=1). Restart 9/10 in 5s…
+[09:26:10] [Trainer] Port 5004 is free.
+[09:26:15] [Trainer] Launch: C:\Users\andre_wjgj23f\miniconda3\envs\mlagents\python.exe -m mlagents.trainers.learn D:\GithubRepos\ml-agents\config\ppo\NpcDialogue.yaml --run-id npc_dialogue_20260304_091701 --results-dir D:\GithubRepos\ml-agents\results --torch-device cuda --time-scale 1 --resume
+[09:27:23] [Trainer] mlagents-learn exited with code 1 after 68s.
+[09:27:23] [Trainer] Unexpected exit (code=1). Restart 10/10 in 5s…
+[09:27:23] [Trainer] Port 5004 is free.
+[09:27:28] [Trainer] Launch: C:\Users\andre_wjgj23f\miniconda3\envs\mlagents\python.exe -m mlagents.trainers.learn D:\GithubRepos\ml-agents\config\ppo\NpcDialogue.yaml --run-id npc_dialogue_20260304_091701 --results-dir D:\GithubRepos\ml-agents\results --torch-device cuda --time-scale 1 --resume
+[09:28:37] [Trainer] mlagents-learn exited with code 1 after 68s.
+[09:28:37] [Trainer] Reached restart limit (10). Exiting.

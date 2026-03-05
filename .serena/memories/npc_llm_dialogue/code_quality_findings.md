@@ -1,7 +1,7 @@
 # Code Quality Findings — LLM Scan Results
 
 Source: `python dev_tools/run_dev_tools.py scan`
-Last full scan: 2026-02-28 (1 file piloted, 44 files total available)
+Last full scan: 2026-03-03 — 42 files, context injection active (14 packages), High=12, Med=21, Low=5
 
 ---
 
@@ -73,6 +73,56 @@ Quick reference for what the scanner looks for:
 | UP002 | FindObjectOfType in hot path | high | unity |
 | UP003 | String allocation in Update | low | unity |
 | UP004 | Missing [SerializeField] on Inspector-assigned private | low | unity |
+
+---
+
+---
+
+## 2026-03-03 Scan Findings (first scan with 14-package context injection)
+
+### HIGH: NetworkObject access before OnNetworkSpawn — multiple files
+**Category**: multiplayer_safety | Files: `DialogueClientUI.cs`, `DialogueParticleCollisionDamage.cs`, `EffectTargetResolverService.cs`, `CombatHealth.cs`, `DialogueEffectProjectile.cs`
+The pattern: `GetComponent<NetworkObject>()` or `NetworkVariable.Value` written/read in `Awake()` before `OnNetworkSpawn()` is called. Confirmed TPs across 5 files.
+```csharp
+// WRONG — Awake fires before network spawn
+void Awake() { m_CachedNetworkObject = GetComponent<NetworkObject>(); }
+// RIGHT
+public override void OnNetworkSpawn() { m_CachedNetworkObject = GetComponent<NetworkObject>(); }
+```
+**Note**: OnNetworkSpawn guard is ONLY required for `NetworkVariable` and `NetworkObject` accesses. Do NOT guard plain `[SerializeField]` MonoBehaviour/Transform/Cinemachine references — they don't need it (scanner FP guard added).
+
+### HIGH: Hardcoded effect tag strings in EffectIntent.cs
+**Category**: npc_dialogue | Pattern: [NPC001]
+Effect tag names referenced as string literals instead of via `DialogueConstants.*`.
+Fix: replace all hardcoded tag strings with constants from `DialogueConstants`.
+
+### HIGH (overnight): DialogueAnimationContextBuilder.cs — new animation training file
+**Category**: ml_agents — **FIRST ANIMATION TRAINING FILE detected 2026-03-03**
+- `IsFresh` and `IsSpeaking` flags fed as observations without explicit `/ constant` normalization — may produce values outside [0,1] and destabilize PPO
+- Reward calculation lacks `Mathf.Clamp` — spike risk confirmed
+- NetworkObject access before `OnEnable()` / `OnNetworkSpawn()`
+Fix: normalize flags with `isFresh ? 1f : 0f` (already binary, safe), clamp rewards via `AddRewardComponent()`.
+
+### MEDIUM: Normalize speed in DialogueEffectProjectile.cs
+**Category**: ml_agents
+Speed value is clamped but not divided by a fixed denominator before being stored as an observation. Unnormalized speed in observation space destabilizes reward shaping.
+```csharp
+// WRONG
+m_Speed = Mathf.Max(0.1f, speed);
+// RIGHT — normalize against a known max speed constant
+m_Speed = Mathf.Clamp01(speed / k_MaxSpeed);
+```
+
+### MEDIUM: StringComparer.Ordinal on Animator parameter dictionaries — CombatHealth.cs
+**Category**: unity_best_practices
+Animator parameter names can differ in casing across platforms. `StringComparer.Ordinal` on these dicts can cause missed lookups. Switch to `StringComparer.OrdinalIgnoreCase`.
+
+### Scanner workflow improvements (2026-03-03)
+- `docs_scanner.py` now documents all **14** manifest-present packages (was 4 — assembly filter bug fixed)
+- `verify` now runs **31 checks** including package context health
+- New FP guard in `unity_code_review.txt`: non-NetworkObject SerializeFields don't need OnNetworkSpawn guard
+- Prompt guard eliminated the old `m_PlayerTransform` and `Mathf.Max` FPs from High severity
+- Baseline comparison: H=17 (pre-context) → H=12 (post-context, −29%)
 
 ---
 

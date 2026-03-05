@@ -46,12 +46,12 @@ namespace Network_Game.Dialogue
 
         private void OnEnable()
         {
-            NetworkDialogueService.OnDialogueResponse += HandleDialogueResponse;
+            NetworkDialogueService.OnRawDialogueResponse += HandleDialogueResponse;
         }
 
         private void OnDisable()
         {
-            NetworkDialogueService.OnDialogueResponse -= HandleDialogueResponse;
+            NetworkDialogueService.OnRawDialogueResponse -= HandleDialogueResponse;
         }
 
         private void HandleDialogueResponse(NetworkDialogueService.DialogueResponse response)
@@ -72,7 +72,9 @@ namespace Network_Game.Dialogue
                 return;
             }
 
-            if (m_TargetNpc != null && m_TargetNpc.IsSpawned && !m_TargetNpc.IsServer)
+            if (m_TargetNpc != null && m_TargetNpc.IsSpawned
+                && NetworkManager.Singleton != null
+                && !NetworkManager.Singleton.IsServer)
             {
                 return;
             }
@@ -82,8 +84,71 @@ namespace Network_Game.Dialogue
                 return;
             }
 
+            bool prefersAnimationOnly = DialogueAnimationDecisionPolicy.IsLikelyAnimationIntentPrompt(
+                response.Request.Prompt
+            );
+            bool containsEffectTag = DialogueAnimationDecisionPolicy.ContainsEffectTag(
+                response.ResponseText
+            );
+
+            if (DialogueAnimationDecisionPolicy.TryParseFirstAnimationTag(
+                response.ResponseText,
+                out var animationIntent))
+            {
+                if (!animationIntent.TargetsSelf)
+                {
+                    if (m_LogDebug)
+                    {
+                        NGLog.Debug(
+                            "DialogueAnim",
+                            NGLog.Format(
+                                "Skipped explicit animation tag because target is not Self",
+                                ("npc", gameObject.name),
+                                ("target", animationIntent.Target)
+                            )
+                        );
+                    }
+
+                    return;
+                }
+
+                if (TryPlayAction(animationIntent.Action, m_ContextBuilder != null
+                    ? m_ContextBuilder.LastResponsePreview
+                    : string.Empty))
+                {
+                    return;
+                }
+            }
+
+            if (prefersAnimationOnly && containsEffectTag)
+            {
+                if (
+                    TryPlayAction(
+                        DialogueAnimationAction.EmphasisReact,
+                        m_ContextBuilder != null
+                        ? m_ContextBuilder.LastResponsePreview
+                        : string.Empty
+                    )
+                )
+                {
+                    if (m_LogDebug)
+                    {
+                        NGLog.Debug(
+                            "DialogueAnim",
+                            NGLog.Format(
+                                "Converted effect-like self-animation reply into EmphasisReact fallback",
+                                ("npc", gameObject.name)
+                            )
+                        );
+                    }
+
+                    return;
+                }
+            }
+
             if (m_SuppressWhenEffectTagPresent
-                && DialogueAnimationDecisionPolicy.ContainsEffectTag(response.ResponseText))
+                && !prefersAnimationOnly
+                && containsEffectTag)
             {
                 if (m_LogDebug)
                 {
@@ -97,6 +162,19 @@ namespace Network_Game.Dialogue
                 }
 
                 return;
+            }
+
+            if (m_LogDebug
+                && prefersAnimationOnly
+                && containsEffectTag)
+            {
+                NGLog.Debug(
+                    "DialogueAnim",
+                    NGLog.Format(
+                        "Ignoring effect tag because the user prompt requested self-animation",
+                        ("npc", gameObject.name)
+                    )
+                );
             }
 
             if (m_ContextBuilder == null || m_AnimationController == null)
@@ -114,6 +192,16 @@ namespace Network_Game.Dialogue
                 return;
             }
 
+            TryPlayAction(action, m_ContextBuilder.LastResponsePreview);
+        }
+
+        private bool TryPlayAction(DialogueAnimationAction action, string preview)
+        {
+            if (m_AnimationController == null)
+            {
+                return false;
+            }
+
             if (m_AnimationController.TryPlayAction(action, out string reason))
             {
                 m_LastAutoAction = action;
@@ -126,12 +214,15 @@ namespace Network_Game.Dialogue
                             "Auto-triggered dialogue animation",
                             ("npc", gameObject.name),
                             ("action", action.ToString()),
-                            ("preview", m_ContextBuilder.LastResponsePreview)
+                            ("preview", preview)
                         )
                     );
                 }
+
+                return true;
             }
-            else if (m_LogDebug && !string.Equals(reason, "cooldown", System.StringComparison.Ordinal))
+
+            if (m_LogDebug && !string.Equals(reason, "cooldown", System.StringComparison.Ordinal))
             {
                 NGLog.Debug(
                     "DialogueAnim",
@@ -143,6 +234,8 @@ namespace Network_Game.Dialogue
                     )
                 );
             }
+
+            return false;
         }
 
         private void ResolveReferences()
@@ -161,7 +254,6 @@ namespace Network_Game.Dialogue
             {
                 m_AnimationController = GetComponent<NpcDialogueAnimationController>();
             }
-
         }
 
         private bool MatchesSpeaker(ulong speakerNetworkId)

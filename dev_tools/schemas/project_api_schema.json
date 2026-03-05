@@ -1,100 +1,12 @@
 {
-  "NpcDialogueAgent": {
-    "class": "NpcDialogueAgent",
-    "namespace": "",
-    "base_class": "Agent",
-    "serialized_fields": [
-      {
-        "name": "m_PlayerTransform",
-        "type": "Transform",
-        "visibility": "private"
-      },
-      {
-        "name": "m_GameState",
-        "type": "GameStateProvider",
-        "visibility": "private"
-      }
-    ],
-    "public_methods": [
-      {
-        "name": "Initialize",
-        "return_type": "void",
-        "params": "",
-        "is_override": false
-      },
-      {
-        "name": "OnEpisodeBegin",
-        "return_type": "void",
-        "params": "",
-        "is_override": false
-      },
-      {
-        "name": "CollectObservations",
-        "return_type": "void",
-        "params": "VectorSensor sensor",
-        "is_override": false
-      },
-      {
-        "name": "OnActionReceived",
-        "return_type": "void",
-        "params": "ActionBuffers actions",
-        "is_override": false
-      },
-      {
-        "name": "WriteDiscreteActionMask",
-        "return_type": "void",
-        "params": "IDiscreteActionMask actionMask",
-        "is_override": false
-      },
-      {
-        "name": "Heuristic",
-        "return_type": "void",
-        "params": "in ActionBuffers actionsOut",
-        "is_override": false
-      },
-      {
-        "name": "OnDialogueTurnComplete",
-        "return_type": "void",
-        "params": "bool playerReplied",
-        "is_override": false
-      }
-    ],
-    "events": [],
-    "enums": [
-      "ConversationPhase",
-      "DialogueRoutingMode"
-    ],
-    "observation_layout": [
-      "proximity of player to nearest active NPC  (0=far, 1=right next to it)",
-      "player health normalised                   (0–1)",
-      "player in combat                           (0 or 1)",
-      "current conversation turn count / 10       (soft-normalised)",
-      "time in episode / 60                       (soft-normalised, max 1)",
-      "conversation phase                         (0=idle, 0.33=initiated, 0.67=responded, 1=resolved)",
-      "active effect state                        (1=effect just fired, decays exponentially to 0)"
-    ],
-    "action_layout": {
-      "type": "discrete",
-      "branches": 1,
-      "branch_0_size": 3,
-      "action_meanings": {
-        "0": "idle",
-        "1": "engage/continue",
-        "2": "end conversation"
-      }
-    },
-    "notes": [
-      "Space Size: 7"
-    ]
-  },
   "NetworkDialogueService": {
     "class": "NetworkDialogueService",
     "namespace": "Network_Game.Dialogue",
     "base_class": "NetworkBehaviour",
     "serialized_fields": [
       {
-        "name": "m_LlmAgent",
-        "type": "LLMAgent",
+        "name": "m_DialogueBackendConfig",
+        "type": "DialogueBackendConfig",
         "visibility": "private"
       },
       {
@@ -228,6 +140,11 @@
     "events": [
       {
         "name": "OnDialogueResponse",
+        "delegate": "Action<DialogueResponse>",
+        "visibility": "public"
+      },
+      {
+        "name": "OnRawDialogueResponse",
         "delegate": "Action<DialogueResponse>",
         "visibility": "public"
       },

@@ -1,5 +1,6 @@
 using Network_Game.Auth;
 using Network_Game.UI;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -18,6 +19,7 @@ namespace Network_Game.UI.Login
 
         private void OnEnable()
         {
+            LocalPlayerAuthService authService = LocalPlayerAuthService.EnsureInstance();
             m_Root = GetComponent<UIDocument>().rootVisualElement;
             m_NameInput = m_Root.Q<TextField>("name-input");
             m_BioInput = m_Root.Q<TextField>("bio-input");
@@ -30,14 +32,14 @@ namespace Network_Game.UI.Login
             LocalPlayerAuthService.OnPlayerLoggedIn += HandleLoginSuccess;
 
             // Load last used name
-            if (LocalPlayerAuthService.Instance != null)
+            if (authService != null && m_NameInput != null)
             {
-                m_NameInput.value = LocalPlayerAuthService.Instance.LastLoginNameId;
+                m_NameInput.value = authService.LastLoginNameId;
             }
 
             bool hasCurrentPlayer =
-                LocalPlayerAuthService.Instance != null
-                && LocalPlayerAuthService.Instance.HasCurrentPlayer;
+                authService != null
+                && authService.HasCurrentPlayer;
             SetLoginVisible(!hasCurrentPlayer);
 
             if (hasCurrentPlayer)
@@ -134,22 +136,41 @@ namespace Network_Game.UI.Login
 
         private void OnLoginClicked()
         {
-            string nameId = m_NameInput.value?.Trim();
-            if (string.IsNullOrEmpty(nameId))
+            LocalPlayerAuthService authService = LocalPlayerAuthService.EnsureInstance();
+            if (authService == null)
             {
-                m_StatusLabel.text = "ERROR: NAME_ID CANNOT BE EMPTY";
-                m_StatusLabel.style.color = new StyleColor(Color.red);
+                if (m_StatusLabel != null)
+                {
+                    m_StatusLabel.text = "LOGIN SERVICE UNAVAILABLE";
+                    m_StatusLabel.style.color = new StyleColor(Color.red);
+                }
                 return;
             }
 
-            m_StatusLabel.text = "LOGGING IN...";
-            m_StatusLabel.style.color = new StyleColor(new Color(1f, 0.84f, 0.54f)); // System warning color
+            string nameId = m_NameInput != null ? m_NameInput.value?.Trim() : string.Empty;
+            if (string.IsNullOrEmpty(nameId))
+            {
+                if (m_StatusLabel != null)
+                {
+                    m_StatusLabel.text = "ERROR: NAME_ID CANNOT BE EMPTY";
+                    m_StatusLabel.style.color = new StyleColor(Color.red);
+                }
+                return;
+            }
+
+            if (m_StatusLabel != null)
+            {
+                m_StatusLabel.text = "LOGGING IN...";
+                m_StatusLabel.style.color = new StyleColor(new Color(1f, 0.84f, 0.54f)); // System warning color
+            }
 
             // First, login to local service
-            if (LocalPlayerAuthService.Instance.Login(nameId))
+            if (authService.Login(nameId))
             {
+                AttachCurrentLocalPlayer(authService);
+
                 // If bio is provided, set it as customization JSON
-                string bioText = m_BioInput.value?.Trim();
+                string bioText = m_BioInput != null ? m_BioInput.value?.Trim() : string.Empty;
                 if (!string.IsNullOrEmpty(bioText))
                 {
                     // Basic JSON check or just wrap it if it's not JSON
@@ -157,13 +178,16 @@ namespace Network_Game.UI.Login
                     {
                         bioText = "{\"bio\": \"" + bioText.Replace("\"", "\\\"") + "\"}";
                     }
-                    LocalPlayerAuthService.Instance.SetCustomizationJson(bioText);
+                    authService.SetCustomizationJson(bioText);
                 }
             }
             else
             {
-                m_StatusLabel.text = "LOGIN FAILED";
-                m_StatusLabel.style.color = new StyleColor(Color.red);
+                if (m_StatusLabel != null)
+                {
+                    m_StatusLabel.text = "LOGIN FAILED";
+                    m_StatusLabel.style.color = new StyleColor(Color.red);
+                }
             }
         }
 
@@ -196,6 +220,35 @@ namespace Network_Game.UI.Login
                     m_Root.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
                 }
             }
+        }
+
+        private static void AttachCurrentLocalPlayer(LocalPlayerAuthService authService)
+        {
+            if (authService == null)
+            {
+                return;
+            }
+
+            GameObject localPlayer = null;
+            NetworkManager manager = NetworkManager.Singleton;
+            if (manager != null && manager.LocalClient != null && manager.LocalClient.PlayerObject != null)
+            {
+                localPlayer = manager.LocalClient.PlayerObject.gameObject;
+            }
+
+            if (localPlayer == null)
+            {
+                try
+                {
+                    localPlayer = GameObject.FindGameObjectWithTag("Player");
+                }
+                catch (UnityException)
+                {
+                    // Tag is optional in some scenes.
+                }
+            }
+
+            authService.AttachLocalPlayer(localPlayer);
         }
     }
 }

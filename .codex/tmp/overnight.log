@@ -1,181 +1,500 @@
-[06:00:22] Overnight log reset â€” all previous runs used old module with wrong memory path
-[06:00:32] Watch mode: running full pipeline every 120 minutes. Ctrl+C to stop.
-[06:00:32] --- Watch run #1 ---
-[06:00:32] === Phase 1/3: Schema extraction + Assembly map (no LM Studio needed) ===
-[Schema] Extracting: NpcDialogueAgent from NpcDialogueAgent.cs... OK (2 fields, 7 methods)
+[04:40:33] Watch mode: running full pipeline every 120 minutes. Ctrl+C to stop.
+[04:40:33] --- Watch run #1 ---
+[04:40:33] === Phase 1/3: Schema extraction + Assembly map (no LM Studio needed) ===
+[Schema] Extracting: NpcDialogueAgent from NpcDialogueAgent.cs... SKIPPED (file not found: D:\GithubRepos\ml-agents\DevProject\Assets\ML-Agents\Scripts\NpcDialogueAgent.cs)
 [Schema] Extracting: NetworkDialogueService from NetworkDialogueService.cs... OK (2 fields, 20 methods)
 [Schema] Extracting: EffectDefinition from EffectDefinition.cs... OK (28 fields, 0 methods)
 [Schema] Extracting: EffectCatalog from EffectCatalog.cs... OK (4 fields, 7 methods)
 [Schema] Extracting: NpcDialogueProfile from NpcDialogueProfile.cs... OK (0 fields, 7 methods)
 
-[Schema] Extracted 5 class schemas -> D:\GithubRepos\ml-agents\dev_tools\schemas\project_api_schema.json
+[Schema] Extracted 4 class schemas -> D:\GithubRepos\ml-agents\dev_tools\schemas\project_api_schema.json
+[Schema] Skipped (not found): NpcDialogueAgent
 [AsmDef] Scanning .asmdef files in Assets/ and Packages/...
 [AsmDef] WARNING: could not parse D:\GithubRepos\ml-agents\DevProject\Packages\com.unity.multiplayer.tools\NetworkSimulator\Runtime\Unity.Multiplayer.Tools.NetworkSimulator.Runtime.asmdef: Unexpected UTF-8 BOM (decode using utf-8-sig): line 1 column 1 (char 0)
-[AsmDef] Project assemblies: 17, Package assemblies: 50
+[AsmDef] Project assemblies: 15, Package assemblies: 50
 [AsmDef] Written -> D:\GithubRepos\ml-agents\dev_tools\schemas\assembly_map.json
-
-[AsmDef] Project assembly dependency graph (17 assemblies):
-  MCPForUnityTests.EditMode [EDITOR, TEST, no-autoref]
-    -> (project)  Network_Game.Editor, TestAsmdef
-    -> (builtin)  MCPForUnity.Editor, MCPForUnity.Runtime, UnityEngine.TestRunner, UnityEditor.TestRunner
-  MCPForUnityTests.PlayMode [TEST, no-autoref]
-    -> (builtin)  UnityEngine.TestRunner, UnityEditor.TestRunner
-  Network_Game
-    -> (project)  undream.llmunity.Runtime
-    -> (package)  Unity.Netcode.Runtime, Unity.Networking.Transport, Unity.Cinemachine
-    -> (builtin)  Unity.AI.Navigation, Unity.InputSystem, Unity.TextMeshPro, UnityEngine.UI, Unity.Addressables, Unity.ResourceManager
-    <- (used by)  Network_Game.Dialogue.Editor, Network_Game.Editor, Network_Game.ParticlePack.Ramps.Editor, NpcDialogue.Tests.Runtime
-  Network_Game.Dialogue.Editor [EDITOR]
-    -> (project)  Network_Game, undream.llmunity.Runtime
-    -> (package)  Unity.Netcode.Runtime
-    -> (builtin)  MCPForUnity.Editor
-  Network_Game.Editor [EDITOR]
-    -> (project)  Network_Game
-    -> (package)  Unity.Netcode.Runtime
-    -> (builtin)  Unity.RenderPipelines.Core.Runtime, Unity.RenderPipelines.Universal.Runtime, MCPForUnity.Editor
-    <- (used by)  MCPForUnityTests.EditMode
-  Network_Game.ParticlePack.Ramps.Editor [EDITOR]
-    -> (project)  Network_Game
-  NpcDialogue.Tests.Editor [EDITOR, TEST, no-autoref]
-    -> (builtin)  Unity.ML-Agents, UnityEngine.TestRunner, UnityEditor.TestRunner
-  NpcDialogue.Tests.Runtime [TEST, no-autoref]
-    -> (project)  Network_Game
-    -> (builtin)  Unity.ML-Agents, UnityEngine.TestRunner, UnityEditor.TestRunner
-  TestAsmdef [no-autoref]
-    <- (used by)  MCPForUnityTests.EditMode
-  Unity.ML-Agents.DevTests.Editor [EDITOR, TEST, no-autoref]
-    -> (builtin)  Unity.ML-Agents.Editor, Unity.ML-Agents, Unity.InferenceEngine, Unity.ML-Agents.CommunicatorObjects, Unity.PerformanceTesting, UnityEngine.TestRunner, UnityEditor.TestRunner
-  Unity.ML-Agents.DevTests.Runtime [TEST, no-autoref]
-    -> (builtin)  Unity.ML-Agents, UnityEngine.TestRunner, UnityEditor.TestRunner
-  Unity.ProBuilder.Examples
-    -> (builtin)  Unity.ProBuilder, Unity.ugui
-  Unity.ProBuilder.Examples.Editor [EDITOR]
-    -> (builtin)  Unity.ProBuilder.Editor, Unity.ProBuilder
-  VFXGraph.OutputEventHandlers
-    -> (package)  Unity.Cinemachine
-    -> (builtin)  Unity.VisualEffectGraph.Runtime, Unity.RenderPipelines.Core.Runtime
-    <- (used by)  VFXGraph.OutputEventHandlers.Editor
-  VFXGraph.OutputEventHandlers.Editor [EDITOR]
-    -> (project)  VFXGraph.OutputEventHandlers
-    -> (package)  Unity.Cinemachine
-    -> (builtin)  Unity.VisualEffectGraph.Runtime
-  undream.llmunity.Editor [EDITOR]
-    -> (project)  undream.llmunity.Runtime
-  undream.llmunity.Runtime
-    -> (builtin)  UnityEngine.UI, Unity.InputSystem
-    <- (used by)  Network_Game, Network_Game.Dialogue.Editor, undream.llmunity.Editor
-
-[AsmDef] Packages assembly dependency graph (50 assemblies):
-  Unity.Cinemachine  refs=[Unity.Timeline, Unity.Postprocessing.Runtime, Unity.RenderPipelines.Core.Runtime...]  used-by=[Network_Game, Unity.Cinemachine.Editor...]
-  Unity.Cinemachine.Editor [EDITOR]  refs=[Unity.Timeline, Unity.Timeline.Editor, Unity.Postprocessing.Runtime...]
-  Unity.Multiplayer.Tools.Adapters  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.NetStats]  used-by=[Unity.Multiplayer.Tools.Adapters.MockNgo, Unity.Multiplayer.Tools.Adapters.Ngo1...]
-  Unity.Multiplayer.Tools.Adapters.MockNgo  refs=[Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.Common]
-  Unity.Multiplayer.Tools.Adapters.Ngo1 [no-autoref]  refs=[com.unity.netcode.runtime, Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.Common...]  used-by=[Unity.Multiplayer.Tools.Adapters.Tests.Editor]
-  Unity.Multiplayer.Tools.Adapters.Ngo1WithUtp2 [no-autoref]  refs=[Unity.Multiplayer.Tools.Adapters, Unity.Networking.Transport, Unity.Netcode.Runtime...]  used-by=[Unity.Multiplayer.Tools.Adapters.Tests.Editor]
-  Unity.Multiplayer.Tools.Adapters.Tests.Editor [TEST, no-autoref]  refs=[Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.Adapters.Ngo1, Unity.Multiplayer.Tools.Adapters.Utp2...]
-  Unity.Multiplayer.Tools.Adapters.Utp2 [no-autoref]  refs=[Unity.Multiplayer.Tools.Adapters, Unity.Networking.Transport]  used-by=[Unity.Multiplayer.Tools.Adapters.Ngo1WithUtp2, Unity.Multiplayer.Tools.Adapters.Tests.Editor...]
-  Unity.Multiplayer.Tools.Common  used-by=[Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.Adapters.MockNgo...]
-  Unity.Multiplayer.Tools.Common.Tests.Editor [EDITOR, TEST, no-autoref]  refs=[UnityEngine.TestRunner, UnityEditor.TestRunner, Unity.Multiplayer.Tools.Common]
-  Unity.Multiplayer.Tools.DependencyInjection [EDITOR]  used-by=[Unity.Multiplayer.Tools.DependencyInjection.UIElements, Unity.Multiplayer.Tools.NetVis.Editor.UI]
-  Unity.Multiplayer.Tools.DependencyInjection.UIElements [EDITOR]  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.Editor, Unity.Multiplayer.Tools.DependencyInjection]  used-by=[Unity.Multiplayer.Tools.NetVis.Editor.UI]
-  Unity.Multiplayer.Tools.Editor [EDITOR]  refs=[Unity.Multiplayer.Tools.Common]  used-by=[Unity.Multiplayer.Tools.DependencyInjection.UIElements, Unity.Multiplayer.Tools.NetVis.Editor.UI]
-  Unity.Multiplayer.Tools.GameObjects.Tests [TEST, no-autoref]  refs=[Unity.Netcode.Runtime, Unity.Collections, Unity.Multiplayer.Tools.MetricTypes...]
-  Unity.Multiplayer.Tools.Initialization  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.NetVis.Configuration, Unity.Multiplayer.Tools.NetVis.Editor.UI...]
-  Unity.Multiplayer.Tools.MetricEvents  refs=[Unity.Collections, Unity.Multiplayer.Tools.MetricTypes, Unity.Multiplayer.Tools.NetStats]  used-by=[Unity.Multiplayer.Tools.Adapters.Ngo1, Unity.Multiplayer.Tools.MetricTestData...]
-  Unity.Multiplayer.Tools.MetricTestData  refs=[Unity.Collections, Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.MetricEvents...]  used-by=[Unity.Multiplayer.Tools.NetStatsMonitor.Implementation.Tests.Editor]
-  Unity.Multiplayer.Tools.MetricTypes  refs=[Unity.Collections, Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.NetStats]  used-by=[Unity.Multiplayer.Tools.Adapters.Ngo1, Unity.Multiplayer.Tools.GameObjects.Tests...]
-  Unity.Multiplayer.Tools.MetricTypes.Tests.Editor [EDITOR, TEST, no-autoref]  refs=[Unity.Multiplayer.Tools.MetricTypes, UnityEngine.TestRunner, UnityEditor.TestRunner...]
-  Unity.Multiplayer.Tools.MultiplayerToolsWindow.Tests.Editor [EDITOR, TEST]  refs=[com.unity.multiplayer.tools.window, UnityEngine.TestRunner, UnityEditor.TestRunner]
-  Unity.Multiplayer.Tools.NetStats  refs=[Unity.Collections, Unity.Multiplayer.Tools.Common]  used-by=[Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.Adapters.Ngo1...]
-  Unity.Multiplayer.Tools.NetStats.CodeGen [EDITOR, no-autoref]  refs=[Unity.Multiplayer.Tools.NetStats]
-  Unity.Multiplayer.Tools.NetStats.Tests.Editor [EDITOR, TEST, no-autoref]  refs=[Unity.Multiplayer.Tools.NetStats, Unity.Multiplayer.Tools.MetricTypes, UnityEngine.TestRunner...]  used-by=[Unity.Multiplayer.Tools.NetStatsMonitor.Implementation.Tests.Editor, Unity.Multiplayer.Tools.NetworkProfiler.Tests.Editor]
-  Unity.Multiplayer.Tools.NetStatsMonitor.Component  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.NetStats, Unity.Multiplayer.Tools.NetStatsMonitor.Configuration...]  used-by=[Unity.Multiplayer.Tools.NetStatsMonitor.Editor, Unity.Multiplayer.Tools.NetStatsMonitor.Implementation.Tests.Editor...]
-  Unity.Multiplayer.Tools.NetStatsMonitor.Configuration  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.MetricTypes, Unity.Multiplayer.Tools.NetStats]  used-by=[Unity.Multiplayer.Tools.NetStatsMonitor.Component, Unity.Multiplayer.Tools.NetStatsMonitor.Editor...]
-  Unity.Multiplayer.Tools.NetStatsMonitor.Editor [EDITOR]  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.NetStats, Unity.Multiplayer.Tools.NetStatsMonitor.Configuration...]
-  Unity.Multiplayer.Tools.NetStatsMonitor.Implementation  refs=[Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.MetricTypes...]  used-by=[Unity.Multiplayer.Tools.NetStatsMonitor.Component, Unity.Multiplayer.Tools.NetStatsMonitor.Implementation.Tests.Editor]
-  Unity.Multiplayer.Tools.NetStatsMonitor.Implementation.Tests.Editor [EDITOR, TEST, no-autoref]  refs=[UnityEngine.TestRunner, UnityEditor.TestRunner, Unity.Multiplayer.Tools.Adapters...]
-  Unity.Multiplayer.Tools.NetStatsMonitor.Interface.Tests.Editor [EDITOR, TEST, no-autoref]  refs=[UnityEngine.TestRunner, UnityEditor.TestRunner, Unity.Multiplayer.Tools.MetricTypes...]
-  Unity.Multiplayer.Tools.NetStatsReporting  refs=[Unity.Collections, Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.MetricTypes...]  used-by=[Unity.Netcode.Runtime]
-  Unity.Multiplayer.Tools.NetVis.Configuration  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.Adapters, Unity.Burst...]  used-by=[Unity.Multiplayer.Tools.Initialization, Unity.Multiplayer.Tools.NetVis.Editor.UI...]
-  Unity.Multiplayer.Tools.NetVis.Editor.UI [EDITOR]  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.Editor, Unity.Multiplayer.Tools.NetVis.Configuration...]  used-by=[Unity.Multiplayer.Tools.Initialization, Unity.Multiplayer.Tools.NetVis.Tests.Editor]
-  Unity.Multiplayer.Tools.NetVis.Editor.Visualization [EDITOR]  refs=[Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.NetStats...]  used-by=[Unity.Multiplayer.Tools.Initialization, Unity.Multiplayer.Tools.NetVis.Editor.UI]
-  Unity.Multiplayer.Tools.NetVis.Tests.Editor [EDITOR, TEST]  refs=[Unity.Multiplayer.Tools.NetVis.Configuration, Unity.Multiplayer.Tools.NetVis.Editor.UI, Unity.Multiplayer.Tools.Common...]
-  Unity.Multiplayer.Tools.NetworkProfiler.Editor [EDITOR]  refs=[Unity.Profiling.Core, Unity.Multiplayer.Tools.Common, Unity.Multiplayer.Tools.NetworkProfiler.Runtime...]  used-by=[Unity.Multiplayer.Tools.NetworkProfiler.Tests.Editor]
-  Unity.Multiplayer.Tools.NetworkProfiler.Runtime  refs=[Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.MetricTypes, Unity.Multiplayer.Tools.NetStats...]  used-by=[Unity.Multiplayer.Tools.NetworkProfiler.Editor, Unity.Multiplayer.Tools.NetworkProfiler.Tests.Editor]
-  Unity.Multiplayer.Tools.NetworkProfiler.Tests.Editor [EDITOR, TEST, no-autoref]  refs=[Unity.Multiplayer.Tools.NetworkProfiler.Editor, Unity.Multiplayer.Tools.NetworkProfiler.Runtime, UnityEngine.TestRunner...]
-  Unity.Multiplayer.Tools.NetworkSimulator.Editor [EDITOR]  refs=[Unity.Multiplayer.Tools.Adapters, Unity.Multiplayer.Tools.Adapters.Utp2, Unity.Multiplayer.Tools.Common...]
-  Unity.Multiplayer.Tools.NetworkSimulator.Tests.Runtime [TEST, no-autoref]  refs=[Unity.Multiplayer.Tools.NetworkSimulator.Runtime, UnityEngine.TestRunner, Unity.Multiplayer.Tools.Adapters...]
-  Unity.Multiplayer.Tools.NetworkSolutionInterface  used-by=[Unity.Multiplayer.Tools.NetworkProfiler.Editor, Unity.Multiplayer.Tools.NetworkSolutionInterface.Tests.Editor...]
-  Unity.Multiplayer.Tools.NetworkSolutionInterface.Tests.Editor [EDITOR, TEST, no-autoref]  refs=[Unity.Multiplayer.Tools.NetworkSolutionInterface, UnityEngine.TestRunner, UnityEditor.TestRunner]
-  Unity.Netcode.Editor [EDITOR]  refs=[Unity.Netcode.Runtime, Unity.Networking.Transport, Unity.Multiplayer.Tools.NetVis.Configuration]  used-by=[Unity.Netcode.Editor.Tests]
-  Unity.Netcode.Editor.CodeGen [EDITOR, no-autoref]  refs=[Unity.Netcode.Runtime, Unity.Collections]
-  Unity.Netcode.Editor.Tests [EDITOR, TEST, no-autoref]  refs=[Unity.Collections, Unity.Netcode.Runtime, Unity.Netcode.Editor...]
-  Unity.Netcode.PackageChecker.Editor [EDITOR]
-  Unity.Netcode.Runtime  refs=[Unity.Networking.Transport, Unity.Collections, Unity.Burst...]  used-by=[Network_Game, Network_Game.Dialogue.Editor...]
-  Unity.Netcode.Runtime.Tests [TEST, no-autoref]  refs=[Unity.Netcode.Runtime, Unity.Collections, Unity.Multiplayer.MetricTypes...]  used-by=[Unity.Multiplayer.Tools.GameObjects.Tests, Unity.Netcode.Editor.Tests]
-  Unity.Networking.Editor [EDITOR]
-  Unity.Networking.Transport  refs=[Unity.Burst, Unity.Collections, Unity.Mathematics]  used-by=[Network_Game, Unity.Multiplayer.Tools.Adapters.Ngo1WithUtp2...]
-  com.unity.multiplayer.tools.window [EDITOR]  refs=[GUID:c2f37c48e057342cda1e4b53ad30d616, GUID:2c360f3794ebc41388fc11424ddbfdd0, GUID:2406edb708fb4de7b412856af92595c9...]  used-by=[Unity.Multiplayer.Tools.MultiplayerToolsWindow.Tests.Editor]
 
 [AsmDef] WARNING: 1 unresolved reference(s):
   Unity.ProBuilder.Examples -> MISSING: Unity.ugui
-[06:00:33] === Phase 2/3: Code scan ===
+[04:40:33] === Phase 2/3: Code scan ===
 [LmClient] Model not loaded: qwen3-8b — loading now...
 [LmClient] Loaded model: qwen3-8b
 [Scan] Starting full project scan...
-[Scan] [ 1/45] GameStateProvider.cs
-[Scan] [ 2/45] LlmDialogueChannel.cs
-[Scan] [ 3/45] NpcDialogueAgent.cs
-[Scan] [ 4/45] SideChannelDialogueClient.cs
-[Scan] [ 5/45] LocalPlayerAuthService.cs
-[Scan] [ 6/45] CombatHealth.cs
-[Scan] [ 7/45] CombatHealthRegistry.cs
-[Scan] [ 8/45] CombatRuntimeOverlay.cs
-[Scan] [ 9/45] DialogueClientUI.cs
-[Scan] [10/45] DialogueConstants.cs
-[Scan] [11/45] DialogueDebugPanel.cs
-[Scan] [12/45] DialogueEffectFeedbackPrompt.cs
-[Scan] [13/45] DialogueEffectFeedbackRuntimeTuner.cs
-[Scan] [14/45] DialogueEffectProjectile.cs
-[Scan] [15/45] DialogueEffectSpatialResolver.cs
-[Scan] [16/45] DialogueFeedbackCollector.cs
-[Scan] [17/45] DialogueInferenceTypes.cs
-[Scan] [18/45] DialogueParticleCollisionDamage.cs
-[Scan] [19/45] DialogueSceneEffectsController.cs
-[Scan] [20/45] DialogueSemanticTag.cs
-[Scan] [21/45] EffectDispatcher.cs
-[Scan] [22/45] EffectIntentBuilder.cs
-[Scan] [23/45] EffectCatalog.cs
-[Scan] [24/45] EffectDefinition.cs
-[Scan] [25/45] EffectIntent.cs
-[Scan] [26/45] EffectParser.cs
-[Scan] [27/45] EffectSandboxRunner.cs
-[Scan] [28/45] EffectSurface.cs
-[Scan] [29/45] EffectTargetResolverService.cs
-[Scan] [30/45] LlmAgentInferenceClient.cs
-[Scan] [31/45] DialogueMCPBridge.cs
-[Scan] [32/45] DialogueSpawnedMarker.cs
-[Scan] [33/45] MCPShowcasePolishController.cs
-[Scan] [34/45] NetworkDialogueService.cs
-[Scan] [35/45] NpcDialogueActor.cs
-[Scan] [36/45] NpcDialogueProfile.cs
-[Scan] [37/45] OpenAIChatClient.cs
-[Scan] [38/45] ParticleParameterExtractor.cs
-[Scan] [39/45] SpatialResolverConstants.cs
-[Scan] [40/45] ModernDialogueController.cs
-[Scan] [41/45] PlayerLoginController.cs
-[Scan] [42/45] ModernHudController.cs
-[Scan] [43/45] ModernHudLayoutProfile.cs
-[Scan] [44/45] ModernUISetup.cs
-[Scan] [45/45] PlayerProfileController.cs
+[Scan] [ 1/46] LocalPlayerAuthService.cs
+[Scan] [ 2/46] CombatHealth.cs
+[Scan] [ 3/46] CombatHealthRegistry.cs
+[Scan] [ 4/46] CombatRuntimeOverlay.cs
+[Scan] [ 5/46] DialogueAnimationAction.cs
+[Scan] [ 6/46] DialogueAnimationContextBuilder.cs
+[Scan] [ 7/46] DialogueAnimationDecisionPolicy.cs
+[Scan] [ 8/46] DialogueBackendConfig.cs
+[Scan] [ 9/46] DialogueClientUI.cs
+[Scan] [10/46] DialogueConstants.cs
+[Scan] [11/46] DialogueDebugPanel.cs
+[Scan] [12/46] DialogueHistoryEntry.cs
+[Scan] [13/46] DialogueInferenceTypes.cs
+[Scan] [14/46] DialogueEffectFeedbackPrompt.cs
+[Scan] [15/46] DialogueEffectFeedbackRuntimeTuner.cs
+[Scan] [16/46] DialogueEffectProjectile.cs
+[Scan] [17/46] DialogueEffectSpatialResolver.cs
+[Scan] [18/46] DialogueFeedbackCollector.cs
+[Scan] [19/46] DialogueParticleCollisionDamage.cs
+[Scan] [20/46] DialogueSceneEffectsController.cs
+[Scan] [21/46] DialogueSemanticTag.cs
+[Scan] [22/46] EffectCatalog.cs
+[Scan] [23/46] EffectDefinition.cs
+[Scan] [24/46] EffectDispatcher.cs
+[Scan] [25/46] EffectIntent.cs
+[Scan] [26/46] EffectIntentBuilder.cs
+[Scan] [27/46] EffectParser.cs
+[Scan] [28/46] EffectSandboxRunner.cs
+[Scan] [29/46] EffectSurface.cs
+[Scan] [30/46] EffectTargetResolverService.cs
+[Scan] [31/46] ParticleParameterExtractor.cs
+[Scan] [32/46] SpatialResolverConstants.cs
+[Scan] [33/46] DialogueMCPBridge.cs
+[Scan] [34/46] DialogueSpawnedMarker.cs
+[Scan] [35/46] NetworkDialogueService.cs
+[Scan] [36/46] NpcDialogueActor.cs
+[Scan] [37/46] NpcDialogueAnimationAutoResponder.cs
+[Scan] [38/46] NpcDialogueAnimationController.cs
+[Scan] [39/46] NpcDialogueProfile.cs
+[Scan] [40/46] OpenAIChatClient.cs
+[Scan] [41/46] ModernDialogueController.cs
+[Scan] [42/46] PlayerLoginController.cs
+[Scan] [43/46] ModernHudLayoutManager.cs
+[Scan] [44/46] ModernHudLayoutProfile.cs
+[Scan] [45/46] ModernHudManager.cs
+[Scan] [46/46] PlayerProfileController.cs
 
-[Scan] Done. 45 files, 24 issues (High=10 Med=13 Low=1)
-[Scan] Report: D:\GithubRepos\ml-agents\dev_tools\reports\code_scan_2026-03-02.md
+[Scan] Done. 46 files, 52 issues (High=19 Med=26 Low=7)
+[Scan] Report: D:\GithubRepos\ml-agents\dev_tools\reports\code_scan_2026-03-03.md
 [Scan] Summary: D:\GithubRepos\ml-agents\dev_tools\reports\latest_scan_summary.md
-[06:22:14] === Phase 3/3: Knowledge base update ===
+[05:09:10] === Phase 3/3: Knowledge base update ===
 [LmClient] Model not loaded: qwen3-8b — loading now...
 [LmClient] Loaded model: qwen3-8b
 [Update] Synthesising insights with LM Studio...
-[Update] No new insights extracted.
-[06:22:31] === Full pipeline complete ===
-[06:22:31] Sleeping 120m until next run...
+[Update] Wrote 4 insight(s) to code_quality.md
+[Update] Wrote 4 pattern insight(s) + 2 confirmed + 0 invalidated to project_patterns.md
+[Update] Done. 10 total knowledge base entries added/updated.
+[05:10:38] === Full pipeline complete ===
+[05:10:38] Sleeping 120m until next run...
+[07:10:38] --- Watch run #2 ---
+[07:10:38] === Phase 1/3: Schema extraction + Assembly map (no LM Studio needed) ===
+[Schema] Extracting: NpcDialogueAgent from NpcDialogueAgent.cs... SKIPPED (file not found: D:\GithubRepos\ml-agents\DevProject\Assets\ML-Agents\Scripts\NpcDialogueAgent.cs)
+[Schema] Extracting: NetworkDialogueService from NetworkDialogueService.cs... OK (2 fields, 20 methods)
+[Schema] Extracting: EffectDefinition from EffectDefinition.cs... OK (28 fields, 0 methods)
+[Schema] Extracting: EffectCatalog from EffectCatalog.cs... OK (4 fields, 7 methods)
+[Schema] Extracting: NpcDialogueProfile from NpcDialogueProfile.cs... OK (0 fields, 7 methods)
+
+[Schema] Extracted 4 class schemas -> D:\GithubRepos\ml-agents\dev_tools\schemas\project_api_schema.json
+[Schema] Skipped (not found): NpcDialogueAgent
+[AsmDef] Scanning .asmdef files in Assets/ and Packages/...
+[AsmDef] WARNING: could not parse D:\GithubRepos\ml-agents\DevProject\Packages\com.unity.multiplayer.tools\NetworkSimulator\Runtime\Unity.Multiplayer.Tools.NetworkSimulator.Runtime.asmdef: Unexpected UTF-8 BOM (decode using utf-8-sig): line 1 column 1 (char 0)
+[AsmDef] Project assemblies: 15, Package assemblies: 50
+[AsmDef] Written -> D:\GithubRepos\ml-agents\dev_tools\schemas\assembly_map.json
+
+[AsmDef] WARNING: 1 unresolved reference(s):
+  Unity.ProBuilder.Examples -> MISSING: Unity.ugui
+[07:10:39] === Phase 2/3: Code scan ===
+[LmClient] Model not loaded: qwen3-8b — loading now...
+[LmClient] Loaded model: qwen3-8b
+[Scan] Starting full project scan...
+[Scan] [ 1/46] LocalPlayerAuthService.cs
+[Scan] [ 2/46] CombatHealth.cs
+[Scan] [ 3/46] CombatHealthRegistry.cs
+[Scan] [ 4/46] CombatRuntimeOverlay.cs
+[Scan] [ 5/46] DialogueAnimationAction.cs
+[Scan] [ 6/46] DialogueAnimationContextBuilder.cs
+[Scan] [ 7/46] DialogueAnimationDecisionPolicy.cs
+[Scan] [ 8/46] DialogueBackendConfig.cs
+[Scan] [ 9/46] DialogueClientUI.cs
+[Scan] [10/46] DialogueConstants.cs
+[Scan] [11/46] DialogueDebugPanel.cs
+[Scan] [12/46] DialogueHistoryEntry.cs
+[Scan] [13/46] DialogueInferenceTypes.cs
+[Scan] [14/46] DialogueEffectFeedbackPrompt.cs
+[Scan] [15/46] DialogueEffectFeedbackRuntimeTuner.cs
+[Scan] [16/46] DialogueEffectProjectile.cs
+[Scan] [17/46] DialogueEffectSpatialResolver.cs
+[Scan] [18/46] DialogueFeedbackCollector.cs
+[Scan] [19/46] DialogueParticleCollisionDamage.cs
+[Scan] [20/46] DialogueSceneEffectsController.cs
+[Scan] [21/46] DialogueSemanticTag.cs
+[Scan] [22/46] EffectCatalog.cs
+[Scan] [23/46] EffectDefinition.cs
+[Scan] [24/46] EffectDispatcher.cs
+[Scan] [25/46] EffectIntent.cs
+[Scan] [26/46] EffectIntentBuilder.cs
+[Scan] [27/46] EffectParser.cs
+[Scan] [28/46] EffectSandboxRunner.cs
+[Scan] [29/46] EffectSurface.cs
+[Scan] [30/46] EffectTargetResolverService.cs
+[Scan] [31/46] ParticleParameterExtractor.cs
+[Scan] [32/46] SpatialResolverConstants.cs
+[Scan] [33/46] DialogueMCPBridge.cs
+[Scan] [34/46] DialogueSpawnedMarker.cs
+[Scan] [35/46] NetworkDialogueService.cs
+[Scan] [36/46] NpcDialogueActor.cs
+[Scan] [37/46] NpcDialogueAnimationAutoResponder.cs
+[Scan] [38/46] NpcDialogueAnimationController.cs
+[Scan] [39/46] NpcDialogueProfile.cs
+[Scan] [40/46] OpenAIChatClient.cs
+[Scan] [41/46] ModernDialogueController.cs
+[Scan] [42/46] PlayerLoginController.cs
+[Scan] [43/46] ModernHudLayoutManager.cs
+[Scan] [44/46] ModernHudLayoutProfile.cs
+[Scan] [45/46] ModernHudManager.cs
+[Scan] [46/46] PlayerProfileController.cs
+
+[Scan] Done. 46 files, 46 issues (High=17 Med=23 Low=6)
+[Scan] Report: D:\GithubRepos\ml-agents\dev_tools\reports\code_scan_2026-03-03.md
+[Scan] Summary: D:\GithubRepos\ml-agents\dev_tools\reports\latest_scan_summary.md
+[07:39:17] === Phase 3/3: Knowledge base update ===
+[LmClient] Model not loaded: qwen3-8b — loading now...
+[LmClient] lms load failed: Error: Model loading was stopped due to insufficient system resources. Under the current settings, this model requires approximately 5.39 GB of memory, and continuing to load it would likely overload your system and cause it to freeze. If you think this is incorrect, you can adjust the model loading guardrails in settings.
+[LmClient] WARNING: Failed to load qwen3-8b
+[Update] ERROR: Could not load required model: qwen3-8b
+[07:39:21] === Full pipeline completed with errors ===
+[07:39:21] Pipeline run completed with errors.
+[07:39:21] Sleeping 120m until next run...
+[09:39:21] --- Watch run #3 ---
+[09:39:21] === Phase 1/3: Schema extraction + Assembly map (no LM Studio needed) ===
+[Schema] Extracting: NpcDialogueAgent from NpcDialogueAgent.cs... SKIPPED (file not found: D:\GithubRepos\ml-agents\DevProject\Assets\ML-Agents\Scripts\NpcDialogueAgent.cs)
+[Schema] Extracting: NetworkDialogueService from NetworkDialogueService.cs... OK (2 fields, 20 methods)
+[Schema] Extracting: EffectDefinition from EffectDefinition.cs... OK (28 fields, 0 methods)
+[Schema] Extracting: EffectCatalog from EffectCatalog.cs... OK (4 fields, 7 methods)
+[Schema] Extracting: NpcDialogueProfile from NpcDialogueProfile.cs... OK (0 fields, 7 methods)
+
+[Schema] Extracted 4 class schemas -> D:\GithubRepos\ml-agents\dev_tools\schemas\project_api_schema.json
+[Schema] Skipped (not found): NpcDialogueAgent
+[AsmDef] Scanning .asmdef files in Assets/ and Packages/...
+[AsmDef] WARNING: could not parse D:\GithubRepos\ml-agents\DevProject\Packages\com.unity.multiplayer.tools\NetworkSimulator\Runtime\Unity.Multiplayer.Tools.NetworkSimulator.Runtime.asmdef: Unexpected UTF-8 BOM (decode using utf-8-sig): line 1 column 1 (char 0)
+[AsmDef] Project assemblies: 15, Package assemblies: 50
+[AsmDef] Written -> D:\GithubRepos\ml-agents\dev_tools\schemas\assembly_map.json
+
+[AsmDef] WARNING: 1 unresolved reference(s):
+  Unity.ProBuilder.Examples -> MISSING: Unity.ugui
+[09:39:32] === Phase 2/3: Code scan ===
+[LmClient] Model not loaded: qwen3-8b — loading now...
+[LmClient] lms load failed: Error: Model loading was stopped due to insufficient system resources. Under the current settings, this model requires approximately 5.39 GB of memory, and continuing to load it would likely overload your system and cause it to freeze. If you think this is incorrect, you can adjust the model loading guardrails in settings.
+[LmClient] WARNING: Failed to load qwen3-8b
+[Scan] ERROR: Could not load required model: qwen3-8b
+[09:39:37] Scan failed or returned no results. Skipping knowledge update.
+[09:39:37] Pipeline run completed with errors.
+[09:39:37] Sleeping 120m until next run...
+[15:29:01] --- Watch run #4 ---
+[15:29:01] === Phase 1/3: Schema extraction + Assembly map (no LM Studio needed) ===
+[Schema] Extracting: NpcDialogueAgent from NpcDialogueAgent.cs... SKIPPED (file not found: D:\GithubRepos\ml-agents\DevProject\Assets\ML-Agents\Scripts\NpcDialogueAgent.cs)
+[Schema] Extracting: NetworkDialogueService from NetworkDialogueService.cs... OK (2 fields, 20 methods)
+[Schema] Extracting: EffectDefinition from EffectDefinition.cs... OK (28 fields, 0 methods)
+[Schema] Extracting: EffectCatalog from EffectCatalog.cs... OK (4 fields, 7 methods)
+[Schema] Extracting: NpcDialogueProfile from NpcDialogueProfile.cs... OK (0 fields, 7 methods)
+
+[Schema] Extracted 4 class schemas -> D:\GithubRepos\ml-agents\dev_tools\schemas\project_api_schema.json
+[Schema] Skipped (not found): NpcDialogueAgent
+[AsmDef] Scanning .asmdef files in Assets/ and Packages/...
+[AsmDef] WARNING: could not parse D:\GithubRepos\ml-agents\DevProject\Packages\com.unity.multiplayer.tools\NetworkSimulator\Runtime\Unity.Multiplayer.Tools.NetworkSimulator.Runtime.asmdef: Unexpected UTF-8 BOM (decode using utf-8-sig): line 1 column 1 (char 0)
+[AsmDef] Project assemblies: 15, Package assemblies: 50
+[AsmDef] Written -> D:\GithubRepos\ml-agents\dev_tools\schemas\assembly_map.json
+
+[AsmDef] WARNING: 1 unresolved reference(s):
+  Unity.ProBuilder.Examples -> MISSING: Unity.ugui
+[15:29:02] === Phase 2/3: Code scan ===
+[LmClient] Model not loaded: qwen3-8b — loading now...
+[LmClient] lms load failed: Error: Model loading was stopped due to insufficient system resources. Under the current settings, this model requires approximately 5.39 GB of memory, and continuing to load it would likely overload your system and cause it to freeze. If you think this is incorrect, you can adjust the model loading guardrails in settings.
+[LmClient] WARNING: Failed to load qwen3-8b
+[Scan] ERROR: Could not load required model: qwen3-8b
+[15:29:10] Scan failed or returned no results. Skipping knowledge update.
+[15:29:10] Pipeline run completed with errors.
+[15:29:10] Sleeping 120m until next run...
+[17:29:10] --- Watch run #5 ---
+[17:29:10] === Phase 1/3: Schema extraction + Assembly map (no LM Studio needed) ===
+[Schema] Extracting: NpcDialogueAgent from NpcDialogueAgent.cs... SKIPPED (file not found: D:\GithubRepos\ml-agents\DevProject\Assets\ML-Agents\Scripts\NpcDialogueAgent.cs)
+[Schema] Extracting: NetworkDialogueService from NetworkDialogueService.cs... OK (2 fields, 20 methods)
+[Schema] Extracting: EffectDefinition from EffectDefinition.cs... OK (28 fields, 0 methods)
+[Schema] Extracting: EffectCatalog from EffectCatalog.cs... OK (4 fields, 7 methods)
+[Schema] Extracting: NpcDialogueProfile from NpcDialogueProfile.cs... OK (0 fields, 7 methods)
+
+[Schema] Extracted 4 class schemas -> D:\GithubRepos\ml-agents\dev_tools\schemas\project_api_schema.json
+[Schema] Skipped (not found): NpcDialogueAgent
+[AsmDef] Scanning .asmdef files in Assets/ and Packages/...
+[AsmDef] WARNING: could not parse D:\GithubRepos\ml-agents\DevProject\Packages\com.unity.multiplayer.tools\NetworkSimulator\Runtime\Unity.Multiplayer.Tools.NetworkSimulator.Runtime.asmdef: Unexpected UTF-8 BOM (decode using utf-8-sig): line 1 column 1 (char 0)
+[AsmDef] Project assemblies: 15, Package assemblies: 50
+[AsmDef] Written -> D:\GithubRepos\ml-agents\dev_tools\schemas\assembly_map.json
+
+[AsmDef] WARNING: 1 unresolved reference(s):
+  Unity.ProBuilder.Examples -> MISSING: Unity.ugui
+[17:29:12] === Phase 2/3: Code scan ===
+[LmClient] Model not loaded: qwen3-8b — loading now...
+[LmClient] lms load failed: Error: Model loading was stopped due to insufficient system resources. Under the current settings, this model requires approximately 5.39 GB of memory, and continuing to load it would likely overload your system and cause it to freeze. If you think this is incorrect, you can adjust the model loading guardrails in settings.
+[LmClient] WARNING: Failed to load qwen3-8b
+[Scan] ERROR: Could not load required model: qwen3-8b
+[17:29:19] Scan failed or returned no results. Skipping knowledge update.
+[17:29:19] Pipeline run completed with errors.
+[17:29:19] Sleeping 120m until next run...
+[20:15:22] --- Watch run #6 ---
+[20:15:22] === Phase 1/3: Schema extraction + Assembly map (no LM Studio needed) ===
+[Schema] Extracting: NpcDialogueAgent from NpcDialogueAgent.cs... SKIPPED (file not found: D:\GithubRepos\ml-agents\DevProject\Assets\ML-Agents\Scripts\NpcDialogueAgent.cs)
+[Schema] Extracting: NetworkDialogueService from NetworkDialogueService.cs... OK (2 fields, 20 methods)
+[Schema] Extracting: EffectDefinition from EffectDefinition.cs... OK (28 fields, 0 methods)
+[Schema] Extracting: EffectCatalog from EffectCatalog.cs... OK (4 fields, 7 methods)
+[Schema] Extracting: NpcDialogueProfile from NpcDialogueProfile.cs... OK (0 fields, 7 methods)
+
+[Schema] Extracted 4 class schemas -> D:\GithubRepos\ml-agents\dev_tools\schemas\project_api_schema.json
+[Schema] Skipped (not found): NpcDialogueAgent
+[AsmDef] Scanning .asmdef files in Assets/ and Packages/...
+[AsmDef] WARNING: could not parse D:\GithubRepos\ml-agents\DevProject\Packages\com.unity.multiplayer.tools\NetworkSimulator\Runtime\Unity.Multiplayer.Tools.NetworkSimulator.Runtime.asmdef: Unexpected UTF-8 BOM (decode using utf-8-sig): line 1 column 1 (char 0)
+[AsmDef] Project assemblies: 15, Package assemblies: 50
+[AsmDef] Written -> D:\GithubRepos\ml-agents\dev_tools\schemas\assembly_map.json
+
+[AsmDef] WARNING: 1 unresolved reference(s):
+  Unity.ProBuilder.Examples -> MISSING: Unity.ugui
+[20:15:22] === Phase 2/3: Code scan ===
+[LmClient] Model not loaded: qwen3-8b — loading now...
+[LmClient] Loaded model: qwen3-8b
+[Scan] Starting full project scan...
+[Scan] [ 1/46] LocalPlayerAuthService.cs
+[Scan] [ 2/46] CombatHealth.cs
+[Scan] [ 3/46] CombatHealthRegistry.cs
+[Scan] [ 4/46] CombatRuntimeOverlay.cs
+[Scan] [ 5/46] DialogueAnimationAction.cs
+[Scan] [ 6/46] DialogueAnimationContextBuilder.cs
+[Scan] [ 7/46] DialogueAnimationDecisionPolicy.cs
+[Scan] [ 8/46] DialogueBackendConfig.cs
+[Scan] [ 9/46] DialogueClientUI.cs
+[Scan] [10/46] DialogueConstants.cs
+[Scan] [11/46] DialogueDebugPanel.cs
+[Scan] [12/46] DialogueHistoryEntry.cs
+[Scan] [13/46] DialogueInferenceTypes.cs
+[Scan] [14/46] DialogueEffectFeedbackPrompt.cs
+[Scan] [15/46] DialogueEffectFeedbackRuntimeTuner.cs
+[Scan] [16/46] DialogueEffectProjectile.cs
+[Scan] [17/46] DialogueEffectSpatialResolver.cs
+[Scan] [18/46] DialogueFeedbackCollector.cs
+[Scan] [19/46] DialogueParticleCollisionDamage.cs
+[Scan] [20/46] DialogueSceneEffectsController.cs
+[Scan] [21/46] DialogueSemanticTag.cs
+[Scan] [22/46] EffectCatalog.cs
+[Scan] [23/46] EffectDefinition.cs
+[Scan] [24/46] EffectDispatcher.cs
+[Scan] [25/46] EffectIntent.cs
+[Scan] [26/46] EffectIntentBuilder.cs
+[Scan] [27/46] EffectParser.cs
+[Scan] [28/46] EffectSandboxRunner.cs
+[Scan] [29/46] EffectSurface.cs
+[Scan] [30/46] EffectTargetResolverService.cs
+[Scan] [31/46] ParticleParameterExtractor.cs
+[Scan] [32/46] SpatialResolverConstants.cs
+[Scan] [33/46] DialogueMCPBridge.cs
+[Scan] [34/46] DialogueSpawnedMarker.cs
+[Scan] [35/46] NetworkDialogueService.cs
+[Scan] [36/46] NpcDialogueActor.cs
+[Scan] [37/46] NpcDialogueAnimationAutoResponder.cs
+[Scan] [38/46] NpcDialogueAnimationController.cs
+[Scan] [39/46] NpcDialogueProfile.cs
+[Scan] [40/46] OpenAIChatClient.cs
+[Scan] [41/46] ModernDialogueController.cs
+[Scan] [42/46] PlayerLoginController.cs
+[Scan] [43/46] ModernHudLayoutManager.cs
+[Scan] [44/46] ModernHudLayoutProfile.cs
+[Scan] [45/46] ModernHudManager.cs
+[Scan] [46/46] PlayerProfileController.cs
+
+[Scan] Done. 46 files, 51 issues (High=19 Med=26 Low=6)
+[Scan] Report: D:\GithubRepos\ml-agents\dev_tools\reports\code_scan_2026-03-03.md
+[Scan] Summary: D:\GithubRepos\ml-agents\dev_tools\reports\latest_scan_summary.md
+[20:56:07] === Phase 3/3: Knowledge base update ===
+[LmClient] Model not loaded: qwen3-8b — loading now...
+[LmClient] Loaded model: qwen3-8b
+[Update] Synthesising insights with LM Studio...
+[Update] Wrote 3 insight(s) to code_quality.md
+[Update] Wrote 4 pattern insight(s) + 2 confirmed + 0 invalidated to project_patterns.md
+[Update] Done. 9 total knowledge base entries added/updated.
+[20:57:50] === Full pipeline complete ===
+[20:57:50] Sleeping 120m until next run...
+[22:57:50] --- Watch run #7 ---
+[22:57:50] === Phase 1/3: Schema extraction + Assembly map (no LM Studio needed) ===
+[Schema] Extracting: NpcDialogueAgent from NpcDialogueAgent.cs... SKIPPED (file not found: D:\GithubRepos\ml-agents\DevProject\Assets\ML-Agents\Scripts\NpcDialogueAgent.cs)
+[Schema] Extracting: NetworkDialogueService from NetworkDialogueService.cs... OK (2 fields, 20 methods)
+[Schema] Extracting: EffectDefinition from EffectDefinition.cs... OK (28 fields, 0 methods)
+[Schema] Extracting: EffectCatalog from EffectCatalog.cs... OK (4 fields, 7 methods)
+[Schema] Extracting: NpcDialogueProfile from NpcDialogueProfile.cs... OK (0 fields, 7 methods)
+
+[Schema] Extracted 4 class schemas -> D:\GithubRepos\ml-agents\dev_tools\schemas\project_api_schema.json
+[Schema] Skipped (not found): NpcDialogueAgent
+[AsmDef] Scanning .asmdef files in Assets/ and Packages/...
+[AsmDef] WARNING: could not parse D:\GithubRepos\ml-agents\DevProject\Packages\com.unity.multiplayer.tools\NetworkSimulator\Runtime\Unity.Multiplayer.Tools.NetworkSimulator.Runtime.asmdef: Unexpected UTF-8 BOM (decode using utf-8-sig): line 1 column 1 (char 0)
+[AsmDef] Project assemblies: 15, Package assemblies: 50
+[AsmDef] Written -> D:\GithubRepos\ml-agents\dev_tools\schemas\assembly_map.json
+
+[AsmDef] WARNING: 1 unresolved reference(s):
+  Unity.ProBuilder.Examples -> MISSING: Unity.ugui
+[22:57:51] === Phase 2/3: Code scan ===
+[LmClient] Model not loaded: qwen3-8b — loading now...
+[LmClient] Loaded model: qwen3-8b
+[Scan] Starting full project scan...
+[Scan] [ 1/46] LocalPlayerAuthService.cs
+[Scan] [ 2/46] CombatHealth.cs
+[Scan] [ 3/46] CombatHealthRegistry.cs
+[Scan] [ 4/46] CombatRuntimeOverlay.cs
+[Scan] [ 5/46] DialogueAnimationAction.cs
+[Scan] [ 6/46] DialogueAnimationContextBuilder.cs
+[Scan] [ 7/46] DialogueAnimationDecisionPolicy.cs
+[Scan] [ 8/46] DialogueBackendConfig.cs
+[Scan] [ 9/46] DialogueClientUI.cs
+[Scan] [10/46] DialogueConstants.cs
+[Scan] [11/46] DialogueDebugPanel.cs
+[Scan] [12/46] DialogueHistoryEntry.cs
+[Scan] [13/46] DialogueInferenceTypes.cs
+[Scan] [14/46] DialogueEffectFeedbackPrompt.cs
+[Scan] [15/46] DialogueEffectFeedbackRuntimeTuner.cs
+[Scan] [16/46] DialogueEffectProjectile.cs
+[Scan] [17/46] DialogueEffectSpatialResolver.cs
+[Scan] [18/46] DialogueFeedbackCollector.cs
+[Scan] [19/46] DialogueParticleCollisionDamage.cs
+[Scan] [20/46] DialogueSceneEffectsController.cs
+[Scan] [21/46] DialogueSemanticTag.cs
+[Scan] [22/46] EffectCatalog.cs
+[Scan] [23/46] EffectDefinition.cs
+[Scan] [24/46] EffectDispatcher.cs
+[Scan] [25/46] EffectIntent.cs
+[Scan] [26/46] EffectIntentBuilder.cs
+[Scan] [27/46] EffectParser.cs
+[Scan] [28/46] EffectSandboxRunner.cs
+[Scan] [29/46] EffectSurface.cs
+[Scan] [30/46] EffectTargetResolverService.cs
+[Scan] [31/46] ParticleParameterExtractor.cs
+[Scan] [32/46] SpatialResolverConstants.cs
+[Scan] [33/46] DialogueMCPBridge.cs
+[Scan] [34/46] DialogueSpawnedMarker.cs
+[Scan] [35/46] NetworkDialogueService.cs
+[Scan] [36/46] NpcDialogueActor.cs
+[Scan] [37/46] NpcDialogueAnimationAutoResponder.cs
+[Scan] [38/46] NpcDialogueAnimationController.cs
+[Scan] [39/46] NpcDialogueProfile.cs
+[Scan] [40/46] OpenAIChatClient.cs
+[Scan] [41/46] ModernDialogueController.cs
+[Scan] [42/46] PlayerLoginController.cs
+[Scan] [43/46] ModernHudLayoutManager.cs
+[Scan] [44/46] ModernHudLayoutProfile.cs
+[Scan] [45/46] ModernHudManager.cs
+[Scan] [46/46] PlayerProfileController.cs
+
+[Scan] Done. 46 files, 44 issues (High=20 Med=20 Low=4)
+[Scan] Report: D:\GithubRepos\ml-agents\dev_tools\reports\code_scan_2026-03-03.md
+[Scan] Summary: D:\GithubRepos\ml-agents\dev_tools\reports\latest_scan_summary.md
+[23:31:54] === Phase 3/3: Knowledge base update ===
+[LmClient] Model not loaded: qwen3-8b — loading now...
+[LmClient] Loaded model: qwen3-8b
+[Update] Synthesising insights with LM Studio...
+[Update] Wrote 3 insight(s) to code_quality.md
+[Update] Wrote 4 pattern insight(s) + 2 confirmed + 0 invalidated to project_patterns.md
+[Update] Done. 9 total knowledge base entries added/updated.
+[23:33:33] === Full pipeline complete ===
+[23:33:33] Sleeping 120m until next run...
+[01:33:33] --- Watch run #8 ---
+[01:33:33] === Phase 1/3: Schema extraction + Assembly map (no LM Studio needed) ===
+[Schema] Extracting: NpcDialogueAgent from NpcDialogueAgent.cs... SKIPPED (file not found: D:\GithubRepos\ml-agents\DevProject\Assets\ML-Agents\Scripts\NpcDialogueAgent.cs)
+[Schema] Extracting: NetworkDialogueService from NetworkDialogueService.cs... OK (2 fields, 20 methods)
+[Schema] Extracting: EffectDefinition from EffectDefinition.cs... OK (28 fields, 0 methods)
+[Schema] Extracting: EffectCatalog from EffectCatalog.cs... OK (4 fields, 7 methods)
+[Schema] Extracting: NpcDialogueProfile from NpcDialogueProfile.cs... OK (0 fields, 7 methods)
+
+[Schema] Extracted 4 class schemas -> D:\GithubRepos\ml-agents\dev_tools\schemas\project_api_schema.json
+[Schema] Skipped (not found): NpcDialogueAgent
+[AsmDef] Scanning .asmdef files in Assets/ and Packages/...
+[AsmDef] WARNING: could not parse D:\GithubRepos\ml-agents\DevProject\Packages\com.unity.multiplayer.tools\NetworkSimulator\Runtime\Unity.Multiplayer.Tools.NetworkSimulator.Runtime.asmdef: Unexpected UTF-8 BOM (decode using utf-8-sig): line 1 column 1 (char 0)
+[AsmDef] Project assemblies: 15, Package assemblies: 50
+[AsmDef] Written -> D:\GithubRepos\ml-agents\dev_tools\schemas\assembly_map.json
+
+[AsmDef] WARNING: 1 unresolved reference(s):
+  Unity.ProBuilder.Examples -> MISSING: Unity.ugui
+[01:33:37] === Phase 2/3: Code scan ===
+[LmClient] Model not loaded: qwen3-8b — loading now...
+[LmClient] Loaded model: qwen3-8b
+[Scan] Starting full project scan...
+[Scan] [ 1/46] LocalPlayerAuthService.cs
+[Scan] [ 2/46] CombatHealth.cs
+[Scan] [ 3/46] CombatHealthRegistry.cs
+[Scan] [ 4/46] CombatRuntimeOverlay.cs
+[Scan] [ 5/46] DialogueAnimationAction.cs
+[Scan] [ 6/46] DialogueAnimationContextBuilder.cs
+[Scan] [ 7/46] DialogueAnimationDecisionPolicy.cs
+[Scan] [ 8/46] DialogueBackendConfig.cs
+[Scan] [ 9/46] DialogueClientUI.cs
+[Scan] [10/46] DialogueConstants.cs
+[Scan] [11/46] DialogueDebugPanel.cs
+[Scan] [12/46] DialogueHistoryEntry.cs
+[Scan] [13/46] DialogueInferenceTypes.cs
+[Scan] [14/46] DialogueEffectFeedbackPrompt.cs
+[Scan] [15/46] DialogueEffectFeedbackRuntimeTuner.cs
+[Scan] [16/46] DialogueEffectProjectile.cs
+[Scan] [17/46] DialogueEffectSpatialResolver.cs
+[Scan] [18/46] DialogueFeedbackCollector.cs
+[Scan] [19/46] DialogueParticleCollisionDamage.cs
+[Scan] [20/46] DialogueSceneEffectsController.cs
+[Scan] [21/46] DialogueSemanticTag.cs
+[Scan] [22/46] EffectCatalog.cs
+[Scan] [23/46] EffectDefinition.cs
+[Scan] [24/46] EffectDispatcher.cs
+[Scan] [25/46] EffectIntent.cs
+[Scan] [26/46] EffectIntentBuilder.cs
+[Scan] [27/46] EffectParser.cs
+[Scan] [28/46] EffectSandboxRunner.cs
+[Scan] [29/46] EffectSurface.cs
+[Scan] [30/46] EffectTargetResolverService.cs
+[Scan] [31/46] ParticleParameterExtractor.cs
+[Scan] [32/46] SpatialResolverConstants.cs
+[Scan] [33/46] DialogueMCPBridge.cs
+[Scan] [34/46] DialogueSpawnedMarker.cs
+[Scan] [35/46] NetworkDialogueService.cs
+[Scan] [36/46] NpcDialogueActor.cs
+[Scan] [37/46] NpcDialogueAnimationAutoResponder.cs
+[Scan] [38/46] NpcDialogueAnimationController.cs
+[Scan] [39/46] NpcDialogueProfile.cs
+[Scan] [40/46] OpenAIChatClient.cs
+[Scan] [41/46] ModernDialogueController.cs
+[Scan] [42/46] PlayerLoginController.cs
+[Scan] [43/46] ModernHudLayoutManager.cs
+[Scan] [44/46] ModernHudLayoutProfile.cs
+[Scan] [45/46] ModernHudManager.cs
+[Scan] [46/46] PlayerProfileController.cs
+
+[Scan] Done. 46 files, 43 issues (High=18 Med=19 Low=6)
+[Scan] Report: D:\GithubRepos\ml-agents\dev_tools\reports\code_scan_2026-03-04.md
+[Scan] Summary: D:\GithubRepos\ml-agents\dev_tools\reports\latest_scan_summary.md
+[02:01:00] === Phase 3/3: Knowledge base update ===
+[LmClient] Model not loaded: qwen3-8b — loading now...
+[LmClient] Loaded model: qwen3-8b
+[Update] Synthesising insights with LM Studio...
+[Update] Wrote 4 insight(s) to code_quality.md
+[Update] Wrote 4 pattern insight(s) + 1 confirmed + 0 invalidated to project_patterns.md
+[Update] Done. 9 total knowledge base entries added/updated.
+[02:02:29] === Full pipeline complete ===
+[02:02:29] Sleeping 120m until next run...
+[04:02:29] --- Watch run #9 ---
+[04:02:29] === Phase 1/3: Schema extraction + Assembly map (no LM Studio needed) ===
+[Schema] Extracting: NpcDialogueAgent from NpcDialogueAgent.cs... SKIPPED (file not found: D:\GithubRepos\ml-agents\DevProject\Assets\ML-Agents\Scripts\NpcDialogueAgent.cs)
+[Schema] Extracting: NetworkDialogueService from NetworkDialogueService.cs... OK (2 fields, 20 methods)
+[Schema] Extracting: EffectDefinition from EffectDefinition.cs... OK (28 fields, 0 methods)
+[Schema] Extracting: EffectCatalog from EffectCatalog.cs... OK (4 fields, 7 methods)
+[Schema] Extracting: NpcDialogueProfile from NpcDialogueProfile.cs... OK (0 fields, 7 methods)
+
+[Schema] Extracted 4 class schemas -> D:\GithubRepos\ml-agents\dev_tools\schemas\project_api_schema.json
+[Schema] Skipped (not found): NpcDialogueAgent
+[AsmDef] Scanning .asmdef files in Assets/ and Packages/...
+[AsmDef] WARNING: could not parse D:\GithubRepos\ml-agents\DevProject\Packages\com.unity.multiplayer.tools\NetworkSimulator\Runtime\Unity.Multiplayer.Tools.NetworkSimulator.Runtime.asmdef: Unexpected UTF-8 BOM (decode using utf-8-sig): line 1 column 1 (char 0)
+[AsmDef] Project assemblies: 15, Package assemblies: 50
+[AsmDef] Written -> D:\GithubRepos\ml-agents\dev_tools\schemas\assembly_map.json
+
+[AsmDef] WARNING: 1 unresolved reference(s):
+  Unity.ProBuilder.Examples -> MISSING: Unity.ugui
+[04:02:32] === Phase 2/3: Code scan ===
+[LmClient] Model not loaded: qwen3-8b — loading now...
+[LmClient] lms load failed: Error: Model loading was stopped due to insufficient system resources. Under the current settings, this model requires approximately 5.39 GB of memory, and continuing to load it would likely overload your system and cause it to freeze. If you think this is incorrect, you can adjust the model loading guardrails in settings.
+[LmClient] WARNING: Failed to load qwen3-8b
+[Scan] ERROR: Could not load required model: qwen3-8b
+[04:02:36] Scan failed or returned no results. Skipping knowledge update.
+[04:02:36] Pipeline run completed with errors.
+[04:02:36] Sleeping 120m until next run...

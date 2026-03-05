@@ -1,18 +1,18 @@
 {
     "schemaVersion": 1,
-    "updatedUtc": "2026-03-03T07:18:59.6415447Z",
+    "updatedUtc": "2026-03-05T03:03:36.0787363Z",
     "entries": [
         {
             "key": "dissolve",
             "effectType": "dissolve",
-            "scaleMultiplier": 1.0000965595245362,
-            "durationMultiplier": 1.000067949295044,
+            "scaleMultiplier": 1.0000648498535157,
+            "durationMultiplier": 1.000045657157898,
             "attachScore": 0.0,
             "fitScore": 0.0,
-            "sampleCount": 71,
-            "looksCorrectCount": 45,
+            "sampleCount": 73,
+            "looksCorrectCount": 47,
             "lastOutcome": "looks_correct",
-            "lastUpdatedUtc": "2026-03-03T05:24:26.9379997Z"
+            "lastUpdatedUtc": "2026-03-05T00:00:07.4225911Z"
         },
         {
             "key": "fireflies",
@@ -77,14 +77,14 @@
         {
             "key": "fireball",
             "effectType": "prefab_power",
-            "scaleMultiplier": 2.102735996246338,
-            "durationMultiplier": 1.6983507871627808,
-            "attachScore": 0.5543508529663086,
+            "scaleMultiplier": 1.9042434692382813,
+            "durationMultiplier": 1.5726476907730103,
+            "attachScore": 0.5044592618942261,
             "fitScore": 0.0,
-            "sampleCount": 26,
-            "looksCorrectCount": 9,
+            "sampleCount": 27,
+            "looksCorrectCount": 10,
             "lastOutcome": "looks_correct",
-            "lastUpdatedUtc": "2026-03-01T07:05:11.2972542Z"
+            "lastUpdatedUtc": "2026-03-03T07:37:30.7428601Z"
         },
         {
             "key": "wildfire",
@@ -101,14 +101,14 @@
         {
             "key": "lightnigstormcloud",
             "effectType": "prefab_power",
-            "scaleMultiplier": 2.7998650074005129,
-            "durationMultiplier": 2.1581337451934816,
+            "scaleMultiplier": 3.0,
+            "durationMultiplier": 2.3739471435546877,
             "attachScore": 0.3499999940395355,
             "fitScore": 0.0,
-            "sampleCount": 13,
+            "sampleCount": 14,
             "looksCorrectCount": 2,
-            "lastOutcome": "wrong_placement",
-            "lastUpdatedUtc": "2026-03-01T07:11:48.4211200Z"
+            "lastOutcome": "not_visible",
+            "lastUpdatedUtc": "2026-03-04T00:05:09.6756548Z"
         },
         {
             "key": "bigexplosion",
@@ -125,14 +125,14 @@
         {
             "key": "smokeeffect",
             "effectType": "prefab_power",
-            "scaleMultiplier": 1.1346821784973145,
-            "durationMultiplier": 1.0869606733322144,
-            "attachScore": 0.13167069852352143,
+            "scaleMultiplier": 1.110439419746399,
+            "durationMultiplier": 1.0713077783584595,
+            "attachScore": 0.11982033401727677,
             "fitScore": 0.0,
-            "sampleCount": 21,
-            "looksCorrectCount": 11,
+            "sampleCount": 22,
+            "looksCorrectCount": 12,
             "lastOutcome": "looks_correct",
-            "lastUpdatedUtc": "2026-03-03T05:25:48.4127700Z"
+            "lastUpdatedUtc": "2026-03-04T00:42:16.9704713Z"
         },
         {
             "key": "flamestream",
@@ -177,10 +177,10 @@
             "durationMultiplier": 1.0,
             "attachScore": 0.0,
             "fitScore": 0.0,
-            "sampleCount": 6,
-            "looksCorrectCount": 4,
+            "sampleCount": 7,
+            "looksCorrectCount": 5,
             "lastOutcome": "looks_correct",
-            "lastUpdatedUtc": "2026-03-02T23:40:36.5143028Z"
+            "lastUpdatedUtc": "2026-03-04T00:43:21.8001716Z"
         },
         {
             "key": "electricalsparkseffect",
@@ -313,6 +313,18 @@
             "looksCorrectCount": 1,
             "lastOutcome": "looks_correct",
             "lastUpdatedUtc": "2026-03-01T01:25:04.6812211Z"
+        },
+        {
+            "key": "floor_dissolve",
+            "effectType": "dissolve",
+            "scaleMultiplier": 1.0,
+            "durationMultiplier": 1.0,
+            "attachScore": 0.0,
+            "fitScore": 0.0,
+            "sampleCount": 1,
+            "looksCorrectCount": 1,
+            "lastOutcome": "looks_correct",
+            "lastUpdatedUtc": "2026-03-05T01:23:46.4674034Z"
         }
     ]
 }

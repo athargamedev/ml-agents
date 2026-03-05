@@ -464,23 +464,9 @@ namespace Network_Game.Combat
                 }
             }
 
-            // Fallback: Find any UIDocument root
-            VisualElement hostRoot = FindUiToolkitHostRoot();
-            if (hostRoot == null)
+            if (!TryBindToExistingOverlayInDocuments())
             {
                 return;
-            }
-
-            // Try to find in host root
-            m_UiOverlayRoot = hostRoot.Q("combat-overlay");
-            if (m_UiOverlayRoot != null)
-            {
-                m_UiNetLabel = m_UiOverlayRoot.Q<Label>("combat-net");
-                m_UiHealthList = m_UiOverlayRoot.Q("combat-health-list");
-                m_UiEffectsList = m_UiOverlayRoot.Q("combat-effects-list");
-                m_UiDamageList = m_UiOverlayRoot.Q("combat-damage-list");
-                m_UiHostRoot = hostRoot;
-                RefreshUiToolkitOverlay();
             }
         }
 
@@ -703,6 +689,42 @@ namespace Network_Game.Combat
             }
 
             return null;
+        }
+
+        private bool TryBindToExistingOverlayInDocuments()
+        {
+            UIDocument[] docs = FindObjectsByType<UIDocument>(FindObjectsInactive.Exclude);
+            for (int i = 0; i < docs.Length; i++)
+            {
+                UIDocument doc = docs[i];
+                if (doc == null || !doc.isActiveAndEnabled)
+                {
+                    continue;
+                }
+
+                VisualElement root = doc.rootVisualElement;
+                if (!IsUsableUiToolkitHostRoot(root))
+                {
+                    continue;
+                }
+
+                VisualElement overlay = root.Q("combat-overlay");
+                if (overlay == null)
+                {
+                    continue;
+                }
+
+                m_UiOverlayRoot = overlay;
+                m_UiNetLabel = overlay.Q<Label>("combat-net");
+                m_UiHealthList = overlay.Q("combat-health-list");
+                m_UiEffectsList = overlay.Q("combat-effects-list");
+                m_UiDamageList = overlay.Q("combat-damage-list");
+                m_UiHostRoot = root;
+                RefreshUiToolkitOverlay();
+                return true;
+            }
+
+            return false;
         }
     }
 }

@@ -1,6 +1,13 @@
 // This file is generated. Do not modify by hand.
 // XML documentation file not found. To check if public methods have XML comments,
 // make sure the XML doc file is present and located next to the scraped dll
+public static class FaceMapperEditorTool
+{
+    [UnityEditor.MenuItem(@"Tools/Face Mapper/1. Bake Face Materials")] public static void BakeFaceMaterials();
+    [UnityEditor.MenuItem(@"Tools/Face Mapper/3. Clear Baked Assets")] public static void ClearBaked();
+    [UnityEditor.MenuItem(@"Tools/Face Mapper/2. Auto-Setup Characters")] public static void SetupAllCharacters();
+}
+
 [UnityEngine.CreateAssetMenu] public class RampAsset : UnityEngine.ScriptableObject
 {
     public UnityEngine.Gradient gradient = new();
@@ -242,6 +249,23 @@ namespace Network_Game.Dialogue
         public static DialogueAnimationContextSnapshot Empty { get; }
     }
 
+    public static class DialogueAnimationDecisionPolicy
+    {
+        public static bool ContainsAnimationTag(string responseText);
+        public static bool ContainsEffectTag(string responseText);
+        public static bool IsLikelyAnimationIntentPrompt(string promptText);
+        public static DialogueAnimationAction RecommendAction(DialogueAnimationContextSnapshot snapshot, DialogueAnimationAction lastChosenAction);
+        public static string StripAnimationTags(string text);
+        public static bool TryParseFirstAnimationTag(string responseText, out DialogueAnimationDecisionPolicy.AnimationIntent intent);
+        public readonly struct AnimationIntent
+        {
+            public DialogueAnimationAction Action { get; }
+            public string Target { get; }
+            public bool TargetsSelf { get; }
+            public AnimationIntent(DialogueAnimationAction action, string target) {}
+        }
+    }
+
     public enum DialogueAnimationTone
     {
         Neutral = 0,
@@ -449,6 +473,7 @@ namespace Network_Game.Dialogue
     {
         public int MaxTokensOverride = -1;
         public bool PreferJsonResponse;
+        public string StructuredResponseInstruction;
         public DialogueInferenceRequestOptions() {}
     }
 
@@ -493,6 +518,7 @@ namespace Network_Game.Dialogue
         public DialogueSceneEffectsController() {}
         public void ApplyBoredLighting(UnityEngine.Color color, float intensity, float transitionSeconds = 0f);
         public void ApplyDissolveEffect(ulong targetNetworkObjectId, float durationSeconds = 5f);
+        public void ApplyFloorDissolveEffect(float durationSeconds = 8f);
         public void ApplyFloorFreezeSurfaceMaterial(string surfaceId, string rendererHierarchyPath, int materialSlotIndex, float durationSeconds, ulong sourceNetworkObjectId = 0, ulong targetNetworkObjectId = 0);
         public void ApplyPrefabPower(string prefabName, UnityEngine.Vector3 position, UnityEngine.Vector3 forward, float scale, float durationSeconds, UnityEngine.Color color, bool useColorOverride, bool enableGameplayDamage = false, bool enableHoming = false, float projectileSpeed = 10f, float homingTurnRateDegrees = 240f, float damageAmount = 0f, float damageRadius = 1f, bool affectPlayerOnly = false, string damageType = @"effect", ulong sourceNetworkObjectId = 0, ulong targetNetworkObjectId = 0, bool attachToTarget = false, bool fitToTargetMesh = false, float serverSpawnTimeSeconds = -1f, uint effectSeed = 0);
         public void ApplyRespawnEffect(ulong targetNetworkObjectId);
@@ -610,6 +636,7 @@ namespace Network_Game.Dialogue
     {
         public static event System.Action<NetworkDialogueService.DialogueResponse> OnDialogueResponse;
         public static event System.Action<NetworkDialogueService.DialogueResponseTelemetry> OnDialogueResponseTelemetry;
+        public static event System.Action<NetworkDialogueService.DialogueResponse> OnRawDialogueResponse;
         public string ActiveInferenceBackendName { get; }
         public int ActiveRequestCount { get; }
         public bool HasDialogueBackendConfig { get; }
@@ -769,6 +796,11 @@ namespace Network_Game.Dialogue
         public void ShowSpeechText(string text, float durationSeconds);
         public bool TryAutoAssignProfileFromName();
         public bool TryGetBoredLighting(string responseText, out UnityEngine.Color color, out float intensity, out float transitionSeconds);
+    }
+
+    [UnityEngine.DisallowMultipleComponent] [UnityEngine.RequireComponent(typeof(Unity.Netcode.NetworkObject))] public sealed class NpcDialogueAnimationAutoResponder : UnityEngine.MonoBehaviour
+    {
+        public NpcDialogueAnimationAutoResponder() {}
     }
 
     [UnityEngine.DisallowMultipleComponent] [UnityEngine.RequireComponent(typeof(Unity.Netcode.NetworkObject))] public sealed class NpcDialogueAnimationController : Unity.Netcode.NetworkBehaviour
@@ -1103,10 +1135,12 @@ namespace Network_Game.Dialogue.MCP
         public static System.Collections.Generic.Dictionary<string, int> GetQueueStatus();
         public static System.Collections.Generic.Dictionary<string, object> GetStats();
         public static void LogDialogueDebugEntry(NetworkDialogueService.DialogueRequest request, string responseText, string status);
+        public static System.Collections.Generic.Dictionary<string, object> SendAnimationProbeToNpc(ulong speakerNetworkObjectId, string animationTag = @"EmphasisReact", ulong listenerNetworkObjectId = 0);
         public static System.Collections.Generic.Dictionary<string, object> SendGameplayProbeToNpc(ulong speakerNetworkObjectId, string directive = default(string), ulong listenerNetworkObjectId = 0);
         public static System.Collections.Generic.Dictionary<string, object> SendGameplayProbeToNpcs(string directive = default(string), int maxNpcs = 3, ulong listenerNetworkObjectId = 0);
         public struct DebugLogEntry
         {
+            public string[] AnimationTagsParsed;
             public string ConversationKey;
             public string[] EffectTagsParsed;
             public string PromptSnippet;
@@ -1170,12 +1204,27 @@ namespace Network_Game.ThirdPersonController
         public void ToggleFlyMode();
     }
 
+    public class PlayerFaceMapper : Unity.Netcode.NetworkBehaviour
+    {
+        public int CurrentFaceIndex { get; }
+        public int FaceCount { get; }
+        public PlayerFaceMapper() {}
+        protected override string __getTypeName();
+        protected override void __initializeRpcs();
+        protected override void __initializeVariables();
+        public void CycleNext();
+        public override void OnNetworkDespawn();
+        public override void OnNetworkSpawn();
+        public void SelectFace(int index);
+    }
+
     public class StarterAssetsInputs : UnityEngine.MonoBehaviour
     {
         [UnityEngine.Header(@"Movement Settings")] public bool analogMovement;
         public bool crouch;
         public bool cursorInputForLook = true;
         [UnityEngine.Header(@"Mouse Cursor Settings")] public bool cursorLocked = true;
+        [UnityEngine.HideInInspector] public bool inputBlocked;
         public bool interact;
         public bool jump;
         public UnityEngine.Vector2 look;

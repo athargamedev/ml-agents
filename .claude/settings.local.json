@@ -17,5 +17,6 @@
     "serena-mcp",
     "sequentialthinking",
     "unityMCP"
-  ]
+  ],
+  "prefersReducedMotion": false
 }

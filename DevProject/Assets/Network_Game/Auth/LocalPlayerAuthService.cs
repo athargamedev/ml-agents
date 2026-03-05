@@ -1013,12 +1013,40 @@ namespace Network_Game.Auth
         private ulong ResolveLocalPlayerNetworkId()
         {
             NetworkManager manager = NetworkManager.Singleton;
-            if (manager == null || manager.LocalClient?.PlayerObject == null)
+            if (manager != null && manager.LocalClient?.PlayerObject != null)
             {
-                return 0;
+                return manager.LocalClient.PlayerObject.NetworkObjectId;
             }
 
-            return manager.LocalClient.PlayerObject.NetworkObjectId;
+            try
+            {
+                GameObject taggedPlayer = GameObject.FindGameObjectWithTag("Player");
+                if (taggedPlayer != null)
+                {
+                    NetworkObject taggedNetObj = taggedPlayer.GetComponent<NetworkObject>();
+                    if (taggedNetObj != null)
+                    {
+                        return taggedNetObj.NetworkObjectId;
+                    }
+                }
+            }
+            catch (UnityException)
+            {
+                // Tag lookup is best effort only.
+            }
+
+            if (manager != null && manager.SpawnManager != null)
+            {
+                foreach (NetworkObject spawned in manager.SpawnManager.SpawnedObjectsList)
+                {
+                    if (spawned != null && spawned.IsPlayerObject)
+                    {
+                        return spawned.NetworkObjectId;
+                    }
+                }
+            }
+
+            return 0;
         }
 
         private static string NormalizeNameId(string nameId)

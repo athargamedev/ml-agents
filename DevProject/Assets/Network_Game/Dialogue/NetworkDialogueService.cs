@@ -41,6 +41,9 @@ namespace Network_Game.Dialogue
 
         private const int GameplayProbeClientRequestIdMin = 99400;
         private const int EffectProbeMaxResponseTokens = 96;
+        private const int AnimationProbeMaxResponseTokens = 96;
+        private const int AnimationIntentMaxResponseTokens = 128;
+        private const int PowerIntentMaxResponseTokens = 220;
         private const string DefaultRemoteHost = "127.0.0.1";
         private const int DefaultRemotePort = 7002;
 
@@ -196,6 +199,37 @@ namespace Network_Game.Dialogue
             public bool Enabled = true;
         }
 
+        private readonly struct ClientRequestLookupKey : IEquatable<ClientRequestLookupKey>
+        {
+            public readonly int ClientRequestId;
+            public readonly ulong RequestingClientId;
+
+            public ClientRequestLookupKey(int clientRequestId, ulong requestingClientId)
+            {
+                ClientRequestId = clientRequestId;
+                RequestingClientId = requestingClientId;
+            }
+
+            public bool Equals(ClientRequestLookupKey other)
+            {
+                return ClientRequestId == other.ClientRequestId
+                    && RequestingClientId == other.RequestingClientId;
+            }
+
+            public override bool Equals(object obj)
+            {
+                return obj is ClientRequestLookupKey other && Equals(other);
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    return (ClientRequestId * 397) ^ RequestingClientId.GetHashCode();
+                }
+            }
+        }
+
         /// <summary>
         /// Per-player effect modifiers derived from the player's customization data.
         /// Applied server-side in ApplyContextEffects before ClampDynamicMultiplier.
@@ -225,6 +259,7 @@ namespace Network_Game.Dialogue
 
         public static NetworkDialogueService Instance { get; private set; }
         public static event Action<DialogueResponse> OnDialogueResponse;
+        public static event Action<DialogueResponse> OnRawDialogueResponse;
         public static event Action<DialogueResponseTelemetry> OnDialogueResponseTelemetry;
 
         public bool UsesRemoteInference => true;
@@ -464,6 +499,9 @@ namespace Network_Game.Dialogue
         private bool m_LogDebug = true;
 
         private readonly Dictionary<int, DialogueRequestState> m_Requests = new();
+        private readonly Dictionary<ClientRequestLookupKey, int> m_RequestIdsByScopedClientRequest =
+            new();
+        private readonly Dictionary<int, List<int>> m_RequestIdsByClientRequestId = new();
         private readonly Queue<int> m_RequestQueue = new();
         private readonly HashSet<int> m_ActiveRequestIds = new();
         private readonly HashSet<string> m_ActiveConversationKeys = new(StringComparer.Ordinal);
@@ -1147,6 +1185,7 @@ namespace Network_Game.Dialogue
                 Status = DialogueStatus.Pending,
                 EnqueuedAt = Time.realtimeSinceStartup,
             };
+            RegisterClientRequestLookup(requestId, request);
             m_RequestQueue.Enqueue(requestId);
 
             if (!m_IsProcessing)
@@ -1190,6 +1229,7 @@ namespace Network_Game.Dialogue
                     Error = state.Error,
                     Request = state.Request,
                 };
+                UnregisterClientRequestLookup(requestId, state.Request);
                 m_Requests.Remove(requestId);
                 return true;
             }
@@ -1209,37 +1249,32 @@ namespace Network_Game.Dialogue
                 return false;
             }
 
-            int matchedRequestId = -1;
-            foreach (var pair in m_Requests)
+            if (
+                !TryGetRequestIdByClientRequestId(
+                    clientRequestId,
+                    requestingClientId,
+                    out int matchedRequestId
+                )
+            )
             {
-                DialogueRequestState state = pair.Value;
-                if (state == null || state.Request.ClientRequestId != clientRequestId)
-                {
-                    continue;
-                }
-
-                if (
-                    requestingClientId != ulong.MaxValue
-                    && state.Request.RequestingClientId != requestingClientId
-                )
-                {
-                    continue;
-                }
-
-                if (
-                    state.Status != DialogueStatus.Completed
-                    && state.Status != DialogueStatus.Failed
-                    && state.Status != DialogueStatus.Cancelled
-                )
-                {
-                    return false;
-                }
-
-                matchedRequestId = pair.Key;
-                break;
+                return false;
             }
 
-            return matchedRequestId > 0 && TryConsumeResponse(matchedRequestId, out response);
+            if (!m_Requests.TryGetValue(matchedRequestId, out DialogueRequestState state))
+            {
+                return false;
+            }
+
+            if (
+                state.Status != DialogueStatus.Completed
+                && state.Status != DialogueStatus.Failed
+                && state.Status != DialogueStatus.Cancelled
+            )
+            {
+                return false;
+            }
+
+            return TryConsumeResponse(matchedRequestId, out response);
         }
 
         public bool TryGetTerminalResponseByClientRequestId(
@@ -1254,43 +1289,40 @@ namespace Network_Game.Dialogue
                 return false;
             }
 
-            foreach (var pair in m_Requests)
+            if (
+                !TryGetRequestIdByClientRequestId(
+                    clientRequestId,
+                    requestingClientId,
+                    out int matchedRequestId
+                )
+            )
             {
-                DialogueRequestState state = pair.Value;
-                if (state == null || state.Request.ClientRequestId != clientRequestId)
-                {
-                    continue;
-                }
-
-                if (
-                    requestingClientId != ulong.MaxValue
-                    && state.Request.RequestingClientId != requestingClientId
-                )
-                {
-                    continue;
-                }
-
-                if (
-                    state.Status != DialogueStatus.Completed
-                    && state.Status != DialogueStatus.Failed
-                    && state.Status != DialogueStatus.Cancelled
-                )
-                {
-                    return false;
-                }
-
-                response = new DialogueResponse
-                {
-                    RequestId = pair.Key,
-                    Status = state.Status,
-                    ResponseText = state.ResponseText,
-                    Error = state.Error,
-                    Request = state.Request,
-                };
-                return true;
+                return false;
             }
 
-            return false;
+            if (!m_Requests.TryGetValue(matchedRequestId, out DialogueRequestState state))
+            {
+                return false;
+            }
+
+            if (
+                state.Status != DialogueStatus.Completed
+                && state.Status != DialogueStatus.Failed
+                && state.Status != DialogueStatus.Cancelled
+            )
+            {
+                return false;
+            }
+
+            response = new DialogueResponse
+            {
+                RequestId = matchedRequestId,
+                Status = state.Status,
+                ResponseText = state.ResponseText,
+                Error = state.Error,
+                Request = state.Request,
+            };
+            return true;
         }
 
         public DialogueStats GetStats()
@@ -1352,27 +1384,24 @@ namespace Network_Game.Dialogue
                 return false;
             }
 
-            foreach (var pair in m_Requests)
-            {
-                DialogueRequestState state = pair.Value;
-                if (state == null || state.Request.ClientRequestId != clientRequestId)
-                {
-                    continue;
-                }
-
-                if (
-                    requestingClientId != ulong.MaxValue
-                    && state.Request.RequestingClientId != requestingClientId
+            if (
+                !TryGetRequestIdByClientRequestId(
+                    clientRequestId,
+                    requestingClientId,
+                    out int matchedRequestId
                 )
-                {
-                    continue;
-                }
-
-                return state.Status == DialogueStatus.Pending
-                    || state.Status == DialogueStatus.InProgress;
+            )
+            {
+                return false;
             }
 
-            return false;
+            if (!m_Requests.TryGetValue(matchedRequestId, out DialogueRequestState state))
+            {
+                return false;
+            }
+
+            return state.Status == DialogueStatus.Pending
+                || state.Status == DialogueStatus.InProgress;
         }
 
         [ContextMenu("Dialogue/Log Player Identity Report")]
@@ -1569,6 +1598,25 @@ namespace Network_Game.Dialogue
                 request.BlockRepeatedPrompt,
                 request.MinRepeatDelaySeconds,
                 request.RequireUserReply
+            );
+        }
+
+        private static void DispatchRawDialogueResponse(
+            int requestId,
+            DialogueRequest request,
+            DialogueStatus status,
+            string responseText,
+            string error = "")
+        {
+            OnRawDialogueResponse?.Invoke(
+                new DialogueResponse
+                {
+                    RequestId = requestId,
+                    Status = status,
+                    ResponseText = responseText ?? string.Empty,
+                    Error = error ?? string.Empty,
+                    Request = request,
+                }
             );
         }
 
@@ -1912,8 +1960,9 @@ namespace Network_Game.Dialogue
                     return;
                 }
                 List<ChatMessage> history = GetHistory(key);
-                List<ChatMessage> requestHistory = BuildRemoteHistorySlice(history);
-                List<DialogueInferenceMessage> inferenceHistory = ConvertToInferenceHistory(requestHistory);
+                List<DialogueInferenceMessage> inferenceHistory = BuildRemoteInferenceHistory(
+                    history
+                );
                 string promptForRequest = ApplyRemoteUserPromptBudget(state.Request.Prompt ?? string.Empty);
                 ApplyPersonaForRequest(state.Request);
                 string systemPromptForRequest = GetConfiguredSystemPrompt();
@@ -1929,7 +1978,7 @@ namespace Network_Game.Dialogue
                     if (m_LogDebug)
                     {
                         UnityEngine.Debug.Log(
-                            $"[Dialogue][DEBUG] Starting chat | id={requestId} | key={key} | target={inferenceClient.BackendName} | promptLen={promptForRequest.Length} | systemLen={systemPromptForRequest?.Length ?? 0} | historyCount={requestHistory?.Count ?? 0} | timeoutSec={effectiveRequestTimeoutSeconds}"
+                            $"[Dialogue][DEBUG] Starting chat | id={requestId} | key={key} | target={inferenceClient.BackendName} | promptLen={promptForRequest.Length} | systemLen={systemPromptForRequest?.Length ?? 0} | historyCount={inferenceHistory.Count} | timeoutSec={effectiveRequestTimeoutSeconds}"
                         );
                     }
 
@@ -2067,6 +2116,22 @@ namespace Network_Game.Dialogue
                 );
 
                 terminal = true;
+
+                try
+                {
+                    DispatchRawDialogueResponse(requestId, state.Request, state.Status, state.ResponseText);
+                }
+                catch (Exception ex)
+                {
+                    NGLog.Warn(
+                        "Dialogue",
+                        NGLog.Format(
+                            "Raw dialogue callback failed; continuing",
+                            ("id", requestId),
+                            ("error", ex.Message ?? string.Empty)
+                        )
+                    );
+                }
 
                 // From this point onward, the dialogue response must still reach the UI
                 // even if effect parsing/spawning fails. Keep FX work isolated.
@@ -2259,6 +2324,8 @@ namespace Network_Game.Dialogue
             string rewritten =
                 specialMode == PlayerSpecialEffectMode.Dissolve
                     ? "As you wish. You fade from sight."
+                    : specialMode == PlayerSpecialEffectMode.FloorDissolve
+                        ? "As you wish. The floor fades from sight."
                     : "As you wish. You return to view.";
 
             NGLog.Warn(
@@ -2278,6 +2345,7 @@ namespace Network_Game.Dialogue
         {
             None,
             Dissolve,
+            FloorDissolve,
             Respawn
         }
 
@@ -2292,21 +2360,44 @@ namespace Network_Game.Dialogue
             {
                 for (int i = 0; i < intents.Count; i++)
                 {
-                    string tag = intents[i].rawTagName;
+                    EffectIntent intent = intents[i];
+                    string tag = intent.rawTagName;
                     if (string.IsNullOrWhiteSpace(tag))
                     {
                         continue;
                     }
 
+                    string targetHint = ResolveSpecialIntentTargetHint(intent);
                     string normalized = tag.Trim().ToLowerInvariant();
                     if (normalized.Contains("dissolve") || normalized.Contains("vanish"))
                     {
-                        return PlayerSpecialEffectMode.Dissolve;
+                        if (LooksLikeFloorTargetHint(targetHint))
+                        {
+                            return PlayerSpecialEffectMode.FloorDissolve;
+                        }
+
+                        if (
+                            string.IsNullOrWhiteSpace(targetHint)
+                            || LooksLikePlayerTargetHint(targetHint)
+                        )
+                        {
+                            return PlayerSpecialEffectMode.Dissolve;
+                        }
+
+                        continue;
                     }
 
                     if (normalized.Contains("respawn") || normalized.Contains("revive"))
                     {
-                        return PlayerSpecialEffectMode.Respawn;
+                        if (
+                            string.IsNullOrWhiteSpace(targetHint)
+                            || LooksLikePlayerTargetHint(targetHint)
+                        )
+                        {
+                            return PlayerSpecialEffectMode.Respawn;
+                        }
+
+                        continue;
                     }
                 }
             }
@@ -2322,6 +2413,11 @@ namespace Network_Game.Dialogue
                 && (lower.Contains("dissolve") || lower.Contains("vanish"));
             if (hasDissolveTag)
             {
+                if (LooksLikeFloorTargetHint(responseText) || LooksLikeFloorTargetHint(promptText))
+                {
+                    return PlayerSpecialEffectMode.FloorDissolve;
+                }
+
                 return PlayerSpecialEffectMode.Dissolve;
             }
 
@@ -2333,6 +2429,73 @@ namespace Network_Game.Dialogue
             }
 
             return PlayerSpecialEffectMode.None;
+        }
+
+        private static string ResolveSpecialIntentTargetHint(EffectIntent intent)
+        {
+            if (intent == null)
+            {
+                return string.Empty;
+            }
+
+            return !string.IsNullOrWhiteSpace(intent.anchor) ? intent.anchor : intent.target;
+        }
+
+        private static bool LooksLikePlayerTargetHint(string targetHint)
+        {
+            if (string.IsNullOrWhiteSpace(targetHint))
+            {
+                return false;
+            }
+
+            string lower = targetHint.Trim().ToLowerInvariant();
+            if (IsPlayerTargetToken(lower) || IsPlayerHeadAlias(lower) || IsPlayerFeetAlias(lower))
+            {
+                return true;
+            }
+
+            return lower is "self" or "npc" or "caster" or "speaker" or "listener";
+        }
+
+        private static bool LooksLikeFloorTargetHint(string targetHint)
+        {
+            if (string.IsNullOrWhiteSpace(targetHint))
+            {
+                return false;
+            }
+
+            string lower = targetHint.Trim().ToLowerInvariant();
+            if (IsGroundAlias(lower))
+            {
+                return true;
+            }
+
+            return lower.Contains("role:floor", StringComparison.Ordinal)
+                || lower.Contains("role:terrain", StringComparison.Ordinal)
+                || lower.Contains("semantic:floor", StringComparison.Ordinal)
+                || lower.Contains("semantic:terrain", StringComparison.Ordinal)
+                || lower.Contains("all floor", StringComparison.Ordinal)
+                || lower.Contains("all floors", StringComparison.Ordinal)
+                || lower.Contains("floors", StringComparison.Ordinal)
+                || lower.Contains("floor", StringComparison.Ordinal)
+                || lower.Contains("ground", StringComparison.Ordinal)
+                || lower.Contains("terrain", StringComparison.Ordinal)
+                || lower.Contains("stairs", StringComparison.Ordinal)
+                || lower.Contains("stair", StringComparison.Ordinal);
+        }
+
+        private static float ResolveSpecialEffectDurationSeconds(
+            ParticleParameterExtractor.ParticleParameterIntent parameterIntent,
+            float baseDurationSeconds = 5f
+        )
+        {
+            if (parameterIntent.HasExplicitDurationSeconds)
+            {
+                return Mathf.Clamp(parameterIntent.ExplicitDurationSeconds, 0.4f, 20f);
+            }
+
+            float durationMul = Mathf.Clamp(parameterIntent.DurationMultiplier, 0.35f, 3f);
+            return Mathf.Clamp(baseDurationSeconds * durationMul, 0.4f, 20f);
         }
 
         private void AdjustIntentsForProbeMode(
@@ -2385,7 +2548,10 @@ namespace Network_Game.Dialogue
             }
 
             ulong targetNetworkObjectId = request.ListenerNetworkId;
-            if (targetNetworkObjectId == 0)
+            if (
+                specialEffectMode != PlayerSpecialEffectMode.FloorDissolve
+                && targetNetworkObjectId == 0
+            )
             {
                 if (m_LogDebug)
                 {
@@ -2405,17 +2571,7 @@ namespace Network_Game.Dialogue
             {
                 case PlayerSpecialEffectMode.Dissolve:
                 {
-                    float durationSeconds = 5f;
-                    if (parameterIntent.HasExplicitDurationSeconds)
-                    {
-                        durationSeconds = Mathf.Clamp(parameterIntent.ExplicitDurationSeconds, 0.4f, 20f);
-                    }
-                    else
-                    {
-                        float durationMul = Mathf.Clamp(parameterIntent.DurationMultiplier, 0.35f, 3f);
-                        durationSeconds = Mathf.Clamp(durationSeconds * durationMul, 0.4f, 20f);
-                    }
-
+                    float durationSeconds = ResolveSpecialEffectDurationSeconds(parameterIntent, 5f);
                     ApplyDissolveEffectClientRpc(targetNetworkObjectId, durationSeconds);
                     NGLog.Info(
                         "DialogueFX",
@@ -2423,6 +2579,20 @@ namespace Network_Game.Dialogue
                             "Special effect applied",
                             ("mode", "dissolve"),
                             ("target", targetNetworkObjectId),
+                            ("duration", durationSeconds.ToString("F2"))
+                        )
+                    );
+                    return true;
+                }
+                case PlayerSpecialEffectMode.FloorDissolve:
+                {
+                    float durationSeconds = ResolveSpecialEffectDurationSeconds(parameterIntent, 8f);
+                    ApplyFloorDissolveEffectClientRpc(durationSeconds);
+                    NGLog.Info(
+                        "DialogueFX",
+                        NGLog.Format(
+                            "Special effect applied",
+                            ("mode", "floor_dissolve"),
                             ("duration", durationSeconds.ToString("F2"))
                         )
                     );
@@ -3174,11 +3344,150 @@ namespace Network_Game.Dialogue
             return history;
         }
 
-        private List<ChatMessage> BuildRemoteHistorySlice(List<ChatMessage> fullHistory)
+        private void RegisterClientRequestLookup(int requestId, DialogueRequest request)
+        {
+            if (request.ClientRequestId <= 0)
+            {
+                return;
+            }
+
+            var scopedKey = new ClientRequestLookupKey(
+                request.ClientRequestId,
+                request.RequestingClientId
+            );
+            m_RequestIdsByScopedClientRequest[scopedKey] = requestId;
+
+            if (
+                !m_RequestIdsByClientRequestId.TryGetValue(
+                    request.ClientRequestId,
+                    out List<int> requestIds
+                )
+            )
+            {
+                requestIds = new List<int>(1);
+                m_RequestIdsByClientRequestId[request.ClientRequestId] = requestIds;
+            }
+
+            requestIds.Add(requestId);
+        }
+
+        private void UnregisterClientRequestLookup(int requestId, DialogueRequest request)
+        {
+            if (request.ClientRequestId <= 0)
+            {
+                return;
+            }
+
+            var scopedKey = new ClientRequestLookupKey(
+                request.ClientRequestId,
+                request.RequestingClientId
+            );
+            if (
+                m_RequestIdsByScopedClientRequest.TryGetValue(scopedKey, out int scopedRequestId)
+                && scopedRequestId == requestId
+            )
+            {
+                m_RequestIdsByScopedClientRequest.Remove(scopedKey);
+            }
+
+            if (
+                !m_RequestIdsByClientRequestId.TryGetValue(
+                    request.ClientRequestId,
+                    out List<int> requestIds
+                )
+            )
+            {
+                return;
+            }
+
+            for (int i = requestIds.Count - 1; i >= 0; i--)
+            {
+                if (requestIds[i] != requestId)
+                {
+                    continue;
+                }
+
+                requestIds.RemoveAt(i);
+                break;
+            }
+
+            if (requestIds.Count == 0)
+            {
+                m_RequestIdsByClientRequestId.Remove(request.ClientRequestId);
+            }
+        }
+
+        private bool TryGetRequestIdByClientRequestId(
+            int clientRequestId,
+            ulong requestingClientId,
+            out int requestId
+        )
+        {
+            requestId = -1;
+            if (clientRequestId <= 0)
+            {
+                return false;
+            }
+
+            if (requestingClientId != ulong.MaxValue)
+            {
+                var scopedKey = new ClientRequestLookupKey(clientRequestId, requestingClientId);
+                if (m_RequestIdsByScopedClientRequest.TryGetValue(scopedKey, out int scopedRequestId))
+                {
+                    if (m_Requests.ContainsKey(scopedRequestId))
+                    {
+                        requestId = scopedRequestId;
+                        return true;
+                    }
+
+                    m_RequestIdsByScopedClientRequest.Remove(scopedKey);
+                }
+            }
+
+            if (!m_RequestIdsByClientRequestId.TryGetValue(clientRequestId, out List<int> requestIds))
+            {
+                return false;
+            }
+
+            for (int i = requestIds.Count - 1; i >= 0; i--)
+            {
+                int candidateId = requestIds[i];
+                if (
+                    !m_Requests.TryGetValue(candidateId, out DialogueRequestState candidateState)
+                    || candidateState == null
+                )
+                {
+                    requestIds.RemoveAt(i);
+                    continue;
+                }
+
+                if (
+                    requestingClientId != ulong.MaxValue
+                    && candidateState.Request.RequestingClientId != requestingClientId
+                )
+                {
+                    continue;
+                }
+
+                requestId = candidateId;
+                return true;
+            }
+
+            if (requestIds.Count == 0)
+            {
+                m_RequestIdsByClientRequestId.Remove(clientRequestId);
+            }
+
+            return false;
+        }
+
+        private List<DialogueInferenceMessage> BuildRemoteInferenceHistory(
+            List<ChatMessage> fullHistory
+        )
         {
             if (fullHistory == null || fullHistory.Count == 0)
             {
-                return new List<ChatMessage>();
+                return new List<DialogueInferenceMessage>();
             }
 
             int maxMessages = Mathf.Max(0, m_RemoteMaxHistoryMessages);
@@ -3186,55 +3495,36 @@ namespace Network_Game.Dialogue
             maxMessages = Mathf.Min(maxMessages, hardCap);
             if (maxMessages <= 0)
             {
-                return new List<ChatMessage>();
+                return new List<DialogueInferenceMessage>();
             }
 
             int takeCount = Mathf.Min(maxMessages, fullHistory.Count);
             int startIndex = fullHistory.Count - takeCount;
             int messageCharBudget = Mathf.Clamp(m_RemoteHistoryMessageCharBudget, 64, 1024);
-            var slice = new List<ChatMessage>(takeCount);
+            var slice = new List<DialogueInferenceMessage>(takeCount);
             for (int i = startIndex; i < fullHistory.Count; i++)
             {
                 ChatMessage message = fullHistory[i];
+                if (message == null)
+                {
+                    continue;
+                }
+
                 string content = TrimPromptSegment(message.content, messageCharBudget);
                 if (string.IsNullOrWhiteSpace(content))
                 {
                     continue;
                 }
 
-                slice.Add(new ChatMessage(NormalizeHistoryRole(message.role), content));
-            }
-
-            return slice;
-        }
-
-        private static List<DialogueInferenceMessage> ConvertToInferenceHistory(
-            List<ChatMessage> history
-        )
-        {
-            if (history == null || history.Count == 0)
-            {
-                return new List<DialogueInferenceMessage>();
-            }
-
-            var converted = new List<DialogueInferenceMessage>(history.Count);
-            for (int i = 0; i < history.Count; i++)
-            {
-                ChatMessage message = history[i];
-                if (message == null)
-                {
-                    continue;
-                }
-
-                converted.Add(
+                slice.Add(
                     new DialogueInferenceMessage(
                         NormalizeHistoryRole(message.role),
-                        message.content ?? string.Empty
+                        content
                     )
                 );
             }
 
-            return converted;
+            return slice;
         }
 
         private static string NormalizeHistoryRole(string role)
@@ -3790,37 +4080,43 @@ namespace Network_Game.Dialogue
                 return prompt;
             }
 
-            // Priority: Always preserve effect format instructions at the end
-            // Look for common effect format section markers
-            string[] effectSectionMarkers = new[]
+            // Priority: Always preserve structured tag instructions at the end.
+            // Keep the latest control section for either [EFFECT:] or [ANIM:].
+            string[] controlSectionMarkers = new[]
             {
                 "EFFECT FORMAT",
                 "EFFECT TAGS",
+                "ANIMATION TAG",
+                "ANIMATIONS",
                 "When using powers",
                 "include an effect tag",
                 "include effect tags",
+                "use [anim:]",
+                "use [anim:",
+                "use an animation tag",
                 "[effect:",
+                "[anim:",
                 "effect tag at the END",
             };
 
-            // Find the last effect section marker to preserve
-            int effectSectionStart = -1;
-            foreach (var marker in effectSectionMarkers)
+            // Find the last control section marker to preserve.
+            int controlSectionStart = -1;
+            foreach (var marker in controlSectionMarkers)
             {
                 int idx = prompt.LastIndexOf(marker, StringComparison.OrdinalIgnoreCase);
-                if (idx > effectSectionStart)
+                if (idx > controlSectionStart)
                 {
-                    effectSectionStart = idx;
+                    controlSectionStart = idx;
                 }
             }
 
-            // If we found an effect section, prioritize preserving it even if it is short.
-            // Short effect sections are common in profile prompts and were previously
+            // If we found a structured-tag section, prioritize preserving it even if it is short.
+            // Short control sections are common in profile prompts and were previously
             // skipped by the min-tail heuristic, causing the generic trim path to cut
-            // the exact [EFFECT:] formatting instructions.
-            if (effectSectionStart > 0)
+            // the exact [EFFECT:] / [ANIM:] formatting instructions.
+            if (controlSectionStart > 0)
             {
-                int effectSectionLength = prompt.Length - effectSectionStart;
+                int controlSectionLength = prompt.Length - controlSectionStart;
                 const string trimMarker = "\n[...trimmed for latency...]\n";
                 int trimMarkerLength = trimMarker.Length;
 
@@ -3828,13 +4124,13 @@ namespace Network_Game.Dialogue
                 // effect section tail. If the tail alone is too large, keep the tail
                 // ending and guarantee at least one marker occurrence.
                 int maxTailBudget = Mathf.Max(128, budget - trimMarkerLength - 64);
-                int preservedTailLength = Mathf.Min(effectSectionLength, maxTailBudget);
+                int preservedTailLength = Mathf.Min(controlSectionLength, maxTailBudget);
                 int preservedTailStart = prompt.Length - preservedTailLength;
-                if (preservedTailStart > effectSectionStart)
+                if (preservedTailStart > controlSectionStart)
                 {
                     // If we had to trim into the tail, keep the marker line at the
                     // start of the preserved tail for easier debugging.
-                    preservedTailStart = Mathf.Max(effectSectionStart, preservedTailStart);
+                    preservedTailStart = Mathf.Max(controlSectionStart, preservedTailStart);
                 }
 
                 int head = budget - preservedTailLength - trimMarkerLength;
@@ -3855,11 +4151,11 @@ namespace Network_Game.Dialogue
                     NGLog.Warn(
                         "Dialogue",
                         NGLog.Format(
-                            "Trimmed remote system prompt (preserved effect section)",
+                            "Trimmed remote system prompt (preserved structured-tag section)",
                             ("fromChars", prompt.Length),
                             ("toChars", trimmed.Length),
                             ("budget", budget),
-                            ("effectSectionStart", effectSectionStart),
+                            ("controlSectionStart", controlSectionStart),
                             ("preservedTailLength", preservedTailLength)
                         )
                     );
@@ -5157,6 +5453,30 @@ namespace Network_Game.Dialogue
                 return;
             }
 
+            bool hasExplicitAnimationTag = DialogueAnimationDecisionPolicy.ContainsAnimationTag(
+                responseText
+            );
+            bool prefersAnimationOnly = DialogueAnimationDecisionPolicy.IsLikelyAnimationIntentPrompt(
+                request.Prompt
+            );
+            if (hasExplicitAnimationTag)
+            {
+                NGLog.Info(
+                    "DialogueFX",
+                    "Skip effects (response contains explicit [ANIM:] tag)."
+                );
+                return;
+            }
+
+            if (prefersAnimationOnly)
+            {
+                NGLog.Info(
+                    "DialogueFX",
+                    "Skip effects (request is a self-animation intent)."
+                );
+                return;
+            }
+
             bool isGameplayProbe = IsGameplayProbeRequest(request, request.Prompt);
             NpcDialogueActor actor = ResolveDialogueActorForRequest(
                 request,
@@ -5277,7 +5597,13 @@ namespace Network_Game.Dialogue
                     parameterIntent,
                     specialEffectMode
                 );
-                if (specialApplied && specialEffectMode == PlayerSpecialEffectMode.Dissolve)
+                if (
+                    specialApplied
+                    && (
+                        specialEffectMode == PlayerSpecialEffectMode.Dissolve
+                        || specialEffectMode == PlayerSpecialEffectMode.FloorDissolve
+                    )
+                )
                 {
                     hasCatalogIntents = false;
                     if (m_LogDebug)
@@ -6494,6 +6820,18 @@ namespace Network_Game.Dialogue
             }
 
             m_SceneEffectsController.ApplyDissolveEffect(targetNetworkObjectId, durationSeconds);
+        }
+
+        [Rpc(SendTo.ClientsAndHost, InvokePermission = RpcInvokePermission.Server)]
+        private void ApplyFloorDissolveEffectClientRpc(float durationSeconds)
+        {
+            EnsureSceneEffectsController();
+            if (m_SceneEffectsController == null)
+            {
+                return;
+            }
+
+            m_SceneEffectsController.ApplyFloorDissolveEffect(durationSeconds);
         }
 
         [Rpc(SendTo.ClientsAndHost, InvokePermission = RpcInvokePermission.Server)]
@@ -8232,19 +8570,75 @@ namespace Network_Game.Dialogue
             string promptText
         )
         {
-            if (
-                !IsGameplayProbeRequest(request, promptText)
-                || !IsEffectValidationProbePrompt(promptText)
-            )
+            bool isGameplayProbe = IsGameplayProbeRequest(request, promptText);
+            bool isAnimationIntent = DialogueAnimationDecisionPolicy.IsLikelyAnimationIntentPrompt(
+                promptText
+            );
+
+            if (isGameplayProbe && IsEffectValidationProbePrompt(promptText))
             {
-                return null;
+                return new DialogueInferenceRequestOptions
+                {
+                    MaxTokensOverride = EffectProbeMaxResponseTokens,
+                    PreferJsonResponse = true,
+                    StructuredResponseInstruction =
+                        "For this request, respond with a valid JSON object only. "
+                        + "Use exactly one key named \"responseText\". "
+                        + "The responseText value must contain one short in-character sentence followed by exactly one [EFFECT: ...] tag. "
+                        + "No analysis. No extra keys.",
+                };
             }
 
-            return new DialogueInferenceRequestOptions
+            if (isGameplayProbe && IsAnimationValidationProbePrompt(promptText))
             {
-                MaxTokensOverride = EffectProbeMaxResponseTokens,
-                PreferJsonResponse = true,
-            };
+                return new DialogueInferenceRequestOptions
+                {
+                    MaxTokensOverride = AnimationProbeMaxResponseTokens,
+                    PreferJsonResponse = true,
+                    StructuredResponseInstruction =
+                        "For this request, respond with a valid JSON object only. "
+                        + "Use exactly one key named \"responseText\". "
+                        + "The responseText value must contain one short in-character sentence followed by exactly one [ANIM: ...] tag. "
+                        + "Use the exact animation tag format requested in the prompt. "
+                        + "No analysis. No extra keys.",
+                };
+            }
+
+            if (isAnimationIntent)
+            {
+                return new DialogueInferenceRequestOptions
+                {
+                    MaxTokensOverride = AnimationIntentMaxResponseTokens,
+                    PreferJsonResponse = true,
+                    StructuredResponseInstruction =
+                        "For this request, respond with a valid JSON object only. "
+                        + "Use exactly one key named \"responseText\". "
+                        + "The responseText value must contain one short in-character sentence followed by exactly one [ANIM: ...] tag. "
+                        + "Do not emit any [EFFECT:] tags, particles, projectiles, or world/player visual powers for this request. "
+                        + "The [ANIM:] tag must target Self. "
+                        + "If the user asks for a blow, hit, impact, or strong reaction, use [ANIM: EmphasisReact | Target: Self]. "
+                        + "If the user asks for a turn or look to one side, use [ANIM: TurnLeft | Target: Self] or [ANIM: TurnRight | Target: Self]. "
+                        + "If unsure, default to [ANIM: EmphasisReact | Target: Self]. "
+                        + "No analysis. No extra keys.",
+                };
+            }
+
+            if (LooksLikePowerRequest(promptText))
+            {
+                return new DialogueInferenceRequestOptions
+                {
+                    MaxTokensOverride = PowerIntentMaxResponseTokens,
+                    PreferJsonResponse = true,
+                    StructuredResponseInstruction =
+                        "For this request, respond with a valid JSON object only. "
+                        + "Use exactly one key named \"responseText\". "
+                        + "The responseText value must contain one short in-character sentence followed by exactly one [EFFECT: ...] tag. "
+                        + "Use a concrete target in the tag when possible (for example player, self, floor, stairs, or a named scene object). "
+                        + "No analysis. No extra keys.",
+                };
+            }
+
+            return null;
         }
 
         private static bool IsEffectValidationProbePrompt(string promptText)
@@ -8258,6 +8652,24 @@ namespace Network_Game.Dialogue
                     >= 0
                 || (
                     promptText.IndexOf("[EFFECT:", StringComparison.OrdinalIgnoreCase) >= 0
+                    && promptText.IndexOf(
+                            "append exactly one tag",
+                            StringComparison.OrdinalIgnoreCase
+                        ) >= 0
+                );
+        }
+
+        private static bool IsAnimationValidationProbePrompt(string promptText)
+        {
+            if (string.IsNullOrWhiteSpace(promptText))
+            {
+                return false;
+            }
+
+            return promptText.IndexOf("Animation validation step.", StringComparison.OrdinalIgnoreCase)
+                    >= 0
+                || (
+                    promptText.IndexOf("[ANIM:", StringComparison.OrdinalIgnoreCase) >= 0
                     && promptText.IndexOf(
                             "append exactly one tag",
                             StringComparison.OrdinalIgnoreCase

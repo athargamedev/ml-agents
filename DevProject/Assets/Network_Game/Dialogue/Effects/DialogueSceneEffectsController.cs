@@ -121,11 +121,11 @@ namespace Network_Game.Dialogue
         [Header("Player Special FX")]
         [SerializeField]
         [Min(0.05f)]
-        private float m_DissolveFadeOutSeconds = 0.7f;
+        private float m_DissolveFadeOutSeconds = 1.4f;
 
         [SerializeField]
         [Min(0.05f)]
-        private float m_DissolveFadeInSeconds = 0.5f;
+        private float m_DissolveFadeInSeconds = 1.2f;
 
         [SerializeField]
         private AnimationCurve m_DissolveCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
@@ -180,6 +180,10 @@ namespace Network_Game.Dialogue
             new Dictionary<ulong, Coroutine>();
         private readonly Dictionary<ulong, RendererFadeState[]> m_ActiveDissolveStates =
             new Dictionary<ulong, RendererFadeState[]>();
+        private readonly Dictionary<int, Coroutine> m_ActiveObjectHideRoutines =
+            new Dictionary<int, Coroutine>();
+        private readonly Dictionary<int, RendererFadeState[]> m_ActiveObjectHideStates =
+            new Dictionary<int, RendererFadeState[]>();
         private readonly Dictionary<string, Coroutine> m_ActiveSurfaceMaterialRoutines =
             new Dictionary<string, Coroutine>(StringComparer.OrdinalIgnoreCase);
         private readonly Dictionary<
@@ -194,6 +198,17 @@ namespace Network_Game.Dialogue
         private readonly Queue<DeferredEffectRequest> m_DeferredEffects =
             new Queue<DeferredEffectRequest>();
         private bool m_WasFeedbackPromptBlockingLastFrame;
+        private static readonly string[] s_FloorNameHints =
+        {
+            "floor",
+            "ground",
+            "terrain",
+            "stairs",
+            "stair",
+        };
+        private const float kMinDissolveFadeOutSeconds = 1.2f;
+        private const float kMinDissolveFadeInSeconds = 1.0f;
+        private const float kMinDissolveHoldSeconds = 0.2f;
 
         private sealed class DeferredEffectRequest
         {
@@ -1625,6 +1640,12 @@ namespace Network_Game.Dialogue
                 StopActiveDissolve(activeIds[i], restoreVisible: true);
             }
 
+            var activeObjectHideIds = new List<int>(m_ActiveObjectHideStates.Keys);
+            for (int i = 0; i < activeObjectHideIds.Count; i++)
+            {
+                StopActiveObjectHide(activeObjectHideIds[i], restoreVisible: true);
+            }
+
             var activeSurfaceKeys = new List<string>(m_ActiveSurfaceMaterialStates.Keys);
             for (int i = 0; i < activeSurfaceKeys.Count; i++)
             {
@@ -2005,6 +2026,95 @@ namespace Network_Game.Dialogue
                     FitToTargetMesh = true,
                     AppliedAtRealtime = Time.realtimeSinceStartup,
                     FeedbackDelaySeconds = Mathf.Clamp(m_DissolveFadeOutSeconds * 0.6f, 0.2f, 1.0f),
+                }
+            );
+        }
+
+        /// <summary>
+        /// Apply dissolve-style temporary invisibility to semantic floor/terrain objects.
+        /// </summary>
+        public void ApplyFloorDissolveEffect(float durationSeconds = 8f)
+        {
+            if (
+                TryHandleFeedbackPromptBlocking(
+                    "floor_dissolve",
+                    "floor_dissolve",
+                    () => ApplyFloorDissolveEffect(durationSeconds),
+                    0,
+                    0
+                )
+            )
+            {
+                return;
+            }
+
+            List<GameObject> floorTargets = CollectFloorTargets();
+            if (floorTargets.Count == 0)
+            {
+                NGLog.Warn("DialogueFX", "Floor dissolve skipped: no floor targets found.");
+                return;
+            }
+
+            float clampedDuration = Mathf.Clamp(durationSeconds, 0.6f, 30f);
+            int appliedCount = 0;
+            Vector3 firstPosition = Vector3.zero;
+
+            for (int i = 0; i < floorTargets.Count; i++)
+            {
+                GameObject target = floorTargets[i];
+                if (target == null)
+                {
+                    continue;
+                }
+
+                Renderer[] renderers = target.GetComponentsInChildren<Renderer>(true);
+                if (renderers == null || renderers.Length == 0)
+                {
+                    continue;
+                }
+
+                int targetKey = target.GetInstanceID();
+                StopActiveObjectHide(targetKey, restoreVisible: true);
+
+                RendererFadeState[] fadeStates = BuildFadeStates(renderers);
+                m_ActiveObjectHideStates[targetKey] = fadeStates;
+
+                Coroutine routine = StartCoroutine(
+                    RunFloorDissolveSequence(targetKey, target.name, clampedDuration, fadeStates)
+                );
+                m_ActiveObjectHideRoutines[targetKey] = routine;
+
+                if (appliedCount == 0)
+                {
+                    firstPosition = target.transform.position;
+                }
+                appliedCount++;
+            }
+
+            if (appliedCount <= 0)
+            {
+                NGLog.Warn("DialogueFX", "Floor dissolve skipped: targets had no renderers.");
+                return;
+            }
+
+            NGLog.Info(
+                "DialogueFX",
+                $"Floor dissolve effect started on {appliedCount} object(s) for {clampedDuration:0.00}s"
+            );
+
+            EmitEffectApplied(
+                new AppliedEffectInfo
+                {
+                    EffectType = "dissolve",
+                    EffectName = "floor_dissolve",
+                    TargetNetworkObjectId = 0UL,
+                    Position = firstPosition,
+                    Scale = 1f,
+                    DurationSeconds = clampedDuration,
+                    AttachToTarget = false,
+                    FitToTargetMesh = false,
+                    AppliedAtRealtime = Time.realtimeSinceStartup,
+                    FeedbackDelaySeconds = 0.2f,
                 }
             );
         }
@@ -2576,13 +2686,7 @@ namespace Network_Game.Dialogue
             RendererFadeState[] fadeStates
         )
         {
-            float fadeOut = Mathf.Clamp(m_DissolveFadeOutSeconds, 0.05f, durationSeconds * 0.8f);
-            float fadeIn = Mathf.Clamp(
-                m_DissolveFadeInSeconds,
-                0.05f,
-                Mathf.Max(0.05f, durationSeconds - fadeOut)
-            );
-            float hold = Mathf.Max(0.05f, durationSeconds - fadeOut - fadeIn);
+            ResolveDissolveTimings(durationSeconds, out float fadeOut, out float hold, out float fadeIn);
 
             // Fade out
             if (fadeOut > 0f)
@@ -2627,6 +2731,36 @@ namespace Network_Game.Dialogue
             );
         }
 
+        private void ResolveDissolveTimings(
+            float durationSeconds,
+            out float fadeOut,
+            out float hold,
+            out float fadeIn
+        )
+        {
+            float duration = Mathf.Max(0.6f, durationSeconds);
+            float desiredFadeOut = Mathf.Max(m_DissolveFadeOutSeconds, kMinDissolveFadeOutSeconds);
+            float desiredFadeIn = Mathf.Max(m_DissolveFadeInSeconds, kMinDissolveFadeInSeconds);
+            float desiredHold = kMinDissolveHoldSeconds;
+
+            float required = desiredFadeOut + desiredFadeIn + desiredHold;
+            if (required <= duration)
+            {
+                fadeOut = desiredFadeOut;
+                fadeIn = desiredFadeIn;
+                hold = duration - fadeOut - fadeIn;
+                return;
+            }
+
+            float remainingForFades = Mathf.Max(0.1f, duration - desiredHold);
+            float fadeScale = remainingForFades / Mathf.Max(0.1f, desiredFadeOut + desiredFadeIn);
+            fadeScale = Mathf.Clamp(fadeScale, 0.05f, 1f);
+
+            fadeOut = Mathf.Max(0.05f, desiredFadeOut * fadeScale);
+            fadeIn = Mathf.Max(0.05f, desiredFadeIn * fadeScale);
+            hold = Mathf.Max(0.05f, duration - fadeOut - fadeIn);
+        }
+
         private void StopActiveDissolve(ulong targetNetworkObjectId, bool restoreVisible)
         {
             if (m_ActiveDissolveRoutines.TryGetValue(targetNetworkObjectId, out Coroutine routine))
@@ -2651,6 +2785,185 @@ namespace Network_Game.Dialogue
                 }
                 m_ActiveDissolveStates.Remove(targetNetworkObjectId);
             }
+        }
+
+        private IEnumerator RunFloorDissolveSequence(
+            int targetKey,
+            string targetName,
+            float durationSeconds,
+            RendererFadeState[] fadeStates
+        )
+        {
+            ResolveDissolveTimings(durationSeconds, out float fadeOut, out float hold, out float fadeIn);
+
+            if (fadeOut > 0f)
+            {
+                float elapsed = 0f;
+                while (elapsed < fadeOut)
+                {
+                    elapsed += Time.unscaledDeltaTime;
+                    float t = Mathf.Clamp01(elapsed / fadeOut);
+                    float curved = m_DissolveCurve != null ? m_DissolveCurve.Evaluate(t) : t;
+                    ApplyFadeAlpha(fadeStates, 1f - curved);
+                    yield return null;
+                }
+            }
+
+            SetRenderersEnabled(fadeStates, false);
+            if (hold > 0f)
+            {
+                yield return new WaitForSecondsRealtime(hold);
+            }
+
+            SetRenderersEnabled(fadeStates, true);
+            ApplyFadeAlpha(fadeStates, 0f);
+            if (fadeIn > 0f)
+            {
+                float elapsed = 0f;
+                while (elapsed < fadeIn)
+                {
+                    elapsed += Time.unscaledDeltaTime;
+                    float t = Mathf.Clamp01(elapsed / fadeIn);
+                    float curved = m_DissolveCurve != null ? m_DissolveCurve.Evaluate(t) : t;
+                    ApplyFadeAlpha(fadeStates, curved);
+                    yield return null;
+                }
+            }
+
+            RestoreFadeStates(fadeStates, forceVisible: true);
+            m_ActiveObjectHideRoutines.Remove(targetKey);
+            m_ActiveObjectHideStates.Remove(targetKey);
+
+            NGLog.Info(
+                "DialogueFX",
+                $"Floor dissolve effect ended - visibility restored for {targetName}"
+            );
+        }
+
+        private void StopActiveObjectHide(int targetKey, bool restoreVisible)
+        {
+            if (m_ActiveObjectHideRoutines.TryGetValue(targetKey, out Coroutine routine))
+            {
+                if (routine != null)
+                {
+                    StopCoroutine(routine);
+                }
+                m_ActiveObjectHideRoutines.Remove(targetKey);
+            }
+
+            if (m_ActiveObjectHideStates.TryGetValue(targetKey, out RendererFadeState[] states))
+            {
+                if (restoreVisible)
+                {
+                    RestoreFadeStates(states, forceVisible: true);
+                }
+                m_ActiveObjectHideStates.Remove(targetKey);
+            }
+        }
+
+        private static List<GameObject> CollectFloorTargets()
+        {
+            var targets = new List<GameObject>();
+            var seen = new HashSet<int>();
+
+#if UNITY_2023_1_OR_NEWER
+            DialogueSemanticTag[] semanticTags = UnityEngine.Object.FindObjectsByType<DialogueSemanticTag>(
+                findObjectsInactive: FindObjectsInactive.Exclude
+            );
+#else
+            DialogueSemanticTag[] semanticTags = UnityEngine.Object.FindObjectsOfType<DialogueSemanticTag>();
+#endif
+            for (int i = 0; i < semanticTags.Length; i++)
+            {
+                DialogueSemanticTag tag = semanticTags[i];
+                if (tag == null || tag.gameObject == null)
+                {
+                    continue;
+                }
+
+                if (tag.Role != DialogueSemanticRole.Floor && tag.Role != DialogueSemanticRole.Terrain)
+                {
+                    continue;
+                }
+
+                TryAddFloorTarget(tag.gameObject, seen, targets);
+            }
+
+            if (targets.Count > 0)
+            {
+                return targets;
+            }
+
+#if UNITY_2023_1_OR_NEWER
+            Transform[] transforms = UnityEngine.Object.FindObjectsByType<Transform>(
+                findObjectsInactive: FindObjectsInactive.Exclude
+            );
+#else
+            Transform[] transforms = UnityEngine.Object.FindObjectsOfType<Transform>();
+#endif
+            for (int i = 0; i < transforms.Length; i++)
+            {
+                Transform transform = transforms[i];
+                if (transform == null || transform.gameObject == null)
+                {
+                    continue;
+                }
+
+                string objectName = transform.gameObject.name ?? string.Empty;
+                if (!IsLikelyFloorName(objectName))
+                {
+                    continue;
+                }
+
+                TryAddFloorTarget(transform.gameObject, seen, targets);
+            }
+
+            return targets;
+        }
+
+        private static bool IsLikelyFloorName(string objectName)
+        {
+            if (string.IsNullOrWhiteSpace(objectName))
+            {
+                return false;
+            }
+
+            string lower = objectName.ToLowerInvariant();
+            for (int i = 0; i < s_FloorNameHints.Length; i++)
+            {
+                if (lower.Contains(s_FloorNameHints[i], StringComparison.Ordinal))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static void TryAddFloorTarget(
+            GameObject candidate,
+            HashSet<int> seen,
+            List<GameObject> targets
+        )
+        {
+            if (candidate == null)
+            {
+                return;
+            }
+
+            int key = candidate.GetInstanceID();
+            if (!seen.Add(key))
+            {
+                return;
+            }
+
+            Renderer[] renderers = candidate.GetComponentsInChildren<Renderer>(true);
+            if (renderers == null || renderers.Length == 0)
+            {
+                return;
+            }
+
+            targets.Add(candidate);
         }
 
         private RendererFadeState[] BuildFadeStates(Renderer[] renderers)

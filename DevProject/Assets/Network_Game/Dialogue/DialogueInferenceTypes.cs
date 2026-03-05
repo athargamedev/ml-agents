@@ -47,6 +47,7 @@ namespace Network_Game.Dialogue
     {
         public int MaxTokensOverride = -1;
         public bool PreferJsonResponse;
+        public string StructuredResponseInstruction;
     }
 
     public interface IDialogueInferenceClient

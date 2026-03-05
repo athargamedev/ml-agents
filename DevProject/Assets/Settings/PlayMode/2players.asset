@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 15024, guid: 0000000000000000e000000000000000, type: 0}
   m_Name: 2players
   m_EditorClassIdentifier: UnityEditor.MultiplayerModule.dll::Unity.Multiplayer.PlayMode.Editor.OrchestratedScenario
-  m_Description: 2 players. 1 Client/Server and a Client.
+  m_Description: 2 players
   m_EnableEditors: 1
   m_MainEditorInstance:
     Name: Main Editor
@@ -36,7 +36,7 @@ MonoBehaviour:
     PlayerInstanceIndex: 1
     m_AdvancedConfiguration:
       StreamLogsToMainEditor: 1
-      LogsColor: {r: 0.3643, g: 0.581, b: 0.8679, a: 1}
+      LogsColor: {r: 0.8773585, g: 0.2653576, b: 0, a: 1}
   m_LocalInstances: []
   m_RemoteInstances: []
   m_MainEditorInstanceObsolete:
