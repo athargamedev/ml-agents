@@ -2425,7 +2425,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2432808455
+  GlobalObjectIdHash: 1360569439
   InScenePlacedSourceGlobalObjectIdHash: 170955789
   DeferredDespawnTick: 0
   Ownership: 1
@@ -2919,18 +2919,17 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   m_Renderer: {fileID: 1397329432319482016}
   m_FaceMaterialIndex: 0
+  m_BaseBodyMaterial: {fileID: 2100000, guid: ff79bfd78b5899e41bf181b22af9371e, type: 2}
   m_FaceMaterials:
-  - {fileID: 2100000, guid: eba6913bf77bd744ea1cebb0c7684420, type: 2}
-  - {fileID: 2100000, guid: c0798dfb054feff4bb4eb7de8b20597c, type: 2}
-  - {fileID: 2100000, guid: dcf8420827e4efe4cb432f4979aef8e2, type: 2}
-  - {fileID: 2100000, guid: 2f5f8e67b0f60fe47b49ff7f5cf1c17f, type: 2}
-  - {fileID: 2100000, guid: 0f25152e41f4541419f51fc2ac093e8b, type: 2}
-  - {fileID: 2100000, guid: 31c2ab5677b18d3479ad1b151ae6d4c1, type: 2}
-  - {fileID: 2100000, guid: 117fe0a3bbca8264aa5ad5f5f56ebb85, type: 2}
-  - {fileID: 2100000, guid: 1643a33a5b3151d4dbbcfa7eae8f1e38, type: 2}
-  - {fileID: 2100000, guid: 9a32491b66424224bb99802175713e42, type: 2}
-  - {fileID: 2100000, guid: 1b5ee66e1e444094bbee246c08a0424f, type: 2}
-  - {fileID: 2100000, guid: a1c288b47bc1b0c4baf2a030983e907f, type: 2}
+  - {fileID: 2100000, guid: 739250532c4be124ca0c107b17d3fad6, type: 2}
+  - {fileID: 2100000, guid: 7a7c19b727cfa6440a8367d3139d61e6, type: 2}
+  - {fileID: 2100000, guid: 347af13a94309694abca4ddf6d49bee4, type: 2}
+  - {fileID: 2100000, guid: da22786b5a836894197ef99f8abb6152, type: 2}
+  - {fileID: 2100000, guid: c93f2842eab374b48b75343fe4919496, type: 2}
+  - {fileID: 2100000, guid: 607d245cd641b594083e1d27eb3f4854, type: 2}
+  - {fileID: 2100000, guid: 8eb181b71e5248e46a96c51654ccc09f, type: 2}
+  - {fileID: 2100000, guid: dc0fcd7e14050a9459c9bfcfdd45f243, type: 2}
+  - {fileID: 2100000, guid: 37612fbb75c34354db1086c098c4407e, type: 2}
   m_DefaultFaceIndex: 0
 --- !u!1 &6416604143029282004
 GameObject:

@@ -5,6 +5,7 @@ public static class FaceMapperEditorTool
 {
     [UnityEditor.MenuItem(@"Tools/Face Mapper/1. Bake Face Materials")] public static void BakeFaceMaterials();
     [UnityEditor.MenuItem(@"Tools/Face Mapper/3. Clear Baked Assets")] public static void ClearBaked();
+    [UnityEditor.MenuItem(@"Tools/Face Mapper/1b. Import Blender-Baked Atlases")] public static void ImportBlenderBakedAtlases();
     [UnityEditor.MenuItem(@"Tools/Face Mapper/2. Auto-Setup Characters")] public static void SetupAllCharacters();
 }
 

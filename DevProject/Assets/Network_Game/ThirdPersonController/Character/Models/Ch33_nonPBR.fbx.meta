@@ -8,7 +8,7 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Ch33_body
-    second: {fileID: 2100000, guid: 1643a33a5b3151d4dbbcfa7eae8f1e38, type: 2}
+    second: {fileID: 2100000, guid: ff79bfd78b5899e41bf181b22af9371e, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -1003,7 +1003,7 @@ ModelImporter:
     - name: mixamorig7:RightHandIndex2
       parentName: mixamorig7:RightHandIndex1
       position: {x: 0.00021717965, y: 0.032299712, z: -6.9948325e-10}
-      rotation: {x: 0.0000006286425, y: 0.00016591123, z: -0.0037747042, w: 0.99999285}
+      rotation: {x: 0.0000006286426, y: 0.00016591123, z: -0.0037747046, w: 0.99999285}
       scale: {x: 1, y: 1, z: 1}
     - name: mixamorig7:RightHandIndex3
       parentName: mixamorig7:RightHandIndex2

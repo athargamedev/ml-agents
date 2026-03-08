@@ -117,10 +117,15 @@ default_modes:
 
 # initial prompt for the project. It will always be given to the LLM upon activating the project
 # (contrary to the memories, which are loaded on demand).
-initial_prompt: "This DevProject is a unity game project that uses ml-agents. You must use the .serena folder at D:/GithubRepos/ml-agents/.serena to access the memories. "
+initial_prompt: "This DevProject is a unity game project that uses ml-agents. You
+  must use the .serena folder at D:/GithubRepos/ml-agents/.serena to access the memories. "
 
 # time budget (seconds) per tool call for the retrieval of additional symbol information
 # such as docstrings or parameter information.
 # This overrides the corresponding setting in the global configuration; see the documentation there.
 # If null or missing, use the setting from the global configuration.
 symbol_info_budget:
+
+# list of regex patterns which, when matched, mark a memory entry as read‑only.
+# Extends the list from the global configuration, merging the two lists.
+read_only_memory_patterns: []
