@@ -1,6 +1,6 @@
 {
-    "name": "Unity.ML-Agents.DevTests.Editor",
-    "rootNamespace": "Unity.ML-Agents",
+    "name": "Network_Game.ML-Agents.DevTests.Editor",
+    "rootNamespace": "Network_Game.ML-Agents.DevTests",
     "references": [
         "Unity.ML-Agents.Editor",
         "Unity.ML-Agents",

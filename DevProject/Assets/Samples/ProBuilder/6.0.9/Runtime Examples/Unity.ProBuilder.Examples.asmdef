@@ -1,8 +1,9 @@
 {
     "name": "Unity.ProBuilder.Examples",
+    "rootNamespace": "Unity.ProBuilder",
     "references": [
         "Unity.ProBuilder",
-        "Unity.ugui"
+        "UnityEditor.UI"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -11,5 +12,6 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": []
+    "versionDefines": [],
+    "noEngineReferences": false
 }

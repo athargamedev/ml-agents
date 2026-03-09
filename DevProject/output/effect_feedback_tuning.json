@@ -1,6 +1,6 @@
 {
     "schemaVersion": 1,
-    "updatedUtc": "2026-03-07T23:09:03.0855554Z",
+    "updatedUtc": "2026-03-09T09:00:04.6545170Z",
     "entries": [
         {
             "key": "dissolve",
@@ -113,26 +113,26 @@
         {
             "key": "bigexplosion",
             "effectType": "prefab_power",
-            "scaleMultiplier": 1.0492298603057862,
-            "durationMultiplier": 1.0349969863891602,
+            "scaleMultiplier": 1.0403684377670289,
+            "durationMultiplier": 1.0286974906921387,
             "attachScore": 0.0,
             "fitScore": 0.0,
-            "sampleCount": 18,
-            "looksCorrectCount": 13,
+            "sampleCount": 19,
+            "looksCorrectCount": 14,
             "lastOutcome": "looks_correct",
-            "lastUpdatedUtc": "2026-03-02T09:34:22.0326830Z"
+            "lastUpdatedUtc": "2026-03-09T08:31:35.6141248Z"
         },
         {
             "key": "smokeeffect",
             "effectType": "prefab_power",
-            "scaleMultiplier": 1.110439419746399,
-            "durationMultiplier": 1.0713077783584595,
-            "attachScore": 0.11982033401727677,
+            "scaleMultiplier": 1.0905603170394898,
+            "durationMultiplier": 1.0584723949432374,
+            "attachScore": 0.10903650522232056,
             "fitScore": 0.0,
-            "sampleCount": 22,
-            "looksCorrectCount": 12,
+            "sampleCount": 23,
+            "looksCorrectCount": 13,
             "lastOutcome": "looks_correct",
-            "lastUpdatedUtc": "2026-03-04T00:42:16.9704713Z"
+            "lastUpdatedUtc": "2026-03-09T08:32:05.2946457Z"
         },
         {
             "key": "flamestream",
@@ -161,14 +161,14 @@
         {
             "key": "energyexplosion",
             "effectType": "prefab_power",
-            "scaleMultiplier": 1.012864351272583,
-            "durationMultiplier": 1.0304006338119507,
-            "attachScore": 0.2637498378753662,
+            "scaleMultiplier": 1.010548710823059,
+            "durationMultiplier": 1.0249285697937012,
+            "attachScore": 0.24001234769821168,
             "fitScore": 0.0,
-            "sampleCount": 8,
-            "looksCorrectCount": 5,
+            "sampleCount": 9,
+            "looksCorrectCount": 6,
             "lastOutcome": "looks_correct",
-            "lastUpdatedUtc": "2026-03-03T05:27:15.3579426Z"
+            "lastUpdatedUtc": "2026-03-09T08:33:10.5023945Z"
         },
         {
             "key": "steam",
@@ -177,10 +177,10 @@
             "durationMultiplier": 1.0,
             "attachScore": 0.0,
             "fitScore": 0.0,
-            "sampleCount": 7,
-            "looksCorrectCount": 5,
+            "sampleCount": 8,
+            "looksCorrectCount": 6,
             "lastOutcome": "looks_correct",
-            "lastUpdatedUtc": "2026-03-04T00:43:21.8001716Z"
+            "lastUpdatedUtc": "2026-03-09T08:33:41.8067926Z"
         },
         {
             "key": "electricalsparkseffect",
@@ -235,24 +235,24 @@
             "effectType": "prefab_power",
             "scaleMultiplier": 1.114799976348877,
             "durationMultiplier": 1.0820000171661378,
-            "attachScore": 0.0,
+            "attachScore": 0.2800000011920929,
             "fitScore": 0.0,
-            "sampleCount": 3,
+            "sampleCount": 4,
             "looksCorrectCount": 1,
-            "lastOutcome": "looks_correct",
-            "lastUpdatedUtc": "2026-03-01T01:22:54.5046106Z"
+            "lastOutcome": "wrong_target",
+            "lastUpdatedUtc": "2026-03-09T08:34:55.4109395Z"
         },
         {
             "key": "groundfog",
             "effectType": "prefab_power",
-            "scaleMultiplier": 1.5649473667144776,
+            "scaleMultiplier": 1.4866999387741089,
             "durationMultiplier": 1.3805620670318604,
-            "attachScore": 0.0,
+            "attachScore": 0.3499999940395355,
             "fitScore": 0.0,
-            "sampleCount": 7,
+            "sampleCount": 8,
             "looksCorrectCount": 1,
-            "lastOutcome": "looks_correct",
-            "lastUpdatedUtc": "2026-03-01T01:25:41.8360229Z"
+            "lastOutcome": "wrong_placement",
+            "lastUpdatedUtc": "2026-03-09T08:16:03.3641200Z"
         },
         {
             "key": "plasmaexplosioneffect",

@@ -1,6 +1,6 @@
 {
     "schema_version": 1,
-    "updated_utc": "2026-03-03T05:26:50.9698268Z",
+    "updated_utc": "2026-03-09T08:34:55.4134657Z",
     "entries": [
         {
             "effect_tag": "bigexplosion",
@@ -102,6 +102,12 @@
                 "attached",
                 "projectile",
                 "ambient"
+            ]
+        },
+        {
+            "effect_tag": "waterleak",
+            "disfavored_placements": [
+                "attached"
             ]
         },
         {

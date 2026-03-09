@@ -51,7 +51,7 @@ namespace Network_Game.ThirdPersonController
 
         public void OnSprint(InputValue value) => SprintInput(value.isPressed);
 
-        public void OnCrouch(InputValue value) => CrouchInput(!crouch); // toggle, not hold
+        public void OnCrouch(InputValue value) => CrouchInput(!crouch);
 
         public void OnInteract(InputValue value) => InteractInput(value.isPressed);
 

@@ -1,0 +1,461 @@
+// This file is generated. Do not modify by hand.
+// XML documentation file not found. To check if public methods have XML comments,
+// make sure the XML doc file is present and located next to the scraped dll
+namespace TMPro
+{
+    public static class SortingLayerHelper
+    {
+        public static string[] sortingLayerNames { get; }
+    }
+
+    public class TMP_PackageUtilities : UnityEditor.Editor
+    {
+        public TMP_PackageUtilities() {}
+        [UnityEditor.MenuItem(@"Window/TextMeshPro/Import TMP Examples and Extras", false, 2051)] public static void ImportExamplesContentMenu();
+        [UnityEditor.MenuItem(@"Window/TextMeshPro/Import TMP Essential Resources", false, 2050)] public static void ImportProjectResourcesMenu();
+    }
+
+    public class TMP_PostBuildProcessHandler
+    {
+        public TMP_PostBuildProcessHandler() {}
+        [UnityEditor.Callbacks.PostProcessBuild(10000)] public static void OnPostprocessBuild(UnityEditor.BuildTarget target, string pathToBuiltProject);
+    }
+
+    public class TMP_PreBuildProcessor : UnityEditor.Build.IOrderedCallback, UnityEditor.Build.IPreprocessBuildWithReport
+    {
+        public int callbackOrder { get; }
+        public TMP_PreBuildProcessor() {}
+        public void OnPreprocessBuild(UnityEditor.Build.Reporting.BuildReport report);
+    }
+
+    public class TMP_ProjectConversionUtility : UnityEditor.EditorWindow
+    {
+        public TMP_ProjectConversionUtility() {}
+    }
+
+    public class TMP_SpriteAssetImporter : UnityEditor.EditorWindow
+    {
+        public TMP_SpriteAssetImporter() {}
+        public void OnGUI();
+        [UnityEditor.MenuItem(@"Window/TextMeshPro/Sprite Importer", false, 2026)] public static void ShowFontAtlasCreatorWindow();
+    }
+}
+
+namespace TMPro.EditorUtilities
+{
+    [UnityEditor.CanEditMultipleObjects] [UnityEditor.CustomEditor(typeof(TMP_Dropdown), true)] public class DropdownEditor : UnityEditor.UI.SelectableEditor
+    {
+        public DropdownEditor() {}
+        protected override void OnEnable();
+        public override void OnInspectorGUI();
+    }
+
+    public static class EditorShaderUtilities
+    {
+        public static void CopyMaterialProperties(UnityEngine.Material source, UnityEngine.Material destination);
+    }
+
+    [UnityEditor.CustomPropertyDrawer(typeof(TMP_FontWeightPair))] public class FontWeightDrawer : UnityEditor.PropertyDrawer
+    {
+        public FontWeightDrawer() {}
+        public override void OnGUI(UnityEngine.Rect position, UnityEditor.SerializedProperty property, UnityEngine.GUIContent label);
+    }
+
+    [UnityEditor.CustomPropertyDrawer(typeof(UnityEngine.TextCore.GlyphRect))] public class GlyphRectPropertyDrawer : UnityEditor.PropertyDrawer
+    {
+        public GlyphRectPropertyDrawer() {}
+        public override float GetPropertyHeight(UnityEditor.SerializedProperty property, UnityEngine.GUIContent label);
+        public override void OnGUI(UnityEngine.Rect position, UnityEditor.SerializedProperty property, UnityEngine.GUIContent label);
+    }
+
+    [UnityEditor.CustomPropertyDrawer(typeof(TMP_Style))] public class StyleDrawer : UnityEditor.PropertyDrawer
+    {
+        public static readonly float height = 95f;
+        public StyleDrawer() {}
+        public override float GetPropertyHeight(UnityEditor.SerializedProperty property, UnityEngine.GUIContent label);
+        public override void OnGUI(UnityEngine.Rect position, UnityEditor.SerializedProperty property, UnityEngine.GUIContent label);
+    }
+
+    public abstract class TMP_BaseEditorPanel : UnityEditor.Editor
+    {
+        protected static readonly UnityEngine.GUIContent k_ExtraSettingsLabel;
+        protected static string[] k_UiStateLabel;
+        protected UnityEditor.SerializedProperty m_AutoSizingProp;
+        protected UnityEditor.SerializedProperty m_CharacterSpacingProp;
+        protected UnityEditor.SerializedProperty m_CharWidthMaxAdjProp;
+        protected UnityEditor.SerializedProperty m_CheckPaddingRequiredProp;
+        protected UnityEditor.SerializedProperty m_ColorModeProp;
+        protected UnityEditor.SerializedProperty m_EmojiFallbackSupportProp;
+        protected UnityEditor.SerializedProperty m_EnableEscapeCharacterParsingProp;
+        protected UnityEditor.SerializedProperty m_EnableExtraPaddingProp;
+        protected UnityEditor.SerializedProperty m_EnableVertexGradientProp;
+        protected UnityEditor.SerializedProperty m_FontAssetProp;
+        protected UnityEditor.SerializedProperty m_FontColorGradientPresetProp;
+        protected UnityEditor.SerializedProperty m_FontColorGradientProp;
+        protected UnityEditor.SerializedProperty m_FontColorProp;
+        protected UnityEditor.SerializedProperty m_FontFeaturesActiveProp;
+        protected UnityEditor.SerializedProperty m_FontSharedMaterialProp;
+        protected UnityEditor.SerializedProperty m_FontSizeBaseProp;
+        protected UnityEditor.SerializedProperty m_FontSizeMaxProp;
+        protected UnityEditor.SerializedProperty m_FontSizeMinProp;
+        protected UnityEditor.SerializedProperty m_FontSizeProp;
+        protected UnityEditor.SerializedProperty m_FontStyleProp;
+        protected UnityEditor.SerializedProperty m_GeometrySortingOrderProp;
+        protected UnityEngine.Vector3[] m_HandlePoints;
+        protected UnityEditor.SerializedProperty m_HasFontAssetChangedProp;
+        protected bool m_HavePropertiesChanged;
+        protected UnityEditor.SerializedProperty m_HorizontalAlignmentProp;
+        protected UnityEditor.SerializedProperty m_HorizontalMappingProp;
+        protected bool m_IsPresetListDirty;
+        protected UnityEditor.SerializedProperty m_IsRichTextProp;
+        protected UnityEditor.SerializedProperty m_IsRightToLeftProp;
+        protected UnityEditor.SerializedProperty m_IsTextObjectScaleStaticProp;
+        protected UnityEditor.SerializedProperty m_LineSpacingMaxProp;
+        protected UnityEditor.SerializedProperty m_LineSpacingProp;
+        protected UnityEditor.SerializedProperty m_LinkedTextComponentProp;
+        protected UnityEditor.SerializedProperty m_MarginProp;
+        protected System.Collections.Generic.Dictionary<UnityEngine.EntityId, int> m_MaterialPresetIndexLookup = new();
+        protected UnityEngine.GUIContent[] m_MaterialPresetNames;
+        protected UnityEngine.Material[] m_MaterialPresets;
+        protected int m_MaterialPresetSelectionIndex;
+        protected UnityEditor.SerializedProperty m_OverrideHtmlColorProp;
+        protected UnityEditor.SerializedProperty m_PageToDisplayProp;
+        protected UnityEditor.SerializedProperty m_ParagraphSpacingProp;
+        protected UnityEditor.SerializedProperty m_ParentLinkedTextComponentProp;
+        protected TMP_Text m_PreviousLinkedTextComponent;
+        protected UnityEngine.Vector3[] m_RectCorners;
+        protected UnityEngine.RectTransform m_RectTransform;
+        protected string m_RtlText;
+        protected UnityEditor.SerializedProperty m_SpriteAssetProp;
+        protected UnityEngine.GUIContent[] m_StyleNames;
+        protected System.Collections.Generic.List<TMP_Style> m_Styles = new();
+        protected int m_StyleSelectionIndex;
+        protected UnityEditor.SerializedProperty m_StyleSheetAssetProp;
+        protected UnityEngine.Material m_TargetMaterial;
+        protected UnityEditor.SerializedProperty m_TextAlignmentProp;
+        protected TMP_Text m_TextComponent;
+        protected UnityEditor.SerializedProperty m_TextOverflowModeProp;
+        protected UnityEditor.SerializedProperty m_TextProp;
+        protected UnityEditor.SerializedProperty m_TextStyleHashCodeProp;
+        protected System.Collections.Generic.Dictionary<int, int> m_TextStyleIndexLookup = new();
+        protected UnityEditor.SerializedProperty m_TextWrappingModeProp;
+        protected UnityEditor.SerializedProperty m_UseMaxVisibleDescenderProp;
+        protected UnityEditor.SerializedProperty m_UvLineOffsetProp;
+        protected UnityEditor.SerializedProperty m_VerticalAlignmentProp;
+        protected UnityEditor.SerializedProperty m_VerticalMappingProp;
+        protected UnityEditor.SerializedProperty m_WordSpacingProp;
+        protected UnityEditor.SerializedProperty m_WordWrappingRatiosProp;
+        protected static int s_EventId;
+        public int selAlignGridA;
+        public int selAlignGridB;
+        protected TMP_BaseEditorPanel() {}
+        protected void DrawEmojiFallbackSupport();
+        protected abstract void DrawExtraSettings();
+        protected void DrawFontFeatures();
+        protected void DrawGeometrySorting();
+        protected void DrawIsTextObjectScaleStatic();
+        protected void DrawMainSettings();
+        protected void DrawMarginProperty(UnityEditor.SerializedProperty property, UnityEngine.GUIContent label);
+        protected void DrawMargins();
+        protected void DrawPadding();
+        protected void DrawParsing();
+        protected void DrawPropertySlider(UnityEngine.GUIContent label, UnityEditor.SerializedProperty property);
+        protected void DrawRichText();
+        protected void DrawSpriteAsset();
+        protected void DrawStyleSheet();
+        protected void DrawTextInput();
+        protected void DrawTextureMapping();
+        protected UnityEngine.GUIContent[] GetMaterialPresets();
+        protected UnityEngine.GUIContent[] GetStyleNames();
+        protected abstract bool IsMixSelectionTypes();
+        protected virtual void OnDisable();
+        protected virtual void OnEnable();
+        public override void OnInspectorGUI();
+        public void OnSceneGUI();
+        protected abstract void OnUndoRedo();
+        protected struct Foldout
+        {
+            public static bool extraSettings;
+            public static bool materialInspector = true;
+        }
+    }
+
+    public abstract class TMP_BaseShaderGUI : UnityEditor.ShaderGUI
+    {
+        protected UnityEditor.MaterialEditor m_Editor;
+        protected UnityEngine.Material m_Material;
+        protected UnityEditor.MaterialProperty[] m_Properties;
+        protected static UnityEngine.GUIContent[] s_CullingTypeLabels;
+        protected static bool s_DebugExtended;
+        protected static UnityEngine.GUIContent[] s_LbrtVectorLabels;
+        protected static UnityEngine.GUIContent[] s_XywhVectorLabels;
+        protected TMP_BaseShaderGUI() {}
+        public override void AssignNewShaderToMaterial(UnityEngine.Material material, UnityEngine.Shader oldShader, UnityEngine.Shader newShader);
+        protected bool BeginPanel(string panel, bool expanded);
+        protected bool BeginPanel(string panel, TMP_BaseShaderGUI.ShaderFeature feature, bool expanded, bool readState = true);
+        protected void DoColor(string name, string label);
+        protected void DoCubeMap(string name, string label);
+        protected void DoFloat(string name, string label);
+        protected abstract void DoGUI();
+        protected void DoOffset(string name, string label);
+        protected void DoPopup(string name, string label, UnityEngine.GUIContent[] options);
+        protected void DoSlider(string name, string label);
+        protected void DoSlider(string propertyName, string propertyField, string label);
+        protected void DoSlider(string name, UnityEngine.Vector2 range, string label);
+        protected void DoSlider(string propertyName, string propertyField, UnityEngine.Vector2 range, string label);
+        protected void DoTexture2D(string name, string label, bool withTilingOffset = false, string[] speedNames = default(string[]));
+        protected void DoToggle(string name, string label);
+        protected void DoUVSpeed(UnityEngine.Rect rect, string[] names);
+        protected void DoVector(string name, string label, UnityEngine.GUIContent[] subLabels);
+        protected void DoVector2(string name, string label);
+        protected void DoVector3(string name, string label);
+        public void EndPanel();
+        public override void OnGUI(UnityEditor.MaterialEditor materialEditor, UnityEditor.MaterialProperty[] properties);
+        protected class ShaderFeature
+        {
+            public UnityEngine.GUIContent[] keywordLabels;
+            public string[] keywords;
+            public UnityEngine.GUIContent label;
+            public string undoLabel;
+            public bool Active { get; }
+            public int State { get; }
+            public ShaderFeature() {}
+            public void DoPopup(UnityEditor.MaterialEditor editor, UnityEngine.Material material);
+            public void ReadState(UnityEngine.Material material);
+            public void SetActive(bool active, UnityEngine.Material material);
+        }
+    }
+
+    public class TMP_BitmapShaderGUI : TMP_BaseShaderGUI
+    {
+        public TMP_BitmapShaderGUI() {}
+        protected override void DoGUI();
+    }
+
+    [UnityEditor.CustomPropertyDrawer(typeof(TMP_Character))] public class TMP_CharacterPropertyDrawer : UnityEditor.PropertyDrawer
+    {
+        public TMP_CharacterPropertyDrawer() {}
+        public override float GetPropertyHeight(UnityEditor.SerializedProperty property, UnityEngine.GUIContent label);
+        public override void OnGUI(UnityEngine.Rect position, UnityEditor.SerializedProperty property, UnityEngine.GUIContent label);
+    }
+
+    public static class TMP_ColorGradientAssetMenu
+    {
+    }
+
+    [UnityEditor.CustomEditor(typeof(TMP_ColorGradient))] public class TMP_ColorGradientEditor : UnityEditor.Editor
+    {
+        public TMP_ColorGradientEditor() {}
+        public override void OnInspectorGUI();
+    }
+
+    public class TMP_ContextMenus : UnityEditor.Editor
+    {
+        public TMP_ContextMenus() {}
+    }
+
+    public class TMP_EditorCoroutine
+    {
+        public static TMP_EditorCoroutine StartCoroutine(System.Collections.IEnumerator routine);
+        public void Stop();
+    }
+
+    [UnityEditor.CanEditMultipleObjects] [UnityEditor.CustomEditor(typeof(TextMeshPro), true)] public class TMP_EditorPanel : TMP_BaseEditorPanel
+    {
+        public TMP_EditorPanel() {}
+        protected override void DrawExtraSettings();
+        protected void DrawVolumetricSetup();
+        protected override bool IsMixSelectionTypes();
+        protected override void OnEnable();
+        protected override void OnUndoRedo();
+    }
+
+    [UnityEditor.CanEditMultipleObjects] [UnityEditor.CustomEditor(typeof(TextMeshProUGUI), true)] public class TMP_EditorPanelUI : TMP_BaseEditorPanel
+    {
+        public TMP_EditorPanelUI() {}
+        protected override void DrawExtraSettings();
+        protected void DrawMaskable();
+        protected void DrawRaycastTarget();
+        protected override bool IsMixSelectionTypes();
+        protected override void OnEnable();
+        protected override void OnUndoRedo();
+    }
+
+    public static class TMP_EditorUtility
+    {
+        public static string packageFullPath { get; }
+        public static string packageRelativePath { get; }
+    }
+
+    [UnityEditor.CustomEditor(typeof(TMP_FontAsset))] public class TMP_FontAssetEditor : UnityEditor.Editor
+    {
+        public static readonly UnityEngine.GUIContent getFontFeaturesLabel;
+        public TMP_FontAssetEditor() {}
+        public override bool HasPreviewGUI();
+        public void OnDisable();
+        public void OnEnable();
+        public override void OnInspectorGUI();
+        public override void OnPreviewGUI(UnityEngine.Rect rect, UnityEngine.GUIStyle background);
+    }
+
+    [UnityEditor.CustomPropertyDrawer(typeof(UnityEngine.TextCore.Glyph))] public class TMP_GlyphPropertyDrawer : UnityEditor.PropertyDrawer
+    {
+        public TMP_GlyphPropertyDrawer() {}
+        public override float GetPropertyHeight(UnityEditor.SerializedProperty property, UnityEngine.GUIContent label);
+        public override void OnGUI(UnityEngine.Rect position, UnityEditor.SerializedProperty property, UnityEngine.GUIContent label);
+    }
+
+    [UnityEditor.CustomPropertyDrawer(typeof(HorizontalAlignmentOptions))] public class TMP_HorizontalAlignmentDrawer : UnityEditor.PropertyDrawer
+    {
+        public TMP_HorizontalAlignmentDrawer() {}
+        public override float GetPropertyHeight(UnityEditor.SerializedProperty property, UnityEngine.GUIContent label);
+        public override void OnGUI(UnityEngine.Rect position, UnityEditor.SerializedProperty property, UnityEngine.GUIContent label);
+    }
+
+    [UnityEditor.CanEditMultipleObjects] [UnityEditor.CustomEditor(typeof(TMP_InputField), true)] public class TMP_InputFieldEditor : UnityEditor.UI.SelectableEditor
+    {
+        public TMP_InputFieldEditor() {}
+        protected override void OnDisable();
+        protected override void OnEnable();
+        public override void OnInspectorGUI();
+    }
+
+    [UnityEditor.CustomPropertyDrawer(typeof(MarkToMarkAdjustmentRecord))] public class TMP_MarkToMarkAdjustmentRecordPropertyDrawer : UnityEditor.PropertyDrawer
+    {
+        public TMP_MarkToMarkAdjustmentRecordPropertyDrawer() {}
+        public override void OnGUI(UnityEngine.Rect position, UnityEditor.SerializedProperty property, UnityEngine.GUIContent label);
+    }
+
+    public class TMP_SDFShaderGUI : TMP_BaseShaderGUI
+    {
+        public TMP_SDFShaderGUI() {}
+        protected override void DoGUI();
+    }
+
+    [UnityEditor.CustomEditor(typeof(TMP_Settings))] public class TMP_SettingsEditor : UnityEditor.Editor
+    {
+        public TMP_SettingsEditor() {}
+        public void OnEnable();
+        public override void OnInspectorGUI();
+    }
+
+    [UnityEditor.CustomEditor(typeof(TMP_SpriteAsset))] public class TMP_SpriteAssetEditor : UnityEditor.Editor
+    {
+        public TMP_SpriteAssetEditor() {}
+        public void OnEnable();
+        public override void OnInspectorGUI();
+    }
+
+    public static class TMP_SpriteAssetMenu
+    {
+    }
+
+    [UnityEditor.CustomPropertyDrawer(typeof(TMP_SpriteCharacter))] public class TMP_SpriteCharacterPropertyDrawer : UnityEditor.PropertyDrawer
+    {
+        public TMP_SpriteCharacterPropertyDrawer() {}
+        public override float GetPropertyHeight(UnityEditor.SerializedProperty property, UnityEngine.GUIContent label);
+        public override void OnGUI(UnityEngine.Rect position, UnityEditor.SerializedProperty property, UnityEngine.GUIContent label);
+    }
+
+    [UnityEditor.CustomPropertyDrawer(typeof(TMP_SpriteGlyph))] public class TMP_SpriteGlyphPropertyDrawer : UnityEditor.PropertyDrawer
+    {
+        public TMP_SpriteGlyphPropertyDrawer() {}
+        public override float GetPropertyHeight(UnityEditor.SerializedProperty property, UnityEngine.GUIContent label);
+        public override void OnGUI(UnityEngine.Rect position, UnityEditor.SerializedProperty property, UnityEngine.GUIContent label);
+    }
+
+    public static class TMP_StyleAssetMenu
+    {
+    }
+
+    [UnityEditor.CanEditMultipleObjects] [UnityEditor.CustomEditor(typeof(TMP_StyleSheet))] public class TMP_StyleEditor : UnityEditor.Editor
+    {
+        public TMP_StyleEditor() {}
+        public override void OnInspectorGUI();
+    }
+
+    [UnityEditor.CanEditMultipleObjects] [UnityEditor.CustomEditor(typeof(TMP_SubMesh))] public class TMP_SubMesh_Editor : UnityEditor.Editor
+    {
+        public TMP_SubMesh_Editor() {}
+        public void OnEnable();
+        public override void OnInspectorGUI();
+    }
+
+    [UnityEditor.CanEditMultipleObjects] [UnityEditor.CustomEditor(typeof(TMP_SubMeshUI))] public class TMP_SubMeshUI_Editor : UnityEditor.Editor
+    {
+        public TMP_SubMeshUI_Editor() {}
+        public void OnDisable();
+        public void OnEnable();
+        public override void OnInspectorGUI();
+    }
+
+    [UnityEditor.CustomPropertyDrawer(typeof(TextAlignmentOptions))] public class TMP_TextAlignmentDrawer : UnityEditor.PropertyDrawer
+    {
+        public TMP_TextAlignmentDrawer() {}
+        public override float GetPropertyHeight(UnityEditor.SerializedProperty property, UnityEngine.GUIContent label);
+        public override void OnGUI(UnityEngine.Rect position, UnityEditor.SerializedProperty property, UnityEngine.GUIContent label);
+    }
+
+    public static class TMP_UIStyleManager
+    {
+        public static UnityEngine.Texture2D alignBaseline;
+        public static UnityEngine.Texture2D alignBottom;
+        public static UnityEngine.Texture2D alignCapline;
+        public static UnityEngine.Texture2D alignCenter;
+        public static UnityEngine.GUIContent[] alignContentA;
+        public static UnityEngine.GUIContent[] alignContentB;
+        public static UnityEngine.Texture2D alignFlush;
+        public static UnityEngine.Texture2D alignGeoCenter;
+        public static UnityEngine.Texture2D alignJustified;
+        public static UnityEngine.Texture2D alignLeft;
+        public static UnityEngine.GUIStyle alignmentButtonLeft;
+        public static UnityEngine.GUIStyle alignmentButtonMid;
+        public static UnityEngine.GUIStyle alignmentButtonRight;
+        public static UnityEngine.Texture2D alignMiddle;
+        public static UnityEngine.Texture2D alignMidline;
+        public static UnityEngine.Texture2D alignRight;
+        public static UnityEngine.Texture2D alignTop;
+        public static UnityEngine.GUIStyle boldFoldout;
+        public static UnityEngine.GUIStyle centeredLabel;
+        public static UnityEngine.GUIStyle label;
+        public static UnityEngine.GUIStyle panelTitle;
+        public static UnityEngine.GUIStyle rightLabel;
+        public static UnityEngine.GUIStyle sectionHeader;
+        public static UnityEngine.Texture2D sectionHeaderTexture;
+        public static UnityEngine.GUIStyle textAreaBoxWindow;
+        public static UnityEngine.GUIStyle wrappingTextArea;
+    }
+
+    [UnityEditor.CustomPropertyDrawer(typeof(VerticalAlignmentOptions))] public class TMP_VerticalAlignmentDrawer : UnityEditor.PropertyDrawer
+    {
+        public TMP_VerticalAlignmentDrawer() {}
+        public override float GetPropertyHeight(UnityEditor.SerializedProperty property, UnityEngine.GUIContent label);
+        public override void OnGUI(UnityEngine.Rect position, UnityEditor.SerializedProperty property, UnityEngine.GUIContent label);
+    }
+
+    public static class TMPro_CreateObjectMenu
+    {
+        [UnityEditor.MenuItem(@"GameObject/UI (Canvas)/Button - TextMeshPro", false, 2031)] public static void AddButton(UnityEditor.MenuCommand menuCommand);
+        [UnityEditor.MenuItem(@"GameObject/UI (Canvas)/Dropdown - TextMeshPro", false, 2036)] public static void AddDropdown(UnityEditor.MenuCommand menuCommand);
+        public static UnityEngine.GameObject CreateNewUI();
+        public static UnityEngine.GameObject GetOrCreateCanvasGameObject();
+    }
+
+    public class TMPro_FontAssetCreatorWindow : UnityEditor.EditorWindow
+    {
+        public TMPro_FontAssetCreatorWindow() {}
+        public void OnDisable();
+        public void OnEnable();
+        public void OnGUI();
+        [UnityEditor.MenuItem(@"Window/TextMeshPro/Font Asset Creator", false, 2025)] public static void ShowFontAtlasCreatorWindow();
+        public static void ShowFontAtlasCreatorWindow(TMP_FontAsset fontAsset);
+        public static void ShowFontAtlasCreatorWindow(UnityEngine.Font font);
+        public void Update();
+    }
+
+    [UnityEditor.CanEditMultipleObjects] [UnityEditor.CustomEditor(typeof(TextContainer))] public class TMPro_TextContainerEditor : UnityEditor.Editor
+    {
+        public TMPro_TextContainerEditor() {}
+        public override void OnInspectorGUI();
+    }
+}

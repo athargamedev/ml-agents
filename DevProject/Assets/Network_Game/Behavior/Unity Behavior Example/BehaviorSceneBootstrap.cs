@@ -6,7 +6,6 @@ using System.Reflection;
 using Network_Game.Auth;
 using Network_Game.Combat;
 using Network_Game.Diagnostics;
-using Unity.AI.Navigation;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -903,29 +902,6 @@ namespace Network_Game.Behavior
                 "Bootstrap",
                 NGLog.Format("Added CombatHealth to player", ("player", player.name))
             );
-        }
-
-        private void BuildNavMeshIfNeeded()
-        {
-#if UNITY_2023_1_OR_NEWER
-            var surfaces = FindObjectsByType<NavMeshSurface>(FindObjectsInactive.Exclude);
-#else
-            var surfaces = FindObjectsOfType<NavMeshSurface>();
-#endif
-            if (surfaces == null || surfaces.Length == 0)
-            {
-                NGLog.Warn("Bootstrap", "No NavMeshSurface found");
-                return;
-            }
-
-            foreach (var surface in surfaces)
-            {
-                if (surface != null && surface.navMeshData == null)
-                {
-                    NGLog.Info("Bootstrap", "Building NavMesh");
-                    surface.BuildNavMesh();
-                }
-            }
         }
 
         private bool IsClientMode()

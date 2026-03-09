@@ -1,0 +1,34 @@
+﻿{
+    "schema_version":  "1.0",
+    "original_filename":  "2026-03-09 02_52_53-Whiteboard - Diagram - Webcam - Unity Design.png",
+    "original_path":  "D:\\UnityScreenshots\\_incoming\\2026-03-09 02_52_53-Whiteboard - Diagram - Webcam - Unity Design.png",
+    "descriptive_name":  "user_photo_material_atlas",
+    "category":  "Material",
+    "project":  "Whiteboard",
+    "scene":  "Diagram",
+    "platform":  "Unknown",
+    "unity_version":  "Unknown",
+    "is_unity_capture":  false,
+    "capture_timestamp":  "2026-03-09_03-01-44",
+    "window_title":  "Greenshot",
+    "file_path":  "D:\\GithubRepos\\ml-agents\\DevProject\\Assets\\Screenshots\\Material\\user_photo_material_atlas_2026-03-09_03-01-44.png",
+    "file_size_bytes":  439903,
+    "ai_analysis":  {
+                        "analyzed":  true,
+                        "description":  "The diagram illustrates a concept where a user\u0027s photo is used to create or influence a material atlas for a 3D model. An arrow points from \u0027USER_PHOTO\u0027 to \u0027MATERIAL ATLAS\u0027, and another arrow points from \u0027MATERIAL ATLAS\u0027 to a drawn 3D model, suggesting the atlas is applied to the model. This likely represents a system for dynamically generating or applying textures based on user input.",
+                        "tags":  [
+                                     "user_photo",
+                                     "material_atlas",
+                                     "3d_model",
+                                     "texture",
+                                     "dynamic_material"
+                                 ],
+                        "unity_panels":  "Whiteboard",
+                        "issues":  {
+
+                                   },
+                        "confidence":  0.9,
+                        "model":  "qwen/qwen3-vl-8b",
+                        "analyzed_at":  "2026-03-09T03:01:45.0060740-03:00"
+                    }
+}

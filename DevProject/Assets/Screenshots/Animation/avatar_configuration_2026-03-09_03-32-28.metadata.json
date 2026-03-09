@@ -1,0 +1,38 @@
+﻿{
+    "schema_version":  "1.0",
+    "original_filename":  "2026_03_09_03_30_29_D_GithubRepos_ml_agents_DevProject_Behavior_Scene_Windows_Mac_Linux_Uni.png",
+    "original_path":  "C:\\Users\\andre_wjgj23f\\AppData\\Local\\Temp\\2026_03_09_03_30_29_D_GithubRepos_ml_agents_DevProject_Behavior_Scene_Windows_Mac_Linux_Uni.png",
+    "descriptive_name":  "avatar_configuration",
+    "category":  "Animation",
+    "project":  "DevProject",
+    "scene":  "Behavior_Scene",
+    "platform":  "Unknown",
+    "unity_version":  "Unknown",
+    "is_unity_capture":  true,
+    "capture_timestamp":  "2026-03-09_03-32-28",
+    "window_title":  "Greenshot",
+    "file_path":  "D:\\GithubRepos\\ml-agents\\DevProject\\Assets\\Screenshots\\Animation\\avatar_configuration_2026-03-09_03-32-28.png",
+    "file_size_bytes":  460785,
+    "ai_analysis":  {
+                        "analyzed":  true,
+                        "description":  "Selected \u0027Ch33_nonPBR Avatar (Avatar)\u0027 in Hierarchy. Inspector shows \u0027MCP For Unity\u0027 Avatar Configuration with \u0027Mapping\u0027 tab active, displaying bone mapping for the avatar. The avatar is visible in the Game view.",
+                        "tags":  [
+                                     "ch33_nonpbr_avatar",
+                                     "mcp_for_unity",
+                                     "avatar_configuration",
+                                     "mapping",
+                                     "animation"
+                                 ],
+                        "unity_panels":  [
+                                             "Game",
+                                             "Inspector",
+                                             "Hierarchy"
+                                         ],
+                        "issues":  {
+
+                                   },
+                        "confidence":  0.95,
+                        "model":  "qwen/qwen3-vl-8b",
+                        "analyzed_at":  "2026-03-09T03:32:28.7215183-03:00"
+                    }
+}
