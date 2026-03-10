@@ -24,7 +24,7 @@ namespace UnityEngine.UIElements
         /// The camera used by this Raycaster to convert screen coordinates to Rays.
         /// If empty, Camera.main is going to be used.
         /// </summary>
-        public new Camera camera
+        public Camera raycastCamera
         {
             get => m_EventCamera;
             set => m_EventCamera = value;
@@ -60,7 +60,7 @@ namespace UnityEngine.UIElements
             }
 
             if (!worldPicker.TryPickWithCapture(pointerId, worldRay, maxDistance, layerMask, out _,
-                    out var document, out var elementUnderPointer, out var distance, out var captured))
+                out var document, out var elementUnderPointer, out var distance, out var captured))
                 return;
 
             resultAppendList.Add(new RaycastResult

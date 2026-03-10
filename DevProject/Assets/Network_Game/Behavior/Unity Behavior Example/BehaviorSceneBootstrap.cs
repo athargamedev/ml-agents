@@ -42,7 +42,7 @@ namespace Network_Game.Behavior
         [SerializeField]
         [Tooltip(
             "If true, host startup waits until auth is confirmed instead of continuing after timeout."
-         )]
+        )]
         private bool m_BlockNetworkStartUntilAuthenticated = true;
 
         [SerializeField]
@@ -53,30 +53,32 @@ namespace Network_Game.Behavior
         [SerializeField]
         [Tooltip(
             "When enabled, local player is aligned to SpawnPoint after network spawn resolves."
-         )]
+        )]
         private bool m_AlignLocalPlayerToSpawnPoint = true;
 
         [Header("Client Mode (MPPM / 2-Player)")]
         [SerializeField]
         [Tooltip(
             "Force this instance to start as a client instead of host. Use for manual 2-player testing."
-         )]
+        )]
         private bool m_ForceClientMode;
 
         [SerializeField]
         [Tooltip("MPPM player tag that triggers client mode (e.g. 'Client').")]
+#pragma warning disable CS0414
         private string m_ClientModeTag = "Client";
+#pragma warning restore CS0414
 
         [SerializeField]
         [Tooltip(
             "Avoids noisy host bind failures by switching to client mode when the configured UTP listen port is already occupied."
-         )]
+        )]
         private bool m_AvoidHostStartWhenPortIsInUse = true;
 
         [SerializeField]
         [Tooltip(
             "If host startup fails unexpectedly, retry host on the next free UDP port instead of silently falling back to client mode."
-         )]
+        )]
         private bool m_TryHostPortFallbackOnStartFailure = true;
 
         [SerializeField]
@@ -93,7 +95,7 @@ namespace Network_Game.Behavior
         [SerializeField]
         [Tooltip(
             "Auto-creates LlmDebugAssistant at runtime. Keep disabled for multiplayer latency tests to avoid extra LLM traffic."
-         )]
+        )]
         private bool m_AutoCreateLlmDebugAssistant;
 
         [SerializeField]
@@ -268,7 +270,10 @@ namespace Network_Game.Behavior
                         nextClientRetry -= Time.deltaTime;
                         if (nextClientRetry <= 0f)
                         {
-                            NGLog.Info("Bootstrap", "Client not connected; retrying StartClient...");
+                            NGLog.Info(
+                                "Bootstrap",
+                                "Client not connected; retrying StartClient..."
+                            );
                             manager.StartClient();
                             nextClientRetry = clientRetryInterval;
                         }
@@ -308,8 +313,8 @@ namespace Network_Game.Behavior
 
             List<GameObject> npcObjects =
                 m_NpcBootstrap != null
-                ? m_NpcBootstrap.CollectAndPrioritizeNpcs(m_PrimaryNpc)
-                : new List<GameObject>();
+                    ? m_NpcBootstrap.CollectAndPrioritizeNpcs(m_PrimaryNpc)
+                    : new List<GameObject>();
             if (npcObjects.Count > 0)
             {
                 m_PrimaryNpc = npcObjects[0];
@@ -382,8 +387,8 @@ namespace Network_Game.Behavior
                     NGLog.Info(
                         "Bootstrap",
                         shouldUseWebSockets
-                        ? "WebSocket transport enabled"
-                        : "UDP transport enabled"
+                            ? "WebSocket transport enabled"
+                            : "UDP transport enabled"
                     );
                 }
             }
@@ -440,7 +445,6 @@ namespace Network_Game.Behavior
                 NGLog.Warn("Bootstrap", $"Failed to read server address from URL: {ex.Message}");
             }
         }
-
 #endif
 
         private IEnumerator WaitForEditorHostEndpoint(NetworkManager manager)
@@ -983,8 +987,10 @@ namespace Network_Game.Behavior
             try
             {
                 string normalizedDataPath = Application.dataPath.Replace('\\', '/');
-                return normalizedDataPath.IndexOf("/Library/VP/", StringComparison.OrdinalIgnoreCase)
-                    >= 0;
+                return normalizedDataPath.IndexOf(
+                        "/Library/VP/",
+                        StringComparison.OrdinalIgnoreCase
+                    ) >= 0;
             }
             catch
             {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Unity.Multiplayer.Tools.Common;
@@ -14,7 +14,9 @@ namespace Unity.Multiplayer.Tools.NetworkSimulator.Runtime
     /// </summary>
     class NetworkEventsApi : INetworkEventsApi
     {
+#pragma warning disable CS0414
         private bool m_IsLageSpikeRunning;
+#pragma warning restore CS0414
         readonly NetworkSimulator m_NetworkSimulator;
         readonly INetworkTransportApi m_NetworkTransportApi;
 

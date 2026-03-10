@@ -100,7 +100,6 @@
   <Project Path="Unity.TestTools.CodeCoverage.Editor.OpenCover.Mono.Reflection.csproj" />
   <Project Path="Unity.Multiplayer.Tools.DependencyInjection.UIElements.csproj" />
   <Project Path="Unity.Numerics.Linear.Solvers.Lowlevel.csproj" />
-  <Project Path="Unity.ProBuilder.Examples.csproj" />
   <Project Path="UnityEditor.UI.EditorTests.csproj" />
   <Project Path="Unity.ProBuilder.KdTree.csproj" />
   <Project Path="Unity.Multiplayer.Tools.NetworkSimulator.Editor.csproj" />
@@ -116,11 +115,9 @@
   <Project Path="Unity.Entities.Editor.Properties.csproj" />
   <Project Path="Unity.Entities.UI.csproj" />
   <Project Path="Unity.Entities.CodeGen.csproj" />
-  <Project Path="VFXGraph.OutputEventHandlers.Editor.csproj" />
   <Project Path="Unity.Multiplayer.Tools.Common.Tests.Editor.csproj" />
   <Project Path="Unity.Multiplayer.Tools.NetworkSolutionInterface.csproj" />
   <Project Path="Unity.Multiplayer.Tools.NetVis.Editor.UI.csproj" />
-  <Project Path="VFXGraph.OutputEventHandlers.csproj" />
   <Project Path="Unity.Addressables.csproj" />
   <Project Path="Unity.UI.TestFramework.Runtime.csproj" />
   <Project Path="Unity.AppUI.Editor.csproj" />
@@ -147,7 +144,6 @@
   <Project Path="Unity.SurfaceCache.Runtime.csproj" />
   <Project Path="Unity.Netcode.Editor.csproj" />
   <Project Path="Unity.InternalAPIEngineBridge.RenderPipelines.Core.Runtime.Shared.csproj" />
-  <Project Path="Unity.ProBuilder.Examples.Editor.csproj" />
   <Project Path="Unity.Splines.csproj" />
   <Project Path="Unity.AI.Navigation.csproj" />
   <Project Path="Unity.Multiplayer.Tools.NetStatsMonitor.Interface.Tests.Editor.csproj" />
@@ -223,8 +219,6 @@
   <Project Path="Unity.Entities.Hybrid.HybridComponents.csproj" />
   <Project Path="Unity.ShaderGraph.Utilities.csproj" />
   <Project Path="Unity.Recorder.Base.csproj" />
-  <Project Path="Network_Game.ML-Agents.DevTests.Runtime.csproj" />
-  <Project Path="NpcDialogue.Tests.Runtime.csproj" />
   <Project Path="Unity.RenderPipeline.Universal.ShaderLibrary.csproj" />
   <Project Path="Unity.Numerics.Random.csproj" />
   <Project Path="Unity.Bindings.OpenImageIO.Editor.csproj" />
@@ -232,7 +226,6 @@
   <Project Path="Unity.RenderPipelines.Universal.Shaders.csproj" />
   <Project Path="Unity.InferenceEngine.MacBLAS.csproj" />
   <Project Path="Unity.InferenceEngine.ONNX.Editor.csproj" />
-  <Project Path="NpcDialogue.Tests.Editor.csproj" />
   <Project Path="Unity.InferenceEngine.iOSBLAS.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
   <Project Path="Unity.RenderPipelines.Universal.Config.Runtime.csproj" />

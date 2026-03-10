@@ -85,7 +85,7 @@ namespace UnityEngine.UIElements
         }
 
         private bool shouldTrackPanels => overrideUIToolkitEvents && createDefaultPanelComponents &&
-                                          m_Started && m_Enabled;
+        m_Started && m_Enabled;
 
         private void StartTrackingUIToolkitPanels()
         {
@@ -179,7 +179,7 @@ namespace UnityEngine.UIElements
                 {
                     foreach (var cam in m_InputSettings.eventCameras)
                     {
-                        go.AddComponent<WorldDocumentRaycaster>().camera = cam;
+                        go.AddComponent<WorldDocumentRaycaster>().raycastCamera = cam;
                     }
                 }
 

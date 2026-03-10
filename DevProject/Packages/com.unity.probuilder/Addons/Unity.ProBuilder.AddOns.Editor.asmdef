@@ -3,9 +3,7 @@
     "rootNamespace": "",
     "references": [
         "Unity.ProBuilder",
-        "Unity.ProBuilder.Editor",
-        "Unity.Formats.Fbx.Editor",
-        "Autodesk.Fbx"
+        "Unity.ProBuilder.Editor"
     ],
     "includePlatforms": [
         "Editor"

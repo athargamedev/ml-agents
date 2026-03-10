@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 using Unity.Multiplayer.Tools.Adapters;
 using Unity.Multiplayer.Tools.Common.Visualization;
@@ -9,13 +9,16 @@ namespace Unity.Multiplayer.Tools.NetVis.Configuration
     {
         public bool MeshShadingEnabled { get; set; } = true;
         public bool TextOverlayEnabled { get; set; } = true;
+#pragma warning disable CS0067
         public event Action ColorsChanged;
+#pragma warning restore CS0067
 
 #if UNITY_EDITOR
         public OwnershipSettings()
         {
             CustomColorSettings.DataChanged += () => ColorsChanged?.Invoke();
         }
+
 #endif
 
         public Color ServerHostColor

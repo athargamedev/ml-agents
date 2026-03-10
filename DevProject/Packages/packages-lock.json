@@ -8,7 +8,7 @@
         "com.unity.nuget.newtonsoft-json": "3.0.2",
         "com.unity.test-framework": "1.1.31"
       },
-      "hash": "d01ac7cf8d2f3ec1c478ddc815f9768c86769b66"
+      "hash": "ad998f165467b7d46ef349df1cd05261616e3658"
     },
     "com.unity.addressables": {
       "version": "2.8.1",

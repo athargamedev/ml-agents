@@ -2000,8 +2000,8 @@ namespace UnityEngine.UIElements
 
     [AddComponentMenu(@"UI Toolkit/World Document Raycaster (UI Toolkit)")] public class WorldDocumentRaycaster : UnityEngine.EventSystems.BaseRaycaster
     {
-        public Camera camera { get; set; }
         public override Camera eventCamera { get; }
+        public Camera raycastCamera { get; set; }
         public WorldDocumentRaycaster() {}
         protected virtual bool GetWorldRay(UnityEngine.EventSystems.PointerEventData eventData, out Ray worldRay, out float maxDistance, out int layerMask);
         public override void Raycast(UnityEngine.EventSystems.PointerEventData eventData, System.Collections.Generic.List<UnityEngine.EventSystems.RaycastResult> resultAppendList);
