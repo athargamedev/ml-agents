@@ -15649,6 +15649,7 @@ MonoBehaviour:
     CustomizationJson: 
     LastUpdatedUtc: 
     Enabled: 0
+  m_RequireAuthenticatedPlayers: 1
   m_EnableContextSceneEffects: 1
   m_SceneEffectsController: {fileID: 1858454364}
   m_EnableSpatialEffectResolver: 1

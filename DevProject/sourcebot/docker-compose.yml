@@ -1,0 +1,28 @@
+# Sourcebot Docker Compose for Unity ML-Agents Project
+#
+# Usage:
+#   docker-compose up -d      # Start Sourcebot
+#   docker-compose logs -f    # View logs
+#   docker-compose down      # Stop Sourcebot
+
+services:
+  sourcebot:
+    image: ghcr.io/sourcebot-dev/sourcebot:latest
+    container_name: sourcebot-ml-agents
+    ports:
+      - "8090:3000"
+    volumes:
+      # Parent ml-agents repo (contains DevProject as subdirectory)
+      - D:/GithubRepos/ml-agents:/data/repos/ml-agents:ro
+      # Sourcebot configuration
+      - ./config.json:/data/config.json:ro
+    environment:
+      - CONFIG_PATH=/data/config.json
+      - FORCE_ENABLE_ANONYMOUS_ACCESS=true
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+networks:
+  default:
+    name: sourcebot-network

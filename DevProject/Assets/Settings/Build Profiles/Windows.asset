@@ -203,14 +203,10 @@ MonoBehaviour:
     - line: '|   tvOSBundleVersion: 1.0'
     - line: '|   bundleVersion: 1.0'
     - line: '|   preloadedAssets:'
-    - line: '|   - {fileID: 11400000, guid: 14ef8cf1b477f364d8dc7725482f59a7, type:
-        2}'
     - line: '|   - {fileID: -944628639613478452, guid: 94f05d837b64836469161572e3efa4b5,
         type: 3}'
     - line: '|   - {fileID: 11400000, guid: cfcd333dcef6a2c4eb65335ba3be9a4a, type:
         2}'
-    - line: '|   - {fileID: -7034895395322051954, guid: bb0f6a35a51e2444d80713c62516d74b,
-        type: 2}'
     - line: '|   metroInputSource: 0'
     - line: '|   wsaTransparentSwapchain: 0'
     - line: '|   xboxOneDisableKinectGpuReservation: 1'
@@ -316,7 +312,7 @@ MonoBehaviour:
     - line: '|   iOSRequireARKit: 0'
     - line: '|   iOSAutomaticallyDetectAndAddCapabilities: 1'
     - line: '|   appleEnableProMotion: 0'
-    - line: '|   shaderPrecisionModel: 1'
+    - line: '|   shaderPrecisionModel: 0'
     - line: '|   clonedFromGUID: 00000000000000000000000000000000'
     - line: '|   templatePackageId: '
     - line: '|   templateDefaultScene: '
@@ -1358,8 +1354,6 @@ MonoBehaviour:
   - Low
   - Medium
   - High
-  - Very High
-  - Ultra
 --- !u!114 &6535728313962349275
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -402,6 +402,9 @@ namespace Network_Game.Dialogue
         [SerializeField]
         private List<PlayerIdentityBinding> m_PlayerIdentityBindings = new();
 
+        [SerializeField]
+        private bool m_RequireAuthenticatedPlayers = true;
+
         [Header("Scene Effects")]
         [SerializeField]
         private bool m_EnableContextSceneEffects = true;
@@ -3700,6 +3703,11 @@ namespace Network_Game.Dialogue
                 conversationState.AwaitingUserInput = false;
             }
 
+            if (!CanAcceptAuthForRequest(request, out reason))
+            {
+                return false;
+            }
+
             if (conversationState.IsInFlight)
             {
                 reason = "conversation_in_flight";
@@ -3767,7 +3775,7 @@ namespace Network_Game.Dialogue
 
                 if (active >= m_MaxRequestsPerClient)
                 {
-                    reason = "Too many active requests for client.";
+                    reason = "rate_limited_active";
                     return false;
                 }
             }
@@ -3784,7 +3792,7 @@ namespace Network_Game.Dialogue
                     float elapsed = Time.realtimeSinceStartup - lastTime;
                     if (elapsed < m_MinSecondsBetweenRequests)
                     {
-                        reason = "Request rate limited.";
+                        reason = "rate_limited_interval";
                         return false;
                     }
                 }
@@ -3792,6 +3800,17 @@ namespace Network_Game.Dialogue
             }
 
             return true;
+        }
+
+        private bool CanAcceptAuthForRequest(DialogueRequest request, out string rejectionReason)
+        {
+            return NetworkDialogueAuthGate.CanAccept(
+                m_RequireAuthenticatedPlayers,
+                request.IsUserInitiated,
+                request.RequestingClientId,
+                clientId => TryGetPlayerIdentityByClientId(clientId, out _),
+                out rejectionReason
+            );
         }
 
         private void NotifyIfRequested(int requestId, DialogueRequestState state)
@@ -8784,19 +8803,23 @@ namespace Network_Game.Dialogue
                 senderClientId,
                 null
             );
-            if (
-                TryGetPlayerNetworkObjectIdForClient(
-                    senderClientId,
-                    out ulong senderPlayerNetworkId
-                )
-            )
+
+            if (!m_RequireAuthenticatedPlayers || !isUserInitiated)
             {
-                UpsertPlayerIdentity(
-                    senderClientId,
-                    senderPlayerNetworkId,
-                    $"client_{senderClientId}",
-                    null
-                );
+                if (
+                    TryGetPlayerNetworkObjectIdForClient(
+                        senderClientId,
+                        out ulong senderPlayerNetworkId
+                    )
+                )
+                {
+                    UpsertPlayerIdentity(
+                        senderClientId,
+                        senderPlayerNetworkId,
+                        $"client_{senderClientId}",
+                        null
+                    );
+                }
             }
 
             if (

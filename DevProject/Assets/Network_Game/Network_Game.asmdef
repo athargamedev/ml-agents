@@ -10,8 +10,7 @@
         "Unity.TextMeshPro",
         "UnityEngine.UI",
         "Unity.Addressables",
-        "Unity.ResourceManager",
-        "UnityEditor.UI"
+        "Unity.ResourceManager"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

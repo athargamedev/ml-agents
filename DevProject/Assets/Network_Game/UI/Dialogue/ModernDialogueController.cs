@@ -538,6 +538,13 @@ namespace Network_Game.UI.Dialogue
                 return;
             }
 
+            if (!TryResolveRequesterClientId(out ulong requesterId))
+            {
+                LogSendBlocked("netcode_not_ready");
+                AppendSystemLine("Connecting... please wait for multiplayer to initialize.");
+                return;
+            }
+
             if (
                 !TryResolveNearestNpc(
                     localPlayer.transform.position,
@@ -560,8 +567,6 @@ namespace Network_Game.UI.Dialogue
 
             ulong speakerId = targetNpc.NetworkObjectId;
             ulong listenerId = localPlayer.NetworkObjectId;
-            ulong requesterId =
-                NetworkManager.Singleton != null ? NetworkManager.Singleton.LocalClientId : 0UL;
 
             string conversationKey = service.ResolveConversationKey(
                 speakerId,
@@ -902,6 +907,19 @@ namespace Network_Game.UI.Dialogue
             }
 
             return false;
+        }
+
+        private static bool TryResolveRequesterClientId(out ulong requesterClientId)
+        {
+            requesterClientId = 0UL;
+            NetworkManager manager = NetworkManager.Singleton;
+            if (manager == null || !manager.IsListening || manager.LocalClient == null)
+            {
+                return false;
+            }
+
+            requesterClientId = manager.LocalClientId;
+            return requesterClientId != 0UL;
         }
 
         private void LogSendBlocked(string reason)
