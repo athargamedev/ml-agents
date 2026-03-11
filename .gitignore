@@ -104,3 +104,59 @@ coverage.xml
 
 Tools/ci/obj/
 Tools/ci/bin/
+
+# Unity-specific ignores
+# Unity Library and cache folders
+DevProject/Library/
+DevProject/Temp/
+DevProject/Logs/
+DevProject/UserSettings/
+DevProject/obj/
+DevProject/mem/
+DevProject/Builds/
+DevProject/Build/
+DevProject/*.csproj
+DevProject/*.sln
+DevProject/*.userprefs
+
+# Unity package manager cache
+DevProject/Packages/packages-lock.json
+
+# Unity crash and memory files
+DevProject/Crashes/
+DevProject/LogFiles/
+DevProject/il2cpp_build/
+
+# Unity Cloud Build
+DevProject/CloudBuild/
+
+# Unity Analytics and Services
+DevProject/ProjectSettings/ProjectVersion.txt
+
+# Unity Test Runner
+DevProject/Assets/TestRunner/
+
+# Unity Addressables build cache
+DevProject/ServerData/
+DevProject/Assets/AddressableAssetsData/*.build
+DevProject/Assets/AddressableAssetsData/*.bundle
+
+# Unity Burst and IL2CPP cache
+DevProject/Library/BurstCache/
+DevProject/Library/Bee/
+DevProject/Library/Il2cppBuildCache/
+
+# LLM and ML agents training data (large binary files)
+DevProject/output/
+DevProject/sourcebot/data/
+DevProject/models/
+DevProject/checkpoints/
+
+# LM Studio and model files
+*.gguf
+*.bin
+*.safetensors
+*.model
+
+# Sourcebot git cache
+DevProject/sourcebot/data/.sourcebot/
