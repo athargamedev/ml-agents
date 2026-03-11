@@ -24,10 +24,17 @@ namespace Network_Game.Dialogue
                 return true;
             }
 
+            // Netcode host uses clientId 0 for its local client.
+            // Keep strictness for true clients by letting the caller pass a host-aware predicate.
             if (requestingClientId == 0)
             {
-                rejectionReason = "auth_missing_client";
-                return false;
+                if (hasIdentitySnapshot == null || !hasIdentitySnapshot(0))
+                {
+                    rejectionReason = "auth_missing_client";
+                    return false;
+                }
+
+                return true;
             }
 
             if (hasIdentitySnapshot == null || !hasIdentitySnapshot(requestingClientId))

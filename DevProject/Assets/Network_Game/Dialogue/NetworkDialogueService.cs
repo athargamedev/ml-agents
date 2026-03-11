@@ -230,6 +230,18 @@ namespace Network_Game.Dialogue
             }
         }
 
+        private void TryApplyContextEffectsSafe(DialogueRequest request, string responseText)
+        {
+            try
+            {
+                ApplyContextEffects(request, responseText);
+            }
+            catch (Exception ex)
+            {
+                NGLog.Error("DialogueFX", ex.Message);
+            }
+        }
+
         /// <summary>
         /// Per-player effect modifiers derived from the player's customization data.
         /// Applied server-side in ApplyContextEffects before ClampDynamicMultiplier.
@@ -1169,7 +1181,7 @@ namespace Network_Game.Dialogue
                 request.ConversationKey
             );
 
-            if (!CanAcceptRequest(request, out string reason))
+            if (!TryValidateRequestForEnqueue(request, out string reason))
             {
                 rejectionReason = reason;
                 TrackRejected(rejectionReason);
@@ -1208,6 +1220,11 @@ namespace Network_Game.Dialogue
                 )
             );
             return true;
+        }
+
+        private bool TryValidateRequestForEnqueue(DialogueRequest request, out string rejectionReason)
+        {
+            return CanAcceptRequest(request, out rejectionReason);
         }
 
         public bool TryConsumeResponse(int requestId, out DialogueResponse response)
@@ -1499,7 +1516,7 @@ namespace Network_Game.Dialogue
             }
 
             string key = ResolveConversationKey(0, 0, 0, conversationKey);
-            ConversationState state = GetConversationState(key);
+            ConversationState state = GetConversationStateForConversation(key);
             if (state.IsInFlight)
             {
                 reason = "conversation_in_flight";
@@ -1725,14 +1742,14 @@ namespace Network_Game.Dialogue
             }
 
             conversationKey = ResolveConversationKey(0, 0, 0, conversationKey);
-            var history = GetHistory(conversationKey);
+            var history = GetHistoryForConversation(conversationKey);
             string normalizedRole = string.IsNullOrWhiteSpace(role)
                 ? "user"
                 : role.Trim().ToLowerInvariant();
             history.Add(new ChatMessage(normalizedRole, content));
-            StoreHistory(conversationKey, history);
+            StoreHistoryForConversation(conversationKey, history);
 
-            ConversationState conversationState = GetConversationState(conversationKey);
+            ConversationState conversationState = GetConversationStateForConversation(conversationKey);
             if (normalizedRole == "user")
             {
                 conversationState.AwaitingUserInput = false;
@@ -1962,7 +1979,7 @@ namespace Network_Game.Dialogue
                     terminal = true;
                     return;
                 }
-                List<ChatMessage> history = GetHistory(key);
+                List<ChatMessage> history = GetHistoryForConversation(key);
                 List<DialogueInferenceMessage> inferenceHistory = BuildRemoteInferenceHistory(
                     history
                 );
@@ -2112,7 +2129,7 @@ namespace Network_Game.Dialogue
                 state.Status = DialogueStatus.Completed;
                 state.ResponseText = result;
                 List<ChatMessage> historyToStore = history;
-                StoreHistory(key, historyToStore);
+                StoreHistoryForConversation(key, historyToStore);
                 NGLog.Info(
                     "Dialogue",
                     $"Completed request | id={requestId} | responseLen={result.Length}"
@@ -2138,22 +2155,7 @@ namespace Network_Game.Dialogue
 
                 // From this point onward, the dialogue response must still reach the UI
                 // even if effect parsing/spawning fails. Keep FX work isolated.
-                try
-                {
-                    ApplyContextEffects(state.Request, state.ResponseText);
-                }
-                catch (Exception ex)
-                {
-                    NGLog.Warn(
-                        "DialogueFX",
-                        NGLog.Format(
-                            "ApplyContextEffects failed; response will still be delivered",
-                            ("id", requestId),
-                            ("error", ex.Message ?? string.Empty)
-                        )
-                    );
-                    Debug.LogException(ex);
-                }
+                TryApplyContextEffectsSafe(state.Request, state.ResponseText);
 
                 try
                 {
@@ -3336,15 +3338,24 @@ namespace Network_Game.Dialogue
             return "Idle";
         }
 
-        private List<ChatMessage> GetHistory(string key)
+        private List<ChatMessage> GetHistoryInternal(string key)
         {
             if (!m_Histories.TryGetValue(key, out List<ChatMessage> history))
             {
                 history = new List<ChatMessage>();
                 m_Histories[key] = history;
             }
-
             return history;
+        }
+
+        private List<ChatMessage> GetHistory(string key)
+        {
+            return GetHistoryInternal(key);
+        }
+
+        private List<ChatMessage> GetHistoryForConversation(string conversationKey)
+        {
+            return GetHistory(conversationKey);
         }
 
         private void RegisterClientRequestLookup(int requestId, DialogueRequest request)
@@ -3600,32 +3611,46 @@ namespace Network_Game.Dialogue
             return trimmed;
         }
 
-        private void StoreHistory(string key, List<ChatMessage> history)
+        private void TrimHistory(string key, int maxMessages)
+        {
+            if (maxMessages <= 0)
+            {
+                return;
+            }
+
+            if (!m_Histories.TryGetValue(key, out List<ChatMessage> history))
+            {
+                return;
+            }
+
+            if (history.Count <= maxMessages)
+            {
+                return;
+            }
+
+            int removeCount = history.Count - maxMessages;
+            history.RemoveRange(0, removeCount);
+        }
+
+        private void StoreHistoryInternal(string key, List<ChatMessage> history)
         {
             if (history == null)
             {
                 return;
             }
 
-            if (m_MaxHistoryMessages > 0 && history.Count > m_MaxHistoryMessages)
-            {
-                int removeCount = history.Count - m_MaxHistoryMessages;
-                history.RemoveRange(0, removeCount);
-            }
-
             m_Histories[key] = history;
+            TrimHistory(key, m_MaxHistoryMessages);
+        }
 
-            if (m_LogDebug)
-            {
-                NGLog.Debug(
-                    "Dialogue",
-                    NGLog.Format(
-                        "Stored conversation history",
-                        ("key", key),
-                        ("messageCount", history.Count)
-                    )
-                );
-            }
+            private void StoreHistory(string key, List<ChatMessage> history)
+        {
+            StoreHistoryInternal(key, history);
+        }
+
+        private void StoreHistoryForConversation(string conversationKey, List<ChatMessage> history)
+        {
+            StoreHistory(conversationKey, history);
         }
 
         private string BuildConversationKey(DialogueRequest request)
@@ -3650,9 +3675,14 @@ namespace Network_Game.Dialogue
             return state;
         }
 
+        private ConversationState GetConversationStateForConversation(string conversationKey)
+        {
+            return GetConversationState(conversationKey);
+        }
+
         private void BeginConversationRequest(int requestId, DialogueRequest request)
         {
-            ConversationState state = GetConversationState(request.ConversationKey);
+            ConversationState state = GetConversationStateForConversation(request.ConversationKey);
             state.IsInFlight = true;
             state.ActiveRequestId = requestId;
             if (request.IsUserInitiated)
@@ -3673,7 +3703,7 @@ namespace Network_Game.Dialogue
             }
 
             string key = BuildConversationKey(requestState.Request);
-            ConversationState state = GetConversationState(key);
+            ConversationState state = GetConversationStateForConversation(key);
             if (state.ActiveRequestId == requestId || state.IsInFlight)
             {
                 state.IsInFlight = false;
@@ -3697,7 +3727,7 @@ namespace Network_Game.Dialogue
         private bool CanAcceptRequest(DialogueRequest request, out string reason)
         {
             reason = null;
-            ConversationState conversationState = GetConversationState(request.ConversationKey);
+            ConversationState conversationState = GetConversationStateForConversation(request.ConversationKey);
             if (request.IsUserInitiated)
             {
                 conversationState.AwaitingUserInput = false;

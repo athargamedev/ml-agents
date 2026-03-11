@@ -919,7 +919,7 @@ namespace Network_Game.UI.Dialogue
             }
 
             requesterClientId = manager.LocalClientId;
-            return requesterClientId != 0UL;
+            return true;
         }
 
         private void LogSendBlocked(string reason)

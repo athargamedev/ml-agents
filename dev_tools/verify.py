@@ -10,6 +10,7 @@ Usage:
 """
 
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -186,7 +187,7 @@ def check_lm_studio_models(r: Results) -> None:
         import urllib.request, json as _json
         req = urllib.request.Request(
             "http://127.0.0.1:7002/api/v0/models",
-            headers={"Authorization": "Bearer sk-lm-Li2oVsHm:wNxCcCTjZM4PFuNC0RnH"},
+            headers={"Authorization": f"Bearer {os.environ.get('LM_STUDIO_API_KEY', 'lm-studio')}"},
         )
         with urllib.request.urlopen(req, timeout=5) as resp:
             data = _json.loads(resp.read())

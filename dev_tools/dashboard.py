@@ -30,7 +30,7 @@ LOG_SCAN    = REPO_ROOT / ".codex" / "tmp" / "overnight.log"
 LOG_BRIDGE  = REPO_ROOT / ".codex" / "tmp" / "run_llm_bridge.runtime.log"
 REPORTS_DIR = REPO_ROOT / "dev_tools" / "reports"
 LMS_API     = "http://127.0.0.1:7002"
-LMS_KEY     = "sk-lm-Li2oVsHm:wNxCcCTjZM4PFuNC0RnH"
+LMS_KEY     = os.environ.get("LM_STUDIO_API_KEY", "lm-studio")
 PYTHON      = sys.executable
 
 # ── managed process handles ────────────────────────────────────────────────────

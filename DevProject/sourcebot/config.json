@@ -3,9 +3,10 @@
   "connections": {
     "ml-agents-github": {
       "type": "github",
-      "url": "https://github.com/athargamedev/ml-agents",
-      "token": {
-        "env": "GITHUB_TOKEN"
+      "url": "https://github.com",
+      "repos": ["athargamedev/ml-agents"],
+      "revisions": {
+        "branches": ["develop"]
       }
     }
   },
@@ -13,7 +14,10 @@
     {
       "provider": "openai-compatible",
       "model": "lmstudio-community/DeepSeek-R1-Distributed-Llama-3.3-70B-Instruct-M2-Server",
-      "baseUrl": "http://host.docker.internal:7002/v1"
+      "baseUrl": "http://host.docker.internal:7002/v1",
+      "token": {
+        "env": "LM_STUDIO_TOKEN"
+      }
     }
   ],
   "settings": {

@@ -10,15 +10,17 @@ services:
     image: ghcr.io/sourcebot-dev/sourcebot:latest
     container_name: sourcebot-ml-agents
     ports:
-      - "8090:3000"
+      - "127.0.0.1:8090:3000"
     volumes:
-      # Parent ml-agents repo (contains DevProject as subdirectory)
-      - D:/GithubRepos/ml-agents:/data/repos/ml-agents:ro
+      # Sourcebot data (indexed repos, etc.)
+      - ./data:/data
       # Sourcebot configuration
       - ./config.json:/data/config.json:ro
     environment:
       - CONFIG_PATH=/data/config.json
       - FORCE_ENABLE_ANONYMOUS_ACCESS=true
+      - GITHUB_TOKEN=${GITHUB_TOKEN:?Set GITHUB_TOKEN env var}
+      - LM_STUDIO_TOKEN=${LM_STUDIO_TOKEN:-lm-studio}
     restart: unless-stopped
     extra_hosts:
       - "host.docker.internal:host-gateway"

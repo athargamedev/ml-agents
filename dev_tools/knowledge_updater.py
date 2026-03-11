@@ -148,13 +148,27 @@ def _format_insights_as_markdown(insights: list, date_str: str) -> str:
 
 
 def _append_to_memory(path: Path, new_content: str, header: str) -> None:
-    """Append new_content to a memory file, creating it with a header if new."""
+    """Append new_content to a memory file, creating it with a header if new.
+    Skips content blocks whose ### title already exists in the file."""
     path.parent.mkdir(parents=True, exist_ok=True)
     if not path.exists():
         path.write_text(f"# {header}\n\n{new_content}", encoding="utf-8")
-    else:
-        existing = path.read_text(encoding="utf-8")
-        path.write_text(existing.rstrip() + "\n\n" + new_content, encoding="utf-8")
+        return
+    existing = path.read_text(encoding="utf-8")
+    existing_lower = existing.lower()
+    # Filter out blocks whose title heading already exists
+    filtered_lines = []
+    skip_block = False
+    for line in new_content.splitlines(keepends=True):
+        if line.strip().startswith("### "):
+            title_part = line.strip().split("_")[0].strip().lower()
+            skip_block = title_part in existing_lower
+        if not skip_block:
+            filtered_lines.append(line)
+    filtered = "".join(filtered_lines).strip()
+    if not filtered:
+        return
+    path.write_text(existing.rstrip() + "\n\n" + filtered, encoding="utf-8")
 
 
 def _update_memory_md_index() -> None:
@@ -224,7 +238,7 @@ def run_update_cli(client: Optional[LmStudioClient] = None) -> bool:
 
     existing_combined = (existing_code + "\n" + existing_patt).strip()
     if existing_combined:
-        user_msg_parts.append(f"=== EXISTING KNOWLEDGE BASE (do not duplicate) ===\n{existing_combined[:3000]}")
+        user_msg_parts.append(f"=== EXISTING KNOWLEDGE BASE (do not duplicate) ===\n{existing_combined[-3000:]}")
 
     user_msg = "/no_think\n" + "\n\n".join(user_msg_parts)
 

@@ -3,26 +3,11 @@
 // make sure the XML doc file is present and located next to the scraped dll
 namespace Network_Game.Dialogue.Editor
 {
-    public static class DialogueEffectAutoTestMenu
-    {
-        [UnityEditor.MenuItem(@"Network Game/MCP/Legacy/Force Effect Tag Test (LLM)")] public static void ForceEffectTagTest();
-        [UnityEditor.MenuItem(@"Network Game/MCP/Legacy/Print Effect Format Instructions")] public static void PrintEffectInstructions();
-        [UnityEditor.MenuItem(@"Network Game/MCP/Auto Test All Effects")] public static void RunAutoTest();
-        [UnityEditor.MenuItem(@"Network Game/MCP/Auto Test All Effects Direct (No LLM)")] public static void RunDirectAutoTestAllEffectsNoLlm();
-        [UnityEditor.MenuItem(@"Network Game/MCP/Spawn Direct NPC Power (No LLM)")] public static void SpawnDirectNpcPowerNoLlm();
-        [UnityEditor.MenuItem(@"Network Game/MCP/Stop Direct Auto Test All Effects")] public static void StopDirectAutoTestAllEffects();
-    }
-
     public static class DialogueEffectBulkImporter
     {
         [UnityEditor.MenuItem(@"Network Game/MCP/Import All Particle Effects")] public static void ImportAllEffects();
         [UnityEditor.MenuItem(@"Network Game/MCP/Legacy/Print All Available Effects")] public static void PrintAllEffects();
         [UnityEditor.MenuItem(@"Network Game/MCP/Legacy/Verify Effect Links")] public static void VerifyEffectLinks();
-    }
-
-    public static class DialogueFxSmokeTestMenu
-    {
-        [UnityEditor.MenuItem(@"Network Game/MCP/Run FX Smoke Test")] public static void RunFxSmokeTest();
     }
 
     public class EffectEditorWindow : UnityEditor.EditorWindow

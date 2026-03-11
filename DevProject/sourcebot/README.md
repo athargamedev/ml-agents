@@ -23,7 +23,7 @@ cd sourcebot && docker-compose up -d
 
 ### Access
 
-Open **http://localhost:8080**
+Open **http://localhost:8090**
 
 ## Search Examples
 

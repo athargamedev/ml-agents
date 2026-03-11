@@ -21,6 +21,7 @@ import queue
 import threading
 import time
 import uuid
+from concurrent.futures import ThreadPoolExecutor
 from typing import Callable
 
 from mlagents_envs.side_channel import SideChannel, IncomingMessage, OutgoingMessage
@@ -53,11 +54,16 @@ class LlmDialogueChannel(SideChannel):
         self._handler = handler
         self._response_queue: queue.Queue = queue.Queue()
         self._last_heartbeat_sent = 0.0
+        self._executor = ThreadPoolExecutor(max_workers=4)
 
     def on_message_received(self, msg: IncomingMessage) -> None:
         """Deserialize the request and dispatch it to the LLM handler."""
         raw = msg.get_raw_bytes()
-        request = json.loads(raw.decode("utf-8"))
+        try:
+            request = json.loads(raw.decode("utf-8"))
+        except (json.JSONDecodeError, UnicodeDecodeError) as e:
+            print(f"[LlmDialogueChannel] Malformed message received: {e}")
+            return
         if request.get("messageType") == PING_MESSAGE_TYPE:
             # Reply immediately in the current exchange so Unity warmup probes
             # (which can run during env.reset()) don't deadlock waiting for a
@@ -76,11 +82,7 @@ class LlmDialogueChannel(SideChannel):
             self.queue_message_to_send(out)
             return
 
-        threading.Thread(
-            target=self._handle_and_queue,
-            args=(request,),
-            daemon=True,
-        ).start()
+        self._executor.submit(self._handle_and_queue, request)
 
     def _handle_and_queue(self, request: dict) -> None:
         """Run the LLM handler and push the response into the queue."""
