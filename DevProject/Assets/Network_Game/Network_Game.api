@@ -87,6 +87,28 @@ namespace Network_Game.Behavior
         public BehaviorSceneBootstrap() {}
     }
 
+    public class NetworkBootstrapEvents : UnityEngine.MonoBehaviour
+    {
+        public event System.Action OnAuthGatePassed;
+        public event System.Action<bool> OnClientModeDetermined;
+        public event System.Action OnClientStarted;
+        public event System.Action OnHostStarted;
+        public event System.Action<UnityEngine.GameObject> OnLocalPlayerReady;
+        public event System.Action<UnityEngine.GameObject> OnLocalPlayerSpawned;
+        public event System.Action<string> OnNetworkError;
+        public event System.Action<Unity.Netcode.NetworkManager> OnNetworkReady;
+        public static NetworkBootstrapEvents Instance { get; }
+        public NetworkBootstrapEvents() {}
+        public void PublishAuthGatePassed();
+        public void PublishClientModeDetermined(bool isClient);
+        public void PublishClientStarted();
+        public void PublishHostStarted();
+        public void PublishLocalPlayerReady(UnityEngine.GameObject player);
+        public void PublishLocalPlayerSpawned(UnityEngine.GameObject player);
+        public void PublishNetworkError(string error);
+        public void PublishNetworkReady(Unity.Netcode.NetworkManager manager);
+    }
+
     [UnityEngine.DisallowMultipleComponent] public sealed class NPCAgentBootstrap : UnityEngine.MonoBehaviour
     {
         public NPCAgentBootstrap() {}

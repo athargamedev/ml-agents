@@ -1,20 +1,17 @@
 {
   "$schema": "https://raw.githubusercontent.com/sourcebot-dev/sourcebot/main/schemas/v3/index.json",
   "connections": {
-    "ml-agents-github": {
-      "type": "github",
-      "url": "https://github.com",
-      "repos": ["athargamedev/ml-agents"],
-      "revisions": {
-        "branches": ["develop"]
-      }
+    "ml-agents-local": {
+      "type": "git",
+      "url": "file:///repos/ml-agents"
     }
   },
   "models": [
     {
       "provider": "openai-compatible",
-      "model": "lmstudio-community/DeepSeek-R1-Distributed-Llama-3.3-70B-Instruct-M2-Server",
-      "baseUrl": "http://host.docker.internal:7002/v1",
+      "model": "qwen2.5-coder-7b-instruct@q4_k_m",
+      "displayName": "LM Studio Code Model",
+      "baseUrl": "http://host.docker.internal:7002/v1/chat/completions",
       "token": {
         "env": "LM_STUDIO_TOKEN"
       }

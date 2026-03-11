@@ -8,8 +8,8 @@ using Network_Game.ThirdPersonController;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 namespace Network_Game.Dialogue
 {
@@ -966,78 +966,47 @@ namespace Network_Game.Dialogue
             return string.Empty;
         }
 
-        public static string FormatErrorMessage(string error, bool includeTechnicalCode = false)
+        public void SetPlayer(GameObject player)
         {
-            string raw = string.IsNullOrWhiteSpace(error) ? "Dialogue failed." : error.Trim();
-            string lower = raw.ToLowerInvariant();
-            string friendly;
-            switch (lower)
+            if (player == null)
             {
-                case "llm_component_missing":
-                    friendly = "Dialogue backend is not configured. Check the remote LM Studio settings.";
-                    break;
-                case "model_not_set":
-                    friendly = "No remote model is configured. Set the LM Studio model name.";
-                    break;
-                case "conversation_in_flight":
-                    friendly = "NPC is still responding. Wait a moment and try again.";
-                    break;
-                case "awaiting_user_message":
-                    friendly = "NPC is waiting for your next message.";
-                    break;
-                case "duplicate_prompt":
-                    friendly = "You already sent that. Try a different message.";
-                    break;
-                case "repeat_delay":
-                    friendly = "Please wait a moment before sending another message.";
-                    break;
-                case "queue_full":
-                    friendly = "Dialogue queue is busy. Try again in a few seconds.";
-                    break;
-                case "not_server":
-                    friendly = "Dialogue service is not ready yet. Start host/server first.";
-                    break;
-                case "request_rejected":
-                    friendly = "Dialogue request was rejected. Please try again.";
-                    break;
-                default:
-                    if (lower.StartsWith("model_file_not_found", StringComparison.Ordinal))
-                    {
-                        string model = raw;
-                        int idx = raw.IndexOf(':');
-                        if (idx >= 0 && idx + 1 < raw.Length)
-                        {
-                            model = raw.Substring(idx + 1).Trim();
-                        }
-
-                        friendly = $"Configured dialogue model is unavailable ({model}). Check LM Studio.";
-                        break;
-                    }
-                    if (lower.Contains("timed out"))
-                    {
-                        friendly = "NPC took too long to respond. Please try again.";
-                    }
-                    else if (lower.Contains("rate limited"))
-                    {
-                        friendly = "You are sending messages too fast. Please wait briefly.";
-                    }
-                    else if (lower.Contains("too many active requests"))
-                    {
-                        friendly = "Too many pending messages. Wait for current responses first.";
-                    }
-                    else
-                    {
-                        friendly = raw;
-                    }
-                    break;
+                NGLog.Warn("DialogueClientUI", "SetPlayer called with null player");
+                return;
             }
 
-            if (includeTechnicalCode && !string.Equals(friendly, raw, StringComparison.Ordinal))
+            var networkObject = player.GetComponent<NetworkObject>();
+            if (networkObject != null)
             {
-                return $"{friendly} ({raw})";
+                m_Speaker = networkObject;
+                NGLog.Info("DialogueClientUI", $"Player set to: {player.name}");
+            }
+            else
+            {
+                NGLog.Warn(
+                    "DialogueClientUI",
+                    $"Player {player.name} has no NetworkObject component"
+                );
+            }
+        }
+
+        public void SetNpc(GameObject npc)
+        {
+            if (npc == null)
+            {
+                NGLog.Warn("DialogueClientUI", "SetNpc called with null NPC");
+                return;
             }
 
-            return friendly;
+            var networkObject = npc.GetComponent<NetworkObject>();
+            if (networkObject != null)
+            {
+                m_Listener = networkObject;
+                NGLog.Info("DialogueClientUI", $"NPC set to: {npc.name}");
+            }
+            else
+            {
+                NGLog.Warn("DialogueClientUI", $"NPC {npc.name} has no NetworkObject component");
+            }
         }
 
         private void ResolveUiReferences()

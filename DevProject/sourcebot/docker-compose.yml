@@ -1,26 +1,22 @@
-# Sourcebot Docker Compose for Unity ML-Agents Project
-#
-# Usage:
-#   docker-compose up -d      # Start Sourcebot
-#   docker-compose logs -f    # View logs
-#   docker-compose down      # Stop Sourcebot
-
 services:
   sourcebot:
-    image: ghcr.io/sourcebot-dev/sourcebot:latest
+    image: ghcr.io/sourcebot-dev/sourcebot:v4.15.2
     container_name: sourcebot-ml-agents
     ports:
       - "127.0.0.1:8090:3000"
     volumes:
-      # Sourcebot data (indexed repos, etc.)
-      - ./data:/data
-      # Sourcebot configuration
+      - ./runtime-v4152:/data
       - ./config.json:/data/config.json:ro
+      - ../../:/repos/ml-agents:ro
     environment:
       - CONFIG_PATH=/data/config.json
       - FORCE_ENABLE_ANONYMOUS_ACCESS=true
-      - GITHUB_TOKEN=${GITHUB_TOKEN:?Set GITHUB_TOKEN env var}
-      - LM_STUDIO_TOKEN=${LM_STUDIO_TOKEN:-lm-studio}
+      - AUTH_URL=${AUTH_URL:-http://localhost:8090}
+      - AUTH_SECRET=${AUTH_SECRET:?Set AUTH_SECRET in sourcebot/.env}
+      - SOURCEBOT_ENCRYPTION_KEY=${SOURCEBOT_ENCRYPTION_KEY:?Set SOURCEBOT_ENCRYPTION_KEY in sourcebot/.env}
+      - LM_STUDIO_TOKEN=${LM_STUDIO_TOKEN:?Set LM_STUDIO_TOKEN in sourcebot/.env}
+      - ALWAYS_INDEX_FILE_PATTERNS=DevProject/**/*.asmdef,DevProject/**/*.uxml,DevProject/**/*.uss,DevProject/**/*.json,DevProject/**/*.yaml,DevProject/**/*.yml,DevProject/**/*.shader,DevProject/**/*.shadergraph,DevProject/**/*.compute,DevProject/**/*.hlsl,DevProject/**/*.cginc,DevProject/**/*.unity,DevProject/**/*.prefab,DevProject/ProjectSettings/**
+      - SOURCEBOT_LOG_LEVEL=info
     restart: unless-stopped
     extra_hosts:
       - "host.docker.internal:host-gateway"

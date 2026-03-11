@@ -1222,7 +1222,10 @@ namespace Network_Game.Dialogue
             return true;
         }
 
-        private bool TryValidateRequestForEnqueue(DialogueRequest request, out string rejectionReason)
+        private bool TryValidateRequestForEnqueue(
+            DialogueRequest request,
+            out string rejectionReason
+        )
         {
             return CanAcceptRequest(request, out rejectionReason);
         }
@@ -1626,7 +1629,8 @@ namespace Network_Game.Dialogue
             DialogueRequest request,
             DialogueStatus status,
             string responseText,
-            string error = "")
+            string error = ""
+        )
         {
             OnRawDialogueResponse?.Invoke(
                 new DialogueResponse
@@ -1749,7 +1753,9 @@ namespace Network_Game.Dialogue
             history.Add(new ChatMessage(normalizedRole, content));
             StoreHistoryForConversation(conversationKey, history);
 
-            ConversationState conversationState = GetConversationStateForConversation(conversationKey);
+            ConversationState conversationState = GetConversationStateForConversation(
+                conversationKey
+            );
             if (normalizedRole == "user")
             {
                 conversationState.AwaitingUserInput = false;
@@ -1983,7 +1989,9 @@ namespace Network_Game.Dialogue
                 List<DialogueInferenceMessage> inferenceHistory = BuildRemoteInferenceHistory(
                     history
                 );
-                string promptForRequest = ApplyRemoteUserPromptBudget(state.Request.Prompt ?? string.Empty);
+                string promptForRequest = ApplyRemoteUserPromptBudget(
+                    state.Request.Prompt ?? string.Empty
+                );
                 ApplyPersonaForRequest(state.Request);
                 string systemPromptForRequest = GetConfiguredSystemPrompt();
                 CancellationTokenSource openAiTimeoutCts = null;
@@ -2010,8 +2018,10 @@ namespace Network_Game.Dialogue
                             )
                             : null;
 
-                    DialogueInferenceRequestOptions requestOptions =
-                        BuildInferenceRequestOptions(state.Request, promptForRequest);
+                    DialogueInferenceRequestOptions requestOptions = BuildInferenceRequestOptions(
+                        state.Request,
+                        promptForRequest
+                    );
                     OpenAIChatClient openAiClient = inferenceClient as OpenAIChatClient;
                     if (openAiClient != null)
                     {
@@ -2052,9 +2062,7 @@ namespace Network_Game.Dialogue
                     }
                 }
                 catch (OperationCanceledException)
-                    when (openAiTimeoutCts != null
-                        && openAiTimeoutCts.IsCancellationRequested
-                    )
+                    when (openAiTimeoutCts != null && openAiTimeoutCts.IsCancellationRequested)
                 {
                     state.Status = DialogueStatus.Failed;
                     state.Error = "Dialogue request timed out.";
@@ -2139,7 +2147,12 @@ namespace Network_Game.Dialogue
 
                 try
                 {
-                    DispatchRawDialogueResponse(requestId, state.Request, state.Status, state.ResponseText);
+                    DispatchRawDialogueResponse(
+                        requestId,
+                        state.Request,
+                        state.Status,
+                        state.ResponseText
+                    );
                 }
                 catch (Exception ex)
                 {
@@ -2329,9 +2342,9 @@ namespace Network_Game.Dialogue
             string rewritten =
                 specialMode == PlayerSpecialEffectMode.Dissolve
                     ? "As you wish. You fade from sight."
-                    : specialMode == PlayerSpecialEffectMode.FloorDissolve
-                        ? "As you wish. The floor fades from sight."
-                    : "As you wish. You return to view.";
+                : specialMode == PlayerSpecialEffectMode.FloorDissolve
+                    ? "As you wish. The floor fades from sight."
+                : "As you wish. You return to view.";
 
             NGLog.Warn(
                 "DialogueFX",
@@ -2351,7 +2364,7 @@ namespace Network_Game.Dialogue
             None,
             Dissolve,
             FloorDissolve,
-            Respawn
+            Respawn,
         }
 
         private PlayerSpecialEffectMode ResolvePlayerSpecialEffectMode(
@@ -2414,7 +2427,8 @@ namespace Network_Game.Dialogue
             }
 
             string lower = responseText.ToLowerInvariant();
-            bool hasDissolveTag = lower.Contains("[effect:")
+            bool hasDissolveTag =
+                lower.Contains("[effect:")
                 && (lower.Contains("dissolve") || lower.Contains("vanish"));
             if (hasDissolveTag)
             {
@@ -2426,7 +2440,8 @@ namespace Network_Game.Dialogue
                 return PlayerSpecialEffectMode.Dissolve;
             }
 
-            bool hasRespawnTag = lower.Contains("[effect:")
+            bool hasRespawnTag =
+                lower.Contains("[effect:")
                 && (lower.Contains("respawn") || lower.Contains("revive"));
             if (hasRespawnTag)
             {
@@ -2517,7 +2532,9 @@ namespace Network_Game.Dialogue
             }
 
             catalogIntents = catalogIntents
-                .Where(intent => intent != null && !LooksLikePlaceholderEffectTag(intent.rawTagName))
+                .Where(intent =>
+                    intent != null && !LooksLikePlaceholderEffectTag(intent.rawTagName)
+                )
                 .ToList();
 
             if (catalogIntents.Count == 0)
@@ -2576,7 +2593,10 @@ namespace Network_Game.Dialogue
             {
                 case PlayerSpecialEffectMode.Dissolve:
                 {
-                    float durationSeconds = ResolveSpecialEffectDurationSeconds(parameterIntent, 5f);
+                    float durationSeconds = ResolveSpecialEffectDurationSeconds(
+                        parameterIntent,
+                        5f
+                    );
                     ApplyDissolveEffectClientRpc(targetNetworkObjectId, durationSeconds);
                     NGLog.Info(
                         "DialogueFX",
@@ -2591,7 +2611,10 @@ namespace Network_Game.Dialogue
                 }
                 case PlayerSpecialEffectMode.FloorDissolve:
                 {
-                    float durationSeconds = ResolveSpecialEffectDurationSeconds(parameterIntent, 8f);
+                    float durationSeconds = ResolveSpecialEffectDurationSeconds(
+                        parameterIntent,
+                        8f
+                    );
                     ApplyFloorDissolveEffectClientRpc(durationSeconds);
                     NGLog.Info(
                         "DialogueFX",
@@ -3446,7 +3469,12 @@ namespace Network_Game.Dialogue
             if (requestingClientId != ulong.MaxValue)
             {
                 var scopedKey = new ClientRequestLookupKey(clientRequestId, requestingClientId);
-                if (m_RequestIdsByScopedClientRequest.TryGetValue(scopedKey, out int scopedRequestId))
+                if (
+                    m_RequestIdsByScopedClientRequest.TryGetValue(
+                        scopedKey,
+                        out int scopedRequestId
+                    )
+                )
                 {
                     if (m_Requests.ContainsKey(scopedRequestId))
                     {
@@ -3458,7 +3486,12 @@ namespace Network_Game.Dialogue
                 }
             }
 
-            if (!m_RequestIdsByClientRequestId.TryGetValue(clientRequestId, out List<int> requestIds))
+            if (
+                !m_RequestIdsByClientRequestId.TryGetValue(
+                    clientRequestId,
+                    out List<int> requestIds
+                )
+            )
             {
                 return false;
             }
@@ -3531,10 +3564,7 @@ namespace Network_Game.Dialogue
                 }
 
                 slice.Add(
-                    new DialogueInferenceMessage(
-                        NormalizeHistoryRole(message.role),
-                        content
-                    )
+                    new DialogueInferenceMessage(NormalizeHistoryRole(message.role), content)
                 );
             }
 
@@ -3643,7 +3673,7 @@ namespace Network_Game.Dialogue
             TrimHistory(key, m_MaxHistoryMessages);
         }
 
-            private void StoreHistory(string key, List<ChatMessage> history)
+        private void StoreHistory(string key, List<ChatMessage> history)
         {
             StoreHistoryInternal(key, history);
         }
@@ -3727,7 +3757,9 @@ namespace Network_Game.Dialogue
         private bool CanAcceptRequest(DialogueRequest request, out string reason)
         {
             reason = null;
-            ConversationState conversationState = GetConversationStateForConversation(request.ConversationKey);
+            ConversationState conversationState = GetConversationStateForConversation(
+                request.ConversationKey
+            );
             if (request.IsUserInitiated)
             {
                 conversationState.AwaitingUserInput = false;
@@ -5505,24 +5537,17 @@ namespace Network_Game.Dialogue
             bool hasExplicitAnimationTag = DialogueAnimationDecisionPolicy.ContainsAnimationTag(
                 responseText
             );
-            bool prefersAnimationOnly = DialogueAnimationDecisionPolicy.IsLikelyAnimationIntentPrompt(
-                request.Prompt
-            );
+            bool prefersAnimationOnly =
+                DialogueAnimationDecisionPolicy.IsLikelyAnimationIntentPrompt(request.Prompt);
             if (hasExplicitAnimationTag)
             {
-                NGLog.Info(
-                    "DialogueFX",
-                    "Skip effects (response contains explicit [ANIM:] tag)."
-                );
+                NGLog.Info("DialogueFX", "Skip effects (response contains explicit [ANIM:] tag).");
                 return;
             }
 
             if (prefersAnimationOnly)
             {
-                NGLog.Info(
-                    "DialogueFX",
-                    "Skip effects (request is a self-animation intent)."
-                );
+                NGLog.Info("DialogueFX", "Skip effects (request is a self-animation intent).");
                 return;
             }
 
@@ -5613,7 +5638,9 @@ namespace Network_Game.Dialogue
                 intents: catalogIntents
             );
 
-            PlayerIdentityBinding targetPlayerIdentity = ResolvePlayerIdentityForRequest(normalizedRequest);
+            PlayerIdentityBinding targetPlayerIdentity = ResolvePlayerIdentityForRequest(
+                normalizedRequest
+            );
             PlayerEffectModifier playerMod = BuildPlayerEffectModifier(targetPlayerIdentity);
 
             bool hasPlayerSpecialEffect = specialEffectMode != PlayerSpecialEffectMode.None;
@@ -5701,7 +5728,6 @@ namespace Network_Game.Dialogue
                     probeTrace: isGameplayProbe
                 );
             }
-
         }
 
         private void ApplyEffectParserIntents(
@@ -8702,9 +8728,9 @@ namespace Network_Game.Dialogue
                 || (
                     promptText.IndexOf("[EFFECT:", StringComparison.OrdinalIgnoreCase) >= 0
                     && promptText.IndexOf(
-                            "append exactly one tag",
-                            StringComparison.OrdinalIgnoreCase
-                        ) >= 0
+                        "append exactly one tag",
+                        StringComparison.OrdinalIgnoreCase
+                    ) >= 0
                 );
         }
 
@@ -8715,14 +8741,16 @@ namespace Network_Game.Dialogue
                 return false;
             }
 
-            return promptText.IndexOf("Animation validation step.", StringComparison.OrdinalIgnoreCase)
-                    >= 0
+            return promptText.IndexOf(
+                    "Animation validation step.",
+                    StringComparison.OrdinalIgnoreCase
+                ) >= 0
                 || (
                     promptText.IndexOf("[ANIM:", StringComparison.OrdinalIgnoreCase) >= 0
                     && promptText.IndexOf(
-                            "append exactly one tag",
-                            StringComparison.OrdinalIgnoreCase
-                        ) >= 0
+                        "append exactly one tag",
+                        StringComparison.OrdinalIgnoreCase
+                    ) >= 0
                 );
         }
 

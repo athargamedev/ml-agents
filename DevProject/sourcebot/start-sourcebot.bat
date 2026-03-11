@@ -1,9 +1,9 @@
 @echo off
-REM Sourcebot Startup Script for Windows
-REM 
-REM Prerequisites:
-REM   1. Docker Desktop is running
-REM   2. LM Studio is running with server started (port 7002)
+setlocal
+cd /d "%~dp0"
+
+REM Sourcebot Startup Script for Windows.
+REM Uses docker compose so startup matches the checked-in config.
 
 echo ==========================================
 echo   Sourcebot for Unity ML-Agents
@@ -18,54 +18,56 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 
-REM Get script directory
-set SCRIPT_DIR=%~dp0
-set CONFIG_PATH=%SCRIPT_DIR%config.json
-set PROJECT_PATH=D:\GithubRepos\ml-agents
+if not exist ".env" (
+    echo Creating sourcebot\.env with fresh local auth secrets...
+    powershell -NoProfile -Command ^
+        "$auth=[Convert]::ToBase64String((1..33 | ForEach-Object { Get-Random -Minimum 0 -Maximum 256 }));" ^
+        "$enc=[Convert]::ToBase64String((1..24 | ForEach-Object { Get-Random -Minimum 0 -Maximum 256 }));" ^
+        "@('AUTH_URL=http://localhost:8090','AUTH_SECRET=' + $auth,'SOURCEBOT_ENCRYPTION_KEY=' + $enc,'LM_STUDIO_TOKEN=') | Set-Content -Encoding ascii .env"
+)
 
-echo Project path: %PROJECT_PATH%
-echo Config path: %CONFIG_PATH%
-echo Port: 8090
-echo LM Studio: http://127.0.0.1:7002
+for /f "usebackq delims=" %%A in (`powershell -NoProfile -Command "$line = Get-Content .env | Where-Object { $_ -match '^LM_STUDIO_TOKEN=' } | Select-Object -First 1; if ($line) { $line.Substring(16) }"`) do set "LM_STUDIO_TOKEN_FROM_FILE=%%A"
+
+if "%LM_STUDIO_TOKEN%"=="" if "%LM_STUDIO_TOKEN_FROM_FILE%"=="" (
+    echo ERROR: LM_STUDIO_TOKEN is not set.
+    echo Add it to sourcebot\.env or set it in your shell before launching.
+    exit /b 1
+)
+
+if not exist "runtime-v4152" mkdir runtime-v4152
+
+echo Sourcebot image: ghcr.io/sourcebot-dev/sourcebot:v4.15.2
+echo Sourcebot URL:   http://localhost:8090
+echo Local repo:      D:\GithubRepos\ml-agents
+echo Config path:     %CD%\config.json
+echo LM Studio API:   http://127.0.0.1:7002
 echo.
 
-REM Stop existing container
-echo Stopping existing Sourcebot container...
-docker stop sourcebot-ml-agents 2>nul
-docker rm sourcebot-ml-agents 2>nul
+echo Pulling Sourcebot image...
+docker compose pull
+if %errorlevel% neq 0 (
+    echo ERROR: Failed to pull Sourcebot image
+    exit /b 1
+)
 
-echo Starting Sourcebot container...
+echo Starting Sourcebot with docker compose...
 echo.
 
-REM Run Sourcebot - mounting parent ml-agents repo which contains DevProject
-docker run -d ^
-    --name sourcebot-ml-agents ^
-    -p 8090:3000 ^
-    -v "%PROJECT_PATH%:/data/repos/ml-agents:ro" ^
-    -v "%CONFIG_PATH%:/data/config.json:ro" ^
-    -e CONFIG_PATH=/data/config.json ^
-    -e FORCE_ENABLE_ANONYMOUS_ACCESS=true ^
-    --add-host=host.docker.internal:host-gateway ^
-    ghcr.io/sourcebot-dev/sourcebot:latest
-
+docker compose up -d --remove-orphans
 if %errorlevel% equ 0 (
     echo ==========================================
     echo   Sourcebot started successfully!
     echo ==========================================
     echo.
-    echo Web UI: http://localhost:8090
-    echo.
-    echo Useful commands:
-    echo   docker logs -f sourcebot-ml-agents   - View logs
-    echo   docker stop sourcebot-ml-agents    - Stop
-    echo   docker restart sourcebot-ml-agents  - Restart
-    echo.
-    echo Note: Full ml-agents repo is indexed.
-    echo   Use repo:ml-agents filter in searches.
-    echo.
+    echo Web UI:          http://localhost:8090
+    echo Repo source:     local ml-agents checkout
+    echo Ask model:       qwen2.5-coder-7b-instruct@q4_k_m
+    echo Verify status:   .\check-sourcebot.ps1 -WaitForIndex
+    echo Logs:            docker compose logs -f
+    echo Stop:            docker compose down
+    echo Restart:         docker compose restart
 ) else (
     echo ERROR: Failed to start Sourcebot container
-    pause
     exit /b 1
 )
 
