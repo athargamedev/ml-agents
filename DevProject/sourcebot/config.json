@@ -3,15 +3,20 @@
   "connections": {
     "ml-agents-local": {
       "type": "git",
-      "url": "file:///repos/ml-agents"
+      "url": "file:///repos/ml-agents",
+      "revisions": {
+        "branches": [
+          "main"
+        ]
+      }
     }
   },
   "models": [
     {
       "provider": "openai-compatible",
-      "model": "qwen2.5-coder-7b-instruct@q4_k_m",
+      "model": "qwen3-8b",
       "displayName": "LM Studio Code Model",
-      "baseUrl": "http://host.docker.internal:7002/v1/chat/completions",
+      "baseUrl": "http://lmstudio-proxy:8080/v1",
       "token": {
         "env": "LM_STUDIO_TOKEN"
       }

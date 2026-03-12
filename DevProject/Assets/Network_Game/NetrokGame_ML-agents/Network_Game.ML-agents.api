@@ -1,6 +1,21 @@
 // This file is generated. Do not modify by hand.
 // XML documentation file not found. To check if public methods have XML comments,
 // make sure the XML doc file is present and located next to the scraped dll
+[UnityEngine.CreateAssetMenu(fileName = @"DialogueAgentProfile", menuName = @"Network Game/Dialogue/Dialogue Agent Profile", order = 0)] public class DialogueAgentProfile : UnityEngine.ScriptableObject
+{
+    [UnityEngine.Tooltip(@"Small bonus for acceptable-but-not-fast responses.")] public float AcceptableResponseBonus = 0.01f;
+    [UnityEngine.Header(@"Behavior")] [UnityEngine.Tooltip(@"ML-Agents behavior name expected by the trainer config (e.g. NpcDialogue).")] public string BehaviorName = @"NpcDialogue";
+    [UnityEngine.Header(@"Decisioning")] [UnityEngine.Min(1f)] [UnityEngine.Tooltip(@"How often the agent makes decisions (frames between decisions).")] public int DecisionPeriod = 5;
+    [UnityEngine.Tooltip(@"Bonus for very fast LLM responses (under FastResponseThresholdMs).")] public float FastResponseBonus = 0.03f;
+    [UnityEngine.Tooltip(@"Scale for normalized player feedback scores (-1..1).")] public float FeedbackScoreRewardScale = 0.1f;
+    [UnityEngine.Header(@"Training Reward Shaping")] [UnityEngine.Tooltip(@"Scale for outcome-based rewards (success/failure of dialogue turns).")] public float OutcomeRewardScale = 1f;
+    [UnityEngine.Tooltip(@"Penalty applied per LLM retry attempt.")] public float RetryPenaltyPerAttempt = 0.02f;
+    [UnityEngine.Tooltip(@"Penalty for very slow responses (over SlowResponseThresholdMs).")] public float SlowResponsePenalty = 0.03f;
+    [UnityEngine.Tooltip(@"Whether to apply actions on intermediate steps between decisions.")] public bool TakeActionsBetweenDecisions = true;
+    [UnityEngine.Tooltip(@"Penalty when a request times out entirely.")] public float TimeoutPenalty = 0.08f;
+    public DialogueAgentProfile() {}
+}
+
 public class GameStateProvider : UnityEngine.MonoBehaviour
 {
     public bool IsPlayerInCombat { get; }

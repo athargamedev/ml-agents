@@ -1009,6 +1009,80 @@ namespace Network_Game.Dialogue
             }
         }
 
+        public static string FormatErrorMessage(string error, bool includeTechnicalCode = false)
+        {
+            string raw = string.IsNullOrWhiteSpace(error) ? "Dialogue failed." : error.Trim();
+            string lower = raw.ToLowerInvariant();
+            string friendly;
+            switch (lower)
+            {
+                case "llm_component_missing":
+                    friendly = "Dialogue backend is not configured. Check the remote LM Studio settings.";
+                    break;
+                case "model_not_set":
+                    friendly = "No remote model is configured. Set the LM Studio model name.";
+                    break;
+                case "conversation_in_flight":
+                    friendly = "NPC is still responding. Wait a moment and try again.";
+                    break;
+                case "awaiting_user_message":
+                    friendly = "NPC is waiting for your next message.";
+                    break;
+                case "duplicate_prompt":
+                    friendly = "You already sent that. Try a different message.";
+                    break;
+                case "repeat_delay":
+                    friendly = "Please wait a moment before sending another message.";
+                    break;
+                case "queue_full":
+                    friendly = "Dialogue queue is busy. Try again in a few seconds.";
+                    break;
+                case "not_server":
+                    friendly = "Dialogue service is not ready yet. Start host/server first.";
+                    break;
+                case "request_rejected":
+                    friendly = "Dialogue request was rejected. Please try again.";
+                    break;
+                default:
+                    if (lower.StartsWith("model_file_not_found", StringComparison.Ordinal))
+                    {
+                        string model = raw;
+                        int idx = raw.IndexOf(':');
+                        if (idx >= 0 && idx + 1 < raw.Length)
+                        {
+                            model = raw.Substring(idx + 1).Trim();
+                        }
+
+                        friendly = $"Configured dialogue model is unavailable ({model}). Check LM Studio.";
+                        break;
+                    }
+                    if (lower.Contains("timed out"))
+                    {
+                        friendly = "NPC took too long to respond. Please try again.";
+                    }
+                    else if (lower.Contains("rate limited"))
+                    {
+                        friendly = "You are sending messages too fast. Please wait briefly.";
+                    }
+                    else if (lower.Contains("too many active requests"))
+                    {
+                        friendly = "Too many pending messages. Wait for current responses first.";
+                    }
+                    else
+                    {
+                        friendly = raw;
+                    }
+                    break;
+            }
+
+            if (includeTechnicalCode && !string.Equals(friendly, raw, StringComparison.Ordinal))
+            {
+                return $"{friendly} ({raw})";
+            }
+
+            return friendly;
+        }
+
         private void ResolveUiReferences()
         {
             if (m_InputField == null)

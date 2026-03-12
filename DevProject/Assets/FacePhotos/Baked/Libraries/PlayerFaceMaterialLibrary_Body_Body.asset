@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 927c9f06f9774b3e95e7d0ff95a0b113, type: 3}
+  m_Name: PlayerFaceMaterialLibrary_Body_Body
+  m_EditorClassIdentifier: Network_Game::Network_Game.ThirdPersonController.PlayerFaceMaterialLibrary
+  m_BaseBodyMaterial: {fileID: 2100000, guid: 87b93918c0ed86e4eb9220cd55bb9d98, type: 2}
+  m_FaceMaterials:
+  - {fileID: 2100000, guid: c52d4645db2a79940905e2c866417b01, type: 2}
+  - {fileID: 2100000, guid: 194d8d234b0be634688c32048d04a20d, type: 2}
+  m_DefaultFaceIndex: 0

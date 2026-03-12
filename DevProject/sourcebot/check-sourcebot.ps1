@@ -57,9 +57,31 @@ function Get-RepoBranch {
     return Get-ContainerShOutput "git -C /repos/ml-agents rev-parse --abbrev-ref HEAD"
 }
 
+function Get-DockerServiceStatus {
+    $service = Get-Service com.docker.service -ErrorAction SilentlyContinue
+    if (-not $service) {
+        return "not installed"
+    }
+
+    return $service.Status.ToString()
+}
+
+function Write-DockerTroubleshootingHint {
+    $serviceStatus = Get-DockerServiceStatus
+    Write-Warning ("Docker Desktop service status: {0}" -f $serviceStatus)
+    Write-Warning "If Sourcebot hangs on port 8090 or Ask returns stale output, restart Docker Desktop. If com.docker.service is stopped, start Docker Desktop from an elevated shell or start the service as Administrator."
+}
+
 Write-Section "Container"
-$containerInfo = & docker ps --filter "name=^/${containerName}$" --format "{{.Image}}|{{.Status}}"
+try {
+    $containerInfo = & docker ps --filter "name=^/${containerName}$" --format "{{.Image}}|{{.Status}}"
+} catch {
+    Write-DockerTroubleshootingHint
+    throw
+}
+
 if (-not $containerInfo) {
+    Write-DockerTroubleshootingHint
     throw "Sourcebot container '$containerName' is not running."
 }
 
@@ -69,21 +91,55 @@ Write-Host ("Status:  {0}" -f $parts[1])
 Write-Host ("Branch:  {0}" -f (Get-RepoBranch))
 
 Write-Section "HTTP"
-$rootResponse = Invoke-WebRequest -Uri "http://127.0.0.1:8090" -UseBasicParsing -TimeoutSec 20
-$sessionResponse = Invoke-WebRequest -Uri "http://127.0.0.1:8090/api/auth/session" -UseBasicParsing -TimeoutSec 20
+try {
+    $rootResponse = Invoke-WebRequest -Uri "http://127.0.0.1:8090/~" -UseBasicParsing -TimeoutSec 20
+    $sessionResponse = Invoke-WebRequest -Uri "http://127.0.0.1:8090/api/auth/session" -UseBasicParsing -TimeoutSec 20
+} catch {
+    Write-DockerTroubleshootingHint
+    throw
+}
+
 Write-Host ("Root:    HTTP {0}" -f $rootResponse.StatusCode)
 Write-Host ("Session: {0}" -f $sessionResponse.Content)
 
+Write-Section "MCP"
+$mcpInitializeBody = @{
+    jsonrpc = "2.0"
+    id = 1
+    method = "initialize"
+    params = @{
+        protocolVersion = "2024-11-05"
+        capabilities = @{}
+        clientInfo = @{
+            name = "sourcebot-check"
+            version = "1.0"
+        }
+    }
+} | ConvertTo-Json -Depth 6
+
+$mcpResponse = Invoke-WebRequest -Uri "http://127.0.0.1:8090/api/mcp" `
+    -Method Post `
+    -Headers @{ Accept = "application/json, text/event-stream" } `
+    -ContentType "application/json" `
+    -Body $mcpInitializeBody `
+    -TimeoutSec 20
+$mcpSessionId = $mcpResponse.Headers["mcp-session-id"]
+Write-Host ("Initialize: HTTP {0}" -f $mcpResponse.StatusCode)
+Write-Host ("Session id: {0}" -f ($(if ($mcpSessionId) { "present" } else { "missing" })))
+
 Write-Section "Logs"
+$anonymousAccessEnv = Get-ContainerShOutput "printenv FORCE_ENABLE_ANONYMOUS_ACCESS 2>/dev/null || true"
 $recentLogs = (& cmd /c "docker logs --tail 200 $containerName 2>&1" | Out-String)
-$hasAnonymousAccess = $recentLogs -match "Anonymous access enabled"
 $hasJwtError = $recentLogs -match "JWTSessionError"
-Write-Host ("Anonymous access log: {0}" -f ($(if ($hasAnonymousAccess) { "present" } else { "missing" })))
+Write-Host ("Anonymous access: {0}" -f ($(if ($anonymousAccessEnv -eq "true") { "enabled" } else { "not enabled" })))
 Write-Host ("JWT session errors:   {0}" -f ($(if ($hasJwtError) { "present" } else { "none found" })))
 
 Write-Section "LM Studio"
 $config = Get-Content $configPath | ConvertFrom-Json
+$modelConfig = $config.models[0]
 $modelName = $config.models[0].model
+$modelProvider = $modelConfig.provider
+$modelBaseUrl = $modelConfig.baseUrl
 $token = Get-DotEnvValue "LM_STUDIO_TOKEN"
 if (-not $token) {
     throw "LM_STUDIO_TOKEN is missing from sourcebot/.env"
@@ -92,8 +148,14 @@ if (-not $token) {
 $modelsResponse = Invoke-RestMethod -Uri "http://127.0.0.1:7002/v1/models" -Headers @{ Authorization = "Bearer $token" } -Method Get -TimeoutSec 20
 $availableModels = @($modelsResponse.data | ForEach-Object { $_.id })
 $modelPresent = $availableModels -contains $modelName
+Write-Host ("Provider:         {0}" -f $modelProvider)
+Write-Host ("Configured baseUrl: {0}" -f $modelBaseUrl)
 Write-Host ("Configured model: {0}" -f $modelName)
 Write-Host ("Model available:  {0}" -f ($(if ($modelPresent) { "yes" } else { "no" })))
+
+if ($modelProvider -eq "openai-compatible" -and $modelBaseUrl -match "/chat/completions/?$") {
+    Write-Warning "Sourcebot openai-compatible models expect the API root (for LM Studio usually /v1), not /chat/completions."
+}
 
 $probeBody = @{
     model = $modelName

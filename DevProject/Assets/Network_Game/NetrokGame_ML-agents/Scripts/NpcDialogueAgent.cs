@@ -78,6 +78,10 @@ public class NpcDialogueAgent : Agent
         SideChannelOverride = 1,
     }
 
+    [Header("Profile (Optional)")]
+    [Tooltip("Shared configuration for dialogue ML-Agents behaviour and reward shaping.")]
+    [SerializeField] private DialogueAgentProfile m_Profile;
+
     [Header("Player")]
     [Tooltip("Drag your Player GameObject's Transform here.")]
     [SerializeField] private Transform m_PlayerTransform;
@@ -158,6 +162,8 @@ public class NpcDialogueAgent : Agent
     {
         m_StatsRecorder = Academy.Instance != null ? Academy.Instance.StatsRecorder : null;
         TryResolvePlayerTransform();
+
+        ApplyProfileIfAvailable();
 
         // Create/register the dialogue sidechannel only when explicitly routing
         // dialogue generation through the Python bridge.
@@ -729,6 +735,31 @@ public class NpcDialogueAgent : Agent
         NetworkDialogueService.OnDialogueResponseTelemetry -= HandleDialogueTelemetry;
         DialogueFeedbackCollector.OnFeedbackScored -= HandleFeedbackScore;
         m_RuntimeHandlersRegistered = false;
+    }
+
+    /// <summary>
+    /// Apply values from the optional DialogueAgentProfile to this instance so that
+    /// multiple scenes/prefabs can share consistent tuning without hand-editing
+    /// every NpcDialogueAgent component.
+    /// </summary>
+    private void ApplyProfileIfAvailable()
+    {
+        if (m_Profile == null)
+            return;
+
+        // Decision cadence
+        if (m_Profile.DecisionPeriod > 0)
+            m_DecisionPeriod = m_Profile.DecisionPeriod;
+        m_TakeActionsBetweenDecisions = m_Profile.TakeActionsBetweenDecisions;
+
+        // Reward shaping scales
+        m_OutcomeRewardScale          = m_Profile.OutcomeRewardScale;
+        m_FeedbackScoreRewardScale    = m_Profile.FeedbackScoreRewardScale;
+        m_FastResponseBonus           = m_Profile.FastResponseBonus;
+        m_AcceptableResponseBonus     = m_Profile.AcceptableResponseBonus;
+        m_SlowResponsePenalty         = m_Profile.SlowResponsePenalty;
+        m_TimeoutPenalty              = m_Profile.TimeoutPenalty;
+        m_RetryPenaltyPerAttempt      = m_Profile.RetryPenaltyPerAttempt;
     }
 
     private bool UseSideChannelOverride => m_DialogueRoutingMode == DialogueRoutingMode.SideChannelOverride;

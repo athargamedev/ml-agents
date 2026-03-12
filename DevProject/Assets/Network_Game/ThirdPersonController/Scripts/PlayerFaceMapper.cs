@@ -5,19 +5,19 @@ namespace Network_Game.ThirdPersonController
 {
     /// <summary>
     /// Syncs a player's face selection across the network and applies the
-    /// pre-baked face material to the character's SkinnedMeshRenderer.
+    /// generated face material to the character's SkinnedMeshRenderer.
     ///
-    /// Setup: use Tools > Face Mapper > Auto-Setup Characters in the Editor
-    /// to auto-assign this component and populate the material array.
+    /// Setup: use Tools > Face Mapper > Sync Generated Face Materials and
+    /// Auto-Setup Characters to populate the assigned face library.
     /// </summary>
     public class PlayerFaceMapper : NetworkBehaviour
     {
         [Header("Renderer")]
-        [Tooltip("Auto-found in children if left empty. Must be the body mesh (Ch33_Body).")]
+        [Tooltip("Auto-found in children if left empty. Prefers a dedicated head renderer, otherwise falls back to the body mesh.")]
         [SerializeField]
         private SkinnedMeshRenderer m_Renderer;
 
-        [Tooltip("Which material slot on the renderer holds the face/body material.")]
+        [Tooltip("Which material slot on the renderer holds the head/face material.")]
         [SerializeField]
         private int m_FaceMaterialIndex;
 
@@ -28,7 +28,11 @@ namespace Network_Game.ThirdPersonController
         private Material m_BaseBodyMaterial;
 
         [Header("Face Library")]
-        [Tooltip("Pre-baked face materials. Populated automatically by the Editor bake tool.")]
+        [Tooltip("Preferred face library populated by the editor sync step.")]
+        [SerializeField]
+        private PlayerFaceMaterialLibrary m_FaceLibrary;
+
+        [Tooltip("Legacy fallback list of face materials kept for backward compatibility.")]
         [SerializeField]
         private Material[] m_FaceMaterials;
 
@@ -37,14 +41,25 @@ namespace Network_Game.ThirdPersonController
         private int m_DefaultFaceIndex;
 
         // Synced across all clients: which face this player is wearing.
-        private readonly NetworkVariable<int> m_FaceIndex = new(
+        private readonly NetworkVariable<int> m_FaceIndex = new NetworkVariable<int>(
             0,
             NetworkVariableReadPermission.Everyone,
             NetworkVariableWritePermission.Owner
         );
 
-        public int FaceCount => m_FaceMaterials != null ? m_FaceMaterials.Length : 0;
-        public int CurrentFaceIndex => m_FaceIndex.Value;
+        public int FaceCount
+        {
+            get
+            {
+                Material[] materials = ResolveFaceMaterials();
+                return materials != null ? materials.Length : 0;
+            }
+        }
+
+        public int CurrentFaceIndex
+        {
+            get { return m_FaceIndex.Value; }
+        }
 
         public override void OnNetworkSpawn()
         {
@@ -110,14 +125,19 @@ namespace Network_Game.ThirdPersonController
             SelectFace((m_FaceIndex.Value + 1) % FaceCount);
         }
 
-        private void OnFaceChanged(int _, int next) =>
+        private void OnFaceChanged(int _, int next)
+        {
             ApplyFaceMaterial(ClampToValidFaceIndex(next));
+        }
 
         private void ApplyFaceMaterial(int index)
         {
             m_Renderer = ResolveRendererReference(m_Renderer);
 
-            if (m_Renderer == null || m_FaceMaterials == null || m_FaceMaterials.Length == 0)
+            if (m_Renderer == null)
+                return;
+            Material[] faceMaterials = ResolveFaceMaterials();
+            if (faceMaterials == null || faceMaterials.Length == 0)
                 return;
 
             int clamped = ClampToValidFaceIndex(index);
@@ -154,13 +174,16 @@ namespace Network_Game.ThirdPersonController
 
         private Material ResolveTargetMaterial(int index)
         {
-            Material candidate =
-                (m_FaceMaterials != null && index >= 0 && index < m_FaceMaterials.Length)
-                ? m_FaceMaterials[index]
+            Material[] faceMaterials = ResolveFaceMaterials();
+            Material candidate = (faceMaterials != null && index >= 0 && index < faceMaterials.Length)
+                ? faceMaterials[index]
                 : null;
 
             if (IsMaterialUsable(candidate))
                 return candidate;
+
+            if (m_FaceLibrary != null && IsMaterialUsable(m_FaceLibrary.BaseBodyMaterial))
+                return m_FaceLibrary.BaseBodyMaterial;
 
             if (m_BaseBodyMaterial == null && m_Renderer != null)
             {
@@ -177,12 +200,20 @@ namespace Network_Game.ThirdPersonController
             return mat != null && mat.shader != null && mat.shader.isSupported;
         }
 
+        private Material[] ResolveFaceMaterials()
+        {
+            if (m_FaceLibrary != null && m_FaceLibrary.FaceCount > 0)
+                return m_FaceLibrary.FaceMaterials;
+
+            return m_FaceMaterials;
+        }
+
         private SkinnedMeshRenderer ResolveRendererReference(SkinnedMeshRenderer current)
         {
             if (IsRendererCandidateUsable(current))
                 return current;
 
-            SkinnedMeshRenderer resolved = FindBodyRenderer();
+            SkinnedMeshRenderer resolved = FindFaceRenderer();
             return IsRendererCandidateUsable(resolved) ? resolved : current;
         }
 
@@ -192,13 +223,28 @@ namespace Network_Game.ThirdPersonController
         }
 
         /// <summary>
-        /// Finds the SkinnedMeshRenderer whose GameObject name contains "body".
-        /// Targets Ch33_Body (face+body UV atlas) rather than Ch33_Belt/Hair/etc.
-        /// which GetComponentInChildren would grab alphabetically first.
+        /// Finds the best renderer to receive face materials.
+        /// Prefers a dedicated head mesh when present, otherwise falls back to the
+        /// body mesh used by older character imports.
         /// </summary>
-        private SkinnedMeshRenderer FindBodyRenderer()
+        private SkinnedMeshRenderer FindFaceRenderer()
         {
             var all = GetComponentsInChildren<SkinnedMeshRenderer>(true);
+            foreach (var smr in all)
+                if (
+                    IsRendererCandidateUsable(smr)
+                    && smr.gameObject.name.IndexOf("head", System.StringComparison.OrdinalIgnoreCase)
+                    >= 0
+                )
+                    return smr;
+
+            foreach (var smr in all)
+                if (
+                    smr.gameObject.name.IndexOf("head", System.StringComparison.OrdinalIgnoreCase)
+                    >= 0
+                )
+                    return smr;
+
             foreach (var smr in all)
                 if (
                     IsRendererCandidateUsable(smr)
@@ -228,6 +274,8 @@ namespace Network_Game.ThirdPersonController
                 m_FaceMaterialIndex = 0;
             if (m_DefaultFaceIndex < 0)
                 m_DefaultFaceIndex = 0;
+            if (m_BaseBodyMaterial == null && m_FaceLibrary != null)
+                m_BaseBodyMaterial = m_FaceLibrary.BaseBodyMaterial;
             if (m_BaseBodyMaterial == null && m_Renderer != null)
             {
                 var shared = m_Renderer.sharedMaterials;

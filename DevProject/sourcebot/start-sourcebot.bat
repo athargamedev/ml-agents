@@ -14,6 +14,10 @@ REM Check if Docker is running
 docker info >nul 2>&1
 if %errorlevel% neq 0 (
     echo ERROR: Docker is not running. Please start Docker Desktop.
+    sc query com.docker.service | findstr /I "STATE" | findstr /I "STOPPED" >nul 2>&1
+    if %errorlevel% equ 0 (
+        echo NOTE: com.docker.service is stopped. Start Docker Desktop from an elevated shell or start the service as Administrator.
+    )
     pause
     exit /b 1
 )
@@ -61,7 +65,7 @@ if %errorlevel% equ 0 (
     echo.
     echo Web UI:          http://localhost:8090
     echo Repo source:     local ml-agents checkout
-    echo Ask model:       qwen2.5-coder-7b-instruct@q4_k_m
+    echo Ask model:       qwen3-8b
     echo Verify status:   .\check-sourcebot.ps1 -WaitForIndex
     echo Logs:            docker compose logs -f
     echo Stop:            docker compose down

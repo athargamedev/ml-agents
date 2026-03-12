@@ -129,6 +129,7 @@
   <Project Path="Unity.Multiplayer.Tools.NetStats.CodeGen.csproj" />
   <Project Path="Unity.ML-Agents.Editor.csproj" />
   <Project Path="Unity.Multiplayer.Tools.NetworkProfiler.Runtime.csproj" />
+  <Project Path="Unity.SharpZipLib.Editor.csproj" />
   <Project Path="Unity.AI.Navigation.Editor.ConversionSystem.csproj" />
   <Project Path="Unity.ProBuilder.AssetIdRemapUtility.csproj" />
   <Project Path="Unity.AppUI.Redux.Editor.csproj" />
@@ -222,6 +223,7 @@
   <Project Path="Unity.RenderPipeline.Universal.ShaderLibrary.csproj" />
   <Project Path="Unity.Numerics.Random.csproj" />
   <Project Path="Unity.Bindings.OpenImageIO.Editor.csproj" />
+  <Project Path="Unity.SharpZipLib.Utils.csproj" />
   <Project Path="Unity.Netcode.PackageChecker.Editor.csproj" />
   <Project Path="Unity.RenderPipelines.Universal.Shaders.csproj" />
   <Project Path="Unity.InferenceEngine.MacBLAS.csproj" />

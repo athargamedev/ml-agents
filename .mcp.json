@@ -1,5 +1,8 @@
 {
   "mcpServers": {
+    "sourcebot": {
+      "url": "http://127.0.0.1:8090/api/mcp"
+    },
     "filesystem": {
       "command": "cmd",
       "args": [
@@ -7,7 +10,7 @@
         "npx",
         "-y",
         "@modelcontextprotocol/server-filesystem",
-        "${PROJECT_ROOT}"
+        "D:\\GithubRepos\\ml-agents"
       ],
       "alwaysAllow": [
         "read_file",
@@ -26,21 +29,6 @@
         "read_media_file"
       ]
     },
-    "qdrant": {
-      "command": "cmd",
-      "args": [
-        "/c",
-        "uvx",
-        "mcp-server-qdrant",
-        "--transport",
-        "stdio"
-      ],
-      "env": {
-        "QDRANT_URL": "http://localhost:6333",
-        "QDRANT_API_KEY": "unitykb",
-        "COLLECTION_NAME": "unity_codebase"
-      }
-    },
     "serena-mcp": {
       "command": "cmd",
       "args": [
@@ -51,7 +39,7 @@
         "serena",
         "start-mcp-server",
         "--project",
-        "ml-agents"
+        "D:\\GithubRepos\\ml-agents"
       ]
     },
     "sequentialthinking": {

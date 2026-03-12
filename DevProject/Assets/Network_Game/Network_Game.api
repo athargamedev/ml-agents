@@ -3,10 +3,18 @@
 // make sure the XML doc file is present and located next to the scraped dll
 public static class FaceMapperEditorTool
 {
-    [UnityEditor.MenuItem(@"Tools/Face Mapper/1. Bake Face Materials")] public static void BakeFaceMaterials();
-    [UnityEditor.MenuItem(@"Tools/Face Mapper/3. Clear Baked Assets")] public static void ClearBaked();
+    [UnityEditor.MenuItem(@"Tools/Face Mapper/1. Sync Generated Face Materials")] public static void BakeFaceMaterials();
+    [UnityEditor.MenuItem(@"Tools/Face Mapper/3. Clear Generated Face Assets")] public static void ClearBaked();
     [UnityEditor.MenuItem(@"Tools/Face Mapper/1b. Import Blender-Baked Atlases")] public static void ImportBlenderBakedAtlases();
+    [UnityEditor.MenuItem(@"Tools/Face Mapper/4. Preview First Face In Open Scene")] public static void PreviewFirstFaceInOpenScene();
+    [UnityEditor.MenuItem(@"Tools/Face Mapper/5. Restore Base Heads In Open Scene")] public static void RestoreBaseHeadsInOpenScene();
     [UnityEditor.MenuItem(@"Tools/Face Mapper/2. Auto-Setup Characters")] public static void SetupAllCharacters();
+    [UnityEditor.MenuItem(@"Tools/Face Mapper/Deprecated/Legacy Unity Bake")] public static void ShowLegacyBakeRemoved();
+}
+
+public sealed class FaceMapperImportPostprocessor : UnityEditor.AssetPostprocessor
+{
+    public FaceMapperImportPostprocessor() {}
 }
 
 [UnityEngine.CreateAssetMenu] public class RampAsset : UnityEngine.ScriptableObject
@@ -81,10 +89,35 @@ namespace Network_Game.Auth
 
 namespace Network_Game.Behavior
 {
-    [UnityEngine.DefaultExecutionOrder(-100)] public class BehaviorSceneBootstrap : UnityEngine.MonoBehaviour
+    [UnityEngine.DefaultExecutionOrder(-220)] public class AuthBootstrap : UnityEngine.MonoBehaviour
     {
-        [UnityEngine.SerializeField] [UnityEngine.Tooltip(@"When enabled, clients can also auto-create LlmDebugAssistant.")] public bool m_EnableDebugAssistantOnClients;
+        [UnityEngine.SerializeField] public bool m_BlockNetworkStartUntilAuthenticated = true;
+        [UnityEngine.SerializeField] public bool m_RequireExplicitLoginEachSession = true;
+        [UnityEngine.Header(@"Configuration")] [UnityEngine.Min(0.5f)] [UnityEngine.SerializeField] public float m_TimeoutSeconds = 15f;
+        public bool IsAuthenticated { get; }
+        public AuthBootstrap() {}
+        public void AttachAuthToPlayer(UnityEngine.GameObject player);
+    }
+
+    [UnityEngine.DefaultExecutionOrder(0)] public class BehaviorSceneBootstrap : UnityEngine.MonoBehaviour
+    {
+        [UnityEngine.SerializeField] public bool m_EnableDebugAssistantOnClients;
         public BehaviorSceneBootstrap() {}
+    }
+
+    [UnityEngine.DefaultExecutionOrder(-100)] public class NetworkBootstrap : UnityEngine.MonoBehaviour
+    {
+        [UnityEngine.SerializeField] public bool m_AvoidHostStartWhenPortIsInUse = true;
+        [UnityEngine.SerializeField] public string m_ClientModeTag = @"Client";
+        [UnityEngine.Header(@"Configuration")] [UnityEngine.SerializeField] public bool m_ForceClientMode;
+        [UnityEngine.Range(1f, 32f)] [UnityEngine.SerializeField] public int m_HostFallbackPortAttempts = 8;
+        [UnityEngine.Min(1024f)] [UnityEngine.SerializeField] public int m_HostFallbackPortStart = 7778;
+        [UnityEngine.Header(@"Spawn Point")] [UnityEngine.SerializeField] public UnityEngine.Transform m_PlayerSpawnPoint;
+        [UnityEngine.SerializeField] public string m_PlayerTag = @"Player";
+        [UnityEngine.SerializeField] public bool m_TryHostPortFallbackOnStartFailure = true;
+        public bool IsClientMode { get; }
+        public Unity.Netcode.NetworkManager NetworkManager { get; }
+        public NetworkBootstrap() {}
     }
 
     public class NetworkBootstrapEvents : UnityEngine.MonoBehaviour
@@ -115,6 +148,23 @@ namespace Network_Game.Behavior
         public System.Collections.Generic.List<UnityEngine.GameObject> CollectAndPrioritizeNpcs(UnityEngine.GameObject primaryNpc = default(UnityEngine.GameObject));
         public bool ConfigureDialogueUiParticipants(UnityEngine.GameObject player, UnityEngine.GameObject npcObject);
         public void DisableLlmAgent(UnityEngine.GameObject target);
+    }
+
+    [UnityEngine.DefaultExecutionOrder(-50)] public class PlayerBootstrap : UnityEngine.MonoBehaviour
+    {
+        [UnityEngine.SerializeField] public bool m_AlignLocalPlayerToSpawnPoint = true;
+        [UnityEngine.SerializeField] public UnityEngine.Transform m_PlayerSpawnPoint;
+        [UnityEngine.Header(@"Configuration")] [UnityEngine.SerializeField] public string m_PlayerTag = @"Player";
+        public PlayerBootstrap() {}
+    }
+
+    [UnityEngine.DefaultExecutionOrder(100)] public class RuntimeBinder : UnityEngine.MonoBehaviour
+    {
+        [UnityEngine.Header(@"Diagnostics")] [UnityEngine.SerializeField] public bool m_AutoCreateLlmDebugAssistant;
+        [UnityEngine.SerializeField] public bool m_EnableDebugAssistantOnClients;
+        [UnityEngine.Header(@"NPC Configuration")] [UnityEngine.SerializeField] public UnityEngine.GameObject m_PrimaryNpc;
+        public RuntimeBinder() {}
+        public void RebindCamera();
     }
 
     public class SceneCameraManager : UnityEngine.MonoBehaviour
@@ -341,6 +391,8 @@ namespace Network_Game.Dialogue
         public void OpenDialoguePanel();
         public void SendPrompt();
         public void SetDialogueVisible(bool visible);
+        public void SetNpc(UnityEngine.GameObject npc);
+        public void SetPlayer(UnityEngine.GameObject player);
         public void ToggleDialoguePanel();
     }
 
@@ -1239,6 +1291,17 @@ namespace Network_Game.ThirdPersonController
         public override void OnNetworkDespawn();
         public override void OnNetworkSpawn();
         public void SelectFace(int index);
+    }
+
+    [UnityEngine.CreateAssetMenu(fileName = @"PlayerFaceMaterialLibrary", menuName = @"Network Game/Face Mapper/Face Material Library")] public sealed class PlayerFaceMaterialLibrary : UnityEngine.ScriptableObject
+    {
+        public UnityEngine.Material BaseBodyMaterial { get; }
+        public int DefaultFaceIndex { get; }
+        public int FaceCount { get; }
+        public UnityEngine.Material[] FaceMaterials { get; }
+        public PlayerFaceMaterialLibrary() {}
+        public UnityEngine.Material GetFaceMaterial(int index);
+        public void SetContents(UnityEngine.Material baseBodyMaterial, UnityEngine.Material[] faceMaterials, int defaultFaceIndex);
     }
 
     public class StarterAssetsInputs : UnityEngine.MonoBehaviour
