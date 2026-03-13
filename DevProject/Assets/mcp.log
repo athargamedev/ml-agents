@@ -1,3 +1,6 @@
 {"ts":"2026-03-13T03:35:01.731Z","event":"session_start","unity":"6000.4.0b9"}
 {"ts":"2026-03-13T03:35:01.729Z","tool":"read_console","type":"tool","status":"SUCCESS","ms":38,"action":"get","params":{"action":"get","types":["error","warning","log"],"count":20,"format":"plain","includeStacktrace":false}}
 {"ts":"2026-03-13T03:35:59.621Z","tool":"read_console","type":"tool","status":"SUCCESS","ms":3,"action":"get","params":{"action":"get","types":["error","warning","log"],"count":5,"format":"plain","includeStacktrace":false}}
+{"ts":"2026-03-13T03:58:05.264Z","tool":"get_editor_state","type":"resource","status":"SUCCESS","ms":21,"params":{}}
+{"ts":"2026-03-13T03:58:05.367Z","tool":"get_project_info","type":"resource","status":"SUCCESS","ms":71,"params":{}}
+{"ts":"2026-03-13T03:58:06.042Z","tool":"manage_scene","type":"tool","status":"SUCCESS","ms":92,"action":"get_hierarchy","params":{"action":"get_hierarchy"}}
