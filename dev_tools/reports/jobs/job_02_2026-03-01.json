@@ -1,0 +1,23 @@
+{
+  "job_id": "02",
+  "title": "ML-Agents Reward Balance & MaxStep Conflict",
+  "generated_utc": "2026-03-01T05:53:54.599375+00:00",
+  "result": {
+    "maxstep_conflict": {
+      "verdict": "bug",
+      "root_cause": "inconsistent max step values",
+      "fix": "Ensure that the `MaxStep` value for both the Agent base component and NpcDialogueAgent is consistent. In this case, it should be set to a fixed value instead of an inspector value."
+    },
+    "decision_period_conflict": {
+      "verdict": "bug",
+      "fix": "Ensure that the `DecisionPeriod` values for both DecisionRequester and NpcDialogueAgent are consistent. In this case, they should be set to either a fixed value or overridden in a way that maintains consistency."
+    },
+    "reward_balance": {
+      "feedback_scale_verdict": "imbalanced",
+      "latency_scale_verdict": "weak",
+      "suggested_feedback_scale": 0.1,
+      "suggested_timeout_penalty": 0.05
+    },
+    "priority": "low"
+  }
+}

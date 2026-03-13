@@ -1,0 +1,956 @@
+// This file is generated. Do not modify by hand.
+// XML documentation file not found. To check if public methods have XML comments,
+// make sure the XML doc file is present and located next to the scraped dll
+namespace UnityEngine.ProBuilder
+{
+    public sealed class ActionResult
+    {
+        public static ActionResult NoSelection { get; }
+        public string notification { get; }
+        public ActionResult.Status status { get; }
+        public static ActionResult Success { get; }
+        public static ActionResult UserCanceled { get; }
+        public ActionResult(ActionResult.Status status, string notification) {}
+        public static bool FromBool(bool success);
+        public static bool op_Implicit(ActionResult res);
+        public bool ToBool();
+        public enum Status
+        {
+            Success = 0,
+            Failure = 1,
+            Canceled = 2,
+            NoChange = 3,
+        }
+    }
+
+    public struct AutoUnwrapSettings
+    {
+        public AutoUnwrapSettings.Anchor anchor { get; set; }
+        public static AutoUnwrapSettings defaultAutoUnwrapSettings { get; }
+        public AutoUnwrapSettings.Fill fill { get; set; }
+        public static AutoUnwrapSettings fit { get; }
+        public bool flipU { get; set; }
+        public bool flipV { get; set; }
+        public Vector2 offset { get; set; }
+        public float rotation { get; set; }
+        public Vector2 scale { get; set; }
+        public static AutoUnwrapSettings stretch { get; }
+        public bool swapUV { get; set; }
+        public static AutoUnwrapSettings tile { get; }
+        public bool useWorldSpace { get; set; }
+        public AutoUnwrapSettings(AutoUnwrapSettings unwrapSettings) {}
+        public void Reset();
+        public override string ToString();
+        public enum Anchor
+        {
+            UpperLeft = 0,
+            UpperCenter = 1,
+            UpperRight = 2,
+            MiddleLeft = 3,
+            MiddleCenter = 4,
+            MiddleRight = 5,
+            LowerLeft = 6,
+            LowerCenter = 7,
+            LowerRight = 8,
+            None = 9,
+        }
+        public enum Fill
+        {
+            Fit = 0,
+            Tile = 1,
+            Stretch = 2,
+        }
+    }
+
+    public enum Axis
+    {
+        Right = 0,
+        Left = 1,
+        Up = 2,
+        Down = 3,
+        Forward = 4,
+        Backward = 5,
+    }
+
+    public static class BuiltinMaterials
+    {
+        public const string dotShader = @"Hidden/ProBuilder/VertexShader";
+        public const string faceShader = @"Hidden/ProBuilder/FaceHighlight";
+        public const string lineShader = @"Hidden/ProBuilder/LineBillboard";
+        public const string lineShaderMetal = @"Hidden/ProBuilder/LineBillboardMetal";
+        public const string pointShader = @"Hidden/ProBuilder/PointBillboard";
+        public const string wireShader = @"Hidden/ProBuilder/FaceHighlight";
+        public static Material defaultMaterial { get; }
+        public static bool geometryShadersSupported { get; }
+    }
+
+    [System.Flags] public enum CullingMode
+    {
+        None = 0,
+        Back = 1 << 0,
+        Front = 1 << 1,
+        FrontBack = 0x3,
+    }
+
+    public struct Edge : System.IEquatable<Edge>
+    {
+        public int a;
+        public int b;
+        public static readonly Edge Empty;
+        public Edge(int a, int b) {}
+        public static Edge Add(Edge a, Edge b);
+        public bool Contains(int index);
+        public bool Contains(Edge other);
+        public override bool Equals(object obj);
+        public bool Equals(Edge other);
+        public bool Equals(Edge other, System.Collections.Generic.Dictionary<int, int> lookup);
+        public override int GetHashCode();
+        public bool IsValid();
+        public static Edge operator +(Edge a, int b);
+        public static Edge operator +(Edge a, Edge b);
+        public static bool operator ==(Edge a, Edge b);
+        public static bool operator !=(Edge a, Edge b);
+        public static Edge operator -(Edge a, int b);
+        public static Edge operator -(Edge a, Edge b);
+        public static Edge Subtract(Edge a, Edge b);
+        public override string ToString();
+    }
+
+    public struct EdgeLookup : System.IEquatable<EdgeLookup>
+    {
+        public Edge common { get; set; }
+        public Edge local { get; set; }
+        public EdgeLookup(Edge common, Edge local) {}
+        public EdgeLookup(int cx, int cy, int x, int y) {}
+        public override bool Equals(object obj);
+        public bool Equals(EdgeLookup other);
+        public static System.Collections.Generic.IEnumerable<EdgeLookup> GetEdgeLookup(System.Collections.Generic.IEnumerable<Edge> edges, System.Collections.Generic.Dictionary<int, int> lookup);
+        public static System.Collections.Generic.HashSet<EdgeLookup> GetEdgeLookupHashSet(System.Collections.Generic.IEnumerable<Edge> edges, System.Collections.Generic.Dictionary<int, int> lookup);
+        public override int GetHashCode();
+        public static bool operator ==(EdgeLookup a, EdgeLookup b);
+        public static bool operator !=(EdgeLookup a, EdgeLookup b);
+        public override string ToString();
+    }
+
+    public enum ExtrudeMethod
+    {
+        IndividualFaces = 0,
+        VertexNormal = 1,
+        FaceNormal = 2,
+    }
+
+    public sealed class Face
+    {
+        public System.Collections.ObjectModel.ReadOnlyCollection<int> distinctIndexes { get; }
+        public System.Collections.ObjectModel.ReadOnlyCollection<Edge> edges { get; }
+        public System.Collections.ObjectModel.ReadOnlyCollection<int> indexes { get; }
+        public int this[int i] { get; }
+        public bool manualUV { get; set; }
+        [System.Obsolete(@"Face.material is deprecated. Please use submeshIndex instead.")] public Material material { get; set; }
+        public int smoothingGroup { get; set; }
+        public int submeshIndex { get; set; }
+        public int textureGroup { get; set; }
+        public AutoUnwrapSettings uv { get; set; }
+        public Face() {}
+        public Face(System.Collections.Generic.IEnumerable<int> indices) {}
+        public Face(Face other) {}
+        public bool Contains(int a, int b, int c);
+        public void CopyFrom(Face other);
+        public bool IsQuad();
+        public void Reverse();
+        public void SetIndexes(System.Collections.Generic.IEnumerable<int> indices);
+        public void ShiftIndexes(int offset);
+        public void ShiftIndexesToZero();
+        public int[] ToQuad();
+        public override string ToString();
+    }
+
+    public enum HandleOrientation
+    {
+        World = 0,
+        ActiveObject = 1,
+        ActiveElement = 2,
+    }
+
+    public static class HandleUtility
+    {
+        public static Quaternion GetEdgeRotation(ProBuilderMesh mesh, Edge edge);
+        public static Quaternion GetEdgeRotation(ProBuilderMesh mesh, HandleOrientation orientation, System.Collections.Generic.IEnumerable<Edge> edges);
+        public static Quaternion GetFaceRotation(ProBuilderMesh mesh, Face face);
+        public static Quaternion GetFaceRotation(ProBuilderMesh mesh, HandleOrientation orientation, System.Collections.Generic.IEnumerable<Face> faces);
+        public static Quaternion GetRotation(ProBuilderMesh mesh, System.Collections.Generic.IEnumerable<int> indices);
+        public static Quaternion GetVertexRotation(ProBuilderMesh mesh, int vertex);
+        public static Quaternion GetVertexRotation(ProBuilderMesh mesh, HandleOrientation orientation, System.Collections.Generic.IEnumerable<int> vertices);
+    }
+
+    public static class Math
+    {
+        public const float phi = 1.618034f;
+        public static Vector2 Average(System.Collections.Generic.IList<Vector2> array, System.Collections.Generic.IList<int> indexes = default(System.Collections.Generic.IList<int>));
+        public static Vector3 Average(System.Collections.Generic.IList<Vector3> array, System.Collections.Generic.IList<int> indexes = default(System.Collections.Generic.IList<int>));
+        public static Vector4 Average(System.Collections.Generic.IList<Vector4> array, System.Collections.Generic.IList<int> indexes = default(System.Collections.Generic.IList<int>));
+        public static int Clamp(int value, int lowerBound, int upperBound);
+        public static float DistancePointLineSegment(Vector2 point, Vector2 lineStart, Vector2 lineEnd);
+        public static float DistancePointLineSegment(Vector3 point, Vector3 lineStart, Vector3 lineEnd);
+        public static Vector3 GetNearestPointRayRay(Ray a, Ray b);
+        public static Vector3 Normal(ProBuilderMesh mesh, Face face);
+        public static Vector3 Normal(Vector3 p0, Vector3 p1, Vector3 p2);
+        public static Normal NormalTangentBitangent(ProBuilderMesh mesh, Face face);
+        public static bool RayIntersectsTriangle(Ray InRay, Vector3 InTriangleA, Vector3 InTriangleB, Vector3 InTriangleC, out float OutDistance, out Vector3 OutPoint);
+        public static Vector2 ReflectPoint(Vector2 point, Vector2 lineStart, Vector2 lineEnd);
+        public static Vector2 ScaleAroundPoint(this Vector2 v, Vector2 origin, Vector2 scale);
+        public static float Secant(float x);
+        public static float SqrDistance(Vector3 a, Vector3 b);
+        public static float TriangleArea(Vector3 x, Vector3 y, Vector3 z);
+    }
+
+    [System.Flags] public enum MeshArrays
+    {
+        Position = 1 << 0,
+        Texture0 = 1 << 1,
+        Texture1 = 1 << 2,
+        Lightmap = 1 << 2,
+        Texture2 = 1 << 3,
+        Texture3 = 1 << 4,
+        Color = 1 << 5,
+        Normal = 1 << 6,
+        Tangent = 1 << 7,
+        All = 0xff,
+    }
+
+    public enum MeshSyncState
+    {
+        Null = 0,
+        [System.Obsolete(@"InstanceIDMismatch is no longer used. Mesh references are not tracked by Instance ID.")] InstanceIDMismatch = 1,
+        Lightmap = 2,
+        InSync = 3,
+        NeedsRebuild = 4,
+    }
+
+    public static class MeshUtility
+    {
+        public static void CollapseSharedVertices(Mesh mesh, Vertex[] vertices = default(Vertex[]));
+        public static void Compile(ProBuilderMesh probuilderMesh, Mesh targetMesh, MeshTopology preferredTopology = MeshTopology.Triangles);
+        public static void CopyTo(Mesh source, Mesh destination);
+        public static Mesh DeepCopy(Mesh source);
+        public static void FitToSize(ProBuilderMesh mesh, Bounds currentSize, Vector3 sizeToFit);
+        public static void GenerateTangent(Mesh mesh);
+        public static uint GetIndexCount(Mesh mesh);
+        public static uint GetPrimitiveCount(Mesh mesh);
+        public static Vertex[] GetVertices(this Mesh mesh);
+        public static string Print(Mesh mesh);
+    }
+
+    public struct Normal : System.IEquatable<Normal>
+    {
+        public Vector3 bitangent { get; set; }
+        public Vector3 normal { get; set; }
+        public Vector4 tangent { get; set; }
+        public override bool Equals(object obj);
+        public bool Equals(Normal other);
+        public override int GetHashCode();
+        public static bool operator ==(Normal a, Normal b);
+        public static bool operator !=(Normal a, Normal b);
+    }
+
+    public static class Normals
+    {
+        public static void CalculateNormals(ProBuilderMesh mesh);
+        public static void CalculateTangents(ProBuilderMesh mesh);
+    }
+
+    public struct PickerOptions
+    {
+        public static PickerOptions Default { get; }
+        public bool depthTest { get; set; }
+        public RectSelectMode rectSelectMode { get; set; }
+        public override bool Equals(object obj);
+        public bool Equals(PickerOptions other);
+        public override int GetHashCode();
+        public static bool operator ==(PickerOptions a, PickerOptions b);
+        public static bool operator !=(PickerOptions a, PickerOptions b);
+    }
+
+    public enum PivotLocation
+    {
+        Center = 0,
+        FirstVertex = 1,
+    }
+
+    public enum PivotPoint
+    {
+        Center = 0,
+        IndividualOrigins = 1,
+        ActiveElement = 2,
+    }
+
+    [AddComponentMenu(@"")] [DisallowMultipleComponent] [ExcludeFromObjectFactory] [ExcludeFromPreset] [HelpURL(@"https://docs.unity3d.com/Packages/com.unity.probuilder@latest")] [Icon(@"Packages/com.unity.probuilder/Content/Icons/EditableMesh/EditableMesh.png")] public sealed class PolyShape : MonoBehaviour
+    {
+        public System.Collections.ObjectModel.ReadOnlyCollection<Vector3> controlPoints { get; }
+        public float extrude { get; set; }
+        public bool flipNormals { get; set; }
+        public PolyShape() {}
+        public void SetControlPoints(System.Collections.Generic.IList<Vector3> points);
+    }
+
+    [AddComponentMenu(@"//ProBuilder MeshFilter")] [DisallowMultipleComponent] [ExcludeFromObjectFactory] [ExcludeFromPreset] [ExecuteInEditMode] [HelpURL(@"https://docs.unity3d.com/Packages/com.unity.probuilder@latest")] [Icon(@"Packages/com.unity.probuilder/Content/Icons/EditableMesh/EditableMesh.png")] [RequireComponent(typeof(MeshRenderer))] public sealed class ProBuilderMesh : MonoBehaviour, ISerializationCallbackReceiver
+    {
+        public const uint maxVertexCount = 65535;
+        public static event System.Action<ProBuilderMesh> elementSelectionChanged;
+        public static event System.Action<ProBuilderMesh> meshWillBeDestroyed;
+        public System.Collections.Generic.IList<Color> colors { get; set; }
+        public int edgeCount { get; }
+        public int faceCount { get; }
+        public System.Collections.Generic.IList<Face> faces { get; set; }
+        public int indexCount { get; }
+        public MeshSyncState meshSyncState { get; }
+        public System.Collections.Generic.IList<Vector3> normals { get; }
+        public System.Collections.Generic.IList<Vector3> positions { get; set; }
+        public bool preserveMeshAssetOnDestroy { get; set; }
+        public bool selectable { get; set; }
+        public int selectedEdgeCount { get; }
+        public System.Collections.ObjectModel.ReadOnlyCollection<Edge> selectedEdges { get; }
+        public int selectedFaceCount { get; }
+        public System.Collections.ObjectModel.ReadOnlyCollection<int> selectedFaceIndexes { get; }
+        public int selectedVertexCount { get; }
+        public System.Collections.ObjectModel.ReadOnlyCollection<int> selectedVertices { get; }
+        public System.Collections.Generic.IList<SharedVertex> sharedVertices { get; set; }
+        public System.Collections.Generic.IList<Vector4> tangents { get; set; }
+        public System.Collections.Generic.IList<Vector2> textures { get; set; }
+        public int triangleCount { get; }
+        public UnwrapParameters unwrapParameters { get; set; }
+        public bool userCollisions { get; set; }
+        public int vertexCount { get; }
+        public ProBuilderMesh() {}
+        public void Clear();
+        public void ClearSelection();
+        public void CopyFrom(ProBuilderMesh other);
+        public static ProBuilderMesh Create();
+        public static ProBuilderMesh Create(System.Collections.Generic.IEnumerable<Vector3> positions, System.Collections.Generic.IEnumerable<Face> faces);
+        public static ProBuilderMesh Create(System.Collections.Generic.IList<Vertex> vertices, System.Collections.Generic.IList<Face> faces, System.Collections.Generic.IList<SharedVertex> sharedVertices = default(System.Collections.Generic.IList<SharedVertex>), System.Collections.Generic.IList<SharedVertex> sharedTextures = default(System.Collections.Generic.IList<SharedVertex>), System.Collections.Generic.IList<Material> materials = default(System.Collections.Generic.IList<Material>));
+        public System.Collections.Generic.List<int> GetCoincidentVertices(System.Collections.Generic.IEnumerable<int> vertices);
+        public void GetCoincidentVertices(System.Collections.Generic.IEnumerable<int> vertices, System.Collections.Generic.List<int> coincident);
+        public void GetCoincidentVertices(System.Collections.Generic.IEnumerable<Edge> edges, System.Collections.Generic.List<int> coincident);
+        public void GetCoincidentVertices(System.Collections.Generic.IEnumerable<Face> faces, System.Collections.Generic.List<int> coincident);
+        public void GetCoincidentVertices(int vertex, System.Collections.Generic.List<int> coincident);
+        public Color[] GetColors();
+        public Vector3[] GetNormals();
+        public Face[] GetSelectedFaces();
+        public Vector4[] GetTangents();
+        public void GetUVs(int channel, System.Collections.Generic.List<Vector4> uvs);
+        public Vertex[] GetVertices(System.Collections.Generic.IList<int> indexes = default(System.Collections.Generic.IList<int>));
+        public bool HasArrays(MeshArrays channels);
+        public void MakeUnique();
+        public void OnAfterDeserialize();
+        public void OnBeforeSerialize();
+        public void RebuildWithPositionsAndFaces(System.Collections.Generic.IEnumerable<Vector3> vertices, System.Collections.Generic.IEnumerable<Face> faces);
+        public void Refresh(RefreshMask mask = RefreshMask.All);
+        public void RefreshUV(System.Collections.Generic.IEnumerable<Face> facesToRefresh);
+        public void SetFaceColor(Face face, Color color);
+        public void SetMaterial(System.Collections.Generic.IEnumerable<Face> faces, Material material);
+        public void SetSelectedEdges(System.Collections.Generic.IEnumerable<Edge> edges);
+        public void SetSelectedFaces(System.Collections.Generic.IEnumerable<Face> selected);
+        public void SetSelectedVertices(System.Collections.Generic.IEnumerable<int> vertices);
+        public void SetUVs(int channel, System.Collections.Generic.List<Vector4> uvs);
+        public void SetVertices(System.Collections.Generic.IList<Vertex> vertices, bool applyMesh = false);
+        public void SetVerticesCoincident(System.Collections.Generic.IEnumerable<int> vertices);
+        public void ToMesh(MeshTopology preferredTopology = MeshTopology.Triangles);
+    }
+
+    public static class Projection
+    {
+        public static Plane FindBestPlane(System.Collections.Generic.IList<Vector3> points, System.Collections.Generic.IList<int> indexes = default(System.Collections.Generic.IList<int>));
+        public static Vector2[] PlanarProject(System.Collections.Generic.IList<Vector3> positions, System.Collections.Generic.IList<int> indexes = default(System.Collections.Generic.IList<int>));
+        public static Vector2[] PlanarProject(System.Collections.Generic.IList<Vector3> positions, System.Collections.Generic.IList<int> indexes, Vector3 direction);
+    }
+
+    public enum ProjectionAxis
+    {
+        X = 0,
+        Y = 1,
+        Z = 2,
+        XNegative = 3,
+        YNegative = 4,
+        ZNegative = 5,
+    }
+
+    public enum RectSelectMode
+    {
+        Partial = 0,
+        Complete = 1,
+    }
+
+    [System.Flags] public enum RefreshMask
+    {
+        UV = 1 << 0,
+        Colors = 1 << 1,
+        Normals = 1 << 2,
+        Tangents = 1 << 3,
+        Collisions = 1 << 4,
+        Bounds = 0x16,
+        All = 0x1f,
+    }
+
+    public class SceneSelection : System.IEquatable<SceneSelection>
+    {
+        [System.Obsolete(@"Use SetSingleEdge")] public Edge edge;
+        [System.Obsolete(@"Use SetSingleFace")] public Face face;
+        public GameObject gameObject;
+        public ProBuilderMesh mesh;
+        [System.Obsolete(@"Use SetSingleVertex")] public int vertex;
+        public System.Collections.Generic.List<Edge> edges { get; set; }
+        public System.Collections.Generic.List<Face> faces { get; set; }
+        public System.Collections.Generic.List<int> vertexes { get; set; }
+        public SceneSelection(GameObject gameObject = default(GameObject)) {}
+        public SceneSelection(ProBuilderMesh mesh, int vertex) {}
+        public SceneSelection(ProBuilderMesh mesh, Edge edge) {}
+        public SceneSelection(ProBuilderMesh mesh, Face face) {}
+        public void Clear();
+        public void CopyTo(SceneSelection dst);
+        public override bool Equals(object obj);
+        public bool Equals(SceneSelection other);
+        public override int GetHashCode();
+        public static bool operator ==(SceneSelection left, SceneSelection right);
+        public static bool operator !=(SceneSelection left, SceneSelection right);
+        public void SetSingleEdge(Edge edge);
+        public void SetSingleFace(Face face);
+        public void SetSingleVertex(int vertex);
+        public override string ToString();
+    }
+
+    public enum SelectionModifierBehavior
+    {
+        Add = 0,
+        Subtract = 1,
+        Difference = 2,
+    }
+
+    public static class SelectionPicker
+    {
+        public static System.Collections.Generic.Dictionary<ProBuilderMesh, System.Collections.Generic.HashSet<Edge>> PickEdgesInRect(Camera cam, Rect rect, System.Collections.Generic.IList<ProBuilderMesh> selectable, PickerOptions options, float pixelsPerPoint = 1f);
+        public static Face PickFace(Camera camera, Vector3 mousePosition, ProBuilderMesh pickable);
+        public static System.Collections.Generic.Dictionary<ProBuilderMesh, System.Collections.Generic.HashSet<Face>> PickFacesInRect(Camera cam, Rect rect, System.Collections.Generic.IList<ProBuilderMesh> selectable, PickerOptions options, float pixelsPerPoint = 1f);
+        public static System.Collections.Generic.Dictionary<ProBuilderMesh, System.Collections.Generic.HashSet<int>> PickVerticesInRect(Camera cam, Rect rect, System.Collections.Generic.IList<ProBuilderMesh> selectable, PickerOptions options, float pixelsPerPoint = 1f);
+    }
+
+    [System.Flags] public enum SelectMode
+    {
+        None = 0,
+        Vertex = 1 << 0,
+        Edge = 1 << 1,
+        Face = 1 << 2,
+        TextureVertex = 1 << 3,
+        TextureEdge = 1 << 4,
+        TextureFace = 1 << 5,
+        InputTool = 1 << 6,
+        Any = 0xff,
+    }
+
+    public static class ShapeFactory
+    {
+        public static ProBuilderMesh Instantiate<T>(PivotLocation pivotType = PivotLocation.Center) where T : Shapes.Shape, new();
+        public static ProBuilderMesh Instantiate(Shapes.Shape shape);
+        public static ProBuilderMesh Instantiate(System.Type shapeType, PivotLocation pivotType = PivotLocation.Center);
+    }
+
+    public static class ShapeGenerator
+    {
+        public static ProBuilderMesh CreateShape(ShapeType shape, PivotLocation pivotType = PivotLocation.Center);
+        public static ProBuilderMesh GenerateArch(PivotLocation pivotType, float angle, float radius, float width, float depth, int radialCuts, bool insideFaces, bool outsideFaces, bool frontFaces, bool backFaces, bool endCaps);
+        public static ProBuilderMesh GenerateCone(PivotLocation pivotType, float radius, float height, int subdivAxis);
+        public static ProBuilderMesh GenerateCube(PivotLocation pivotType, Vector3 size);
+        public static ProBuilderMesh GenerateCurvedStair(PivotLocation pivotType, float stairWidth, float height, float innerRadius, float circumference, int steps, bool buildSides);
+        public static ProBuilderMesh GenerateCylinder(PivotLocation pivotType, int axisDivisions, float radius, float height, int heightCuts, int smoothing = -1);
+        public static ProBuilderMesh GenerateDoor(PivotLocation pivotType, float totalWidth, float totalHeight, float ledgeHeight, float legWidth, float depth);
+        public static ProBuilderMesh GenerateIcosahedron(PivotLocation pivotType, float radius, int subdivisions, bool weldVertices = true, bool manualUvs = true);
+        public static ProBuilderMesh GeneratePipe(PivotLocation pivotType, float radius, float height, float thickness, int subdivAxis, int subdivHeight);
+        public static ProBuilderMesh GeneratePlane(PivotLocation pivotType, float width, float height, int widthCuts, int heightCuts, Axis axis);
+        public static ProBuilderMesh GeneratePrism(PivotLocation pivotType, Vector3 size);
+        public static ProBuilderMesh GenerateStair(PivotLocation pivotType, Vector3 size, int steps, bool buildSides);
+        public static ProBuilderMesh GenerateTorus(PivotLocation pivotType, int rows, int columns, float innerRadius, float outerRadius, bool smooth, float horizontalCircumference, float verticalCircumference, bool manualUvs = false);
+    }
+
+    public enum ShapeType
+    {
+        Cube = 0,
+        Stair = 1,
+        CurvedStair = 2,
+        Prism = 3,
+        Cylinder = 4,
+        Plane = 5,
+        Door = 6,
+        Pipe = 7,
+        Cone = 8,
+        Sprite = 9,
+        Arch = 10,
+        Sphere = 11,
+        Torus = 12,
+    }
+
+    public sealed class SharedVertex : System.Collections.Generic.ICollection<int>, System.Collections.Generic.IEnumerable<int>, System.Collections.IEnumerable
+    {
+        public int Count { get; }
+        public bool IsReadOnly { get; }
+        public int this[int i] { get; set; }
+        public SharedVertex(System.Collections.Generic.IEnumerable<int> indexes) {}
+        public SharedVertex(SharedVertex sharedVertex) {}
+        public void Add(int item);
+        public void Clear();
+        public bool Contains(int item);
+        public void CopyTo(int[] array, int arrayIndex);
+        public System.Collections.Generic.IEnumerator<int> GetEnumerator();
+        public static void GetSharedVertexLookup(System.Collections.Generic.IList<SharedVertex> sharedVertices, System.Collections.Generic.Dictionary<int, int> lookup);
+        public static SharedVertex[] GetSharedVerticesWithPositions(System.Collections.Generic.IList<Vector3> positions);
+        public bool Remove(int item);
+        public override string ToString();
+    }
+
+    public struct SimpleTuple<T1, T2>
+    {
+        public T1 item1 { get; set; }
+        public T2 item2 { get; set; }
+        public SimpleTuple(T1 item1, T2 item2) {}
+        public override string ToString();
+    }
+
+    public static class Smoothing
+    {
+        public static void ApplySmoothingGroups(ProBuilderMesh mesh, System.Collections.Generic.IEnumerable<Face> faces, float angleThreshold);
+        public static int GetUnusedSmoothingGroup(ProBuilderMesh mesh);
+        public static bool IsSmooth(int index);
+    }
+
+    public enum SortMethod
+    {
+        Clockwise = 0,
+        CounterClockwise = 1,
+    }
+
+    public sealed class Submesh
+    {
+        public System.Collections.Generic.IEnumerable<int> indexes { get; set; }
+        public int submeshIndex { get; set; }
+        public MeshTopology topology { get; set; }
+        public Submesh(Mesh mesh, int subMeshIndex) {}
+        public Submesh(int submeshIndex, MeshTopology topology, System.Collections.Generic.IEnumerable<int> indexes) {}
+        public static Submesh[] GetSubmeshes(System.Collections.Generic.IEnumerable<Face> faces, int submeshCount, MeshTopology preferredTopology = MeshTopology.Triangles);
+        public override string ToString();
+    }
+
+    public static class TransformUtility
+    {
+        public static Vertex InverseTransformVertex(this Transform transform, Vertex vertex);
+        public static Vertex TransformVertex(this Transform transform, Vertex vertex);
+    }
+
+    public sealed class UnwrapParameters
+    {
+        public float angleError { get; set; }
+        public float areaError { get; set; }
+        public float hardAngle { get; set; }
+        public float packMargin { get; set; }
+        public UnwrapParameters() {}
+        public UnwrapParameters(UnwrapParameters other) {}
+        public void Reset();
+        public override string ToString();
+    }
+
+    public sealed class Vertex : System.IEquatable<Vertex>
+    {
+        public Color color { get; set; }
+        public Vector3 normal { get; set; }
+        public Vector3 position { get; set; }
+        public Vector4 tangent { get; set; }
+        public Vector2 uv0 { get; set; }
+        public Vector2 uv2 { get; set; }
+        public Vector4 uv3 { get; set; }
+        public Vector4 uv4 { get; set; }
+        public Vertex() {}
+        public Vertex(Vertex vertex) {}
+        public void Add(Vertex b);
+        public static Vertex Add(Vertex a, Vertex b);
+        public static Vertex Average(System.Collections.Generic.IList<Vertex> vertices, System.Collections.Generic.IList<int> indexes = default(System.Collections.Generic.IList<int>));
+        public void Divide(float value);
+        public static Vertex Divide(Vertex a, float value);
+        public override bool Equals(object obj);
+        public bool Equals(Vertex other);
+        public bool Equals(Vertex other, MeshArrays mask);
+        public static void GetArrays(System.Collections.Generic.IList<Vertex> vertices, out Vector3[] position, out Color[] color, out Vector2[] uv0, out Vector3[] normal, out Vector4[] tangent, out Vector2[] uv2, out System.Collections.Generic.List<Vector4> uv3, out System.Collections.Generic.List<Vector4> uv4);
+        public static void GetArrays(System.Collections.Generic.IList<Vertex> vertices, out Vector3[] position, out Color[] color, out Vector2[] uv0, out Vector3[] normal, out Vector4[] tangent, out Vector2[] uv2, out System.Collections.Generic.List<Vector4> uv3, out System.Collections.Generic.List<Vector4> uv4, MeshArrays attributes);
+        public override int GetHashCode();
+        public bool HasArrays(MeshArrays attribute);
+        public static Vertex Mix(Vertex x, Vertex y, float weight);
+        public void Multiply(float value);
+        public static Vertex Multiply(Vertex a, float value);
+        public void Normalize();
+        public static Vertex operator +(Vertex a, Vertex b);
+        public static Vertex operator /(Vertex a, float value);
+        public static bool operator ==(Vertex a, Vertex b);
+        public static bool operator !=(Vertex a, Vertex b);
+        public static Vertex operator *(Vertex a, float value);
+        public static Vertex operator -(Vertex a, Vertex b);
+        public static void SetMesh(Mesh mesh, System.Collections.Generic.IList<Vertex> vertices);
+        public void Subtract(Vertex b);
+        public static Vertex Subtract(Vertex a, Vertex b);
+        public string ToString(string args = default(string));
+    }
+
+    public static class VertexPositioning
+    {
+        public static void SetSharedVertexPosition(this ProBuilderMesh mesh, int sharedVertexHandle, Vector3 position);
+        public static void TranslateVertices(this ProBuilderMesh mesh, System.Collections.Generic.IEnumerable<int> indexes, Vector3 offset);
+        public static void TranslateVertices(this ProBuilderMesh mesh, System.Collections.Generic.IEnumerable<Edge> edges, Vector3 offset);
+        public static void TranslateVertices(this ProBuilderMesh mesh, System.Collections.Generic.IEnumerable<Face> faces, Vector3 offset);
+        public static void TranslateVerticesInWorldSpace(this ProBuilderMesh mesh, int[] indexes, Vector3 offset);
+        public static Vector3[] VerticesInWorldSpace(this ProBuilderMesh mesh);
+    }
+
+    public enum WindingOrder
+    {
+        Unknown = 0,
+        Clockwise = 1,
+        CounterClockwise = 2,
+    }
+
+    public sealed class WingedEdge : System.IEquatable<WingedEdge>
+    {
+        public EdgeLookup edge { get; }
+        public Face face { get; }
+        public WingedEdge next { get; }
+        public WingedEdge opposite { get; }
+        public WingedEdge previous { get; }
+        public int Count();
+        public override bool Equals(object obj);
+        public bool Equals(WingedEdge other);
+        public WingedEdge GetAdjacentEdgeWithCommonIndex(int common);
+        public override int GetHashCode();
+        public static System.Collections.Generic.Dictionary<int, System.Collections.Generic.List<WingedEdge>> GetSpokes(System.Collections.Generic.List<WingedEdge> wings);
+        public static System.Collections.Generic.List<WingedEdge> GetWingedEdges(ProBuilderMesh mesh, bool oneWingPerFace = false);
+        public static System.Collections.Generic.List<WingedEdge> GetWingedEdges(ProBuilderMesh mesh, System.Collections.Generic.IEnumerable<Face> faces, bool oneWingPerFace = false);
+        public static System.Collections.Generic.List<Edge> SortEdgesByAdjacency(Face face);
+        public static void SortEdgesByAdjacency(System.Collections.Generic.List<Edge> edges);
+        public override string ToString();
+    }
+
+    public sealed class WingedEdgeEnumerator : System.Collections.Generic.IEnumerator<WingedEdge>, System.Collections.IEnumerator, System.IDisposable
+    {
+        public WingedEdge Current { get; }
+        public WingedEdgeEnumerator(WingedEdge start) {}
+        public void Dispose();
+        public bool MoveNext();
+        public void Reset();
+    }
+}
+
+namespace UnityEngine.ProBuilder.MeshOperations
+{
+    public static class AppendElements
+    {
+        public static Face[] AppendFaces(this ProBuilderMesh mesh, Vector3[][] positions, Color[][] colors, Vector2[][] uvs, Face[] faces, int[][] shared);
+        public static System.Collections.Generic.List<Edge> AppendVerticesToEdge(this ProBuilderMesh mesh, System.Collections.Generic.IList<Edge> edges, int count);
+        public static System.Collections.Generic.List<Edge> AppendVerticesToEdge(this ProBuilderMesh mesh, Edge edge, int count);
+        public static Face AppendVerticesToFace(this ProBuilderMesh mesh, Face face, Vector3[] points);
+        public static Face AppendVerticesToFace(this ProBuilderMesh mesh, Face face, Vector3[] points, bool insertOnEdge);
+        public static Face Bridge(this ProBuilderMesh mesh, Edge a, Edge b, bool allowNonManifoldGeometry = false);
+        public static Face CreatePolygon(this ProBuilderMesh mesh, System.Collections.Generic.IList<int> indexes, bool unordered);
+        public static Face CreatePolygonWithHole(this ProBuilderMesh mesh, System.Collections.Generic.IList<int> indexes, System.Collections.Generic.IList<System.Collections.Generic.IList<int>> holes);
+        public static ActionResult CreateShapeFromPolygon(this PolyShape poly);
+        public static ActionResult CreateShapeFromPolygon(this ProBuilderMesh mesh, System.Collections.Generic.IList<Vector3> points, float extrude, bool flipNormals);
+        public static ActionResult CreateShapeFromPolygon(this ProBuilderMesh mesh, System.Collections.Generic.IList<Vector3> points, float extrude, bool flipNormals, System.Collections.Generic.IList<System.Collections.Generic.IList<Vector3>> holePoints);
+        [System.Obsolete(@"Face.CreateShapeFromPolygon is deprecated as it no longer relies on camera look at.")] public static ActionResult CreateShapeFromPolygon(this ProBuilderMesh mesh, System.Collections.Generic.IList<Vector3> points, float extrude, bool flipNormals, Vector3 cameraLookAt, System.Collections.Generic.IList<System.Collections.Generic.IList<Vector3>> holePoints = default(System.Collections.Generic.IList<System.Collections.Generic.IList<Vector3>>));
+        public static void DuplicateAndFlip(this ProBuilderMesh mesh, Face[] faces);
+        public static Face[] InsertVertexInFace(this ProBuilderMesh mesh, Face face, Vector3 point);
+        public static Vertex InsertVertexInMesh(this ProBuilderMesh mesh, Vector3 point, Vector3 normal);
+        public static Vertex InsertVertexOnEdge(this ProBuilderMesh mesh, Edge originalEdge, Vector3 point);
+    }
+
+    public static class Bevel
+    {
+        public static System.Collections.Generic.List<Face> BevelEdges(ProBuilderMesh mesh, System.Collections.Generic.IList<Edge> edges, float amount);
+    }
+
+    public static class CombineMeshes
+    {
+        [System.Obsolete(@"Combine(IEnumerable<ProBuilderMesh> meshes) is deprecated. Plase use Combine(IEnumerable<ProBuilderMesh> meshes, ProBuilderMesh meshTarget).")] public static System.Collections.Generic.List<ProBuilderMesh> Combine(System.Collections.Generic.IEnumerable<ProBuilderMesh> meshes);
+        public static System.Collections.Generic.List<ProBuilderMesh> Combine(System.Collections.Generic.IEnumerable<ProBuilderMesh> meshes, ProBuilderMesh meshTarget);
+    }
+
+    public static class ConnectElements
+    {
+        public static int[] Connect(this ProBuilderMesh mesh, System.Collections.Generic.IList<int> indexes);
+        public static Face[] Connect(this ProBuilderMesh mesh, System.Collections.Generic.IEnumerable<Face> faces);
+        public static UnityEngine.ProBuilder.SimpleTuple<Face[], Edge[]> Connect(this ProBuilderMesh mesh, System.Collections.Generic.IEnumerable<Edge> edges);
+    }
+
+    public static class DeleteElements
+    {
+        public static int[] DeleteFace(this ProBuilderMesh mesh, Face face);
+        public static int[] DeleteFaces(this ProBuilderMesh mesh, System.Collections.Generic.IEnumerable<Face> faces);
+        public static int[] DeleteFaces(this ProBuilderMesh mesh, System.Collections.Generic.IList<int> faceIndexes);
+        public static void DeleteVertices(this ProBuilderMesh mesh, System.Collections.Generic.IEnumerable<int> distinctIndexes);
+        [System.Obsolete(@"Use MeshValidation.RemoveDegenerateTriangles")] public static int[] RemoveDegenerateTriangles(this ProBuilderMesh mesh);
+        [System.Obsolete(@"Use MeshValidation.RemoveUnusedVertices")] public static int[] RemoveUnusedVertices(this ProBuilderMesh mesh);
+    }
+
+    public static class ElementSelection
+    {
+        public static System.Collections.Generic.HashSet<Face> FloodSelection(ProBuilderMesh mesh, System.Collections.Generic.IList<Face> faces, float maxAngleDiff);
+        public static System.Collections.Generic.HashSet<Face> GetFaceLoop(ProBuilderMesh mesh, Face[] faces, bool ring = false);
+        public static System.Collections.Generic.HashSet<Face> GetFaceRingAndLoop(ProBuilderMesh mesh, Face[] faces);
+        public static void GetNeighborFaces(ProBuilderMesh mesh, Edge edge, System.Collections.Generic.List<Face> neighborFaces);
+        public static System.Collections.Generic.IEnumerable<Edge> GetPerimeterEdges(this ProBuilderMesh mesh, System.Collections.Generic.IEnumerable<Face> faces);
+        public static System.Collections.Generic.HashSet<Face> GrowSelection(ProBuilderMesh mesh, System.Collections.Generic.IEnumerable<Face> faces, float maxAngleDiff = -1f);
+    }
+
+    public static class ExtrudeElements
+    {
+        public static System.Collections.Generic.List<Face> DetachFaces(this ProBuilderMesh mesh, System.Collections.Generic.IEnumerable<Face> faces);
+        public static System.Collections.Generic.List<Face> DetachFaces(this ProBuilderMesh mesh, System.Collections.Generic.IEnumerable<Face> faces, bool deleteSourceFaces);
+        public static Face[] Extrude(this ProBuilderMesh mesh, System.Collections.Generic.IEnumerable<Face> faces, ExtrudeMethod method, float distance);
+        public static Edge[] Extrude(this ProBuilderMesh mesh, System.Collections.Generic.IEnumerable<Edge> edges, float distance, bool extrudeAsGroup, bool enableManifoldExtrude);
+    }
+
+    public static class MergeElements
+    {
+        public static Face Merge(ProBuilderMesh target, System.Collections.Generic.IEnumerable<Face> faces);
+        public static System.Collections.Generic.List<Face> MergePairs(ProBuilderMesh target, System.Collections.Generic.IEnumerable<UnityEngine.ProBuilder.SimpleTuple<Face, Face>> pairs, bool collapseCoincidentVertices = true);
+    }
+
+    public sealed class MeshImporter
+    {
+        public MeshImporter(GameObject gameObject) {}
+        [System.Obsolete] public MeshImporter(ProBuilderMesh destination) {}
+        public MeshImporter(Mesh sourceMesh, Material[] sourceMaterials, ProBuilderMesh destination) {}
+        public void Import(MeshImportSettings importSettings = default(MeshImportSettings));
+        [System.Obsolete] public bool Import(GameObject go, MeshImportSettings importSettings = default(MeshImportSettings));
+    }
+
+    public sealed class MeshImportSettings
+    {
+        public bool quads { get; set; }
+        public bool smoothing { get; set; }
+        public float smoothingAngle { get; set; }
+        public MeshImportSettings() {}
+        public override string ToString();
+    }
+
+    public static class MeshTransform
+    {
+        public static void CenterPivot(this ProBuilderMesh mesh, int[] indexes);
+        public static void FreezeScaleTransform(this ProBuilderMesh mesh);
+        public static void SetPivot(this ProBuilderMesh mesh, Vector3 worldPosition);
+    }
+
+    public static class MeshValidation
+    {
+        public static bool ContainsDegenerateTriangles(this ProBuilderMesh mesh);
+        public static bool ContainsDegenerateTriangles(this ProBuilderMesh mesh, System.Collections.Generic.IList<Face> faces);
+        public static bool ContainsDegenerateTriangles(this ProBuilderMesh mesh, Face face);
+        public static bool ContainsNonContiguousTriangles(this ProBuilderMesh mesh, Face face);
+        public static System.Collections.Generic.List<Face> EnsureFacesAreComposedOfContiguousTriangles(this ProBuilderMesh mesh, System.Collections.Generic.IEnumerable<Face> faces);
+        public static bool RemoveDegenerateTriangles(ProBuilderMesh mesh, System.Collections.Generic.List<int> removed = default(System.Collections.Generic.List<int>));
+        public static bool RemoveUnusedVertices(ProBuilderMesh mesh, System.Collections.Generic.List<int> removed = default(System.Collections.Generic.List<int>));
+    }
+
+    public static class QuadUtility
+    {
+        public static System.Collections.Generic.List<Face> ToQuads(this ProBuilderMesh mesh, System.Collections.Generic.IList<Face> faces, bool smoothing = true);
+    }
+
+    public static class SurfaceTopology
+    {
+        public static ActionResult ConformNormals(this ProBuilderMesh mesh, System.Collections.Generic.IEnumerable<Face> faces);
+        public static bool FlipEdge(this ProBuilderMesh mesh, Face face);
+        public static WindingOrder GetWindingOrder(System.Collections.Generic.IList<Vector2> points);
+        public static WindingOrder GetWindingOrder(this ProBuilderMesh mesh, Face face);
+        public static Face[] ToTriangles(this ProBuilderMesh mesh, System.Collections.Generic.IList<Face> faces);
+    }
+
+    public static class VertexEditing
+    {
+        public static int MergeVertices(this ProBuilderMesh mesh, int[] indexes, bool collapseToFirst = false);
+        public static void SplitVertices(this ProBuilderMesh mesh, System.Collections.Generic.IEnumerable<int> vertices);
+        public static void SplitVertices(this ProBuilderMesh mesh, Edge edge);
+        public static int[] WeldVertices(this ProBuilderMesh mesh, System.Collections.Generic.IEnumerable<int> indexes, float neighborRadius);
+    }
+}
+
+namespace UnityEngine.ProBuilder.Shapes
+{
+    [Shape(@"Arch")] public class Arch : Shape
+    {
+        public Arch() {}
+        public override void CopyShape(Shape shape);
+        public override Bounds RebuildMesh(ProBuilderMesh mesh, Vector3 size, Quaternion rotation);
+    }
+
+    [UnityEditor.CustomPropertyDrawer(typeof(Arch))] public class ArchDrawer : UnityEditor.PropertyDrawer
+    {
+        public ArchDrawer() {}
+        public override void OnGUI(Rect position, UnityEditor.SerializedProperty property, GUIContent label);
+    }
+
+    [Shape(@"Cone")] public class Cone : Shape
+    {
+        public Cone() {}
+        public override void CopyShape(Shape shape);
+        public override Bounds RebuildMesh(ProBuilderMesh mesh, Vector3 size, Quaternion rotation);
+        public override Bounds UpdateBounds(ProBuilderMesh mesh, Vector3 size, Quaternion rotation, Bounds bounds);
+    }
+
+    [UnityEditor.CustomPropertyDrawer(typeof(Cone))] public class ConeDrawer : UnityEditor.PropertyDrawer
+    {
+        public ConeDrawer() {}
+        public override void OnGUI(Rect position, UnityEditor.SerializedProperty property, GUIContent label);
+    }
+
+    [Shape(@"Cube")] public class Cube : Shape
+    {
+        public Cube() {}
+        public override void CopyShape(Shape shape);
+        public override Bounds RebuildMesh(ProBuilderMesh mesh, Vector3 size, Quaternion rotation);
+    }
+
+    [UnityEditor.CustomPropertyDrawer(typeof(Cube))] public class CubeDrawer : UnityEditor.PropertyDrawer
+    {
+        public CubeDrawer() {}
+        public override void OnGUI(Rect position, UnityEditor.SerializedProperty property, GUIContent label);
+    }
+
+    [Shape(@"Cylinder")] public class Cylinder : Shape
+    {
+        public Cylinder() {}
+        public override void CopyShape(Shape shape);
+        public override Bounds RebuildMesh(ProBuilderMesh mesh, Vector3 size, Quaternion rotation);
+        public override Bounds UpdateBounds(ProBuilderMesh mesh, Vector3 size, Quaternion rotation, Bounds bounds);
+    }
+
+    [UnityEditor.CustomPropertyDrawer(typeof(Cylinder))] public class CylinderDrawer : UnityEditor.PropertyDrawer
+    {
+        public CylinderDrawer() {}
+        public override void OnGUI(Rect position, UnityEditor.SerializedProperty property, GUIContent label);
+    }
+
+    [Shape(@"Door")] public class Door : Shape
+    {
+        public Door() {}
+        public override void CopyShape(Shape shape);
+        public override Bounds RebuildMesh(ProBuilderMesh mesh, Vector3 size, Quaternion rotation);
+    }
+
+    [UnityEditor.CustomPropertyDrawer(typeof(Door))] public class DoorDrawer : UnityEditor.PropertyDrawer
+    {
+        public DoorDrawer() {}
+        public override void OnGUI(Rect position, UnityEditor.SerializedProperty property, GUIContent label);
+    }
+
+    [Shape(@"Pipe")] public class Pipe : Shape
+    {
+        public Pipe() {}
+        public override void CopyShape(Shape shape);
+        public override Bounds RebuildMesh(ProBuilderMesh mesh, Vector3 size, Quaternion rotation);
+        public override Bounds UpdateBounds(ProBuilderMesh mesh, Vector3 size, Quaternion rotation, Bounds bounds);
+    }
+
+    [UnityEditor.CustomPropertyDrawer(typeof(Pipe))] public class PipeDrawer : UnityEditor.PropertyDrawer
+    {
+        public PipeDrawer() {}
+        public override void OnGUI(Rect position, UnityEditor.SerializedProperty property, GUIContent label);
+    }
+
+    [Shape(@"Plane")] public class Plane : Shape
+    {
+        public Plane() {}
+        public override void CopyShape(Shape shape);
+        public override Bounds RebuildMesh(ProBuilderMesh mesh, Vector3 size, Quaternion rotation);
+    }
+
+    [UnityEditor.CustomPropertyDrawer(typeof(Plane))] public class PlaneDrawer : UnityEditor.PropertyDrawer
+    {
+        public PlaneDrawer() {}
+        public override void OnGUI(Rect position, UnityEditor.SerializedProperty property, GUIContent label);
+    }
+
+    [Shape(@"Prism")] public class Prism : Shape
+    {
+        public Prism() {}
+        public override void CopyShape(Shape shape);
+        public override Bounds RebuildMesh(ProBuilderMesh mesh, Vector3 size, Quaternion rotation);
+    }
+
+    [UnityEditor.CustomPropertyDrawer(typeof(Prism))] public class PrismDrawer : UnityEditor.PropertyDrawer
+    {
+        public PrismDrawer() {}
+        public override void OnGUI(Rect position, UnityEditor.SerializedProperty property, GUIContent label);
+    }
+
+    public abstract class Shape
+    {
+        protected Shape() {}
+        public abstract void CopyShape(Shape shape);
+        public abstract Bounds RebuildMesh(ProBuilderMesh mesh, Vector3 size, Quaternion rotation);
+        public virtual Bounds UpdateBounds(ProBuilderMesh mesh, Vector3 size, Quaternion rotation, Bounds bounds);
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Class)] public class ShapeAttribute : System.Attribute
+    {
+        public string name;
+        public ShapeAttribute(string n) {}
+    }
+
+    [Shape(@"Sphere")] public class Sphere : Shape
+    {
+        public Sphere() {}
+        public override void CopyShape(Shape shape);
+        public override Bounds RebuildMesh(ProBuilderMesh mesh, Vector3 size, Quaternion rotation);
+        public override Bounds UpdateBounds(ProBuilderMesh mesh, Vector3 size, Quaternion rotation, Bounds bounds);
+    }
+
+    [UnityEditor.CustomPropertyDrawer(typeof(Sphere))] public class SphereDrawer : UnityEditor.PropertyDrawer
+    {
+        public SphereDrawer() {}
+        public override void OnGUI(Rect position, UnityEditor.SerializedProperty property, GUIContent label);
+    }
+
+    [Shape(@"Sprite")] public class Sprite : Shape
+    {
+        public Sprite() {}
+        public override void CopyShape(Shape shape);
+        public override Bounds RebuildMesh(ProBuilderMesh mesh, Vector3 size, Quaternion rotation);
+    }
+
+    [UnityEditor.CustomPropertyDrawer(typeof(Sprite))] public class SpriteDrawer : UnityEditor.PropertyDrawer
+    {
+        public SpriteDrawer() {}
+        public override void OnGUI(Rect position, UnityEditor.SerializedProperty property, GUIContent label);
+    }
+
+    [Shape(@"Stairs")] public class Stairs : Shape
+    {
+        public bool sides { get; set; }
+        public Stairs() {}
+        public override void CopyShape(Shape shape);
+        public override Bounds RebuildMesh(ProBuilderMesh mesh, Vector3 size, Quaternion rotation);
+        public override Bounds UpdateBounds(ProBuilderMesh mesh, Vector3 size, Quaternion rotation, Bounds bounds);
+    }
+
+    [UnityEditor.CustomPropertyDrawer(typeof(Stairs))] public class StairsDrawer : UnityEditor.PropertyDrawer
+    {
+        public StairsDrawer() {}
+        public override void OnGUI(Rect position, UnityEditor.SerializedProperty property, GUIContent label);
+    }
+
+    [Shape(@"Torus")] public class Torus : Shape
+    {
+        public Torus() {}
+        public override void CopyShape(Shape shape);
+        public override Bounds RebuildMesh(ProBuilderMesh mesh, Vector3 size, Quaternion rotation);
+        public override Bounds UpdateBounds(ProBuilderMesh mesh, Vector3 size, Quaternion rotation, Bounds bounds);
+    }
+
+    [UnityEditor.CustomPropertyDrawer(typeof(Torus))] public class TorusDrawer : UnityEditor.PropertyDrawer
+    {
+        public TorusDrawer() {}
+        public override void OnGUI(Rect position, UnityEditor.SerializedProperty property, GUIContent label);
+    }
+}

@@ -6,9 +6,10 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/ML-Agents/Scripts/Tests/Runtime/AcademyTest/AcademyStepperTestScene.unity
+    path: Assets/Network_Game/NetrokGame_ML-agents/Tests/Runtime/AcademyTest/AcademyStepperTestScene.unity
     guid: 9bafc50b1e55b43b2b1ae9620f1f8311
   m_configObjects:
-    com.unity.ml-agents.settings: {fileID: 11400000, guid: b9540ad82945942dd852207c48989240,
-      type: 2}
-  m_UseUCBPForAssetBundles: 0
+    com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
+    com.unity.input.settings: {fileID: 11400000, guid: cfcd333dcef6a2c4eb65335ba3be9a4a, type: 2}
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 94f05d837b64836469161572e3efa4b5, type: 3}
+    com.unity.ml-agents.settings: {fileID: 11400000, guid: 14ef8cf1b477f364d8dc7725482f59a7, type: 2}

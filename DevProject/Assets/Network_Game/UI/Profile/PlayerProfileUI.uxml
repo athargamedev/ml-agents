@@ -1,0 +1,17 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Network_Game/UI/BlocksShared.uss?fileID=7433441132597879392&amp;guid=5b446a577d2cebf4d8d926d521552982&amp;type=3#BlocksShared"/>
+    <ui:VisualElement name="profile-card" class="blocks-profile-card hud-profile-card" style="font-size: 12px;">
+        <ui:VisualElement class="blocks-profile-card__header hud-profile-header">
+            <ui:Label name="player-name" text="NOT LOGGED IN" class="blocks-header hud-profile-name"/>
+            <ui:Button name="minimize-button" text="—" emoji-fallback-support="false" class="blocks-button--xs blocks-button hud-profile-minimize"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="content" class="blocks-profile-card__content">
+            <ui:Label name="player-status" text="Waiting for identity..." class="blocks-login-label hud-profile-status" style="font-size: 12px; -unity-text-align: upper-center;"/>
+            <ui:Label name="player-bio" text="" class="blocks-chat-message__text hud-profile-bio" style="align-items: auto; align-content: auto;"/>
+            <ui:VisualElement class="hud-profile-client-row">
+                <ui:Label text="NETCODE CLIENT" class="blocks-login-label hud-profile-client-label" style="font-size: 12px; -unity-text-align: middle-left;"/>
+                <ui:Label name="client-id" text="-" class="blocks-login-label hud-profile-client-id" style="-unity-text-align: middle-left; padding-left: 2px; color: rgb(37, 214, 53);"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

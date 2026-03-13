@@ -1,0 +1,2308 @@
+// This file is generated. Do not modify by hand.
+// XML documentation file not found. To check if public methods have XML comments,
+// make sure the XML doc file is present and located next to the scraped dll
+namespace TMPro
+{
+    public struct AlternateSubstitutionRecord
+    {
+    }
+
+    public enum AtlasPopulationMode
+    {
+        Static = 0,
+        Dynamic = 1,
+        DynamicOS = 2,
+    }
+
+    public struct CaretInfo
+    {
+        public int index;
+        public CaretPosition position;
+        public CaretInfo(int index, CaretPosition position) {}
+    }
+
+    public enum CaretPosition
+    {
+        None = 0,
+        Left = 1,
+        Right = 2,
+    }
+
+    public enum ColorMode
+    {
+        Single = 0,
+        HorizontalGradient = 1,
+        VerticalGradient = 2,
+        FourCornersGradient = 3,
+    }
+
+    public enum Compute_DistanceTransform_EventTypes
+    {
+        Processing = 0,
+        Completed = 1,
+    }
+
+    public class Compute_DT_EventArgs
+    {
+        public UnityEngine.Color[] Colors;
+        public Compute_DistanceTransform_EventTypes EventType;
+        public float ProgressPercentage;
+        public Compute_DT_EventArgs(Compute_DistanceTransform_EventTypes type, float progress) {}
+        public Compute_DT_EventArgs(Compute_DistanceTransform_EventTypes type, UnityEngine.Color[] colors) {}
+    }
+
+    public struct Extents
+    {
+        public UnityEngine.Vector2 max;
+        public UnityEngine.Vector2 min;
+        public Extents(UnityEngine.Vector2 min, UnityEngine.Vector2 max) {}
+        public override string ToString();
+    }
+
+    public class FaceInfo_Legacy
+    {
+        public float Ascender;
+        public float AtlasHeight;
+        public float AtlasWidth;
+        public float Baseline;
+        public float CapHeight;
+        public float CenterLine;
+        public int CharacterCount;
+        public float Descender;
+        public float LineHeight;
+        public string Name;
+        public float Padding;
+        public float PointSize;
+        public float Scale;
+        public float strikethrough;
+        public float strikethroughThickness;
+        public float SubscriptOffset;
+        public float SubSize;
+        public float SuperscriptOffset;
+        public float TabWidth;
+        public float Underline;
+        public float UnderlineThickness;
+        public FaceInfo_Legacy() {}
+    }
+
+    public class FastAction
+    {
+        public FastAction() {}
+        public void Add(System.Action rhs);
+        public void Call();
+        public void Remove(System.Action rhs);
+    }
+
+    public class FastAction<A>
+    {
+        public FastAction() {}
+        public void Add(System.Action<A> rhs);
+        public void Call(A a);
+        public void Remove(System.Action<A> rhs);
+    }
+
+    public class FastAction<A, B>
+    {
+        public FastAction() {}
+        public void Add(System.Action<A, B> rhs);
+        public void Call(A a, B b);
+        public void Remove(System.Action<A, B> rhs);
+    }
+
+    public class FastAction<A, B, C>
+    {
+        public FastAction() {}
+        public void Add(System.Action<A, B, C> rhs);
+        public void Call(A a, B b, C c);
+        public void Remove(System.Action<A, B, C> rhs);
+    }
+
+    public struct FontAssetCreationSettings
+    {
+        public int atlasHeight;
+        public int atlasWidth;
+        public string characterSequence;
+        public int characterSetSelectionMode;
+        public int faceIndex;
+        public int fontStyle;
+        public float fontStyleModifier;
+        public bool includeFontFeatures;
+        public int packingMode;
+        public int padding;
+        public int paddingMode = 2;
+        public int pointSize;
+        public int pointSizeSamplingMode;
+        public string referencedFontAssetGUID;
+        public string referencedTextAssetGUID;
+        public int renderMode;
+        public string sourceFontFileGUID;
+        public string sourceFontFileName;
+    }
+
+    [System.Flags] public enum FontFeatureLookupFlags
+    {
+        None = 0,
+        IgnoreLigatures = 1 << 2,
+        IgnoreSpacingAdjustments = 1 << 8,
+    }
+
+    [System.Flags] public enum FontStyles
+    {
+        Normal = 0,
+        Bold = 1 << 0,
+        Italic = 1 << 1,
+        Underline = 1 << 2,
+        LowerCase = 1 << 3,
+        UpperCase = 1 << 4,
+        SmallCaps = 1 << 5,
+        Strikethrough = 1 << 6,
+        Superscript = 1 << 7,
+        Subscript = 1 << 8,
+        Highlight = 1 << 9,
+    }
+
+    public enum FontWeight
+    {
+        Thin = 100,
+        ExtraLight = 200,
+        Light = 300,
+        Regular = 400,
+        Medium = 500,
+        SemiBold = 600,
+        Bold = 700,
+        Heavy = 800,
+        Black = 900,
+    }
+
+    public struct GlyphAnchorPoint
+    {
+        public float xCoordinate { get; set; }
+        public float yCoordinate { get; set; }
+    }
+
+    public struct GlyphPairKey
+    {
+        public uint firstGlyphIndex;
+        public uint key;
+        public uint secondGlyphIndex;
+        public GlyphPairKey(uint firstGlyphIndex, uint secondGlyphIndex) {}
+    }
+
+    public struct GlyphValueRecord_Legacy
+    {
+        public float xAdvance;
+        public float xPlacement;
+        public float yAdvance;
+        public float yPlacement;
+        public static GlyphValueRecord_Legacy operator +(GlyphValueRecord_Legacy a, GlyphValueRecord_Legacy b);
+    }
+
+    public struct HighlightState
+    {
+        public UnityEngine.Color32 color;
+        public TMP_Offset padding;
+        public HighlightState(UnityEngine.Color32 color, TMP_Offset padding) {}
+        public override bool Equals(object obj);
+        public bool Equals(HighlightState other);
+        public override int GetHashCode();
+        public static bool operator ==(HighlightState lhs, HighlightState rhs);
+        public static bool operator !=(HighlightState lhs, HighlightState rhs);
+    }
+
+    public enum HorizontalAlignmentOptions
+    {
+        Left = 1,
+        Center = 2,
+        Right = 4,
+        Justified = 8,
+        Flush = 16,
+        Geometry = 32,
+    }
+
+    public interface ITextElement
+    {
+        public UnityEngine.Material sharedMaterial { get; }
+        public UnityEngine.EntityId GetEntityId();
+        [System.Obsolete(@"GetInstanceID() is obsolete, use GetEntityId() instead.", false)] public int GetInstanceID();
+        public void Rebuild(UnityEngine.UI.CanvasUpdate update);
+    }
+
+    public interface ITextPreprocessor
+    {
+        public string PreprocessText(string text);
+    }
+
+    public class KerningPair
+    {
+        [UnityEngine.Serialization.FormerlySerializedAs(@"XadvanceOffset")] public float xOffset;
+        public uint firstGlyph { get; set; }
+        public GlyphValueRecord_Legacy firstGlyphAdjustments { get; }
+        public bool ignoreSpacingAdjustments { get; }
+        public uint secondGlyph { get; set; }
+        public GlyphValueRecord_Legacy secondGlyphAdjustments { get; }
+        public KerningPair() {}
+        public KerningPair(uint left, uint right, float offset) {}
+        public KerningPair(uint firstGlyph, GlyphValueRecord_Legacy firstGlyphAdjustments, uint secondGlyph, GlyphValueRecord_Legacy secondGlyphAdjustments) {}
+    }
+
+    public struct KerningPairKey
+    {
+        public uint ascii_Left;
+        public uint ascii_Right;
+        public uint key;
+        public KerningPairKey(uint ascii_left, uint ascii_right) {}
+    }
+
+    public class KerningTable
+    {
+        public System.Collections.Generic.List<KerningPair> kerningPairs;
+        public KerningTable() {}
+        public int AddGlyphPairAdjustmentRecord(uint first, GlyphValueRecord_Legacy firstAdjustments, uint second, GlyphValueRecord_Legacy secondAdjustments);
+        public void AddKerningPair();
+        public int AddKerningPair(uint first, uint second, float offset);
+        public void RemoveKerningPair(int index);
+        public void RemoveKerningPair(int left, int right);
+        public void SortKerningPairs();
+    }
+
+    public struct LigatureSubstitutionRecord
+    {
+        public uint[] componentGlyphIDs { get; set; }
+        public uint ligatureGlyphID { get; set; }
+        public static bool operator ==(LigatureSubstitutionRecord lhs, LigatureSubstitutionRecord rhs);
+        public static bool operator !=(LigatureSubstitutionRecord lhs, LigatureSubstitutionRecord rhs);
+    }
+
+    public struct MarkPositionAdjustment
+    {
+        public float xPositionAdjustment { get; set; }
+        public float yPositionAdjustment { get; set; }
+        public MarkPositionAdjustment(float x, float y) {}
+    }
+
+    public struct MarkToBaseAdjustmentRecord
+    {
+        public GlyphAnchorPoint baseGlyphAnchorPoint { get; set; }
+        public uint baseGlyphID { get; set; }
+        public uint markGlyphID { get; set; }
+        public MarkPositionAdjustment markPositionAdjustment { get; set; }
+    }
+
+    public struct MarkToMarkAdjustmentRecord
+    {
+        public GlyphAnchorPoint baseMarkGlyphAnchorPoint { get; set; }
+        public uint baseMarkGlyphID { get; set; }
+        public uint combiningMarkGlyphID { get; set; }
+        public MarkPositionAdjustment combiningMarkPositionAdjustment { get; set; }
+    }
+
+    public enum MaskingOffsetMode
+    {
+        Percentage = 0,
+        Pixel = 1,
+    }
+
+    public enum MaskingTypes
+    {
+        MaskOff = 0,
+        MaskHard = 1,
+        MaskSoft = 2,
+    }
+
+    public struct MaterialReference
+    {
+        public UnityEngine.Material fallbackMaterial;
+        public TMP_FontAsset fontAsset;
+        public int index;
+        public bool isDefaultMaterial;
+        public bool isFallbackMaterial;
+        public UnityEngine.Material material;
+        public float padding;
+        public int referenceCount;
+        public TMP_SpriteAsset spriteAsset;
+        public MaterialReference(int index, TMP_FontAsset fontAsset, TMP_SpriteAsset spriteAsset, UnityEngine.Material material, float padding) {}
+        [System.Obsolete(@"AddMaterialReference(Material material, TMP_FontAsset fontAsset, ref MaterialReference[] materialReferences, Dictionary<int, int> materialReferenceIndexLookup) is obsolete, use AddMaterialReference(Material material, TMP_FontAsset fontAsset, ref MaterialReference[] materialReferences, Dictionary<int, int> materialReferenceIndexLookup) instead.", true)] public static int AddMaterialReference(UnityEngine.Material material, TMP_FontAsset fontAsset, ref MaterialReference[] materialReferences, System.Collections.Generic.Dictionary<int, int> materialReferenceIndexLookup);
+        public static int AddMaterialReference(UnityEngine.Material material, TMP_FontAsset fontAsset, ref MaterialReference[] materialReferences, System.Collections.Generic.Dictionary<UnityEngine.EntityId, int> materialReferenceIndexLookup);
+        [System.Obsolete(@"AddMaterialReference(Material material, TMP_SpriteAsset spriteAsset, ref MaterialReference[] materialReferences, Dictionary<int, int> materialReferenceIndexLookup) is obsolete, use AddMaterialReference(Material material, TMP_SpriteAsset spriteAsset, ref MaterialReference[] materialReferences, Dictionary<int, int> materialReferenceIndexLookup) instead.", true)] public static int AddMaterialReference(UnityEngine.Material material, TMP_SpriteAsset spriteAsset, ref MaterialReference[] materialReferences, System.Collections.Generic.Dictionary<int, int> materialReferenceIndexLookup);
+        public static int AddMaterialReference(UnityEngine.Material material, TMP_SpriteAsset spriteAsset, ref MaterialReference[] materialReferences, System.Collections.Generic.Dictionary<UnityEngine.EntityId, int> materialReferenceIndexLookup);
+        public static bool Contains(MaterialReference[] materialReferences, TMP_FontAsset fontAsset);
+    }
+
+    public class MaterialReferenceManager
+    {
+        public static MaterialReferenceManager instance { get; }
+        public MaterialReferenceManager() {}
+        public static void AddColorGradientPreset(int hashCode, TMP_ColorGradient spriteAsset);
+        public static void AddFontAsset(TMP_FontAsset fontAsset);
+        public static void AddFontMaterial(int hashCode, UnityEngine.Material material);
+        public static void AddSpriteAsset(TMP_SpriteAsset spriteAsset);
+        public static void AddSpriteAsset(int hashCode, TMP_SpriteAsset spriteAsset);
+        public bool Contains(TMP_FontAsset font);
+        public bool Contains(TMP_SpriteAsset sprite);
+        public static bool TryGetColorGradientPreset(int hashCode, out TMP_ColorGradient gradientPreset);
+        public static bool TryGetFontAsset(int hashCode, out TMP_FontAsset fontAsset);
+        public static bool TryGetMaterial(int hashCode, out UnityEngine.Material material);
+        public static bool TryGetSpriteAsset(int hashCode, out TMP_SpriteAsset spriteAsset);
+    }
+
+    public struct Mesh_Extents
+    {
+        public UnityEngine.Vector2 max;
+        public UnityEngine.Vector2 min;
+        public Mesh_Extents(UnityEngine.Vector2 min, UnityEngine.Vector2 max) {}
+        public override string ToString();
+    }
+
+    public struct MultipleSubstitutionRecord
+    {
+        public uint[] substituteGlyphIDs { get; set; }
+        public uint targetGlyphID { get; set; }
+    }
+
+    public static class ShaderUtilities
+    {
+        public static int ID_BevelAmount;
+        public static int ID_ClipRect;
+        public static int ID_EnvMap;
+        public static int ID_EnvMatrix;
+        public static int ID_EnvMatrixRotation;
+        public static int ID_FaceColor;
+        public static int ID_FaceDilate;
+        public static int ID_FaceTex;
+        public static int ID_GlowColor;
+        public static int ID_GlowInner;
+        public static int ID_GlowOffset;
+        public static int ID_GlowOuter;
+        public static int ID_GlowPower;
+        public static int ID_GradientScale;
+        public static int ID_IsoPerimeter;
+        public static int ID_LightAngle;
+        public static int ID_MainTex;
+        public static int ID_MaskCoord;
+        public static int ID_MaskSoftnessX;
+        public static int ID_MaskSoftnessY;
+        public static int ID_Outline2Color;
+        public static int ID_Outline2Width;
+        public static int ID_OutlineColor;
+        public static int ID_OutlineMode;
+        public static int ID_OutlineOffset1;
+        public static int ID_OutlineOffset2;
+        public static int ID_OutlineOffset3;
+        public static int ID_OutlineSoftness;
+        public static int ID_OutlineTex;
+        public static int ID_OutlineWidth;
+        public static int ID_Padding;
+        public static int ID_PerspectiveFilter;
+        public static int ID_ScaleRatio_A;
+        public static int ID_ScaleRatio_B;
+        public static int ID_ScaleRatio_C;
+        public static int ID_ScaleX;
+        public static int ID_ScaleY;
+        public static int ID_ShaderFlags;
+        public static int ID_Sharpness;
+        public static int ID_Shininess;
+        public static int ID_Softness;
+        public static int ID_StencilComp;
+        public static int ID_StencilID;
+        public static int ID_StencilOp;
+        public static int ID_StencilReadMask;
+        public static int ID_StencilWriteMask;
+        public static int ID_TextureHeight;
+        public static int ID_TextureWidth;
+        public static int ID_UnderlayColor;
+        public static int ID_UnderlayDilate;
+        public static int ID_UnderlayIsoPerimeter;
+        public static int ID_UnderlayOffset;
+        public static int ID_UnderlayOffsetX;
+        public static int ID_UnderlayOffsetY;
+        public static int ID_UnderlaySoftness;
+        public static int ID_UseClipRect;
+        public static int ID_VertexOffsetX;
+        public static int ID_VertexOffsetY;
+        public static int ID_WeightBold;
+        public static int ID_WeightNormal;
+        public static bool isInitialized;
+        public static string Keyword_Bevel = @"BEVEL_ON";
+        public static string Keyword_Glow = @"GLOW_ON";
+        public static string Keyword_MASK_HARD = @"MASK_HARD";
+        public static string Keyword_MASK_SOFT = @"MASK_SOFT";
+        public static string Keyword_MASK_TEX = @"MASK_TEX";
+        public static string Keyword_Outline = @"OUTLINE_ON";
+        public static string Keyword_Ratios = @"RATIOS_OFF";
+        public static string Keyword_Underlay = @"UNDERLAY_ON";
+        public static string ShaderTag_CullMode = @"_CullMode";
+        public static string ShaderTag_ZTestMode = @"unity_GUIZTestMode";
+        public static UnityEngine.Vector4 GetFontExtent(UnityEngine.Material material);
+        public static float GetPadding(UnityEngine.Material material, bool enableExtraPadding, bool isBold);
+        public static float GetPadding(UnityEngine.Material[] materials, bool enableExtraPadding, bool isBold);
+        public static void GetShaderPropertyIDs();
+        public static bool IsMaskingEnabled(UnityEngine.Material material);
+        public static void UpdateShaderRatios(UnityEngine.Material mat);
+    }
+
+    public struct SingleSubstitutionRecord
+    {
+    }
+
+    public enum TagUnitType
+    {
+        Pixels = 0,
+        FontUnits = 1,
+        Percentage = 2,
+    }
+
+    public enum TagValueType
+    {
+        None = 0,
+        NumericalValue = 1,
+        StringValue = 2,
+        ColorValue = 4,
+    }
+
+    public enum TextAlignmentOptions
+    {
+        TopLeft = 257,
+        Top = 258,
+        TopRight = 260,
+        TopJustified = 264,
+        TopFlush = 272,
+        TopGeoAligned = 288,
+        Left = 513,
+        Center = 514,
+        Right = 516,
+        Justified = 520,
+        Flush = 528,
+        CenterGeoAligned = 544,
+        BottomLeft = 1025,
+        Bottom = 1026,
+        BottomRight = 1028,
+        BottomJustified = 1032,
+        BottomFlush = 1040,
+        BottomGeoAligned = 1056,
+        BaselineLeft = 2049,
+        Baseline = 2050,
+        BaselineRight = 2052,
+        BaselineJustified = 2056,
+        BaselineFlush = 2064,
+        BaselineGeoAligned = 2080,
+        MidlineLeft = 4097,
+        Midline = 4098,
+        MidlineRight = 4100,
+        MidlineJustified = 4104,
+        MidlineFlush = 4112,
+        MidlineGeoAligned = 4128,
+        CaplineLeft = 8193,
+        Capline = 8194,
+        CaplineRight = 8196,
+        CaplineJustified = 8200,
+        CaplineFlush = 8208,
+        CaplineGeoAligned = 8224,
+        Converted = 65535,
+    }
+
+    [UnityEngine.RequireComponent(typeof(UnityEngine.RectTransform))] public class TextContainer : UnityEngine.EventSystems.UIBehaviour
+    {
+        public TextContainerAnchors anchorPosition { get; set; }
+        public UnityEngine.Vector3[] corners { get; }
+        public bool hasChanged { get; set; }
+        public float height { get; set; }
+        public bool isAutoFitting { get; set; }
+        public bool isDefaultHeight { get; }
+        public bool isDefaultWidth { get; }
+        public UnityEngine.Vector4 margins { get; set; }
+        public UnityEngine.Vector2 pivot { get; set; }
+        public UnityEngine.Rect rect { get; set; }
+        public UnityEngine.RectTransform rectTransform { get; }
+        public UnityEngine.Vector2 size { get; set; }
+        public TextMeshPro textMeshPro { get; }
+        public float width { get; set; }
+        public UnityEngine.Vector3[] worldCorners { get; }
+        public TextContainer() {}
+        protected override void Awake();
+        protected override void OnDisable();
+        protected override void OnEnable();
+        protected override void OnRectTransformDimensionsChange();
+        protected override void OnValidate();
+    }
+
+    public enum TextContainerAnchors
+    {
+        TopLeft = 0,
+        Top = 1,
+        TopRight = 2,
+        Left = 3,
+        Middle = 4,
+        Right = 5,
+        BottomLeft = 6,
+        Bottom = 7,
+        BottomRight = 8,
+        Custom = 9,
+    }
+
+    public enum TextElementType : byte
+    {
+        Character = 1,
+        Sprite = 2,
+    }
+
+    [UnityEngine.AddComponentMenu(@"Mesh/TextMeshPro - Text")] [UnityEngine.DisallowMultipleComponent] [UnityEngine.ExecuteAlways] [UnityEngine.HelpURL(@"https://docs.unity3d.com/Packages/com.unity.ugui@2.0/manual/TextMeshPro/index.html")] [UnityEngine.RequireComponent(typeof(UnityEngine.MeshRenderer))] public class TextMeshPro : TMP_Text, UnityEngine.UI.ILayoutElement
+    {
+        public event System.Action<TMP_TextInfo> OnPreRenderText;
+        public override bool autoSizeTextContainer { get; set; }
+        public MaskingTypes maskType { get; set; }
+        public override UnityEngine.Mesh mesh { get; }
+        public UnityEngine.MeshFilter meshFilter { get; }
+        public UnityEngine.Renderer renderer { get; }
+        public int sortingLayerID { get; set; }
+        public int sortingOrder { get; set; }
+        [System.Obsolete(@"The TextContainer is now obsolete. Use the RectTransform instead.")] public TextContainer textContainer { get; }
+        public UnityEngine.Transform transform { get; }
+        public TextMeshPro() {}
+        protected override void Awake();
+        public void CalculateLayoutInputHorizontal();
+        public void CalculateLayoutInputVertical();
+        public override void ClearMesh(bool updateMesh);
+        public override void ComputeMarginSize();
+        protected override void DestroySubMeshObjects();
+        public override void ForceMeshUpdate(bool ignoreActiveState = false, bool forceTextReparsing = false);
+        protected virtual void GenerateTextMesh();
+        protected override UnityEngine.Bounds GetCompoundBounds();
+        protected override UnityEngine.Material GetMaterial(UnityEngine.Material mat);
+        protected override UnityEngine.Material[] GetMaterials(UnityEngine.Material[] mats);
+        protected override UnityEngine.Material[] GetSharedMaterials();
+        protected override UnityEngine.Vector3[] GetTextContainerLocalCorners();
+        public override TMP_TextInfo GetTextInfo(string text);
+        protected override void LoadFontAsset();
+        protected override void OnDestroy();
+        protected override void OnDidApplyAnimationProperties();
+        protected override void OnDisable();
+        protected override void OnEnable();
+        protected override void OnRectTransformDimensionsChange();
+        protected override void OnTransformParentChanged();
+        protected override void OnValidate();
+        public override void Rebuild(UnityEngine.UI.CanvasUpdate update);
+        protected override void Reset();
+        protected override void SetActiveSubMeshes(bool state);
+        protected void SetActiveSubTextObjectRenderers(bool state);
+        public override void SetAllDirty();
+        protected override void SetCulling();
+        protected override void SetFaceColor(UnityEngine.Color32 color);
+        public override void SetLayoutDirty();
+        public void SetMask(MaskingTypes type, UnityEngine.Vector4 maskCoords);
+        public void SetMask(MaskingTypes type, UnityEngine.Vector4 maskCoords, float softnessX, float softnessY);
+        public override void SetMaterialDirty();
+        protected override void SetOutlineColor(UnityEngine.Color32 color);
+        protected override void SetOutlineThickness(float thickness);
+        protected override void SetShaderDepth();
+        protected override void SetSharedMaterial(UnityEngine.Material mat);
+        protected override void SetSharedMaterials(UnityEngine.Material[] materials);
+        public override void SetVerticesDirty();
+        public void UpdateFontAsset();
+        public override void UpdateGeometry(UnityEngine.Mesh mesh, int index);
+        protected override void UpdateMaterial();
+        public override void UpdateMeshPadding();
+        public override void UpdateVertexData();
+        public override void UpdateVertexData(TMP_VertexDataUpdateFlags flags);
+    }
+
+    [UnityEngine.AddComponentMenu(@"UI (Canvas)/TextMeshPro - Text (UI)", 11)] [UnityEngine.DisallowMultipleComponent] [UnityEngine.ExecuteAlways] [UnityEngine.HelpURL(@"https://docs.unity3d.com/Packages/com.unity.ugui@2.0/manual/TextMeshPro/index.html")] [UnityEngine.RequireComponent(typeof(UnityEngine.CanvasRenderer))] [UnityEngine.RequireComponent(typeof(UnityEngine.RectTransform))] public class TextMeshProUGUI : TMP_Text, UnityEngine.UI.ILayoutElement
+    {
+        protected TMP_SubMeshUI[] m_subTextObjects;
+        public event System.Action<TMP_TextInfo> OnPreRenderText;
+        public override bool autoSizeTextContainer { get; set; }
+        public UnityEngine.CanvasRenderer canvasRenderer { get; }
+        public UnityEngine.Vector4 maskOffset { get; set; }
+        public override UnityEngine.Material materialForRendering { get; }
+        public override UnityEngine.Mesh mesh { get; }
+        public TextMeshProUGUI() {}
+        protected override void Awake();
+        public void CalculateLayoutInputHorizontal();
+        public void CalculateLayoutInputVertical();
+        public override void ClearMesh();
+        public override void ComputeMarginSize();
+        public override void Cull(UnityEngine.Rect clipRect, bool validRect);
+        protected override void DestroySubMeshObjects();
+        public override void ForceMeshUpdate(bool ignoreActiveState = false, bool forceTextReparsing = false);
+        protected virtual void GenerateTextMesh();
+        protected override UnityEngine.Bounds GetCompoundBounds();
+        protected override UnityEngine.Material GetMaterial(UnityEngine.Material mat);
+        protected override UnityEngine.Material[] GetMaterials(UnityEngine.Material[] mats);
+        public override UnityEngine.Material GetModifiedMaterial(UnityEngine.Material baseMaterial);
+        protected override UnityEngine.Material[] GetSharedMaterials();
+        protected override UnityEngine.Vector3[] GetTextContainerLocalCorners();
+        public override TMP_TextInfo GetTextInfo(string text);
+        protected override void InternalCrossFadeAlpha(float alpha, float duration, bool ignoreTimeScale);
+        protected override void InternalCrossFadeColor(UnityEngine.Color targetColor, float duration, bool ignoreTimeScale, bool useAlpha);
+        protected override void LoadFontAsset();
+        protected override void OnCanvasHierarchyChanged();
+        protected override void OnDestroy();
+        protected override void OnDidApplyAnimationProperties();
+        protected override void OnDisable();
+        protected override void OnEnable();
+        protected override void OnRectTransformDimensionsChange();
+        protected override void OnTransformParentChanged();
+        protected override void OnValidate();
+        public override void Rebuild(UnityEngine.UI.CanvasUpdate update);
+        public override void RecalculateClipping();
+        protected override void Reset();
+        protected override void SetActiveSubMeshes(bool state);
+        public override void SetAllDirty();
+        protected override void SetCulling();
+        protected override void SetFaceColor(UnityEngine.Color32 color);
+        public override void SetLayoutDirty();
+        public override void SetMaterialDirty();
+        protected override void SetOutlineColor(UnityEngine.Color32 color);
+        protected override void SetOutlineThickness(float thickness);
+        protected override void SetShaderDepth();
+        protected override void SetSharedMaterial(UnityEngine.Material mat);
+        protected override void SetSharedMaterials(UnityEngine.Material[] materials);
+        public override void SetVerticesDirty();
+        public void UpdateFontAsset();
+        public override void UpdateGeometry(UnityEngine.Mesh mesh, int index);
+        protected override void UpdateMaterial();
+        public override void UpdateMeshPadding();
+        public override void UpdateVertexData();
+        public override void UpdateVertexData(TMP_VertexDataUpdateFlags flags);
+    }
+
+    public enum TextOverflowModes
+    {
+        Overflow = 0,
+        Ellipsis = 1,
+        Masking = 2,
+        Truncate = 3,
+        ScrollRect = 4,
+        Page = 5,
+        Linked = 6,
+    }
+
+    public enum TextRenderFlags
+    {
+        DontRender = 0,
+        Render = 255,
+    }
+
+    public enum TextureMappingOptions
+    {
+        Character = 0,
+        Line = 1,
+        Paragraph = 2,
+        MatchAspect = 3,
+    }
+
+    public enum TextWrappingModes
+    {
+        NoWrap = 0,
+        Normal = 1,
+        PreserveWhitespace = 2,
+        PreserveWhitespaceNoWrap = 3,
+    }
+
+    public abstract class TMP_Asset : UnityEngine.ScriptableObject
+    {
+        public UnityEngine.EntityId entityId { get; }
+        public UnityEngine.TextCore.FaceInfo faceInfo { get; set; }
+        public int hashCode { get; set; }
+        [System.Obsolete(@"instanceID is obsolete, use entityId instead. This will be removed in a future version.", false)] public int instanceID { get; }
+        public UnityEngine.Material material { get; set; }
+        public int materialHashCode { get; set; }
+        public string version { get; }
+        protected TMP_Asset() {}
+    }
+
+    public class TMP_Character : TMP_TextElement
+    {
+        public TMP_Character() {}
+        public TMP_Character(uint unicode, UnityEngine.TextCore.Glyph glyph) {}
+        public TMP_Character(uint unicode, TMP_FontAsset fontAsset, UnityEngine.TextCore.Glyph glyph) {}
+    }
+
+    [System.Diagnostics.DebuggerDisplay(@"Unicode '{character}'  ({((uint)character).ToString(""X"")})")] public struct TMP_CharacterInfo
+    {
+        public UnityEngine.TextCore.Glyph alternativeGlyph;
+        public float ascender;
+        public float aspectRatio;
+        public float baseLine;
+        public UnityEngine.Vector3 bottomLeft;
+        public UnityEngine.Vector3 bottomRight;
+        public char character;
+        public UnityEngine.Color32 color;
+        public float descender;
+        public TMP_TextElementType elementType;
+        public TMP_FontAsset fontAsset;
+        public UnityEngine.Color32 highlightColor;
+        public HighlightState highlightState;
+        public int index;
+        public bool isUsingAlternateTypeface;
+        public bool isVisible;
+        public int lineNumber;
+        public UnityEngine.Material material;
+        public int materialReferenceIndex;
+        public float origin;
+        public int pageNumber;
+        public float pointSize;
+        public float scale;
+        public UnityEngine.Color32 strikethroughColor;
+        public int strikethroughVertexIndex;
+        public int stringLength;
+        public FontStyles style;
+        public TMP_TextElement textElement;
+        public UnityEngine.Vector3 topLeft;
+        public UnityEngine.Vector3 topRight;
+        public UnityEngine.Color32 underlineColor;
+        public int underlineVertexIndex;
+        public TMP_Vertex vertex_BL;
+        public TMP_Vertex vertex_BR;
+        public TMP_Vertex vertex_TL;
+        public TMP_Vertex vertex_TR;
+        public int vertexIndex;
+        public float xAdvance;
+    }
+
+    [UnityEngine.ExcludeFromPreset] public class TMP_ColorGradient : UnityEngine.ScriptableObject
+    {
+        public UnityEngine.Color bottomLeft;
+        public UnityEngine.Color bottomRight;
+        public ColorMode colorMode = ColorMode.FourCornersGradient; // warning: this initializer is overridden in at least one ctor
+        public UnityEngine.Color topLeft;
+        public UnityEngine.Color topRight;
+        public TMP_ColorGradient() {}
+        public TMP_ColorGradient(UnityEngine.Color color) {}
+        public TMP_ColorGradient(UnityEngine.Color color0, UnityEngine.Color color1, UnityEngine.Color color2, UnityEngine.Color color3) {}
+    }
+
+    public static class TMP_Compatibility
+    {
+        public static TextAlignmentOptions ConvertTextAlignmentEnumValues(TextAlignmentOptions oldValue);
+        public enum AnchorPositions
+        {
+            TopLeft = 0,
+            Top = 1,
+            TopRight = 2,
+            Left = 3,
+            Center = 4,
+            Right = 5,
+            BottomLeft = 6,
+            Bottom = 7,
+            BottomRight = 8,
+            BaseLine = 9,
+            None = 10,
+        }
+    }
+
+    public static class TMP_DefaultControls
+    {
+        public static UnityEngine.GameObject CreateButton(TMP_DefaultControls.Resources resources);
+        public static UnityEngine.GameObject CreateDropdown(TMP_DefaultControls.Resources resources);
+        public static UnityEngine.GameObject CreateInputField(TMP_DefaultControls.Resources resources);
+        public static UnityEngine.GameObject CreateScrollbar(TMP_DefaultControls.Resources resources);
+        public static UnityEngine.GameObject CreateText(TMP_DefaultControls.Resources resources);
+        public struct Resources
+        {
+            public UnityEngine.Sprite background;
+            public UnityEngine.Sprite checkmark;
+            public UnityEngine.Sprite dropdown;
+            public UnityEngine.Sprite inputField;
+            public UnityEngine.Sprite knob;
+            public UnityEngine.Sprite mask;
+            public UnityEngine.Sprite standard;
+        }
+    }
+
+    [UnityEngine.AddComponentMenu(@"UI (Canvas)/Dropdown - TextMeshPro", 35)] [UnityEngine.RequireComponent(typeof(UnityEngine.RectTransform))] public class TMP_Dropdown : UnityEngine.UI.Selectable, UnityEngine.EventSystems.ICancelHandler, UnityEngine.EventSystems.IEventSystemHandler, UnityEngine.EventSystems.IPointerClickHandler, UnityEngine.EventSystems.ISubmitHandler
+    {
+        public float alphaFadeSpeed { get; set; }
+        public UnityEngine.UI.Image captionImage { get; set; }
+        public TMP_Text captionText { get; set; }
+        public bool IsExpanded { get; }
+        public UnityEngine.UI.Image itemImage { get; set; }
+        public TMP_Text itemText { get; set; }
+        public bool MultiSelect { get; set; }
+        public TMP_Dropdown.DropdownEvent onValueChanged { get; set; }
+        public System.Collections.Generic.List<TMP_Dropdown.OptionData> options { get; set; }
+        public UnityEngine.UI.Graphic placeholder { get; set; }
+        public UnityEngine.RectTransform template { get; set; }
+        public int value { get; set; }
+        protected TMP_Dropdown() {}
+        public void AddOptions(System.Collections.Generic.List<string> options);
+        public void AddOptions(System.Collections.Generic.List<TMP_Dropdown.OptionData> options);
+        public void AddOptions(System.Collections.Generic.List<UnityEngine.Sprite> options);
+        protected override void Awake();
+        public void ClearOptions();
+        protected virtual UnityEngine.GameObject CreateBlocker(UnityEngine.Canvas rootCanvas);
+        protected virtual UnityEngine.GameObject CreateDropdownList(UnityEngine.GameObject template);
+        protected virtual TMP_Dropdown.DropdownItem CreateItem(TMP_Dropdown.DropdownItem itemTemplate);
+        protected virtual void DestroyBlocker(UnityEngine.GameObject blocker);
+        protected virtual void DestroyDropdownList(UnityEngine.GameObject dropdownList);
+        protected virtual void DestroyItem(TMP_Dropdown.DropdownItem item);
+        public void Hide();
+        public virtual void OnCancel(UnityEngine.EventSystems.BaseEventData eventData);
+        protected override void OnDisable();
+        public virtual void OnPointerClick(UnityEngine.EventSystems.PointerEventData eventData);
+        public virtual void OnSubmit(UnityEngine.EventSystems.BaseEventData eventData);
+        protected override void OnValidate();
+        public void RefreshShownValue();
+        public void SetValueWithoutNotify(int input);
+        public void Show();
+        protected override void Start();
+        public class DropdownEvent : UnityEngine.Events.UnityEvent<int>
+        {
+            public DropdownEvent() {}
+        }
+        protected class DropdownItem : UnityEngine.MonoBehaviour, UnityEngine.EventSystems.ICancelHandler, UnityEngine.EventSystems.IEventSystemHandler, UnityEngine.EventSystems.IPointerEnterHandler
+        {
+            public UnityEngine.UI.Image image { get; set; }
+            public UnityEngine.RectTransform rectTransform { get; set; }
+            public TMP_Text text { get; set; }
+            public UnityEngine.UI.Toggle toggle { get; set; }
+            public DropdownItem() {}
+            public virtual void OnCancel(UnityEngine.EventSystems.BaseEventData eventData);
+            public virtual void OnPointerEnter(UnityEngine.EventSystems.PointerEventData eventData);
+        }
+        public class OptionData
+        {
+            public UnityEngine.Color color { get; set; }
+            public UnityEngine.Sprite image { get; set; }
+            public string text { get; set; }
+            public OptionData() {}
+            public OptionData(string text) {}
+            public OptionData(UnityEngine.Sprite image) {}
+            public OptionData(string text, UnityEngine.Sprite image, UnityEngine.Color color) {}
+        }
+        public class OptionDataList
+        {
+            public System.Collections.Generic.List<TMP_Dropdown.OptionData> options { get; set; }
+            public OptionDataList() {}
+        }
+    }
+
+    [UnityEngine.ExcludeFromPreset] public class TMP_FontAsset : TMP_Asset
+    {
+        [UnityEngine.SerializeField] public UnityEngine.Texture2D atlas;
+        public float boldSpacing = 7f;
+        public float boldStyle = 0.75f;
+        public byte italicStyle = 35;
+        public float normalSpacingOffset;
+        public float normalStyle;
+        public byte tabSize = 10;
+        public int atlasHeight { get; }
+        public int atlasPadding { get; }
+        public AtlasPopulationMode atlasPopulationMode { get; set; }
+        public UnityEngine.TextCore.LowLevel.GlyphRenderMode atlasRenderMode { get; }
+        public UnityEngine.Texture2D atlasTexture { get; }
+        public int atlasTextureCount { get; }
+        public UnityEngine.Texture2D[] atlasTextures { get; set; }
+        public int atlasWidth { get; }
+        public System.Collections.Generic.Dictionary<uint, TMP_Character> characterLookupTable { get; }
+        public System.Collections.Generic.List<TMP_Character> characterTable { get; }
+        public FontAssetCreationSettings creationSettings { get; set; }
+        public System.Collections.Generic.List<TMP_FontAsset> fallbackFontAssetTable { get; set; }
+        public TMP_FontFeatureTable fontFeatureTable { get; }
+        [System.Obsolete(@"The fontInfo property and underlying type is now obsolete. Please use the faceInfo property and FaceInfo type instead.")] public FaceInfo_Legacy fontInfo { get; }
+        public TMP_FontWeightPair[] fontWeightTable { get; }
+        public bool getFontFeatures { get; set; }
+        public System.Collections.Generic.Dictionary<uint, UnityEngine.TextCore.Glyph> glyphLookupTable { get; }
+        public System.Collections.Generic.List<UnityEngine.TextCore.Glyph> glyphTable { get; }
+        public bool isMultiAtlasTexturesEnabled { get; set; }
+        public UnityEngine.Font sourceFontFile { get; }
+        public TMP_FontAsset() {}
+        public void ClearFontAssetData(bool setAtlasSizeToZero = false);
+        public static TMP_FontAsset CreateFontAsset(UnityEngine.Font font);
+        public static TMP_FontAsset CreateFontAsset(string familyName, string styleName, int pointSize = 90);
+        public static TMP_FontAsset CreateFontAsset(string fontFilePath, int faceIndex, int samplingPointSize, int atlasPadding, UnityEngine.TextCore.LowLevel.GlyphRenderMode renderMode, int atlasWidth, int atlasHeight);
+        public static TMP_FontAsset CreateFontAsset(UnityEngine.Font font, int samplingPointSize, int atlasPadding, UnityEngine.TextCore.LowLevel.GlyphRenderMode renderMode, int atlasWidth, int atlasHeight, AtlasPopulationMode atlasPopulationMode = AtlasPopulationMode.Dynamic, bool enableMultiAtlasSupport = true);
+        public static string GetCharacters(TMP_FontAsset fontAsset);
+        public static int[] GetCharactersArray(TMP_FontAsset fontAsset);
+        public bool HasCharacter(int character);
+        public bool HasCharacter(char character, bool searchFallbacks = false, bool tryAddCharacter = false);
+        public bool HasCharacters(string text);
+        public bool HasCharacters(string text, out System.Collections.Generic.List<char> missingCharacters);
+        public bool HasCharacters(string text, out uint[] missingCharacters, bool searchFallbacks = false, bool tryAddCharacter = false);
+        public void ReadFontAssetDefinition();
+        public bool TryAddCharacters(string characters, bool includeFontFeatures = false);
+        public bool TryAddCharacters(uint[] unicodes, bool includeFontFeatures = false);
+        public bool TryAddCharacters(string characters, out string missingCharacters, bool includeFontFeatures = false);
+        public bool TryAddCharacters(uint[] unicodes, out uint[] missingUnicodes, bool includeFontFeatures = false);
+    }
+
+    public class TMP_FontAssetUtilities
+    {
+        public static TMP_FontAssetUtilities instance { get; }
+        public TMP_FontAssetUtilities() {}
+        public static TMP_Character GetCharacterFromFontAsset(uint unicode, TMP_FontAsset sourceFontAsset, bool includeFallbacks, FontStyles fontStyle, FontWeight fontWeight, out bool isAlternativeTypeface);
+        public static TMP_Character GetCharacterFromFontAssets(uint unicode, TMP_FontAsset sourceFontAsset, System.Collections.Generic.List<TMP_FontAsset> fontAssets, bool includeFallbacks, FontStyles fontStyle, FontWeight fontWeight, out bool isAlternativeTypeface);
+        public static TMP_SpriteCharacter GetSpriteCharacterFromSpriteAsset(uint unicode, TMP_SpriteAsset spriteAsset, bool includeFallbacks);
+    }
+
+    public class TMP_FontFeatureTable
+    {
+        public System.Collections.Generic.List<UnityEngine.TextCore.LowLevel.GlyphPairAdjustmentRecord> glyphPairAdjustmentRecords { get; set; }
+        public System.Collections.Generic.List<LigatureSubstitutionRecord> ligatureRecords { get; set; }
+        public System.Collections.Generic.List<MarkToBaseAdjustmentRecord> MarkToBaseAdjustmentRecords { get; set; }
+        public System.Collections.Generic.List<MarkToMarkAdjustmentRecord> MarkToMarkAdjustmentRecords { get; set; }
+        public System.Collections.Generic.List<MultipleSubstitutionRecord> multipleSubstitutionRecords { get; set; }
+        public TMP_FontFeatureTable() {}
+        public void SortGlyphPairAdjustmentRecords();
+        public void SortMarkToBaseAdjustmentRecords();
+        public void SortMarkToMarkAdjustmentRecords();
+    }
+
+    public struct TMP_FontStyleStack
+    {
+        public byte bold;
+        public byte highlight;
+        public byte italic;
+        public byte lowercase;
+        public byte smallcaps;
+        public byte strikethrough;
+        public byte subscript;
+        public byte superscript;
+        public byte underline;
+        public byte uppercase;
+        public byte Add(FontStyles style);
+        public void Clear();
+        public byte Remove(FontStyles style);
+    }
+
+    public static class TMP_FontUtilities
+    {
+        public static TMP_FontAsset SearchForCharacter(System.Collections.Generic.List<TMP_FontAsset> fonts, uint unicode, out TMP_Character character);
+        public static TMP_FontAsset SearchForCharacter(TMP_FontAsset font, uint unicode, out TMP_Character character);
+    }
+
+    public struct TMP_FontWeightPair
+    {
+        public TMP_FontAsset italicTypeface;
+        public TMP_FontAsset regularTypeface;
+    }
+
+    public class TMP_Glyph : TMP_TextElement_Legacy
+    {
+        public TMP_Glyph() {}
+        public static TMP_Glyph Clone(TMP_Glyph source);
+    }
+
+    public struct TMP_GlyphAdjustmentRecord
+    {
+        public uint glyphIndex { get; set; }
+        public TMP_GlyphValueRecord glyphValueRecord { get; set; }
+        public TMP_GlyphAdjustmentRecord(uint glyphIndex, TMP_GlyphValueRecord glyphValueRecord) {}
+    }
+
+    public class TMP_GlyphPairAdjustmentRecord
+    {
+        public FontFeatureLookupFlags featureLookupFlags { get; set; }
+        public TMP_GlyphAdjustmentRecord firstAdjustmentRecord { get; set; }
+        public TMP_GlyphAdjustmentRecord secondAdjustmentRecord { get; set; }
+        public TMP_GlyphPairAdjustmentRecord(TMP_GlyphAdjustmentRecord firstAdjustmentRecord, TMP_GlyphAdjustmentRecord secondAdjustmentRecord) {}
+    }
+
+    public struct TMP_GlyphValueRecord
+    {
+        public float xAdvance { get; set; }
+        public float xPlacement { get; set; }
+        public float yAdvance { get; set; }
+        public float yPlacement { get; set; }
+        public TMP_GlyphValueRecord(float xPlacement, float yPlacement, float xAdvance, float yAdvance) {}
+        public static TMP_GlyphValueRecord operator +(TMP_GlyphValueRecord a, TMP_GlyphValueRecord b);
+    }
+
+    [UnityEngine.AddComponentMenu(@"UI (Canvas)/TextMeshPro - Input Field", 11)] [UnityEngine.HelpURL(@"https://docs.unity3d.com/Packages/com.unity.ugui@2.0/manual/TextMeshPro/index.html")] public class TMP_InputField : UnityEngine.UI.Selectable, UnityEngine.EventSystems.IBeginDragHandler, UnityEngine.EventSystems.ICancelHandler, UnityEngine.EventSystems.IDragHandler, UnityEngine.EventSystems.IEndDragHandler, UnityEngine.EventSystems.IEventSystemHandler, UnityEngine.EventSystems.IPointerClickHandler, UnityEngine.EventSystems.IScrollHandler, UnityEngine.EventSystems.ISubmitHandler, UnityEngine.EventSystems.IUpdateSelectedHandler, UnityEngine.UI.ICanvasElement, UnityEngine.UI.ILayoutElement
+    {
+        public bool isAlert;
+        protected int m_CaretPosition;
+        protected int m_CaretSelectPosition;
+        protected bool m_CaretVisible;
+        protected UnityEngine.UIVertex[] m_CursorVerts;
+        [UnityEngine.SerializeField] protected TMP_FontAsset m_GlobalFontAsset;
+        [UnityEngine.SerializeField] protected TMP_InputValidator m_InputValidator;
+        [UnityEngine.SerializeField] protected bool m_isRichTextEditingAllowed;
+        protected bool m_isSelectAll;
+        [UnityEngine.SerializeField] protected int m_LineLimit;
+        protected UnityEngine.Mesh m_Mesh;
+        [UnityEngine.SerializeField] protected bool m_OnFocusSelectAll = true;
+        [UnityEngine.SerializeField] protected UnityEngine.UI.Graphic m_Placeholder;
+        protected UnityEngine.RectTransform m_RectTransform;
+        [UnityEngine.SerializeField] protected bool m_ResetOnDeActivation = true;
+        [UnityEngine.SerializeField] protected float m_ScrollSensitivity = 1f;
+        protected UnityEngine.TouchScreenKeyboard m_SoftKeyboard;
+        protected int m_StringPosition;
+        protected int m_StringSelectPosition;
+        [UnityEngine.SerializeField] [UnityEngine.TextArea(5, 10)] protected string m_Text;
+        [UnityEngine.SerializeField] protected TMP_Text m_TextComponent;
+        protected UnityEngine.UI.RectMask2D m_TextComponentRectMask;
+        protected UnityEngine.RectTransform m_TextComponentRectTransform;
+        [UnityEngine.SerializeField] protected UnityEngine.RectTransform m_TextViewport;
+        protected UnityEngine.UI.RectMask2D m_TextViewportRectMask;
+        [UnityEngine.SerializeField] protected UnityEngine.UI.Scrollbar m_VerticalScrollbar;
+        [UnityEngine.SerializeField] protected TMP_ScrollbarEventHandler m_VerticalScrollbarEventHandler;
+        public char asteriskChar { get; set; }
+        public float caretBlinkRate { get; set; }
+        public UnityEngine.Color caretColor { get; set; }
+        public int caretPosition { get; set; }
+        protected int caretPositionInternal { get; set; }
+        protected int caretSelectPositionInternal { get; set; }
+        public int caretWidth { get; set; }
+        public int characterLimit { get; set; }
+        public TMP_InputField.CharacterValidation characterValidation { get; set; }
+        public TMP_InputField.ContentType contentType { get; set; }
+        public bool customCaretColor { get; set; }
+        public virtual float flexibleHeight { get; }
+        public virtual float flexibleWidth { get; }
+        public TMP_FontAsset fontAsset { get; set; }
+        public TMP_InputField.InputType inputType { get; set; }
+        public TMP_InputValidator inputValidator { get; set; }
+        public bool isFocused { get; }
+        public bool isRichTextEditingAllowed { get; set; }
+        public bool keepTextSelectionVisible { get; set; }
+        public UnityEngine.TouchScreenKeyboardType keyboardType { get; set; }
+        public virtual int layoutPriority { get; }
+        public int lineLimit { get; set; }
+        public TMP_InputField.LineType lineType { get; set; }
+        protected UnityEngine.Mesh mesh { get; }
+        public virtual float minHeight { get; }
+        public virtual float minWidth { get; }
+        public bool multiLine { get; }
+        public TMP_InputField.SelectionEvent onDeselect { get; set; }
+        public TMP_InputField.SubmitEvent onEndEdit { get; set; }
+        public TMP_InputField.TextSelectionEvent onEndTextSelection { get; set; }
+        public bool onFocusSelectAll { get; set; }
+        public TMP_InputField.SelectionEvent onSelect { get; set; }
+        public TMP_InputField.SubmitEvent onSubmit { get; set; }
+        public TMP_InputField.TextSelectionEvent onTextSelection { get; set; }
+        public TMP_InputField.TouchScreenKeyboardEvent onTouchScreenKeyboardStatusChanged { get; set; }
+        public TMP_InputField.OnValidateInput onValidateInput { get; set; }
+        public TMP_InputField.OnChangeEvent onValueChanged { get; set; }
+        public UnityEngine.UI.Graphic placeholder { get; set; }
+        public float pointSize { get; set; }
+        public virtual float preferredHeight { get; }
+        public virtual float preferredWidth { get; }
+        public bool readOnly { get; set; }
+        public bool resetOnDeActivation { get; set; }
+        public bool restoreOriginalTextOnEscape { get; set; }
+        public bool richText { get; set; }
+        public float scrollSensitivity { get; set; }
+        public int selectionAnchorPosition { get; set; }
+        public UnityEngine.Color selectionColor { get; set; }
+        public int selectionFocusPosition { get; set; }
+        public int selectionStringAnchorPosition { get; set; }
+        public int selectionStringFocusPosition { get; set; }
+        public virtual bool shouldActivateOnSelect { get; set; }
+        public bool shouldHideMobileInput { get; set; }
+        public bool shouldHideSoftKeyboard { get; set; }
+        public int stringPosition { get; set; }
+        protected int stringPositionInternal { get; set; }
+        protected int stringSelectPositionInternal { get; set; }
+        public string text { get; set; }
+        public TMP_Text textComponent { get; set; }
+        public UnityEngine.RectTransform textViewport { get; set; }
+        public UnityEngine.TouchScreenKeyboard touchScreenKeyboard { get; }
+        public UnityEngine.UI.Scrollbar verticalScrollbar { get; set; }
+        public bool wasCanceled { get; }
+        protected TMP_InputField() {}
+        public void ActivateInputField();
+        protected virtual void Append(char input);
+        protected virtual void Append(string input);
+        public virtual void CalculateLayoutInputHorizontal();
+        public virtual void CalculateLayoutInputVertical();
+        protected void ClampCaretPos(ref int pos);
+        protected void ClampStringPos(ref int pos);
+        public void DeactivateInputField(bool clearSelection = false);
+        protected override void DoStateTransition(UnityEngine.UI.Selectable.SelectionState state, bool instant);
+        public void ForceLabelUpdate();
+        public virtual void GraphicUpdateComplete();
+        protected virtual bool IsValidChar(char c);
+        protected TMP_InputField.EditState KeyPressed(UnityEngine.Event evt);
+        protected virtual void LateUpdate();
+        public virtual void LayoutComplete();
+        public void MoveTextEnd(bool shift);
+        public void MoveTextStart(bool shift);
+        public void MoveToEndOfLine(bool shift, bool ctrl);
+        public void MoveToStartOfLine(bool shift, bool ctrl);
+        public virtual void OnBeginDrag(UnityEngine.EventSystems.PointerEventData eventData);
+        public virtual void OnCancel(UnityEngine.EventSystems.BaseEventData eventData);
+        public void OnControlClick();
+        public override void OnDeselect(UnityEngine.EventSystems.BaseEventData eventData);
+        protected override void OnDisable();
+        public virtual void OnDrag(UnityEngine.EventSystems.PointerEventData eventData);
+        protected override void OnEnable();
+        public virtual void OnEndDrag(UnityEngine.EventSystems.PointerEventData eventData);
+        protected void OnFocus();
+        public override void OnMove(UnityEngine.EventSystems.AxisEventData eventData);
+        public virtual void OnPointerClick(UnityEngine.EventSystems.PointerEventData eventData);
+        public override void OnPointerDown(UnityEngine.EventSystems.PointerEventData eventData);
+        public virtual void OnScroll(UnityEngine.EventSystems.PointerEventData eventData);
+        public override void OnSelect(UnityEngine.EventSystems.BaseEventData eventData);
+        public virtual void OnSubmit(UnityEngine.EventSystems.BaseEventData eventData);
+        public virtual void OnUpdateSelected(UnityEngine.EventSystems.BaseEventData eventData);
+        protected override void OnValidate();
+        public void ProcessEvent(UnityEngine.Event e);
+        public virtual void Rebuild(UnityEngine.UI.CanvasUpdate update);
+        public void ReleaseSelection();
+        protected void SelectAll();
+        protected void SendOnEndEdit();
+        protected void SendOnEndTextSelection();
+        protected void SendOnFocus();
+        protected void SendOnFocusLost();
+        protected void SendOnSubmit();
+        protected void SendOnTextSelection();
+        protected void SendTouchScreenKeyboardStatusChanged();
+        public void SetGlobalFontAsset(TMP_FontAsset fontAsset);
+        public void SetGlobalPointSize(float pointSize);
+        public void SetTextWithoutNotify(string input);
+        protected void UpdateLabel();
+        protected char Validate(string text, int pos, char ch);
+        public enum CharacterValidation
+        {
+            None = 0,
+            Digit = 1,
+            Integer = 2,
+            Decimal = 3,
+            Alphanumeric = 4,
+            Name = 5,
+            Regex = 6,
+            EmailAddress = 7,
+            CustomValidator = 8,
+        }
+        public enum ContentType
+        {
+            Standard = 0,
+            Autocorrected = 1,
+            IntegerNumber = 2,
+            DecimalNumber = 3,
+            Alphanumeric = 4,
+            Name = 5,
+            EmailAddress = 6,
+            Password = 7,
+            Pin = 8,
+            Custom = 9,
+        }
+        protected enum EditState
+        {
+            Continue = 0,
+            Finish = 1,
+        }
+        public enum InputType
+        {
+            Standard = 0,
+            AutoCorrect = 1,
+            Password = 2,
+        }
+        public enum LineType
+        {
+            SingleLine = 0,
+            MultiLineSubmit = 1,
+            MultiLineNewline = 2,
+        }
+        public class OnChangeEvent : UnityEngine.Events.UnityEvent<string>
+        {
+            public OnChangeEvent() {}
+        }
+        public delegate char OnValidateInput(string text, int charIndex, char addedChar);
+        public class SelectionEvent : UnityEngine.Events.UnityEvent<string>
+        {
+            public SelectionEvent() {}
+        }
+        public class SubmitEvent : UnityEngine.Events.UnityEvent<string>
+        {
+            public SubmitEvent() {}
+        }
+        public class TextSelectionEvent : UnityEngine.Events.UnityEvent<string, int, int>
+        {
+            public TextSelectionEvent() {}
+        }
+        public class TouchScreenKeyboardEvent : UnityEngine.Events.UnityEvent<UnityEngine.TouchScreenKeyboard.Status>
+        {
+            public TouchScreenKeyboardEvent() {}
+        }
+    }
+
+    public abstract class TMP_InputValidator : UnityEngine.ScriptableObject
+    {
+        protected TMP_InputValidator() {}
+        public abstract char Validate(ref string text, ref int pos, char ch);
+    }
+
+    public struct TMP_LineInfo
+    {
+        public HorizontalAlignmentOptions alignment;
+        public float ascender;
+        public float baseline;
+        public int characterCount;
+        public float descender;
+        public int firstCharacterIndex;
+        public int firstVisibleCharacterIndex;
+        public int lastCharacterIndex;
+        public int lastVisibleCharacterIndex;
+        public float length;
+        public Extents lineExtents;
+        public float lineHeight;
+        public float marginLeft;
+        public float marginRight;
+        public float maxAdvance;
+        public int spaceCount;
+        public int visibleCharacterCount;
+        public int visibleSpaceCount;
+        public float width;
+        public int wordCount;
+    }
+
+    public struct TMP_LinkInfo
+    {
+        public int hashCode;
+        public int linkIdFirstCharacterIndex;
+        public int linkIdLength;
+        public int linkTextfirstCharacterIndex;
+        public int linkTextLength;
+        public TMP_Text textComponent;
+        public string GetLink();
+        public string GetLinkID();
+        public string GetLinkText();
+    }
+
+    public static class TMP_MaterialManager
+    {
+        public static void AddFallbackMaterialReference(UnityEngine.Material targetMaterial);
+        public static void AddMaskingMaterial(UnityEngine.Material baseMaterial, UnityEngine.Material stencilMaterial, int stencilID);
+        public static void CleanupFallbackMaterials();
+        public static void ClearMaterials();
+        public static void CopyMaterialPresetProperties(UnityEngine.Material source, UnityEngine.Material destination);
+        public static UnityEngine.Material GetBaseMaterial(UnityEngine.Material stencilMaterial);
+        public static UnityEngine.Material GetFallbackMaterial(UnityEngine.Material sourceMaterial, UnityEngine.Material targetMaterial);
+        public static UnityEngine.Material GetMaterialForRendering(UnityEngine.UI.MaskableGraphic graphic, UnityEngine.Material baseMaterial);
+        public static int GetStencilID(UnityEngine.GameObject obj);
+        public static UnityEngine.Material GetStencilMaterial(UnityEngine.Material baseMaterial, int stencilID);
+        public static void ReleaseBaseMaterial(UnityEngine.Material baseMaterial);
+        public static void ReleaseFallbackMaterial(UnityEngine.Material fallbackMaterial);
+        public static void ReleaseStencilMaterial(UnityEngine.Material stencilMaterial);
+        public static void RemoveFallbackMaterialReference(UnityEngine.Material targetMaterial);
+        public static void RemoveStencilMaterial(UnityEngine.Material stencilMaterial);
+        public static UnityEngine.Material SetStencil(UnityEngine.Material material, int stencilID);
+    }
+
+    public struct TMP_MaterialReference
+    {
+        public UnityEngine.Material material;
+        public int referenceCount;
+    }
+
+    public static class TMP_Math
+    {
+        public const float FLOAT_MAX = 32767f;
+        public const float FLOAT_MIN = -32767f;
+        public const float FLOAT_UNSET = -32767f;
+        public const int INT_MAX = int.MaxValue;
+        public const int INT_MIN = -2147483647;
+        public const int INT_UNSET = -32767;
+        public static UnityEngine.Vector2 MAX_16BIT;
+        public static UnityEngine.Vector2 MIN_16BIT;
+        public static bool Approximately(float a, float b);
+        public static int Mod(int a, int b);
+    }
+
+    public struct TMP_MeshInfo
+    {
+        public UnityEngine.Color32[] colors32;
+        public UnityEngine.Material material;
+        public UnityEngine.Mesh mesh;
+        public UnityEngine.Vector3[] normals;
+        public UnityEngine.Vector4[] tangents;
+        public int[] triangles;
+        public UnityEngine.Vector4[] uvs0;
+        public UnityEngine.Vector2[] uvs2;
+        public int vertexCount;
+        public UnityEngine.Vector3[] vertices;
+        public TMP_MeshInfo(UnityEngine.Mesh mesh, int size) {}
+        public TMP_MeshInfo(UnityEngine.Mesh mesh, int size, bool isVolumetric) {}
+        public void Clear();
+        public void Clear(bool uploadChanges);
+        public void ClearUnusedVertices();
+        public void ClearUnusedVertices(int startIndex);
+        public void ClearUnusedVertices(int startIndex, bool updateMesh);
+        public void ResizeMeshInfo(int size);
+        public void ResizeMeshInfo(int size, bool isVolumetric);
+        public void SortGeometry(System.Collections.Generic.IList<int> sortingOrder);
+        public void SortGeometry(VertexSortingOrder order);
+        public void SwapVertexData(int src, int dst);
+    }
+
+    public struct TMP_Offset
+    {
+        public float bottom { get; set; }
+        public float horizontal { get; set; }
+        public float left { get; set; }
+        public float right { get; set; }
+        public float top { get; set; }
+        public float vertical { get; set; }
+        public static TMP_Offset zero { get; }
+        public TMP_Offset(float horizontal, float vertical) {}
+        public TMP_Offset(float left, float right, float top, float bottom) {}
+        public override bool Equals(object obj);
+        public bool Equals(TMP_Offset other);
+        public override int GetHashCode();
+        public static bool operator ==(TMP_Offset lhs, TMP_Offset rhs);
+        public static bool operator !=(TMP_Offset lhs, TMP_Offset rhs);
+        public static TMP_Offset operator *(TMP_Offset a, float b);
+    }
+
+    public class TMP_PackageResourceImporter
+    {
+        public TMP_PackageResourceImporter(bool logErrors = true) {}
+        public static void ImportResources(bool importEssentials, bool importExamples, bool interactive);
+        public void OnDestroy();
+        public void OnGUI();
+    }
+
+    public class TMP_PackageResourceImporterWindow : UnityEditor.EditorWindow
+    {
+        public TMP_PackageResourceImporterWindow() {}
+        public static void ShowPackageImporterWindow();
+    }
+
+    public struct TMP_PageInfo
+    {
+        public float ascender;
+        public float baseLine;
+        public float descender;
+        public int firstCharacterIndex;
+        public int lastCharacterIndex;
+    }
+
+    public class TMP_ResourceManager
+    {
+        public TMP_ResourceManager() {}
+        public static void AddFontAsset(TMP_FontAsset fontAsset);
+        public static void ClearFontAssetGlyphCache();
+        public static void RemoveFontAsset(TMP_FontAsset fontAsset);
+    }
+
+    public class TMP_ScrollbarEventHandler : UnityEngine.MonoBehaviour, UnityEngine.EventSystems.IDeselectHandler, UnityEngine.EventSystems.IEventSystemHandler, UnityEngine.EventSystems.IPointerClickHandler, UnityEngine.EventSystems.ISelectHandler
+    {
+        public bool isSelected;
+        public TMP_ScrollbarEventHandler() {}
+        public void OnDeselect(UnityEngine.EventSystems.BaseEventData eventData);
+        public void OnPointerClick(UnityEngine.EventSystems.PointerEventData eventData);
+        public void OnSelect(UnityEngine.EventSystems.BaseEventData eventData);
+    }
+
+    [UnityEngine.RequireComponent(typeof(UnityEngine.CanvasRenderer))] public class TMP_SelectionCaret : UnityEngine.UI.MaskableGraphic
+    {
+        public TMP_SelectionCaret() {}
+        public override void Cull(UnityEngine.Rect clipRect, bool validRect);
+        protected override void UpdateGeometry();
+    }
+
+    [UnityEngine.ExcludeFromPreset] [UnityEngine.HelpURL(@"https://docs.unity3d.com/Packages/com.unity.ugui@2.0/manual/TextMeshPro/Settings.html")] public class TMP_Settings : UnityEngine.ScriptableObject
+    {
+        public static bool autoSizeTextContainer { get; }
+        public static bool clearDynamicDataOnBuild { get; }
+        public static string defaultColorGradientPresetsPath { get; }
+        public static TMP_FontAsset defaultFontAsset { get; set; }
+        public static string defaultFontAssetPath { get; }
+        public static float defaultFontSize { get; }
+        public static TMP_SpriteAsset defaultSpriteAsset { get; set; }
+        public static string defaultSpriteAssetPath { get; }
+        public static TMP_StyleSheet defaultStyleSheet { get; set; }
+        public static float defaultTextAutoSizingMaxRatio { get; }
+        public static float defaultTextAutoSizingMinRatio { get; }
+        public static UnityEngine.Vector2 defaultTextMeshProTextContainerSize { get; }
+        public static UnityEngine.Vector2 defaultTextMeshProUITextContainerSize { get; }
+        public static System.Collections.Generic.List<TMP_Asset> emojiFallbackTextAssets { get; set; }
+        public static bool enableEmojiSupport { get; set; }
+        public static bool enableExtraPadding { get; }
+        [System.Obsolete(@"The ""enableKerning"" property has been deprecated. Use the ""fontFeatures"" property to control what features are enabled by default on newly created text components.")] public static bool enableKerning { get; }
+        public static bool enableParseEscapeCharacters { get; }
+        public static bool enableRaycastTarget { get; }
+        public static bool enableTintAllSprites { get; }
+        public static System.Collections.Generic.List<TMP_FontAsset> fallbackFontAssets { get; set; }
+        public static UnityEngine.TextAsset followingCharacters { get; }
+        public static System.Collections.Generic.List<UnityEngine.TextCore.OTL_FeatureTag> fontFeatures { get; }
+        public static bool getFontFeaturesAtRuntime { get; }
+        public static bool hideSubTextObjects { get; }
+        public static TMP_Settings instance { get; }
+        public static bool isTextObjectScaleStatic { get; set; }
+        public static UnityEngine.TextAsset leadingCharacters { get; }
+        public static TMP_Settings.LineBreakingTable linebreakingRules { get; }
+        public static bool matchMaterialPreset { get; }
+        public static uint missingCharacterSpriteUnicode { get; set; }
+        public static int missingGlyphCharacter { get; set; }
+        public static string styleSheetsResourcePath { get; }
+        public static TextWrappingModes textWrappingMode { get; }
+        public static bool useModernHangulLineBreakingRules { get; set; }
+        public static string version { get; }
+        public static bool warningsDisabled { get; }
+        public TMP_Settings() {}
+        public static async void DelayShowPackageImporterWindow();
+        public static TMP_FontAsset GetFontAsset();
+        public static TMP_Settings GetSettings();
+        public static TMP_SpriteAsset GetSpriteAsset();
+        public static TMP_StyleSheet GetStyleSheet();
+        public static TMP_Settings LoadDefaultSettings();
+        public static void LoadLinebreakingRules();
+        public class LineBreakingTable
+        {
+            public System.Collections.Generic.HashSet<uint> followingCharacters;
+            public System.Collections.Generic.HashSet<uint> leadingCharacters;
+            public LineBreakingTable() {}
+        }
+    }
+
+    public class TMP_Sprite : TMP_TextElement_Legacy
+    {
+        public int hashCode;
+        public string name;
+        public UnityEngine.Vector2 pivot;
+        public UnityEngine.Sprite sprite;
+        public int unicode;
+        public TMP_Sprite() {}
+    }
+
+    [UnityEngine.DisallowMultipleComponent] public class TMP_SpriteAnimator : UnityEngine.MonoBehaviour
+    {
+        public TMP_SpriteAnimator() {}
+        public void DoSpriteAnimation(int currentCharacter, TMP_SpriteAsset spriteAsset, int start, int end, int framerate);
+        public void StopAllAnimations();
+    }
+
+    [UnityEngine.ExcludeFromPreset] [UnityEngine.HelpURL(@"https://docs.unity3d.com/Packages/com.unity.ugui@2.0/manual/TextMeshPro/Sprites.html")] public class TMP_SpriteAsset : TMP_Asset
+    {
+        [UnityEngine.SerializeField] public System.Collections.Generic.List<TMP_SpriteAsset> fallbackSpriteAssets;
+        public System.Collections.Generic.List<TMP_Sprite> spriteInfoList;
+        public UnityEngine.Texture spriteSheet;
+        public System.Collections.Generic.Dictionary<uint, TMP_SpriteCharacter> spriteCharacterLookupTable { get; }
+        public System.Collections.Generic.List<TMP_SpriteCharacter> spriteCharacterTable { get; }
+        public System.Collections.Generic.List<TMP_SpriteGlyph> spriteGlyphTable { get; }
+        public TMP_SpriteAsset() {}
+        public int GetSpriteIndexFromHashcode(int hashCode);
+        public int GetSpriteIndexFromName(string name);
+        public int GetSpriteIndexFromUnicode(uint unicode);
+        public static TMP_SpriteAsset SearchForSpriteByHashCode(TMP_SpriteAsset spriteAsset, int hashCode, bool includeFallbacks, out int spriteIndex);
+        public static TMP_SpriteAsset SearchForSpriteByUnicode(TMP_SpriteAsset spriteAsset, uint unicode, bool includeFallbacks, out int spriteIndex);
+        public void SortGlyphTable();
+        public void UpdateLookupTables();
+    }
+
+    public class TMP_SpriteCharacter : TMP_TextElement
+    {
+        public string name { get; set; }
+        public TMP_SpriteCharacter() {}
+        public TMP_SpriteCharacter(uint unicode, TMP_SpriteGlyph glyph) {}
+        public TMP_SpriteCharacter(uint unicode, TMP_SpriteAsset spriteAsset, TMP_SpriteGlyph glyph) {}
+    }
+
+    public class TMP_SpriteGlyph : UnityEngine.TextCore.Glyph
+    {
+        public UnityEngine.Sprite sprite;
+        public TMP_SpriteGlyph() {}
+        public TMP_SpriteGlyph(uint index, UnityEngine.TextCore.GlyphMetrics metrics, UnityEngine.TextCore.GlyphRect glyphRect, float scale, int atlasIndex) {}
+        public TMP_SpriteGlyph(uint index, UnityEngine.TextCore.GlyphMetrics metrics, UnityEngine.TextCore.GlyphRect glyphRect, float scale, int atlasIndex, UnityEngine.Sprite sprite) {}
+    }
+
+    public struct TMP_SpriteInfo
+    {
+        public int characterIndex;
+        public int spriteIndex;
+        public int vertexIndex;
+    }
+
+    public class TMP_Style
+    {
+        public int hashCode { get; set; }
+        public string name { get; set; }
+        public static TMP_Style NormalStyle { get; }
+        public string styleClosingDefinition { get; }
+        public uint[] styleClosingTagArray { get; }
+        public string styleOpeningDefinition { get; }
+        public uint[] styleOpeningTagArray { get; }
+        public void RefreshStyle();
+    }
+
+    [UnityEngine.ExcludeFromPreset] public class TMP_StyleSheet : UnityEngine.ScriptableObject
+    {
+        public TMP_StyleSheet() {}
+        public TMP_Style GetStyle(int hashCode);
+        public TMP_Style GetStyle(string name);
+        public void RefreshStyles();
+    }
+
+    [UnityEngine.ExecuteAlways] [UnityEngine.RequireComponent(typeof(UnityEngine.MeshRenderer))] public class TMP_SubMesh : UnityEngine.MonoBehaviour
+    {
+        public UnityEngine.Material fallbackMaterial { get; set; }
+        public UnityEngine.Material fallbackSourceMaterial { get; set; }
+        public TMP_FontAsset fontAsset { get; set; }
+        public bool isDefaultMaterial { get; set; }
+        public UnityEngine.Material material { get; set; }
+        public UnityEngine.Mesh mesh { get; set; }
+        public UnityEngine.MeshFilter meshFilter { get; }
+        public float padding { get; set; }
+        public UnityEngine.Renderer renderer { get; }
+        public UnityEngine.Material sharedMaterial { get; set; }
+        public TMP_SpriteAsset spriteAsset { get; set; }
+        public TMP_Text textComponent { get; }
+        public TMP_SubMesh() {}
+        public static TMP_SubMesh AddSubTextObject(TextMeshPro textComponent, MaterialReference materialReference);
+        public void DestroySelf();
+        public float GetPaddingForMaterial();
+        public void SetMaterialDirty();
+        public void SetVerticesDirty();
+        protected void UpdateMaterial();
+        public void UpdateMeshPadding(bool isExtraPadding, bool isUsingBold);
+    }
+
+    [UnityEngine.ExecuteAlways] [UnityEngine.RequireComponent(typeof(UnityEngine.CanvasRenderer))] public class TMP_SubMeshUI : UnityEngine.UI.MaskableGraphic
+    {
+        public UnityEngine.Material fallbackMaterial { get; set; }
+        public UnityEngine.Material fallbackSourceMaterial { get; set; }
+        public TMP_FontAsset fontAsset { get; set; }
+        public bool isDefaultMaterial { get; set; }
+        public override UnityEngine.Texture mainTexture { get; }
+        public override UnityEngine.Material material { get; set; }
+        public override UnityEngine.Material materialForRendering { get; }
+        public UnityEngine.Mesh mesh { get; set; }
+        public float padding { get; set; }
+        public UnityEngine.Material sharedMaterial { get; set; }
+        public TMP_SpriteAsset spriteAsset { get; set; }
+        public TMP_Text textComponent { get; }
+        public TMP_SubMeshUI() {}
+        public static TMP_SubMeshUI AddSubTextObject(TextMeshProUGUI textComponent, MaterialReference materialReference);
+        public override void Cull(UnityEngine.Rect clipRect, bool validRect);
+        public override UnityEngine.Material GetModifiedMaterial(UnityEngine.Material baseMaterial);
+        public float GetPaddingForMaterial();
+        public float GetPaddingForMaterial(UnityEngine.Material mat);
+        protected override void OnDestroy();
+        protected override void OnDisable();
+        protected override void OnEnable();
+        protected override void OnTransformParentChanged();
+        public override void Rebuild(UnityEngine.UI.CanvasUpdate update);
+        public override void RecalculateClipping();
+        public void RefreshMaterial();
+        public override void SetAllDirty();
+        public override void SetLayoutDirty();
+        public override void SetMaterialDirty();
+        public void SetPivotDirty();
+        public override void SetVerticesDirty();
+        protected override void UpdateGeometry();
+        protected override void UpdateMaterial();
+        public void UpdateMeshPadding(bool isExtraPadding, bool isUsingBold);
+    }
+
+    public abstract class TMP_Text : UnityEngine.UI.MaskableGraphic
+    {
+        [UnityEngine.SerializeField] protected bool checkPaddingRequired;
+        protected bool isMaskUpdateRequired;
+        protected static float k_LargeNegativeFloat = -32767f;
+        protected static int k_LargeNegativeInt = -2147483647;
+        protected static UnityEngine.Vector2 k_LargeNegativeVector2;
+        protected static float k_LargePositiveFloat = 32767f;
+        protected static int k_LargePositiveInt = int.MaxValue;
+        protected static UnityEngine.Vector2 k_LargePositiveVector2;
+        protected TMPro.TMP_TextProcessingStack<int> m_actionStack;
+        [UnityEngine.SerializeField] protected System.Collections.Generic.List<UnityEngine.TextCore.OTL_FeatureTag> m_ActiveFontFeatures;
+        protected int m_AutoSizeIterationCount;
+        protected int m_AutoSizeMaxIterationCount = 100;
+        protected bool m_autoSizeTextContainer;
+        protected float m_baselineOffset;
+        protected TMPro.TMP_TextProcessingStack<float> m_baselineOffsetStack;
+        protected TMP_TextElement m_cached_TextElement;
+        protected int m_characterCount;
+        [UnityEngine.SerializeField] protected float m_characterSpacing;
+        protected float m_charWidthAdjDelta;
+        [UnityEngine.SerializeField] protected float m_charWidthMaxAdj;
+        protected TMP_ColorGradient m_colorGradientPreset;
+        protected bool m_colorGradientPresetIsTinted;
+        protected TMPro.TMP_TextProcessingStack<TMP_ColorGradient> m_colorGradientStack;
+        [UnityEngine.SerializeField] protected ColorMode m_colorMode = ColorMode.FourCornersGradient;
+        protected TMPro.TMP_TextProcessingStack<UnityEngine.Color32> m_colorStack;
+        protected float m_cSpacing;
+        protected UnityEngine.Vector3 m_currentEnvMapRotation;
+        protected TMP_FontAsset m_currentFontAsset;
+        protected float m_currentFontSize;
+        protected UnityEngine.Material m_currentMaterial;
+        protected int m_currentMaterialIndex;
+        protected TMP_SpriteAsset m_currentSpriteAsset;
+        protected TMP_SpriteAsset m_defaultSpriteAsset;
+        protected bool m_duoSpace;
+        protected float m_ElementAscender;
+        protected float m_ElementDescender;
+        protected TMP_Text.SpecialCharacter m_Ellipsis;
+        [UnityEngine.SerializeField] protected bool m_enableAutoSizing;
+        [UnityEngine.SerializeField] protected bool m_enableExtraPadding;
+        [UnityEngine.SerializeField] protected bool m_enableKerning;
+        [UnityEngine.SerializeField] protected bool m_enableVertexGradient;
+        [UnityEngine.SerializeField] protected UnityEngine.Color32 m_faceColor;
+        protected int m_firstCharacterOfLine;
+        protected int m_firstOverflowCharacterIndex = -1;
+        protected int m_firstVisibleCharacter;
+        protected int m_firstVisibleCharacterOfLine;
+        protected float m_flexibleHeight = -1f;
+        protected float m_flexibleWidth = -1f;
+        [UnityEngine.SerializeField] protected TMP_FontAsset m_fontAsset;
+        [UnityEngine.SerializeField] protected UnityEngine.Color m_fontColor;
+        [UnityEngine.SerializeField] protected UnityEngine.Color32 m_fontColor32;
+        [UnityEngine.SerializeField] protected VertexGradient m_fontColorGradient;
+        [UnityEngine.SerializeField] protected TMP_ColorGradient m_fontColorGradientPreset;
+        [UnityEngine.SerializeField] protected UnityEngine.Material m_fontMaterial;
+        [UnityEngine.SerializeField] protected UnityEngine.Material[] m_fontMaterials;
+        protected float m_fontScaleMultiplier;
+        [UnityEngine.SerializeField] protected UnityEngine.Material[] m_fontSharedMaterials;
+        [UnityEngine.SerializeField] protected float m_fontSize = -99f;
+        [UnityEngine.SerializeField] protected float m_fontSizeBase = 36f;
+        [UnityEngine.SerializeField] protected float m_fontSizeMax;
+        [UnityEngine.SerializeField] protected float m_fontSizeMin;
+        [UnityEngine.SerializeField] protected FontStyles m_fontStyle;
+        protected FontStyles m_FontStyleInternal;
+        protected TMP_FontStyleStack m_fontStyleStack;
+        [UnityEngine.SerializeField] protected FontWeight m_fontWeight = FontWeight.Regular;
+        protected FontWeight m_FontWeightInternal = FontWeight.Regular;
+        protected TMPro.TMP_TextProcessingStack<FontWeight> m_FontWeightStack;
+        protected UnityEngine.Quaternion m_FXRotation;
+        protected UnityEngine.Vector3 m_FXScale;
+        [UnityEngine.SerializeField] protected VertexSortingOrder m_geometrySortingOrder;
+        protected bool m_hasEnvMapProperty;
+        protected bool m_havePropertiesChanged;
+        protected TMPro.TMP_TextProcessingStack<HighlightState> m_HighlightStateStack;
+        [UnityEngine.SerializeField] protected HorizontalAlignmentOptions m_HorizontalAlignment = HorizontalAlignmentOptions.Left;
+        [UnityEngine.SerializeField] protected TextureMappingOptions m_horizontalMapping;
+        protected UnityEngine.Color32 m_htmlColor;
+        protected bool m_ignoreActiveState;
+        protected bool m_ignoreCulling = true;
+        protected TMPro.TMP_TextProcessingStack<float> m_indentStack;
+        protected bool m_IsAutoSizePointSizeSet;
+        protected bool m_isAwake;
+        protected bool m_isCalculatingPreferredValues;
+        protected bool m_isCharacterWrappingEnabled;
+        [UnityEngine.SerializeField] protected bool m_isCullingEnabled;
+        protected bool m_IsDrivenLineSpacing;
+        protected bool m_isIgnoringAlignment;
+        protected bool m_isLayoutDirty;
+        protected bool m_isMaskingEnabled;
+        protected bool m_isMaterialDirty;
+        protected bool m_isNewPage;
+        protected bool m_isNonBreakingSpace;
+        [UnityEngine.SerializeField] protected bool m_isOrthographic;
+        protected bool m_isOverlay;
+        protected bool m_isPreferredHeightDirty;
+        protected bool m_isPreferredWidthDirty;
+        [UnityEngine.SerializeField] protected bool m_isRichText = true;
+        [UnityEngine.SerializeField] protected bool m_isRightToLeft;
+        protected bool m_isSDFShader;
+        protected bool m_isTextLayoutPhase;
+        [UnityEngine.SerializeField] protected bool m_IsTextObjectScaleStatic;
+        protected bool m_isTextTruncated;
+        protected bool m_isUsingBold;
+        [UnityEngine.SerializeField] protected bool m_isUsingLegacyAnimationComponent;
+        [UnityEngine.SerializeField] protected bool m_isVolumetricText;
+        protected int m_ItalicAngle;
+        protected TMPro.TMP_TextProcessingStack<int> m_ItalicAngleStack;
+        protected int m_LastBaseGlyphIndex;
+        protected int m_lastCharacterOfLine;
+        protected int m_lastVisibleCharacterOfLine;
+        protected UnityEngine.UI.LayoutElement m_LayoutElement;
+        protected int m_layoutPriority;
+        protected float m_lineHeight = -32767f;
+        protected HorizontalAlignmentOptions m_lineJustification;
+        protected TMPro.TMP_TextProcessingStack<HorizontalAlignmentOptions> m_lineJustificationStack;
+        protected int m_lineNumber;
+        protected float m_lineOffset;
+        [UnityEngine.SerializeField] protected float m_lineSpacing;
+        protected float m_lineSpacingDelta;
+        [UnityEngine.SerializeField] protected float m_lineSpacingMax;
+        protected int m_lineVisibleCharacterCount;
+        protected int m_lineVisibleSpaceCount;
+        [UnityEngine.SerializeField] protected TMP_Text m_linkedTextComponent;
+        [UnityEngine.SerializeField] protected UnityEngine.Vector4 m_margin;
+        protected float m_marginHeight;
+        protected float m_marginLeft;
+        protected float m_marginRight;
+        protected float m_marginWidth;
+        protected static System.Collections.Generic.Dictionary<UnityEngine.EntityId, int> m_materialReferenceIndexLookup = new();
+        protected static MaterialReference[] m_materialReferences;
+        protected static TMPro.TMP_TextProcessingStack<MaterialReference> m_materialReferenceStack;
+        protected float m_maxCapHeight;
+        protected float m_maxFontSize;
+        protected float m_maxHeight;
+        protected float m_maxLineAscender;
+        protected float m_maxLineDescender;
+        protected float m_maxTextAscender;
+        protected int m_maxVisibleCharacters = 99999;
+        protected int m_maxVisibleLines = 99999;
+        protected int m_maxVisibleWords = 99999;
+        protected float m_maxWidth;
+        protected UnityEngine.Mesh m_mesh;
+        protected Extents m_meshExtents;
+        protected float m_minFontSize;
+        protected float m_minHeight;
+        protected float m_minWidth;
+        protected float m_monoSpacing;
+        protected UnityEngine.Color32 m_outlineColor;
+        protected float m_outlineWidth;
+        [UnityEngine.SerializeField] protected TextOverflowModes m_overflowMode;
+        [UnityEngine.SerializeField] protected bool m_overrideHtmlColors;
+        protected float m_padding;
+        protected float m_PageAscender;
+        protected int m_pageNumber;
+        [UnityEngine.SerializeField] protected int m_pageToDisplay = 1;
+        [UnityEngine.SerializeField] protected float m_paragraphSpacing;
+        [UnityEngine.SerializeField] protected bool m_parseCtrlCharacters = true;
+        protected float m_preferredHeight;
+        protected float m_preferredWidth;
+        protected UnityEngine.Vector2 m_PreviousPivotPosition;
+        protected UnityEngine.Vector2 m_PreviousRectTransformSize;
+        protected UnityEngine.RectTransform m_rectTransform;
+        protected float m_RenderedHeight;
+        protected float m_RenderedWidth;
+        protected TextRenderFlags m_renderMode = TextRenderFlags.Render;
+        [UnityEngine.SerializeField] protected UnityEngine.Material m_sharedMaterial;
+        protected TMPro.TMP_TextProcessingStack<float> m_sizeStack;
+        protected float m_spacing;
+        protected int m_spriteAnimationID;
+        protected TMP_SpriteAnimator m_spriteAnimator;
+        [UnityEngine.SerializeField] protected TMP_SpriteAsset m_spriteAsset;
+        protected UnityEngine.Color32 m_spriteColor;
+        protected int m_spriteCount;
+        protected int m_spriteIndex;
+        protected float m_startOfLineAscender;
+        protected float m_startOfLineDescender;
+        protected UnityEngine.Color32 m_strikethroughColor;
+        protected TMPro.TMP_TextProcessingStack<UnityEngine.Color32> m_strikethroughColorStack;
+        [UnityEngine.SerializeField] protected TMP_StyleSheet m_StyleSheet;
+        protected float m_tabSpacing;
+        [UnityEngine.SerializeField] [UnityEngine.TextArea(5, 10)] protected string m_text;
+        [UnityEngine.Serialization.FormerlySerializedAs(@"m_lineJustification")] [UnityEngine.SerializeField] protected TextAlignmentOptions m_textAlignment = TextAlignmentOptions.Converted;
+        protected UnityEngine.Vector3[] m_textContainerLocalCorners;
+        protected TMP_TextElementType m_textElementType;
+        protected TMP_TextInfo m_textInfo;
+        [UnityEngine.SerializeField] protected ITextPreprocessor m_TextPreprocessor;
+        [UnityEngine.SerializeField] protected int m_TextStyleHashCode;
+        protected int m_TextStyleStackDepth;
+        protected TMPro.TMP_TextProcessingStack<int>[] m_TextStyleStacks;
+        [UnityEngine.Serialization.FormerlySerializedAs(@"m_enableWordWrapping")] [UnityEngine.SerializeField] protected TextWrappingModes m_TextWrappingMode;
+        [UnityEngine.SerializeField] protected bool m_tintAllSprites;
+        protected bool m_tintSprite;
+        protected int m_totalCharacterCount;
+        protected UnityEngine.Transform m_transform;
+        protected TMP_Text.SpecialCharacter m_Underline;
+        protected UnityEngine.Color32 m_underlineColor;
+        protected TMPro.TMP_TextProcessingStack<UnityEngine.Color32> m_underlineColorStack;
+        [UnityEngine.SerializeField] protected bool m_useMaxVisibleDescender = true;
+        [UnityEngine.SerializeField] protected float m_uvLineOffset;
+        [UnityEngine.SerializeField] protected bool m_VertexBufferAutoSizeReduction;
+        [UnityEngine.SerializeField] protected VerticalAlignmentOptions m_VerticalAlignment = VerticalAlignmentOptions.Top;
+        [UnityEngine.SerializeField] protected TextureMappingOptions m_verticalMapping;
+        protected float m_width = -1f;
+        [UnityEngine.SerializeField] protected float m_wordSpacing;
+        [UnityEngine.SerializeField] protected float m_wordWrappingRatios = 0.4f;
+        protected float m_xAdvance;
+        protected static UnityEngine.Color32 s_colorWhite;
+        protected float tag_Indent;
+        protected float tag_LineIndent;
+        protected bool tag_NoParsing;
+        public static event System.Func<int, string, TMP_FontAsset> OnFontAssetRequest;
+        public static event TMP_Text.MissingCharacterEventCallback OnMissingCharacter;
+        public event System.Action<TMP_TextInfo> OnPreRenderText;
+        public static event System.Func<int, string, TMP_SpriteAsset> OnSpriteAssetRequest;
+        public TextAlignmentOptions alignment { get; set; }
+        public float alpha { get; set; }
+        public virtual bool autoSizeTextContainer { get; set; }
+        public UnityEngine.Bounds bounds { get; }
+        public float characterHorizontalScale { get; set; }
+        public float characterSpacing { get; set; }
+        public float characterWidthAdjustment { get; set; }
+        public override UnityEngine.Color color { get; set; }
+        public VertexGradient colorGradient { get; set; }
+        public TMP_ColorGradient colorGradientPreset { get; set; }
+        public bool emojiFallbackSupport { get; set; }
+        public bool enableAutoSizing { get; set; }
+        public bool enableCulling { get; set; }
+        [System.Obsolete(@"The ""enableKerning"" property has been deprecated. Use the ""fontFeatures"" property to control what features are enabled on the text component.")] public bool enableKerning { get; set; }
+        public bool enableVertexGradient { get; set; }
+        [System.Obsolete(@"The enabledWordWrapping property is now obsolete. Please use the textWrappingMode property instead.")] public bool enableWordWrapping { get; set; }
+        public bool extraPadding { get; set; }
+        public UnityEngine.Color32 faceColor { get; set; }
+        public int firstOverflowCharacterIndex { get; }
+        public int firstVisibleCharacter { get; set; }
+        public float flexibleHeight { get; }
+        public float flexibleWidth { get; }
+        public TMP_FontAsset font { get; set; }
+        public System.Collections.Generic.List<UnityEngine.TextCore.OTL_FeatureTag> fontFeatures { get; set; }
+        public UnityEngine.Material fontMaterial { get; set; }
+        public virtual UnityEngine.Material[] fontMaterials { get; set; }
+        public virtual UnityEngine.Material fontSharedMaterial { get; set; }
+        public virtual UnityEngine.Material[] fontSharedMaterials { get; set; }
+        public float fontSize { get; set; }
+        public float fontSizeMax { get; set; }
+        public float fontSizeMin { get; set; }
+        public FontStyles fontStyle { get; set; }
+        public FontWeight fontWeight { get; set; }
+        public VertexSortingOrder geometrySortingOrder { get; set; }
+        public bool havePropertiesChanged { get; set; }
+        public HorizontalAlignmentOptions horizontalAlignment { get; set; }
+        public TextureMappingOptions horizontalMapping { get; set; }
+        public bool ignoreVisibility { get; set; }
+        public bool isOrthographic { get; set; }
+        public bool isOverlay { get; set; }
+        public bool isRightToLeftText { get; set; }
+        public bool isTextObjectScaleStatic { get; set; }
+        public bool isTextOverflowing { get; }
+        public bool isTextTruncated { get; }
+        public bool isUsingBold { get; }
+        public bool isUsingLegacyAnimationComponent { get; set; }
+        public bool isVolumetricText { get; set; }
+        protected UnityEngine.UI.LayoutElement layoutElement { get; }
+        public int layoutPriority { get; }
+        public float lineSpacing { get; set; }
+        public float lineSpacingAdjustment { get; set; }
+        public TMP_Text linkedTextComponent { get; set; }
+        public float mappingUvLineOffset { get; set; }
+        public virtual UnityEngine.Vector4 margin { get; set; }
+        public float maxHeight { get; }
+        public int maxVisibleCharacters { get; set; }
+        public int maxVisibleLines { get; set; }
+        public int maxVisibleWords { get; set; }
+        public float maxWidth { get; }
+        public virtual UnityEngine.Mesh mesh { get; }
+        public float minHeight { get; }
+        public float minWidth { get; }
+        public UnityEngine.Color32 outlineColor { get; set; }
+        public float outlineWidth { get; set; }
+        public TextOverflowModes overflowMode { get; set; }
+        public bool overrideColorTags { get; set; }
+        public int pageToDisplay { get; set; }
+        public float paragraphSpacing { get; set; }
+        public bool parseCtrlCharacters { get; set; }
+        public float pixelsPerUnit { get; }
+        public virtual float preferredHeight { get; }
+        public virtual float preferredWidth { get; }
+        public UnityEngine.RectTransform rectTransform { get; }
+        public virtual float renderedHeight { get; }
+        public virtual float renderedWidth { get; }
+        public TextRenderFlags renderMode { get; set; }
+        public bool richText { get; set; }
+        protected TMP_SpriteAnimator spriteAnimator { get; }
+        public TMP_SpriteAsset spriteAsset { get; set; }
+        public TMP_StyleSheet styleSheet { get; set; }
+        public virtual string text { get; set; }
+        public UnityEngine.Bounds textBounds { get; }
+        public TMP_TextInfo textInfo { get; }
+        public ITextPreprocessor textPreprocessor { get; set; }
+        public TMP_Style textStyle { get; set; }
+        public TextWrappingModes textWrappingMode { get; set; }
+        public bool tintAllSprites { get; set; }
+        public UnityEngine.Transform transform { get; }
+        public bool useMaxVisibleDescender { get; set; }
+        public bool vertexBufferAutoSizeReduction { get; set; }
+        public VerticalAlignmentOptions verticalAlignment { get; set; }
+        public TextureMappingOptions verticalMapping { get; set; }
+        public float wordSpacing { get; set; }
+        public float wordWrappingRatios { get; set; }
+        protected TMP_Text() {}
+        protected void AdjustLineOffset(int startIndex, int endIndex, float offset);
+        protected virtual UnityEngine.Vector2 CalculatePreferredValues(ref float fontSize, UnityEngine.Vector2 marginSize, bool isTextAutoSizingEnabled, TextWrappingModes textWrapMode);
+        public virtual void ClearMesh();
+        public virtual void ClearMesh(bool uploadGeometry);
+        public virtual void ComputeMarginSize();
+        protected float ConvertToFloat(char[] chars, int startIndex, int length);
+        protected float ConvertToFloat(char[] chars, int startIndex, int length, out int lastIndex);
+        protected virtual UnityEngine.Material CreateMaterialInstance(UnityEngine.Material source);
+        public override void CrossFadeAlpha(float alpha, float duration, bool ignoreTimeScale);
+        public override void CrossFadeColor(UnityEngine.Color targetColor, float duration, bool ignoreTimeScale, bool useAlpha);
+        protected virtual void DestroySubMeshObjects();
+        protected void DoMissingGlyphCallback(int unicode, int stringIndex, TMP_FontAsset fontAsset);
+        protected virtual void DrawTextHighlight(UnityEngine.Vector3 start, UnityEngine.Vector3 end, ref int index, UnityEngine.Color32 highlightColor);
+        protected virtual void DrawUnderlineMesh(UnityEngine.Vector3 start, UnityEngine.Vector3 end, ref int index, float startScale, float endScale, float maxScale, float sdfScale, UnityEngine.Color32 underlineColor);
+        protected virtual void FillCharacterVertexBuffers(int i);
+        protected virtual void FillCharacterVertexBuffers(int i, bool isVolumetric);
+        protected virtual void FillSpriteVertexBuffers(int i);
+        public virtual void ForceMeshUpdate(bool ignoreActiveState = false, bool forceTextReparsing = false);
+        protected virtual UnityEngine.Bounds GetCompoundBounds();
+        protected void GetEllipsisSpecialCharacter(TMP_FontAsset fontAsset);
+        protected TMP_FontAsset GetFontAssetForWeight(int fontWeight);
+        protected virtual UnityEngine.Material GetMaterial(UnityEngine.Material mat);
+        protected virtual UnityEngine.Material[] GetMaterials(UnityEngine.Material[] mats);
+        protected virtual float GetPaddingForMaterial();
+        protected virtual float GetPaddingForMaterial(UnityEngine.Material mat);
+        public virtual string GetParsedText();
+        protected float GetPreferredHeight();
+        public UnityEngine.Vector2 GetPreferredValues();
+        public UnityEngine.Vector2 GetPreferredValues(string text);
+        public UnityEngine.Vector2 GetPreferredValues(float width, float height);
+        public UnityEngine.Vector2 GetPreferredValues(string text, float width, float height);
+        protected float GetPreferredWidth();
+        protected float GetRenderedHeight(bool onlyVisibleCharacters);
+        public UnityEngine.Vector2 GetRenderedValues();
+        public UnityEngine.Vector2 GetRenderedValues(bool onlyVisibleCharacters);
+        protected float GetRenderedWidth(bool onlyVisibleCharacters);
+        protected virtual UnityEngine.Material[] GetSharedMaterials();
+        protected void GetSpecialCharacters(TMP_FontAsset fontAsset);
+        protected UnityEngine.Bounds GetTextBounds();
+        protected UnityEngine.Bounds GetTextBounds(bool onlyVisibleCharacters);
+        protected virtual UnityEngine.Vector3[] GetTextContainerLocalCorners();
+        public virtual TMP_TextInfo GetTextInfo(string text);
+        protected void GetUnderlineSpecialCharacter(TMP_FontAsset fontAsset);
+        protected UnityEngine.Color32 HexCharsToColor(char[] hexChars, int tagCount);
+        protected UnityEngine.Color32 HexCharsToColor(char[] hexChars, int startIndex, int length);
+        protected uint HexToInt(char hex);
+        protected virtual void InternalCrossFadeAlpha(float alpha, float duration, bool ignoreTimeScale);
+        protected virtual void InternalCrossFadeColor(UnityEngine.Color targetColor, float duration, bool ignoreTimeScale, bool useAlpha);
+        protected void LoadDefaultSettings();
+        protected virtual void LoadFontAsset();
+        protected float PackUV(float x, float y);
+        protected UnityEngine.Vector2 PackUV(float x, float y, float scale);
+        protected void ParseInputText();
+        protected void ReplaceTagWithCharacter(int[] chars, int insertionIndex, int tagLength, char c);
+        protected void ResizeLineExtents(int size);
+        protected virtual void SaveGlyphVertexInfo(float padding, float style_padding, UnityEngine.Color32 vertexColor);
+        protected virtual void SaveSpriteVertexInfo(UnityEngine.Color32 vertexColor);
+        protected virtual void SetActiveSubMeshes(bool state);
+        public void SetCharArray(char[] sourceText);
+        public void SetCharArray(char[] sourceText, int start, int length);
+        protected virtual void SetCulling();
+        protected virtual void SetFaceColor(UnityEngine.Color32 color);
+        protected virtual void SetFontBaseMaterial(UnityEngine.Material mat);
+        protected virtual void SetOutlineColor(UnityEngine.Color32 color);
+        protected virtual void SetOutlineThickness(float thickness);
+        protected virtual void SetShaderDepth();
+        protected virtual void SetSharedMaterial(UnityEngine.Material mat);
+        protected virtual void SetSharedMaterials(UnityEngine.Material[] materials);
+        public void SetText(char[] sourceText);
+        public void SetText(string sourceText);
+        public void SetText(System.Text.StringBuilder sourceText);
+        [System.Obsolete(@"Use the SetText(string) function instead.")] public void SetText(string sourceText, bool syncTextInputBox = true);
+        public void SetText(string sourceText, float arg0);
+        public void SetText(char[] sourceText, int start, int length);
+        public void SetText(string sourceText, float arg0, float arg1);
+        public void SetText(string sourceText, float arg0, float arg1, float arg2);
+        public void SetText(string sourceText, float arg0, float arg1, float arg2, float arg3);
+        public void SetText(string sourceText, float arg0, float arg1, float arg2, float arg3, float arg4);
+        public void SetText(string sourceText, float arg0, float arg1, float arg2, float arg3, float arg4, float arg5);
+        public void SetText(string sourceText, float arg0, float arg1, float arg2, float arg3, float arg4, float arg5, float arg6);
+        public void SetText(string sourceText, float arg0, float arg1, float arg2, float arg3, float arg4, float arg5, float arg6, float arg7);
+        protected void SetTextSortingOrder(int[] order);
+        protected void SetTextSortingOrder(VertexSortingOrder order);
+        protected void SetVertexColorGradient(TMP_ColorGradient gradient);
+        public virtual void SetVertices(UnityEngine.Vector3[] vertices);
+        public virtual void UpdateGeometry(UnityEngine.Mesh mesh, int index);
+        public virtual void UpdateMeshPadding();
+        public virtual void UpdateVertexData();
+        public virtual void UpdateVertexData(TMP_VertexDataUpdateFlags flags);
+        protected struct CharacterSubstitution
+        {
+            public int index;
+            public uint unicode;
+            public CharacterSubstitution(int index, uint unicode) {}
+        }
+        public delegate void MissingCharacterEventCallback(int unicode, int stringIndex, string text, TMP_FontAsset fontAsset, TMP_Text textComponent);
+        protected struct SpecialCharacter
+        {
+            public TMP_Character character;
+            public TMP_FontAsset fontAsset;
+            public UnityEngine.Material material;
+            public int materialIndex;
+            public SpecialCharacter(TMP_Character character, int materialIndex) {}
+        }
+    }
+
+    public class TMP_TextElement
+    {
+        public TextElementType elementType { get; }
+        public UnityEngine.TextCore.Glyph glyph { get; set; }
+        public uint glyphIndex { get; set; }
+        public float scale { get; set; }
+        public TMP_Asset textAsset { get; set; }
+        public uint unicode { get; set; }
+        public TMP_TextElement() {}
+    }
+
+    public class TMP_TextElement_Legacy
+    {
+        public float height;
+        public int id;
+        public float scale;
+        public float width;
+        public float x;
+        public float xAdvance;
+        public float xOffset;
+        public float y;
+        public float yOffset;
+        public TMP_TextElement_Legacy() {}
+    }
+
+    public enum TMP_TextElementType
+    {
+        Character = 0,
+        Sprite = 1,
+    }
+
+    public class TMP_TextInfo
+    {
+        public int characterCount;
+        public TMP_CharacterInfo[] characterInfo;
+        public int lineCount;
+        public TMP_LineInfo[] lineInfo;
+        public int linkCount;
+        public TMP_LinkInfo[] linkInfo;
+        public int materialCount;
+        public TMP_MeshInfo[] meshInfo;
+        public int pageCount;
+        public TMP_PageInfo[] pageInfo;
+        public int spaceCount;
+        public int spriteCount;
+        public TMP_Text textComponent;
+        public int wordCount;
+        public TMP_WordInfo[] wordInfo;
+        public TMP_TextInfo() {}
+        public TMP_TextInfo(TMP_Text textComponent) {}
+        public void ClearAllMeshInfo();
+        public void ClearMeshInfo(bool updateMesh);
+        public void ClearUnusedVertices(MaterialReference[] materials);
+        public TMP_MeshInfo[] CopyMeshInfoVertexData();
+        public void ResetVertexLayout(bool isVolumetric);
+        public static void Resize<T>(ref T[] array, int size);
+        public static void Resize<T>(ref T[] array, int size, bool isBlockAllocated);
+    }
+
+    public class TMP_TextParsingUtilities
+    {
+        public static TMP_TextParsingUtilities instance { get; }
+        public TMP_TextParsingUtilities() {}
+        public static int GetHashCode(string s);
+        public static int GetHashCodeCaseSensitive(string s);
+        public static bool IsHighSurrogate(uint c);
+        public static bool IsLowSurrogate(uint c);
+        public static char ToLowerASCIIFast(char c);
+        public static uint ToLowerASCIIFast(uint c);
+        public static char ToUpperASCIIFast(char c);
+        public static uint ToUpperASCIIFast(uint c);
+    }
+
+    [System.Diagnostics.DebuggerDisplay(@"Item count = {m_Count}")] public struct TMP_TextProcessingStack<T>
+    {
+        public int index;
+        public T[] itemStack;
+        public int Count { get; }
+        public T current { get; }
+        public int rolloverSize { get; set; }
+        public TMP_TextProcessingStack(int capacity) {}
+        public TMP_TextProcessingStack(T[] stack) {}
+        public TMP_TextProcessingStack(int capacity, int rolloverSize) {}
+        public void Add(T item);
+        public void Clear();
+        public T CurrentItem();
+        public T Peek();
+        public T Pop();
+        public T PreviousItem();
+        public void Push(T item);
+        public T Remove();
+        public void SetDefault(T item);
+    }
+
+    public static class TMP_TextUtilities
+    {
+        public static float DistanceToLine(UnityEngine.Vector3 a, UnityEngine.Vector3 b, UnityEngine.Vector3 point);
+        public static int FindIntersectingCharacter(TMP_Text text, UnityEngine.Vector3 position, UnityEngine.Camera camera, bool visibleOnly);
+        public static int FindIntersectingLine(TMP_Text text, UnityEngine.Vector3 position, UnityEngine.Camera camera);
+        public static int FindIntersectingLink(TMP_Text text, UnityEngine.Vector3 position, UnityEngine.Camera camera);
+        public static int FindIntersectingWord(TMP_Text text, UnityEngine.Vector3 position, UnityEngine.Camera camera);
+        public static int FindNearestCharacter(TMP_Text text, UnityEngine.Vector3 position, UnityEngine.Camera camera, bool visibleOnly);
+        public static int FindNearestCharacterOnLine(TMP_Text text, UnityEngine.Vector3 position, int line, UnityEngine.Camera camera, bool visibleOnly);
+        public static int FindNearestLine(TMP_Text text, UnityEngine.Vector3 position, UnityEngine.Camera camera);
+        public static int FindNearestLink(TMP_Text text, UnityEngine.Vector3 position, UnityEngine.Camera camera);
+        public static int FindNearestWord(TMP_Text text, UnityEngine.Vector3 position, UnityEngine.Camera camera);
+        public static int GetCursorIndexFromPosition(TMP_Text textComponent, UnityEngine.Vector3 position, UnityEngine.Camera camera);
+        public static int GetCursorIndexFromPosition(TMP_Text textComponent, UnityEngine.Vector3 position, UnityEngine.Camera camera, out CaretPosition cursor);
+        public static int GetHashCode(string s);
+        public static uint GetHashCodeCaseInSensitive(string s);
+        public static int GetSimpleHashCode(string s);
+        public static uint GetSimpleHashCodeLowercase(string s);
+        public static int HexToInt(char hex);
+        public static bool IsIntersectingRectTransform(UnityEngine.RectTransform rectTransform, UnityEngine.Vector3 position, UnityEngine.Camera camera);
+        public static bool ScreenPointToWorldPointInRectangle(UnityEngine.Transform transform, UnityEngine.Vector2 screenPoint, UnityEngine.Camera cam, out UnityEngine.Vector3 worldPoint);
+        public static int StringHexToInt(string s);
+        public static char ToLowerFast(char c);
+        public static char ToUpperFast(char c);
+    }
+
+    public class TMP_UpdateManager
+    {
+        public static void RegisterTextElementForCullingUpdate(TMP_Text element);
+        public static void RegisterTextElementForGraphicRebuild(TMP_Text element);
+        public static void RegisterTextElementForLayoutRebuild(TMP_Text element);
+        public static void UnRegisterTextElementForRebuild(TMP_Text element);
+    }
+
+    public class TMP_UpdateRegistry
+    {
+        public static TMP_UpdateRegistry instance { get; }
+        protected TMP_UpdateRegistry() {}
+        public static void RegisterCanvasElementForGraphicRebuild(UnityEngine.UI.ICanvasElement element);
+        public static void RegisterCanvasElementForLayoutRebuild(UnityEngine.UI.ICanvasElement element);
+        public static void UnRegisterCanvasElementForRebuild(UnityEngine.UI.ICanvasElement element);
+    }
+
+    public struct TMP_Vertex
+    {
+        public UnityEngine.Color32 color;
+        public UnityEngine.Vector3 position;
+        public UnityEngine.Vector4 uv;
+        public UnityEngine.Vector2 uv2;
+        public static TMP_Vertex zero { get; }
+    }
+
+    public enum TMP_VertexDataUpdateFlags
+    {
+        None = 0,
+        Vertices = 1,
+        Uv0 = 2,
+        Uv2 = 4,
+        Uv4 = 8,
+        Colors32 = 16,
+        All = 255,
+    }
+
+    public struct TMP_WordInfo
+    {
+        public int characterCount;
+        public int firstCharacterIndex;
+        public int lastCharacterIndex;
+        public TMP_Text textComponent;
+        public string GetWord();
+    }
+
+    public static class TMPro_EventManager
+    {
+        public static readonly TMPro.FastAction<UnityEngine.Object> COLOR_GRADIENT_PROPERTY_EVENT = new();
+        public static readonly TMPro.FastAction<object, Compute_DT_EventArgs> COMPUTE_DT_EVENT = new();
+        public static readonly TMPro.FastAction<UnityEngine.GameObject, UnityEngine.Material, UnityEngine.Material> DRAG_AND_DROP_MATERIAL_EVENT = new();
+        public static readonly TMPro.FastAction<bool, UnityEngine.Object> FONT_PROPERTY_EVENT = new();
+        public static readonly TMPro.FastAction<bool, UnityEngine.Material> MATERIAL_PROPERTY_EVENT = new();
+        public static readonly FastAction RESOURCE_LOAD_EVENT = new();
+        public static readonly TMPro.FastAction<bool, UnityEngine.Object> SPRITE_ASSET_PROPERTY_EVENT = new();
+        public static readonly TMPro.FastAction<UnityEngine.Object> TEXT_CHANGED_EVENT = new();
+        public static readonly TMPro.FastAction<bool> TEXT_STYLE_PROPERTY_EVENT = new();
+        public static readonly TMPro.FastAction<bool, UnityEngine.Object> TEXTMESHPRO_PROPERTY_EVENT = new();
+        public static readonly TMPro.FastAction<bool, UnityEngine.Object> TEXTMESHPRO_UGUI_PROPERTY_EVENT = new();
+        public static readonly FastAction TMP_SETTINGS_PROPERTY_EVENT = new();
+        public static void ON_COLOR_GRADIENT_PROPERTY_CHANGED(UnityEngine.Object obj);
+        public static void ON_COMPUTE_DT_EVENT(object Sender, Compute_DT_EventArgs e);
+        public static void ON_DRAG_AND_DROP_MATERIAL_CHANGED(UnityEngine.GameObject sender, UnityEngine.Material currentMaterial, UnityEngine.Material newMaterial);
+        public static void ON_FONT_PROPERTY_CHANGED(bool isChanged, UnityEngine.Object obj);
+        public static void ON_MATERIAL_PROPERTY_CHANGED(bool isChanged, UnityEngine.Material mat);
+        public static void ON_RESOURCES_LOADED();
+        public static void ON_SPRITE_ASSET_PROPERTY_CHANGED(bool isChanged, UnityEngine.Object obj);
+        public static void ON_TEXT_CHANGED(UnityEngine.Object obj);
+        public static void ON_TEXT_STYLE_PROPERTY_CHANGED(bool isChanged);
+        public static void ON_TEXTMESHPRO_PROPERTY_CHANGED(bool isChanged, UnityEngine.Object obj);
+        public static void ON_TEXTMESHPRO_UGUI_PROPERTY_CHANGED(bool isChanged, UnityEngine.Object obj);
+        public static void ON_TMP_SETTINGS_CHANGED();
+    }
+
+    public static class TMPro_ExtensionMethods
+    {
+        public static string ArrayToString(this char[] chars);
+        public static bool Compare(this UnityEngine.Color a, UnityEngine.Color b);
+        public static bool Compare(this UnityEngine.Color32 a, UnityEngine.Color32 b);
+        public static bool Compare(this UnityEngine.Quaternion q1, UnityEngine.Quaternion q2, int accuracy);
+        public static bool Compare(this UnityEngine.Vector3 v1, UnityEngine.Vector3 v2, int accuracy);
+        public static bool CompareRGB(this UnityEngine.Color a, UnityEngine.Color b);
+        public static bool CompareRGB(this UnityEngine.Color32 a, UnityEngine.Color32 b);
+        public static int FindInstanceID<T>(this System.Collections.Generic.List<T> list, T target) where T : UnityEngine.Object;
+        public static string IntToString(this int[] unicodes);
+        public static string IntToString(this int[] unicodes, int start, int length);
+        public static UnityEngine.Color MinAlpha(this UnityEngine.Color c1, UnityEngine.Color c2);
+        public static UnityEngine.Color32 Multiply(this UnityEngine.Color32 c1, UnityEngine.Color32 c2);
+        public static UnityEngine.Color32 Tint(this UnityEngine.Color32 c1, float tint);
+        public static UnityEngine.Color32 Tint(this UnityEngine.Color32 c1, UnityEngine.Color32 c2);
+        public static int[] ToIntArray(this string text);
+    }
+
+    public struct VertexGradient
+    {
+        public UnityEngine.Color bottomLeft;
+        public UnityEngine.Color bottomRight;
+        public UnityEngine.Color topLeft;
+        public UnityEngine.Color topRight;
+        public VertexGradient(UnityEngine.Color color) {}
+        public VertexGradient(UnityEngine.Color color0, UnityEngine.Color color1, UnityEngine.Color color2, UnityEngine.Color color3) {}
+    }
+
+    public enum VertexSortingOrder
+    {
+        Normal = 0,
+        Reverse = 1,
+    }
+
+    public enum VerticalAlignmentOptions
+    {
+        Top = 256,
+        Middle = 512,
+        Bottom = 1024,
+        Baseline = 2048,
+        Geometry = 4096,
+        Capline = 8192,
+    }
+}
+
+namespace TMPro.SpriteAssetUtilities
+{
+    public enum SpriteAssetImportFormats
+    {
+        None = 0,
+        TexturePackerJsonArray = 1,
+    }
+
+    public class TexturePacker_JsonArray
+    {
+        public TexturePacker_JsonArray() {}
+        public struct Frame
+        {
+            public string filename;
+            public TexturePacker_JsonArray.SpriteFrame frame;
+            public UnityEngine.Vector2 pivot;
+            public bool rotated;
+            public TexturePacker_JsonArray.SpriteSize sourceSize;
+            public TexturePacker_JsonArray.SpriteFrame spriteSourceSize;
+            public bool trimmed;
+        }
+        public struct Meta
+        {
+            public string app;
+            public string format;
+            public string image;
+            public float scale;
+            public TexturePacker_JsonArray.SpriteSize size;
+            public string smartupdate;
+            public string version;
+        }
+        public class SpriteDataObject
+        {
+            public System.Collections.Generic.List<TexturePacker_JsonArray.Frame> frames;
+            public TexturePacker_JsonArray.Meta meta;
+            public SpriteDataObject() {}
+        }
+        public struct SpriteFrame
+        {
+            public float h;
+            public float w;
+            public float x;
+            public float y;
+            public override string ToString();
+        }
+        public struct SpriteSize
+        {
+            public float h;
+            public float w;
+            public override string ToString();
+        }
+    }
+}
+
+namespace UnityEngine.TextCore
+{
+    public enum OTL_FeatureTag : uint
+    {
+        kern = 1801810542,
+        liga = 1818847073,
+        mark = 1835102827,
+        mkmk = 1835756907,
+    }
+}

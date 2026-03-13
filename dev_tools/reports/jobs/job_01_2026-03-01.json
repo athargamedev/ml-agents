@@ -1,0 +1,40 @@
+{
+  "job_id": "01",
+  "title": "NPC SemanticTag + Profile Audit",
+  "generated_utc": "2026-03-01T05:40:40.758533+00:00",
+  "result": {
+    "npcs": [
+      {
+        "id": "NPC_ForgeKeeper",
+        "displayName": "Forge Keeper",
+        "description": "A master craftsman, providing practical advice and guidance to those seeking to hone their skills.",
+        "faceMainCamera": true,
+        "addCollisionAuth": true,
+        "issues": [
+          "Empty DisplayName or Description fields"
+        ]
+      },
+      {
+        "id": "NPC_Archivist",
+        "displayName": "Archivist",
+        "description": "A keeper of ancient knowledge, providing insight into the mysteries of the past.",
+        "faceMainCamera": true,
+        "addCollisionAuth": false,
+        "issues": [
+          "Inconsistent m_FaceMainCamera values"
+        ]
+      },
+      {
+        "id": "NPC_StormOracle",
+        "displayName": "Storm Oracle",
+        "description": "A seer of storms, providing tactical guidance and insight into the workings of the elements.",
+        "faceMainCamera": true,
+        "addCollisionAuth": false,
+        "issues": [
+          "Inconsistent m_FaceMainCamera values"
+        ]
+      }
+    ],
+    "summary": "Consistency fixes for NPC Inspector data"
+  }
+}

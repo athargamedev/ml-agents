@@ -1,0 +1,22 @@
+{
+    "name": "Network_Game.Dialogue.Editor",
+    "rootNamespace": "Network_Game.Dialogue.Editor",
+    "references": [
+        "Network_Game",
+        "Unity.Netcode.Runtime",
+        "MCPForUnity.Editor"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Newtonsoft.Json.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

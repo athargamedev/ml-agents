@@ -1,0 +1,41 @@
+// This file is generated. Do not modify by hand.
+// XML documentation file not found. To check if public methods have XML comments,
+// make sure the XML doc file is present and located next to the scraped dll
+public class <NetStats_TypeRegistration>
+{
+}
+
+namespace Unity.Multiplayer.Tools.MetricTypes
+{
+    [Unity.Multiplayer.Tools.NetStats.MetricTypeEnum(DisplayName = @"Built-In Metrics")] public enum DirectedMetricType
+    {
+        [Unity.Multiplayer.Tools.NetStats.MetricMetadata(Units = Unity.Multiplayer.Tools.NetStats.Units.Bytes)] TotalBytesReceived = 5,
+        [Unity.Multiplayer.Tools.NetStats.MetricMetadata(Units = Unity.Multiplayer.Tools.NetStats.Units.Bytes)] TotalBytesSent = 6,
+        [Unity.Multiplayer.Tools.NetStats.MetricMetadata(DisplayName = @"RPCs Received")] RpcReceived = 9,
+        [Unity.Multiplayer.Tools.NetStats.MetricMetadata(DisplayName = @"RPCs Sent")] RpcSent = 10,
+        [Unity.Multiplayer.Tools.NetStats.MetricMetadata(DisplayName = @"Named Messages Received")] NamedMessageReceived = 13,
+        [Unity.Multiplayer.Tools.NetStats.MetricMetadata(DisplayName = @"Named Messages Sent")] NamedMessageSent = 14,
+        [Unity.Multiplayer.Tools.NetStats.MetricMetadata(DisplayName = @"Unnamed Messages Received")] UnnamedMessageReceived = 17,
+        [Unity.Multiplayer.Tools.NetStats.MetricMetadata(DisplayName = @"Unnamed Messages Sent")] UnnamedMessageSent = 18,
+        [Unity.Multiplayer.Tools.NetStats.MetricMetadata(DisplayName = @"Network Variable Deltas Received")] NetworkVariableDeltaReceived = 21,
+        [Unity.Multiplayer.Tools.NetStats.MetricMetadata(DisplayName = @"Network Variable Deltas Sent")] NetworkVariableDeltaSent = 22,
+        [Unity.Multiplayer.Tools.NetStats.MetricMetadata(DisplayName = @"Objects Spawned Received")] ObjectSpawnedReceived = 25,
+        [Unity.Multiplayer.Tools.NetStats.MetricMetadata(DisplayName = @"Objects Spawned Sent")] ObjectSpawnedSent = 26,
+        [Unity.Multiplayer.Tools.NetStats.MetricMetadata(DisplayName = @"Objects Destroyed Received")] ObjectDestroyedReceived = 29,
+        [Unity.Multiplayer.Tools.NetStats.MetricMetadata(DisplayName = @"Objects Destroyed Sent")] ObjectDestroyedSent = 30,
+        [Unity.Multiplayer.Tools.NetStats.MetricMetadata(DisplayName = @"Ownership Changes Received")] OwnershipChangeReceived = 33,
+        [Unity.Multiplayer.Tools.NetStats.MetricMetadata(DisplayName = @"Ownership Changes Sent")] OwnershipChangeSent = 34,
+        [Unity.Multiplayer.Tools.NetStats.MetricMetadata(DisplayName = @"Server Logs Received")] ServerLogReceived = 37,
+        [Unity.Multiplayer.Tools.NetStats.MetricMetadata(DisplayName = @"Server Logs Sent")] ServerLogSent = 38,
+        [Unity.Multiplayer.Tools.NetStats.MetricMetadata(DisplayName = @"Scene Events Received")] SceneEventReceived = 41,
+        [Unity.Multiplayer.Tools.NetStats.MetricMetadata(DisplayName = @"Scene Events Sent")] SceneEventSent = 42,
+        [Unity.Multiplayer.Tools.NetStats.MetricMetadata(DisplayName = @"Network Messages Received")] NetworkMessageReceived = 45,
+        [Unity.Multiplayer.Tools.NetStats.MetricMetadata(DisplayName = @"Network Messages Sent")] NetworkMessageSent = 46,
+        PacketsReceived = 49,
+        PacketsSent = 50,
+        [Unity.Multiplayer.Tools.NetStats.MetricMetadata(DisplayName = @"RTT To Server", MetricKind = Unity.Multiplayer.Tools.NetStats.MetricKind.Gauge, Units = Unity.Multiplayer.Tools.NetStats.Units.Seconds)] RttToServer = 55,
+        [Unity.Multiplayer.Tools.NetStats.MetricMetadata(MetricKind = Unity.Multiplayer.Tools.NetStats.MetricKind.Gauge)] NetworkObjects = 59,
+        [Unity.Multiplayer.Tools.NetStats.MetricMetadata(MetricKind = Unity.Multiplayer.Tools.NetStats.MetricKind.Gauge)] Connections = 63,
+        [Unity.Multiplayer.Tools.NetStats.MetricMetadata(DisplayAsPercentage = true, MetricKind = Unity.Multiplayer.Tools.NetStats.MetricKind.Gauge)] PacketLoss = 65,
+    }
+}

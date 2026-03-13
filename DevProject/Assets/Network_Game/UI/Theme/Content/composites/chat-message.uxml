@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Network_Game/UI/Theme/Content/composites/chat-message.uss?fileID=7433441132597879392&amp;guid=cb1bf4f2c98ed374e84df60e144e12e3&amp;type=3#chat-message"/>
+    <ui:VisualElement name="VisualElement" style="font-size: 12px;">
+        <ui:Label text="Robi" name="sender" class="headline-small chat-message__sender"/>
+        <ui:Label text="Yes i really like what you are writing me here its awesome." name="message" class="chat-message__text blocks-chat-message__text"/>
+    </ui:VisualElement>
+</ui:UXML>

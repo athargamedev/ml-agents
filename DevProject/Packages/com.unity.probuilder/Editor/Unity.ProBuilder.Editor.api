@@ -1,0 +1,177 @@
+// This file is generated. Do not modify by hand.
+// XML documentation file not found. To check if public methods have XML comments,
+// make sure the XML doc file is present and located next to the scraped dll
+namespace UnityEditor.ProBuilder
+{
+    [UnityEditor.EditorTools.EditorTool(@"Create PolyShape", null, toolPriority = 1001)] [UnityEngine.Icon(@"Packages/com.unity.probuilder/Content/Icons/Toolbar/CreatePolyShape.png")] public class DrawPolyShapeTool : PolyShapeTool
+    {
+        public override UnityEngine.GUIContent toolbarIcon { get; }
+        public DrawPolyShapeTool() {}
+        public override void OnActivated();
+        protected override void OnObjectSelectionChanged();
+        public override void OnToolGUI(EditorWindow window);
+        public override void OnWillBeDeactivated();
+    }
+
+    public static class EditorMeshUtility
+    {
+        public static event System.Action<UnityEngine.ProBuilder.ProBuilderMesh, UnityEngine.Mesh> meshOptimized;
+        public static void Optimize(this UnityEngine.ProBuilder.ProBuilderMesh mesh, bool generateLightmapUVs = false);
+        public static void RebuildColliders(this UnityEngine.ProBuilder.ProBuilderMesh mesh);
+    }
+
+    public static class EditorUtility
+    {
+        public static event System.Action<UnityEngine.ProBuilder.ProBuilderMesh> meshCreated;
+        public static void SetGizmoIconEnabled(System.Type script, bool enabled);
+        public static void SynchronizeWithMeshFilter(UnityEngine.ProBuilder.ProBuilderMesh mesh);
+    }
+
+    public abstract class MenuAction
+    {
+        public static System.Action<MenuAction> onPerformAction;
+        public event System.Action changed;
+        public virtual bool enabled { get; }
+        public abstract ToolbarGroup group { get; }
+        protected virtual bool hasFileMenuEntry { get; }
+        public virtual bool hidden { get; }
+        public abstract UnityEngine.Texture2D icon { get; }
+        protected bool iconMode { get; set; }
+        public abstract string iconPath { get; }
+        public MenuAction.MenuActionState menuActionState { get; }
+        public virtual string menuTitle { get; }
+        protected virtual MenuAction.MenuActionState optionsMenuState { get; }
+        public virtual int toolbarPriority { get; }
+        public abstract TooltipContent tooltip { get; }
+        public virtual UnityEngine.ProBuilder.SelectMode validSelectModes { get; }
+        protected MenuAction() {}
+        protected void ContentsChanged();
+        public virtual UnityEngine.UIElements.VisualElement CreateSettingsContent();
+        [System.Obsolete(@"DoAction() has been replaced by PerformAction(), the implementation of the action should inherit from PerformActionImplementation(). (UnityUpgradable) -> PerformAction()", false)] public UnityEngine.ProBuilder.ActionResult DoAction();
+        [System.Obsolete] protected bool DoAltButton(params UnityEngine.GUILayoutOption[] options);
+        protected virtual void DoAlternateAction();
+        public virtual void DoSceneGUI(SceneView sceneView);
+        protected virtual void OnSettingsDisable();
+        protected virtual void OnSettingsEnable();
+        protected virtual void OnSettingsGUI();
+        public UnityEngine.ProBuilder.ActionResult PerformAction();
+        protected abstract UnityEngine.ProBuilder.ActionResult PerformActionImplementation();
+        public void PerformAltAction();
+        public virtual void RegisterChangedCallbacks();
+        public virtual void UnregisterChangedCallbacks();
+        [System.Flags] public enum MenuActionState
+        {
+            Hidden = 0,
+            Visible = 1 << 0,
+            Enabled = 1 << 1,
+            VisibleAndEnabled = 0x3,
+        }
+    }
+
+    public class MenuActionSettings : UnityEditor.Actions.EditorAction
+    {
+        public MenuActionSettings(MenuAction action, bool hasPreview = false) {}
+    }
+
+    public abstract class MenuToolToggle : MenuAction
+    {
+        protected UnityEditor.EditorTools.EditorTool m_Tool;
+        public UnityEditor.EditorTools.EditorTool Tool { get; }
+        protected MenuToolToggle() {}
+        protected override UnityEngine.ProBuilder.ActionResult PerformActionImplementation();
+    }
+
+    [InitializeOnLoad] public static class MeshSelection
+    {
+        public static event System.Action objectSelectionChanged;
+        public static UnityEngine.ProBuilder.ProBuilderMesh activeMesh { get; }
+        public static UnityEngine.Bounds bounds { get; }
+        public static System.Collections.Generic.IEnumerable<UnityEngine.ProBuilder.ProBuilderMesh> deep { get; }
+        public static int selectedEdgeCount { get; }
+        public static int selectedFaceCount { get; }
+        public static int selectedObjectCount { get; }
+        public static int selectedSharedVertexCount { get; }
+        public static int selectedVertexCount { get; }
+        public static System.Collections.Generic.IEnumerable<UnityEngine.ProBuilder.ProBuilderMesh> top { get; }
+        public static int totalCommonVertexCount { get; }
+        public static int totalEdgeCount { get; }
+        public static int totalFaceCount { get; }
+        public static int totalTriangleCountCompiled { get; }
+        public static int totalVertexCount { get; }
+        public static void ClearElementAndObjectSelection();
+        public static void ClearElementSelection();
+    }
+
+    [UnityEditor.EditorTools.EditorTool(@"Edit PolyShape", typeof(UnityEngine.ProBuilder.PolyShape))] [UnityEngine.Icon(@"Packages/com.unity.probuilder/Content/Icons/Toolbar/CreatePolyShape.png")] public class PolyShapeTool : UnityEditor.EditorTools.EditorTool
+    {
+        public UnityEngine.ProBuilder.PolyShape polygon { get; set; }
+        public override UnityEngine.GUIContent toolbarIcon { get; }
+        public PolyShapeTool() {}
+        protected void LeaveTool();
+        public override void OnActivated();
+        protected virtual void OnObjectSelectionChanged();
+        public override void OnToolGUI(EditorWindow window);
+        public override void OnWillBeDeactivated();
+        public void RebuildPolyShapeMesh(bool vertexCountChanged = false);
+    }
+
+    public sealed class ProBuilderEditor : System.IDisposable
+    {
+        public static event System.Action<System.Collections.Generic.IEnumerable<UnityEngine.ProBuilder.ProBuilderMesh>> afterMeshModification;
+        public static event System.Action<System.Collections.Generic.IEnumerable<UnityEngine.ProBuilder.ProBuilderMesh>> beforeMeshModification;
+        public static event System.Action<System.Collections.Generic.IEnumerable<UnityEngine.ProBuilder.ProBuilderMesh>> selectionUpdated;
+        public static event System.Action<UnityEngine.ProBuilder.SelectMode> selectModeChanged;
+        public static ProBuilderEditor instance { get; }
+        public static UnityEngine.ProBuilder.SelectMode selectMode { get; set; }
+        public void Dispose();
+        public void OnSceneGUI(SceneView sceneView);
+        public static void Refresh(bool vertexCountChanged = true);
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Class)] public sealed class ProBuilderMenuActionAttribute : System.Attribute
+    {
+        public ProBuilderMenuActionAttribute() {}
+    }
+
+    public enum ToolbarGroup
+    {
+        Tool = 0,
+        Selection = 1,
+        Object = 2,
+        Geometry = 3,
+        Entity = 4,
+        Export = 5,
+    }
+
+    public sealed class TooltipContent : System.IEquatable<TooltipContent>
+    {
+        public string shortcut { get; set; }
+        public string summary { get; set; }
+        public string title { get; set; }
+        public TooltipContent(string title, string summary, params char[] shortcut) {}
+        public TooltipContent(string title, string summary, string shortcut = @"") {}
+        public override bool Equals(object obj);
+        public bool Equals(TooltipContent other);
+        public static TooltipContent FromString(string title);
+        public override int GetHashCode();
+        public static string op_Explicit(TooltipContent content);
+        public static TooltipContent op_Explicit(string title);
+        public override string ToString();
+    }
+}
+
+namespace UnityEditor.ProBuilder.Actions
+{
+    public class CutToolAction : MenuAction
+    {
+        public override bool enabled { get; }
+        public override ToolbarGroup group { get; }
+        protected override bool hasFileMenuEntry { get; }
+        public override UnityEngine.Texture2D icon { get; }
+        public override string iconPath { get; }
+        public override TooltipContent tooltip { get; }
+        public override UnityEngine.ProBuilder.SelectMode validSelectModes { get; }
+        public CutToolAction() {}
+        protected override UnityEngine.ProBuilder.ActionResult PerformActionImplementation();
+    }
+}

@@ -1,0 +1,24 @@
+// This file is generated. Do not modify by hand.
+// XML documentation file not found. To check if public methods have XML comments,
+// make sure the XML doc file is present and located next to the scraped dll
+namespace Network_Game.Dialogue.Editor
+{
+    public static class DialogueEffectBulkImporter
+    {
+        [UnityEditor.MenuItem(@"Network Game/MCP/Import All Particle Effects")] public static void ImportAllEffects();
+        [UnityEditor.MenuItem(@"Network Game/MCP/Legacy/Print All Available Effects")] public static void PrintAllEffects();
+        [UnityEditor.MenuItem(@"Network Game/MCP/Legacy/Verify Effect Links")] public static void VerifyEffectLinks();
+    }
+
+    public class EffectEditorWindow : UnityEditor.EditorWindow
+    {
+        public EffectEditorWindow() {}
+        [UnityEditor.MenuItem(@"Window/Dialogue/Effect Authoring")] public static void ShowWindow();
+    }
+
+    public sealed class NpcDialogueTrainingLauncherWindow : UnityEditor.EditorWindow
+    {
+        public NpcDialogueTrainingLauncherWindow() {}
+        [UnityEditor.MenuItem(@"Network Game/MCP/Npc Dialogue Training Launcher")] public static void ShowWindow();
+    }
+}

@@ -1,0 +1,2333 @@
+// This file is generated. Do not modify by hand.
+// XML documentation file not found. To check if public methods have XML comments,
+// make sure the XML doc file is present and located next to the scraped dll
+public class <NetStats_TypeRegistration>
+{
+}
+
+public class AttachableNode : Unity.Netcode.NetworkBehaviour
+{
+    public bool DetachOnDespawn = true;
+    protected readonly System.Collections.Generic.List<Unity.Netcode.Components.AttachableBehaviour> m_AttachedBehaviours = new();
+    public bool HasAttachments { get; }
+    public AttachableNode() {}
+    protected override string __getTypeName();
+    protected override void __initializeRpcs();
+    protected override void __initializeVariables();
+    protected virtual void OnAttached(Unity.Netcode.Components.AttachableBehaviour attachableBehaviour);
+    protected virtual void OnDetached(Unity.Netcode.Components.AttachableBehaviour attachableBehaviour);
+    public override void OnNetworkPreDespawn();
+    protected override void OnNetworkPreSpawn(ref Unity.Netcode.NetworkManager networkManager);
+    protected override void OnOwnershipChanged(ulong previous, ulong current);
+}
+
+namespace Unity.Netcode
+{
+    public struct __RpcParams
+    {
+        public ClientRpcParams Client;
+        public RpcParams Ext;
+        public ServerRpcParams Server;
+    }
+
+    [GenerateSerializationForGenericParameter(0)] public class AnticipatedNetworkVariable<T> : NetworkVariableBase
+    {
+        public OnAuthoritativeValueChangedDelegate OnAuthoritativeValueChanged;
+        public StaleDataHandling StaleDataHandling;
+        public event Unity.Netcode.NetworkVariable<T>.CheckExceedsDirtinessThresholdDelegate CheckExceedsDirtinessThreshold;
+        public T AuthoritativeValue { get; set; }
+        public T PreviousAnticipatedValue { get; }
+        public bool ShouldReanticipate { get; }
+        public T Value { get; }
+        public AnticipatedNetworkVariable(T value = default(T), StaleDataHandling staleDataHandling = StaleDataHandling.Ignore) {}
+        public void Anticipate(T value);
+        public override void Dispose();
+        public override bool ExceedsDirtinessThreshold();
+        protected override void Finalize();
+        public override bool IsDirty();
+        public override void OnInitialize();
+        public override void ReadDelta(FastBufferReader reader, bool keepDirtyDelta);
+        public override void ReadField(FastBufferReader reader);
+        public override void ResetDirty();
+        public void Smooth(in T from, in T to, float durationSeconds, SmoothDelegate how);
+        public void Update();
+        public override void WriteDelta(FastBufferWriter writer);
+        public override void WriteField(FastBufferWriter writer);
+        public delegate void OnAuthoritativeValueChangedDelegate(Unity.Netcode.AnticipatedNetworkVariable<T> variable, ref readonly T previousValue, ref readonly T newValue);
+        public delegate T SmoothDelegate(T authoritativeValue, T anticipatedValue, float amount);
+    }
+
+    public static class Arithmetic
+    {
+        public static int VarIntSize(ulong value);
+        public static long ZigZagDecode(ulong value);
+        public static ulong ZigZagEncode(long value);
+    }
+
+    public abstract class BaseRpcTarget : System.IDisposable
+    {
+        protected NetworkManager m_NetworkManager;
+        protected void CheckLockBeforeDispose();
+        public abstract void Dispose();
+    }
+
+    public static class BitCounter
+    {
+        public static int GetUsedBitCount(uint value);
+        public static int GetUsedBitCount(ulong value);
+        public static int GetUsedByteCount(uint value);
+        public static int GetUsedByteCount(ulong value);
+    }
+
+    [System.Obsolete(@"Types with embedded references are not supported in this version of your compiler.", true)] [System.Runtime.CompilerServices.IsByRefLike] public struct BitReader
+    {
+        public bool BitAligned { get; }
+        public void Dispose();
+        public void ReadBit(out bool bit);
+        public void ReadBits(out byte value, uint bitCount);
+        public void ReadBits(out ulong value, uint bitCount);
+        public bool TryBeginReadBits(uint bitCount);
+    }
+
+    [System.Obsolete(@"Types with embedded references are not supported in this version of your compiler.", true)] [System.Runtime.CompilerServices.IsByRefLike] public struct BitWriter
+    {
+        public bool BitAligned { get; }
+        public void Dispose();
+        public bool TryBeginWriteBits(int bitCount);
+        public void WriteBit(bool bit);
+        public void WriteBits(byte value, uint bitCount);
+        public void WriteBits(ulong value, uint bitCount);
+    }
+
+    public abstract class BufferedLinearInterpolator<T> where T : struct, new()
+    {
+        [System.Obsolete(@"This list is no longer used and will be deprecated.", false)] protected readonly System.Collections.Generic.List<BufferedItem> m_Buffer = new();
+        protected readonly System.Collections.Generic.Queue<BufferedItem> m_BufferQueue;
+        [System.Obsolete(@"This property will be deprecated.", false)] protected T m_CurrentInterpValue;
+        [System.Obsolete(@"This property will be deprecated.", false)] protected T m_InterpEndValue;
+        [System.Obsolete(@"This property will be deprecated.", false)] protected T m_InterpStartValue;
+        [UnityEngine.Range(0.016f, 1f)] public float MaximumInterpolationTime = 0.1f;
+        protected BufferedLinearInterpolator() {}
+        public void AddMeasurement(T newMeasurement, double sentTime);
+        public void Clear();
+        public T GetInterpolatedValue();
+        protected abstract T Interpolate(T start, T end, float time);
+        protected abstract T InterpolateUnclamped(T start, T end, float time);
+        protected virtual T OnConvertTransformSpace(UnityEngine.Transform transform, T item, bool inLocalSpace);
+        public void ResetTo(T targetValue, double serverTime);
+        [System.Obsolete(@"This method is being deprecated due to it being only used for internal testing purposes.", false)] public T Update(float deltaTime, NetworkTime serverTime);
+        public T Update(float deltaTime, double renderTime, double serverTime);
+        protected struct BufferedItem
+        {
+            public T Item;
+            public int ItemId;
+            public double TimeSent;
+            public BufferedItem(T item, double timeSent) {}
+            public BufferedItem(T item, double timeSent, int itemId) {}
+        }
+    }
+
+    public class BufferedLinearInterpolatorFloat : Unity.Netcode.BufferedLinearInterpolator<float>
+    {
+        public BufferedLinearInterpolatorFloat() {}
+        protected override float Interpolate(float start, float end, float time);
+        protected override float InterpolateUnclamped(float start, float end, float time);
+    }
+
+    public class BufferedLinearInterpolatorQuaternion : Unity.Netcode.BufferedLinearInterpolator<UnityEngine.Quaternion>
+    {
+        public bool IsSlerp;
+        public BufferedLinearInterpolatorQuaternion() {}
+        protected override UnityEngine.Quaternion Interpolate(UnityEngine.Quaternion start, UnityEngine.Quaternion end, float time);
+        protected override UnityEngine.Quaternion InterpolateUnclamped(UnityEngine.Quaternion start, UnityEngine.Quaternion end, float time);
+        protected override UnityEngine.Quaternion OnConvertTransformSpace(UnityEngine.Transform transform, UnityEngine.Quaternion rotation, bool inLocalSpace);
+    }
+
+    public class BufferedLinearInterpolatorVector3 : Unity.Netcode.BufferedLinearInterpolator<UnityEngine.Vector3>
+    {
+        public bool IsSlerp;
+        public BufferedLinearInterpolatorVector3() {}
+        protected override UnityEngine.Vector3 Interpolate(UnityEngine.Vector3 start, UnityEngine.Vector3 end, float time);
+        protected override UnityEngine.Vector3 InterpolateUnclamped(UnityEngine.Vector3 start, UnityEngine.Vector3 end, float time);
+        protected override UnityEngine.Vector3 OnConvertTransformSpace(UnityEngine.Transform transform, UnityEngine.Vector3 position, bool inLocalSpace);
+    }
+
+    [System.Obsolete(@"Types with embedded references are not supported in this version of your compiler.", true)] [System.Runtime.CompilerServices.IsByRefLike] public struct BufferSerializer<TReaderWriter> where TReaderWriter : IReaderWriter
+    {
+        public bool IsReader { get; }
+        public bool IsWriter { get; }
+        public FastBufferReader GetFastBufferReader();
+        public FastBufferWriter GetFastBufferWriter();
+        public bool PreCheck(int amount);
+        public void SerializeNetworkSerializable<T>(ref T value) where T : INetworkSerializable, new();
+        public void SerializeValue(ref byte value);
+        public void SerializeValue(ref UnityEngine.Color value);
+        public void SerializeValue(ref UnityEngine.Color[] value);
+        public void SerializeValue(ref UnityEngine.Color32 value);
+        public void SerializeValue(ref UnityEngine.Color32[] value);
+        public void SerializeValue(ref UnityEngine.Pose value);
+        public void SerializeValue(ref UnityEngine.Pose[] value);
+        public void SerializeValue(ref UnityEngine.Quaternion value);
+        public void SerializeValue(ref UnityEngine.Quaternion[] value);
+        public void SerializeValue(ref UnityEngine.Ray value);
+        public void SerializeValue(ref UnityEngine.Ray[] value);
+        public void SerializeValue(ref UnityEngine.Ray2D value);
+        public void SerializeValue(ref UnityEngine.Ray2D[] value);
+        public void SerializeValue(ref UnityEngine.Vector2 value);
+        public void SerializeValue(ref UnityEngine.Vector2[] value);
+        public void SerializeValue(ref UnityEngine.Vector2Int value);
+        public void SerializeValue(ref UnityEngine.Vector2Int[] value);
+        public void SerializeValue(ref UnityEngine.Vector3 value);
+        public void SerializeValue(ref UnityEngine.Vector3[] value);
+        public void SerializeValue(ref UnityEngine.Vector3Int value);
+        public void SerializeValue(ref UnityEngine.Vector3Int[] value);
+        public void SerializeValue(ref UnityEngine.Vector4 value);
+        public void SerializeValue(ref UnityEngine.Vector4[] value);
+        public void SerializeValue(ref string s, bool oneByteChars = false);
+        public void SerializeValue<T>(ref T value, FastBufferWriter.ForEnums unused = default(FastBufferWriter.ForEnums)) where T : struct, unmanaged, System.Enum, new();
+        public void SerializeValue<T>(ref T value, FastBufferWriter.ForFixedStrings unused = default(FastBufferWriter.ForFixedStrings)) where T : struct, unmanaged, Unity.Collections.INativeList<byte>, Unity.Collections.IUTF8Bytes, new();
+        public void SerializeValue<T>(ref T value, FastBufferWriter.ForNetworkSerializable unused = default(FastBufferWriter.ForNetworkSerializable)) where T : INetworkSerializable, new();
+        public void SerializeValue<T>(ref T value, FastBufferWriter.ForPrimitives unused = default(FastBufferWriter.ForPrimitives)) where T : struct, unmanaged, System.IComparable, System.IConvertible, System.IComparable<T>, System.IEquatable<T>, new();
+        public void SerializeValue<T>(ref T value, FastBufferWriter.ForStructs unused = default(FastBufferWriter.ForStructs)) where T : struct, unmanaged, INetworkSerializeByMemcpy, new();
+        public void SerializeValue<T>(ref T[] value, FastBufferWriter.ForEnums unused = default(FastBufferWriter.ForEnums)) where T : struct, unmanaged, System.Enum, new();
+        public void SerializeValue<T>(ref T[] value, FastBufferWriter.ForNetworkSerializable unused = default(FastBufferWriter.ForNetworkSerializable)) where T : INetworkSerializable, new();
+        public void SerializeValue<T>(ref T[] value, FastBufferWriter.ForPrimitives unused = default(FastBufferWriter.ForPrimitives)) where T : struct, unmanaged, System.IComparable, System.IConvertible, System.IComparable<T>, System.IEquatable<T>, new();
+        public void SerializeValue<T>(ref T[] value, FastBufferWriter.ForStructs unused = default(FastBufferWriter.ForStructs)) where T : struct, unmanaged, INetworkSerializeByMemcpy, new();
+        public void SerializeValue<T>(ref Unity.Collections.NativeArray<T> value, Unity.Collections.Allocator allocator) where T : struct, unmanaged, Unity.Collections.INativeList<byte>, Unity.Collections.IUTF8Bytes, new();
+        public void SerializeValue<T>(ref Unity.Collections.NativeArray<T> value, Unity.Collections.Allocator allocator, FastBufferWriter.ForGeneric unused = default(FastBufferWriter.ForGeneric)) where T : struct, unmanaged, new();
+        public void SerializeValuePreChecked(ref byte value);
+        public void SerializeValuePreChecked(ref UnityEngine.Color value);
+        public void SerializeValuePreChecked(ref UnityEngine.Color[] value);
+        public void SerializeValuePreChecked(ref UnityEngine.Color32 value);
+        public void SerializeValuePreChecked(ref UnityEngine.Color32[] value);
+        public void SerializeValuePreChecked(ref UnityEngine.Pose value);
+        public void SerializeValuePreChecked(ref UnityEngine.Pose[] value);
+        public void SerializeValuePreChecked(ref UnityEngine.Quaternion value);
+        public void SerializeValuePreChecked(ref UnityEngine.Quaternion[] value);
+        public void SerializeValuePreChecked(ref UnityEngine.Ray value);
+        public void SerializeValuePreChecked(ref UnityEngine.Ray[] value);
+        public void SerializeValuePreChecked(ref UnityEngine.Ray2D value);
+        public void SerializeValuePreChecked(ref UnityEngine.Ray2D[] value);
+        public void SerializeValuePreChecked(ref UnityEngine.Vector2 value);
+        public void SerializeValuePreChecked(ref UnityEngine.Vector2[] value);
+        public void SerializeValuePreChecked(ref UnityEngine.Vector2Int value);
+        public void SerializeValuePreChecked(ref UnityEngine.Vector2Int[] value);
+        public void SerializeValuePreChecked(ref UnityEngine.Vector3 value);
+        public void SerializeValuePreChecked(ref UnityEngine.Vector3[] value);
+        public void SerializeValuePreChecked(ref UnityEngine.Vector3Int value);
+        public void SerializeValuePreChecked(ref UnityEngine.Vector3Int[] value);
+        public void SerializeValuePreChecked(ref UnityEngine.Vector4 value);
+        public void SerializeValuePreChecked(ref UnityEngine.Vector4[] value);
+        public void SerializeValuePreChecked(ref string s, bool oneByteChars = false);
+        public void SerializeValuePreChecked<T>(ref T value, FastBufferWriter.ForEnums unused = default(FastBufferWriter.ForEnums)) where T : struct, unmanaged, System.Enum, new();
+        public void SerializeValuePreChecked<T>(ref T value, FastBufferWriter.ForFixedStrings unused = default(FastBufferWriter.ForFixedStrings)) where T : struct, unmanaged, Unity.Collections.INativeList<byte>, Unity.Collections.IUTF8Bytes, new();
+        public void SerializeValuePreChecked<T>(ref T value, FastBufferWriter.ForPrimitives unused = default(FastBufferWriter.ForPrimitives)) where T : struct, unmanaged, System.IComparable, System.IConvertible, System.IComparable<T>, System.IEquatable<T>, new();
+        public void SerializeValuePreChecked<T>(ref T value, FastBufferWriter.ForStructs unused = default(FastBufferWriter.ForStructs)) where T : struct, unmanaged, INetworkSerializeByMemcpy, new();
+        public void SerializeValuePreChecked<T>(ref T[] value, FastBufferWriter.ForEnums unused = default(FastBufferWriter.ForEnums)) where T : struct, unmanaged, System.Enum, new();
+        public void SerializeValuePreChecked<T>(ref T[] value, FastBufferWriter.ForPrimitives unused = default(FastBufferWriter.ForPrimitives)) where T : struct, unmanaged, System.IComparable, System.IConvertible, System.IComparable<T>, System.IEquatable<T>, new();
+        public void SerializeValuePreChecked<T>(ref T[] value, FastBufferWriter.ForStructs unused = default(FastBufferWriter.ForStructs)) where T : struct, unmanaged, INetworkSerializeByMemcpy, new();
+        public void SerializeValuePreChecked<T>(ref Unity.Collections.NativeArray<T> value, Unity.Collections.Allocator allocator, FastBufferWriter.ForGeneric unused = default(FastBufferWriter.ForGeneric)) where T : struct, unmanaged, new();
+    }
+
+    public static class BytePacker
+    {
+        public const int BitPackedIntMax = 536870911;
+        public const int BitPackedIntMin = -536870912;
+        public const long BitPackedLongMax = 1152921504606846975;
+        public const long BitPackedLongMin = -1152921504606846976;
+        public const short BitPackedShortMax = 16383;
+        public const short BitPackedShortMin = -16384;
+        public const uint BitPackedUintMax = 1073741823;
+        public const ulong BitPackedULongMax = 2305843009213693951;
+        public const ushort BitPackedUshortMax = 32767;
+        public static void WriteValueBitPacked(FastBufferWriter writer, short value);
+        public static void WriteValueBitPacked(FastBufferWriter writer, int value);
+        public static void WriteValueBitPacked(FastBufferWriter writer, long value);
+        public static void WriteValueBitPacked(FastBufferWriter writer, ushort value);
+        public static void WriteValueBitPacked(FastBufferWriter writer, uint value);
+        public static void WriteValueBitPacked(FastBufferWriter writer, ulong value);
+        public static void WriteValuePacked(FastBufferWriter writer, bool value);
+        public static void WriteValuePacked(FastBufferWriter writer, byte value);
+        public static void WriteValuePacked(FastBufferWriter writer, char c);
+        public static void WriteValuePacked(FastBufferWriter writer, double value);
+        public static void WriteValuePacked(FastBufferWriter writer, short value);
+        public static void WriteValuePacked(FastBufferWriter writer, int value);
+        public static void WriteValuePacked(FastBufferWriter writer, long value);
+        public static void WriteValuePacked(FastBufferWriter writer, sbyte value);
+        public static void WriteValuePacked(FastBufferWriter writer, float value);
+        public static void WriteValuePacked(FastBufferWriter writer, string s);
+        public static void WriteValuePacked(FastBufferWriter writer, ushort value);
+        public static void WriteValuePacked(FastBufferWriter writer, uint value);
+        public static void WriteValuePacked(FastBufferWriter writer, ulong value);
+        public static void WriteValuePacked<TEnum>(FastBufferWriter writer, TEnum value) where TEnum : struct, unmanaged, System.Enum, new();
+        public static void WriteValuePacked(FastBufferWriter writer, UnityEngine.Color color);
+        public static void WriteValuePacked(FastBufferWriter writer, UnityEngine.Color32 color);
+        public static void WriteValuePacked(FastBufferWriter writer, UnityEngine.Pose pose);
+        public static void WriteValuePacked(FastBufferWriter writer, UnityEngine.Quaternion rotation);
+        public static void WriteValuePacked(FastBufferWriter writer, UnityEngine.Ray ray);
+        public static void WriteValuePacked(FastBufferWriter writer, UnityEngine.Ray2D ray2d);
+        public static void WriteValuePacked(FastBufferWriter writer, UnityEngine.Vector2 vector2);
+        public static void WriteValuePacked(FastBufferWriter writer, UnityEngine.Vector3 vector3);
+        public static void WriteValuePacked(FastBufferWriter writer, UnityEngine.Vector4 vector4);
+    }
+
+    public static class ByteUnpacker
+    {
+        public static void ReadValueBitPacked(FastBufferReader reader, out short value);
+        public static void ReadValueBitPacked(FastBufferReader reader, out int value);
+        public static void ReadValueBitPacked(FastBufferReader reader, out long value);
+        public static void ReadValueBitPacked(FastBufferReader reader, out ushort value);
+        public static void ReadValueBitPacked(FastBufferReader reader, out uint value);
+        public static void ReadValueBitPacked(FastBufferReader reader, out ulong value);
+        public static void ReadValuePacked(FastBufferReader reader, out bool value);
+        public static void ReadValuePacked(FastBufferReader reader, out byte value);
+        public static void ReadValuePacked(FastBufferReader reader, out char c);
+        public static void ReadValuePacked(FastBufferReader reader, out double value);
+        public static void ReadValuePacked(FastBufferReader reader, out short value);
+        public static void ReadValuePacked(FastBufferReader reader, out int value);
+        public static void ReadValuePacked(FastBufferReader reader, out long value);
+        public static void ReadValuePacked(FastBufferReader reader, out sbyte value);
+        public static void ReadValuePacked(FastBufferReader reader, out float value);
+        public static void ReadValuePacked(FastBufferReader reader, out string s);
+        public static void ReadValuePacked(FastBufferReader reader, out ushort value);
+        public static void ReadValuePacked(FastBufferReader reader, out uint value);
+        public static void ReadValuePacked(FastBufferReader reader, out ulong value);
+        public static void ReadValuePacked<TEnum>(FastBufferReader reader, out TEnum value) where TEnum : struct, unmanaged, System.Enum, new();
+        public static void ReadValuePacked(FastBufferReader reader, out UnityEngine.Color color);
+        public static void ReadValuePacked(FastBufferReader reader, out UnityEngine.Color32 color);
+        public static void ReadValuePacked(FastBufferReader reader, out UnityEngine.Pose pose);
+        public static void ReadValuePacked(FastBufferReader reader, out UnityEngine.Quaternion rotation);
+        public static void ReadValuePacked(FastBufferReader reader, out UnityEngine.Ray ray);
+        public static void ReadValuePacked(FastBufferReader reader, out UnityEngine.Ray2D ray2d);
+        public static void ReadValuePacked(FastBufferReader reader, out UnityEngine.Vector2 vector2);
+        public static void ReadValuePacked(FastBufferReader reader, out UnityEngine.Vector3 vector3);
+        public static void ReadValuePacked(FastBufferReader reader, out UnityEngine.Vector4 vector4);
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Method)] public class ClientRpcAttribute : RpcAttribute
+    {
+        public ClientRpcAttribute() {}
+    }
+
+    public struct ClientRpcParams
+    {
+        public ClientRpcReceiveParams Receive;
+        public ClientRpcSendParams Send;
+    }
+
+    public struct ClientRpcReceiveParams
+    {
+    }
+
+    public struct ClientRpcSendParams
+    {
+        public System.Collections.Generic.IReadOnlyList<ulong> TargetClientIds;
+        public System.Nullable<Unity.Collections.NativeArray<ulong>> TargetClientIdsNativeArray;
+    }
+
+    public class CommandLineOptions
+    {
+        public static CommandLineOptions Instance { get; }
+        public CommandLineOptions() {}
+        public string GetArg(string arg);
+    }
+
+    public enum ConnectionEvent
+    {
+        ClientConnected = 0,
+        PeerConnected = 1,
+        ClientDisconnected = 2,
+        PeerDisconnected = 3,
+    }
+
+    public struct ConnectionEventData
+    {
+        public ulong ClientId;
+        public ConnectionEvent EventType;
+        public Unity.Collections.NativeArray<ulong> PeerClientIds;
+    }
+
+    public class CustomMessagingManager
+    {
+        public event CustomMessagingManager.UnnamedMessageDelegate OnUnnamedMessage;
+        public void RegisterNamedMessageHandler(string name, CustomMessagingManager.HandleNamedMessageDelegate callback);
+        public void SendNamedMessage(string messageName, System.Collections.Generic.IReadOnlyList<ulong> clientIds, FastBufferWriter messageStream, NetworkDelivery networkDelivery = NetworkDelivery.ReliableSequenced);
+        public void SendNamedMessage(string messageName, ulong clientId, FastBufferWriter messageStream, NetworkDelivery networkDelivery = NetworkDelivery.ReliableSequenced);
+        public void SendNamedMessageToAll(string messageName, FastBufferWriter messageStream, NetworkDelivery networkDelivery = NetworkDelivery.ReliableSequenced);
+        public void SendUnnamedMessage(System.Collections.Generic.IReadOnlyList<ulong> clientIds, FastBufferWriter messageBuffer, NetworkDelivery networkDelivery = NetworkDelivery.ReliableSequenced);
+        public void SendUnnamedMessage(ulong clientId, FastBufferWriter messageBuffer, NetworkDelivery networkDelivery = NetworkDelivery.ReliableSequenced);
+        public void SendUnnamedMessageToAll(FastBufferWriter messageBuffer, NetworkDelivery networkDelivery = NetworkDelivery.ReliableSequenced);
+        public void UnregisterNamedMessageHandler(string name);
+        public delegate void HandleNamedMessageDelegate(ulong senderClientId, FastBufferReader messagePayload);
+        public delegate void UnnamedMessageDelegate(ulong clientId, FastBufferReader reader);
+    }
+
+    public struct FastBufferReader : System.IDisposable
+    {
+        public bool IsInitialized { get; }
+        public int Length { get; }
+        public int Position { get; }
+        public FastBufferReader(System.ArraySegment<byte> buffer, Unity.Collections.Allocator copyAllocator) {}
+        public FastBufferReader(System.ArraySegment<byte> buffer, Unity.Collections.Allocator copyAllocator, int length = -1) {}
+        public FastBufferReader(System.ArraySegment<byte> buffer, Unity.Collections.Allocator copyAllocator, int length = -1, int offset = 0) {}
+        public FastBufferReader(byte[] buffer, Unity.Collections.Allocator copyAllocator, int length = -1, int offset = 0) {}
+        public FastBufferReader(byte* buffer, Unity.Collections.Allocator copyAllocator, int length, int offset = 0, Unity.Collections.Allocator internalAllocator = Unity.Collections.Allocator.Temp) {}
+        public FastBufferReader(Unity.Collections.NativeArray<byte> buffer, Unity.Collections.Allocator copyAllocator, int length = -1, int offset = 0, Unity.Collections.Allocator internalAllocator = Unity.Collections.Allocator.Temp) {}
+        public FastBufferReader(FastBufferReader reader, Unity.Collections.Allocator copyAllocator, int length = -1, int offset = 0, Unity.Collections.Allocator internalAllocator = Unity.Collections.Allocator.Temp) {}
+        public FastBufferReader(FastBufferWriter writer, Unity.Collections.Allocator copyAllocator, int length = -1, int offset = 0, Unity.Collections.Allocator internalAllocator = Unity.Collections.Allocator.Temp) {}
+        public void Dispose();
+        public BitReader EnterBitwiseContext();
+        public byte* GetUnsafePtr();
+        public byte* GetUnsafePtrAtCurrentPosition();
+        public void ReadByte(out byte value);
+        public void ReadBytes(byte* value, int size, int offset = 0);
+        public void ReadBytes(ref byte[] value, int size, int offset = 0);
+        public void ReadByteSafe(out byte value);
+        public void ReadBytesSafe(byte* value, int size, int offset = 0);
+        public void ReadBytesSafe(ref byte[] value, int size, int offset = 0);
+        public void ReadNetworkSerializable<T>(out T value) where T : INetworkSerializable, new();
+        public void ReadNetworkSerializable<T>(out T[] value) where T : INetworkSerializable, new();
+        public void ReadNetworkSerializable<T>(out Unity.Collections.NativeArray<T> value, Unity.Collections.Allocator allocator) where T : struct, unmanaged, INetworkSerializable, new();
+        public void ReadNetworkSerializableInPlace<T>(ref T value) where T : INetworkSerializable;
+        public void ReadPartialValue<T>(out T value, int bytesToRead, int offsetBytes = 0) where T : struct, unmanaged, new();
+        public void ReadValue(out UnityEngine.Color value);
+        public void ReadValue(out UnityEngine.Color[] value);
+        public void ReadValue(out UnityEngine.Color32 value);
+        public void ReadValue(out UnityEngine.Color32[] value);
+        public void ReadValue(out UnityEngine.Pose value);
+        public void ReadValue(out UnityEngine.Pose[] value);
+        public void ReadValue(out UnityEngine.Quaternion value);
+        public void ReadValue(out UnityEngine.Quaternion[] value);
+        public void ReadValue(out UnityEngine.Ray value);
+        public void ReadValue(out UnityEngine.Ray[] value);
+        public void ReadValue(out UnityEngine.Ray2D value);
+        public void ReadValue(out UnityEngine.Ray2D[] value);
+        public void ReadValue(out UnityEngine.Vector2 value);
+        public void ReadValue(out UnityEngine.Vector2[] value);
+        public void ReadValue(out UnityEngine.Vector2Int value);
+        public void ReadValue(out UnityEngine.Vector2Int[] value);
+        public void ReadValue(out UnityEngine.Vector3 value);
+        public void ReadValue(out UnityEngine.Vector3[] value);
+        public void ReadValue(out UnityEngine.Vector3Int value);
+        public void ReadValue(out UnityEngine.Vector3Int[] value);
+        public void ReadValue(out UnityEngine.Vector4 value);
+        public void ReadValue(out UnityEngine.Vector4[] value);
+        public void ReadValue(out string s, bool oneByteChars = false);
+        public void ReadValue<T>(out T value, FastBufferWriter.ForEnums unused = default(FastBufferWriter.ForEnums)) where T : struct, unmanaged, System.Enum, new();
+        public void ReadValue<T>(out T value, FastBufferWriter.ForFixedStrings unused = default(FastBufferWriter.ForFixedStrings)) where T : struct, unmanaged, Unity.Collections.INativeList<byte>, Unity.Collections.IUTF8Bytes, new();
+        public void ReadValue<T>(out T value, FastBufferWriter.ForNetworkSerializable unused = default(FastBufferWriter.ForNetworkSerializable)) where T : INetworkSerializable, new();
+        public void ReadValue<T>(out T value, FastBufferWriter.ForPrimitives unused = default(FastBufferWriter.ForPrimitives)) where T : struct, unmanaged, System.IComparable, System.IConvertible, System.IComparable<T>, System.IEquatable<T>, new();
+        public void ReadValue<T>(out T value, FastBufferWriter.ForStructs unused = default(FastBufferWriter.ForStructs)) where T : struct, unmanaged, INetworkSerializeByMemcpy, new();
+        public void ReadValue<T>(out T[] value, FastBufferWriter.ForEnums unused = default(FastBufferWriter.ForEnums)) where T : struct, unmanaged, System.Enum, new();
+        public void ReadValue<T>(out T[] value, FastBufferWriter.ForNetworkSerializable unused = default(FastBufferWriter.ForNetworkSerializable)) where T : INetworkSerializable, new();
+        public void ReadValue<T>(out T[] value, FastBufferWriter.ForPrimitives unused = default(FastBufferWriter.ForPrimitives)) where T : struct, unmanaged, System.IComparable, System.IConvertible, System.IComparable<T>, System.IEquatable<T>, new();
+        public void ReadValue<T>(out T[] value, FastBufferWriter.ForStructs unused = default(FastBufferWriter.ForStructs)) where T : struct, unmanaged, INetworkSerializeByMemcpy, new();
+        public void ReadValue<T>(out Unity.Collections.NativeArray<T> value, Unity.Collections.Allocator allocator, FastBufferWriter.ForGeneric unused = default(FastBufferWriter.ForGeneric)) where T : struct, unmanaged, new();
+        public void ReadValueSafe(out UnityEngine.Color value);
+        public void ReadValueSafe(out UnityEngine.Color[] value);
+        public void ReadValueSafe(out UnityEngine.Color32 value);
+        public void ReadValueSafe(out UnityEngine.Color32[] value);
+        public void ReadValueSafe(out UnityEngine.Pose value);
+        public void ReadValueSafe(out UnityEngine.Pose[] value);
+        public void ReadValueSafe(out UnityEngine.Quaternion value);
+        public void ReadValueSafe(out UnityEngine.Quaternion[] value);
+        public void ReadValueSafe(out UnityEngine.Ray value);
+        public void ReadValueSafe(out UnityEngine.Ray[] value);
+        public void ReadValueSafe(out UnityEngine.Ray2D value);
+        public void ReadValueSafe(out UnityEngine.Ray2D[] value);
+        public void ReadValueSafe(out UnityEngine.Vector2 value);
+        public void ReadValueSafe(out UnityEngine.Vector2[] value);
+        public void ReadValueSafe(out UnityEngine.Vector2Int value);
+        public void ReadValueSafe(out UnityEngine.Vector2Int[] value);
+        public void ReadValueSafe(out UnityEngine.Vector3 value);
+        public void ReadValueSafe(out UnityEngine.Vector3[] value);
+        public void ReadValueSafe(out UnityEngine.Vector3Int value);
+        public void ReadValueSafe(out UnityEngine.Vector3Int[] value);
+        public void ReadValueSafe(out UnityEngine.Vector4 value);
+        public void ReadValueSafe(out UnityEngine.Vector4[] value);
+        public void ReadValueSafe(out string s, bool oneByteChars = false);
+        public void ReadValueSafe<T>(out T value, FastBufferWriter.ForEnums unused = default(FastBufferWriter.ForEnums)) where T : struct, unmanaged, System.Enum, new();
+        public void ReadValueSafe<T>(out T value, FastBufferWriter.ForFixedStrings unused = default(FastBufferWriter.ForFixedStrings)) where T : struct, unmanaged, Unity.Collections.INativeList<byte>, Unity.Collections.IUTF8Bytes, new();
+        public void ReadValueSafe<T>(out T value, FastBufferWriter.ForNetworkSerializable unused = default(FastBufferWriter.ForNetworkSerializable)) where T : INetworkSerializable, new();
+        public void ReadValueSafe<T>(out T value, FastBufferWriter.ForPrimitives unused = default(FastBufferWriter.ForPrimitives)) where T : struct, unmanaged, System.IComparable, System.IConvertible, System.IComparable<T>, System.IEquatable<T>, new();
+        public void ReadValueSafe<T>(out T value, FastBufferWriter.ForStructs unused = default(FastBufferWriter.ForStructs)) where T : struct, unmanaged, INetworkSerializeByMemcpy, new();
+        public void ReadValueSafe<T>(out T[] value, FastBufferWriter.ForEnums unused = default(FastBufferWriter.ForEnums)) where T : struct, unmanaged, System.Enum, new();
+        public void ReadValueSafe<T>(out T[] value, FastBufferWriter.ForFixedStrings unused = default(FastBufferWriter.ForFixedStrings)) where T : struct, unmanaged, Unity.Collections.INativeList<byte>, Unity.Collections.IUTF8Bytes, new();
+        public void ReadValueSafe<T>(out T[] value, FastBufferWriter.ForNetworkSerializable unused = default(FastBufferWriter.ForNetworkSerializable)) where T : INetworkSerializable, new();
+        public void ReadValueSafe<T>(out T[] value, FastBufferWriter.ForPrimitives unused = default(FastBufferWriter.ForPrimitives)) where T : struct, unmanaged, System.IComparable, System.IConvertible, System.IComparable<T>, System.IEquatable<T>, new();
+        public void ReadValueSafe<T>(out T[] value, FastBufferWriter.ForStructs unused = default(FastBufferWriter.ForStructs)) where T : struct, unmanaged, INetworkSerializeByMemcpy, new();
+        public void ReadValueSafe<T>(out Unity.Collections.NativeArray<T> value, Unity.Collections.Allocator allocator) where T : struct, unmanaged, Unity.Collections.INativeList<byte>, Unity.Collections.IUTF8Bytes, new();
+        public void ReadValueSafe<T>(out Unity.Collections.NativeArray<T> value, Unity.Collections.Allocator allocator, FastBufferWriter.ForGeneric unused = default(FastBufferWriter.ForGeneric)) where T : struct, unmanaged, new();
+        public void ReadValueSafe<T>(out Unity.Collections.NativeArray<T> value, Unity.Collections.Allocator allocator, FastBufferWriter.ForNetworkSerializable unused = default(FastBufferWriter.ForNetworkSerializable)) where T : struct, unmanaged, INetworkSerializable, new();
+        public void ReadValueSafeInPlace<T>(ref T value, FastBufferWriter.ForFixedStrings unused = default(FastBufferWriter.ForFixedStrings)) where T : struct, unmanaged, Unity.Collections.INativeList<byte>, Unity.Collections.IUTF8Bytes, new();
+        public void ReadValueSafeTemp<T>(out Unity.Collections.NativeArray<T> value) where T : struct, unmanaged, Unity.Collections.INativeList<byte>, Unity.Collections.IUTF8Bytes, new();
+        public void ReadValueSafeTemp<T>(out Unity.Collections.NativeArray<T> value, FastBufferWriter.ForGeneric unused = default(FastBufferWriter.ForGeneric)) where T : struct, unmanaged, new();
+        public void ReadValueTemp<T>(out Unity.Collections.NativeArray<T> value, FastBufferWriter.ForGeneric unused = default(FastBufferWriter.ForGeneric)) where T : struct, unmanaged, new();
+        public void Seek(int where);
+        public byte[] ToArray();
+        public bool TryBeginRead(int bytes);
+        public bool TryBeginReadValue<T>(in T value) where T : struct, unmanaged, new();
+    }
+
+    public struct FastBufferWriter : System.IDisposable
+    {
+        public int Capacity { get; }
+        public bool IsInitialized { get; }
+        public int Length { get; }
+        public int MaxCapacity { get; }
+        public int Position { get; }
+        public FastBufferWriter(int size, Unity.Collections.Allocator allocator, int maxSize = -1) {}
+        public void CopyFrom(FastBufferWriter other);
+        public void CopyTo(FastBufferWriter other);
+        public void Dispose();
+        public BitWriter EnterBitwiseContext();
+        public byte* GetUnsafePtr();
+        public byte* GetUnsafePtrAtCurrentPosition();
+        public static int GetWriteSize<T>() where T : struct, unmanaged, new();
+        public static int GetWriteSize<T>(in T value) where T : struct, unmanaged, Unity.Collections.INativeList<byte>, Unity.Collections.IUTF8Bytes, new();
+        public static int GetWriteSize<T>(in Unity.Collections.NativeArray<T> value) where T : struct, unmanaged, Unity.Collections.INativeList<byte>, Unity.Collections.IUTF8Bytes, new();
+        public static int GetWriteSize(string s, bool oneByteChars = false);
+        public static int GetWriteSize<T>(in T value, FastBufferWriter.ForStructs unused = default(FastBufferWriter.ForStructs)) where T : struct, unmanaged, new();
+        public static int GetWriteSize<T>(T[] array, int count = -1, int offset = 0) where T : struct, unmanaged, new();
+        public static int GetWriteSize<T>(Unity.Collections.NativeArray<T> array, int count = -1, int offset = 0) where T : struct, unmanaged, new();
+        public void Seek(int where);
+        public byte[] ToArray();
+        public void Truncate(int where = -1);
+        public bool TryBeginWrite(int bytes);
+        public bool TryBeginWriteInternal(int bytes);
+        public bool TryBeginWriteValue<T>(in T value) where T : struct, unmanaged, new();
+        public void WriteByte(byte value);
+        public void WriteBytes(byte* value, int size, int offset = 0);
+        public void WriteBytes(byte[] value, int size = -1, int offset = 0);
+        public void WriteBytes(Unity.Collections.NativeArray<byte> value, int size = -1, int offset = 0);
+        public void WriteBytes(Unity.Collections.NativeList<byte> value, int size = -1, int offset = 0);
+        public void WriteByteSafe(byte value);
+        public void WriteBytesSafe(byte* value, int size, int offset = 0);
+        public void WriteBytesSafe(byte[] value, int size = -1, int offset = 0);
+        public void WriteBytesSafe(Unity.Collections.NativeArray<byte> value, int size = -1, int offset = 0);
+        public void WriteBytesSafe(Unity.Collections.NativeList<byte> value, int size = -1, int offset = 0);
+        public void WriteNetworkSerializable<T>(in T value) where T : INetworkSerializable;
+        public void WriteNetworkSerializable<T>(T[] array, int count = -1, int offset = 0) where T : INetworkSerializable;
+        public void WriteNetworkSerializable<T>(Unity.Collections.NativeArray<T> array, int count = -1, int offset = 0) where T : struct, unmanaged, INetworkSerializable, new();
+        public void WritePartialValue<T>(T value, int bytesToWrite, int offsetBytes = 0) where T : struct, unmanaged, new();
+        public void WriteValue(in UnityEngine.Color value);
+        public void WriteValue(UnityEngine.Color[] value);
+        public void WriteValue(in UnityEngine.Color32 value);
+        public void WriteValue(UnityEngine.Color32[] value);
+        public void WriteValue(in UnityEngine.Pose value);
+        public void WriteValue(UnityEngine.Pose[] value);
+        public void WriteValue(in UnityEngine.Quaternion value);
+        public void WriteValue(UnityEngine.Quaternion[] value);
+        public void WriteValue(in UnityEngine.Ray value);
+        public void WriteValue(UnityEngine.Ray[] value);
+        public void WriteValue(in UnityEngine.Ray2D value);
+        public void WriteValue(UnityEngine.Ray2D[] value);
+        public void WriteValue(in UnityEngine.Vector2 value);
+        public void WriteValue(UnityEngine.Vector2[] value);
+        public void WriteValue(in UnityEngine.Vector2Int value);
+        public void WriteValue(UnityEngine.Vector2Int[] value);
+        public void WriteValue(in UnityEngine.Vector3 value);
+        public void WriteValue(UnityEngine.Vector3[] value);
+        public void WriteValue(in UnityEngine.Vector3Int value);
+        public void WriteValue(UnityEngine.Vector3Int[] value);
+        public void WriteValue(in UnityEngine.Vector4 value);
+        public void WriteValue(UnityEngine.Vector4[] value);
+        public void WriteValue(string s, bool oneByteChars = false);
+        public void WriteValue<T>(in T value, FastBufferWriter.ForEnums unused = default(FastBufferWriter.ForEnums)) where T : struct, unmanaged, System.Enum, new();
+        public void WriteValue<T>(in T value, FastBufferWriter.ForFixedStrings unused = default(FastBufferWriter.ForFixedStrings)) where T : struct, unmanaged, Unity.Collections.INativeList<byte>, Unity.Collections.IUTF8Bytes, new();
+        public void WriteValue<T>(in T value, FastBufferWriter.ForNetworkSerializable unused = default(FastBufferWriter.ForNetworkSerializable)) where T : INetworkSerializable;
+        public void WriteValue<T>(in T value, FastBufferWriter.ForPrimitives unused = default(FastBufferWriter.ForPrimitives)) where T : struct, unmanaged, System.IComparable, System.IConvertible, System.IComparable<T>, System.IEquatable<T>, new();
+        public void WriteValue<T>(in T value, FastBufferWriter.ForStructs unused = default(FastBufferWriter.ForStructs)) where T : struct, unmanaged, INetworkSerializeByMemcpy, new();
+        public void WriteValue<T>(T[] value, FastBufferWriter.ForEnums unused = default(FastBufferWriter.ForEnums)) where T : struct, unmanaged, System.Enum, new();
+        public void WriteValue<T>(T[] value, FastBufferWriter.ForFixedStrings unused = default(FastBufferWriter.ForFixedStrings)) where T : struct, unmanaged, Unity.Collections.INativeList<byte>, Unity.Collections.IUTF8Bytes, new();
+        public void WriteValue<T>(T[] value, FastBufferWriter.ForNetworkSerializable unused = default(FastBufferWriter.ForNetworkSerializable)) where T : INetworkSerializable;
+        public void WriteValue<T>(T[] value, FastBufferWriter.ForPrimitives unused = default(FastBufferWriter.ForPrimitives)) where T : struct, unmanaged, System.IComparable, System.IConvertible, System.IComparable<T>, System.IEquatable<T>, new();
+        public void WriteValue<T>(T[] value, FastBufferWriter.ForStructs unused = default(FastBufferWriter.ForStructs)) where T : struct, unmanaged, INetworkSerializeByMemcpy, new();
+        public void WriteValue<T>(in Unity.Collections.NativeArray<T> value, FastBufferWriter.ForFixedStrings unused = default(FastBufferWriter.ForFixedStrings)) where T : struct, unmanaged, Unity.Collections.INativeList<byte>, Unity.Collections.IUTF8Bytes, new();
+        public void WriteValue<T>(Unity.Collections.NativeArray<T> value, FastBufferWriter.ForGeneric unused = default(FastBufferWriter.ForGeneric)) where T : struct, unmanaged, new();
+        public void WriteValueSafe<T>(in Unity.Collections.NativeArray<T> value) where T : struct, unmanaged, Unity.Collections.INativeList<byte>, Unity.Collections.IUTF8Bytes, new();
+        public void WriteValueSafe(in UnityEngine.Color value);
+        public void WriteValueSafe(UnityEngine.Color[] value);
+        public void WriteValueSafe(in UnityEngine.Color32 value);
+        public void WriteValueSafe(UnityEngine.Color32[] value);
+        public void WriteValueSafe(in UnityEngine.Pose value);
+        public void WriteValueSafe(UnityEngine.Pose[] value);
+        public void WriteValueSafe(in UnityEngine.Quaternion value);
+        public void WriteValueSafe(UnityEngine.Quaternion[] value);
+        public void WriteValueSafe(in UnityEngine.Ray value);
+        public void WriteValueSafe(UnityEngine.Ray[] value);
+        public void WriteValueSafe(in UnityEngine.Ray2D value);
+        public void WriteValueSafe(UnityEngine.Ray2D[] value);
+        public void WriteValueSafe(in UnityEngine.Vector2 value);
+        public void WriteValueSafe(UnityEngine.Vector2[] value);
+        public void WriteValueSafe(in UnityEngine.Vector2Int value);
+        public void WriteValueSafe(UnityEngine.Vector2Int[] value);
+        public void WriteValueSafe(in UnityEngine.Vector3 value);
+        public void WriteValueSafe(UnityEngine.Vector3[] value);
+        public void WriteValueSafe(in UnityEngine.Vector3Int value);
+        public void WriteValueSafe(UnityEngine.Vector3Int[] value);
+        public void WriteValueSafe(in UnityEngine.Vector4 value);
+        public void WriteValueSafe(UnityEngine.Vector4[] value);
+        public void WriteValueSafe(string s, bool oneByteChars = false);
+        public void WriteValueSafe<T>(in T value, FastBufferWriter.ForEnums unused = default(FastBufferWriter.ForEnums)) where T : struct, unmanaged, System.Enum, new();
+        public void WriteValueSafe<T>(in T value, FastBufferWriter.ForFixedStrings unused = default(FastBufferWriter.ForFixedStrings)) where T : struct, unmanaged, Unity.Collections.INativeList<byte>, Unity.Collections.IUTF8Bytes, new();
+        public void WriteValueSafe<T>(in T value, FastBufferWriter.ForNetworkSerializable unused = default(FastBufferWriter.ForNetworkSerializable)) where T : INetworkSerializable;
+        public void WriteValueSafe<T>(in T value, FastBufferWriter.ForPrimitives unused = default(FastBufferWriter.ForPrimitives)) where T : struct, unmanaged, System.IComparable, System.IConvertible, System.IComparable<T>, System.IEquatable<T>, new();
+        public void WriteValueSafe<T>(in T value, FastBufferWriter.ForStructs unused = default(FastBufferWriter.ForStructs)) where T : struct, unmanaged, INetworkSerializeByMemcpy, new();
+        public void WriteValueSafe<T>(T[] value, FastBufferWriter.ForEnums unused = default(FastBufferWriter.ForEnums)) where T : struct, unmanaged, System.Enum, new();
+        public void WriteValueSafe<T>(T[] value, FastBufferWriter.ForFixedStrings unused = default(FastBufferWriter.ForFixedStrings)) where T : struct, unmanaged, Unity.Collections.INativeList<byte>, Unity.Collections.IUTF8Bytes, new();
+        public void WriteValueSafe<T>(T[] value, FastBufferWriter.ForNetworkSerializable unused = default(FastBufferWriter.ForNetworkSerializable)) where T : INetworkSerializable;
+        public void WriteValueSafe<T>(T[] value, FastBufferWriter.ForPrimitives unused = default(FastBufferWriter.ForPrimitives)) where T : struct, unmanaged, System.IComparable, System.IConvertible, System.IComparable<T>, System.IEquatable<T>, new();
+        public void WriteValueSafe<T>(T[] value, FastBufferWriter.ForStructs unused = default(FastBufferWriter.ForStructs)) where T : struct, unmanaged, INetworkSerializeByMemcpy, new();
+        public void WriteValueSafe<T>(Unity.Collections.NativeArray<T> value, FastBufferWriter.ForGeneric unused = default(FastBufferWriter.ForGeneric)) where T : struct, unmanaged, new();
+        public struct ForEnums
+        {
+        }
+        public struct ForFixedStrings
+        {
+        }
+        public struct ForGeneric
+        {
+        }
+        public struct ForNetworkSerializable
+        {
+        }
+        public struct ForPrimitives
+        {
+        }
+        public struct ForStructs
+        {
+        }
+    }
+
+    public struct ForceNetworkSerializeByMemcpy<T> : INetworkSerializeByMemcpy, System.IEquatable<Unity.Netcode.ForceNetworkSerializeByMemcpy<T>> where T : struct, unmanaged, System.IEquatable<T>, new()
+    {
+        public T Value;
+        public ForceNetworkSerializeByMemcpy(T value) {}
+        public override bool Equals(object obj);
+        public bool Equals(Unity.Netcode.ForceNetworkSerializeByMemcpy<T> other);
+        public override int GetHashCode();
+        public static T op_Implicit(Unity.Netcode.ForceNetworkSerializeByMemcpy<T> container);
+        public static Unity.Netcode.ForceNetworkSerializeByMemcpy<T> op_Implicit(T underlyingValue);
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Class|System.AttributeTargets.Struct, AllowMultiple = true)] public class GenerateSerializationForGenericParameterAttribute : System.Attribute
+    {
+        public GenerateSerializationForGenericParameterAttribute(int parameterIndex) {}
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Class|System.AttributeTargets.Method|System.AttributeTargets.Struct, AllowMultiple = true)] public class GenerateSerializationForTypeAttribute : System.Attribute
+    {
+        public GenerateSerializationForTypeAttribute(System.Type type) {}
+    }
+
+    public enum HashSize : byte
+    {
+        VarIntFourBytes = 0,
+        VarIntEightBytes = 1,
+    }
+
+    public interface INetworkPrefabInstanceHandler
+    {
+        public void Destroy(NetworkObject networkObject);
+        public NetworkObject Instantiate(ulong ownerClientId, UnityEngine.Vector3 position, UnityEngine.Quaternion rotation);
+    }
+
+    public interface INetworkSerializable
+    {
+        public void NetworkSerialize<T>(Unity.Netcode.BufferSerializer<T> serializer) where T : IReaderWriter;
+    }
+
+    public interface INetworkSerializeByMemcpy
+    {
+    }
+
+    public interface INetworkUpdateSystem
+    {
+        public void NetworkUpdate(NetworkUpdateStage updateStage);
+    }
+
+    public class InvalidChannelException : System.Exception
+    {
+        public InvalidChannelException(string message) {}
+    }
+
+    public class InvalidParentException : System.Exception
+    {
+        public InvalidParentException() {}
+        public InvalidParentException(string message) {}
+        public InvalidParentException(string message, System.Exception innerException) {}
+    }
+
+    public interface IReaderWriter
+    {
+        public bool IsReader { get; }
+        public bool IsWriter { get; }
+        public FastBufferReader GetFastBufferReader();
+        public FastBufferWriter GetFastBufferWriter();
+        public bool PreCheck(int amount);
+        public void SerializeNetworkSerializable<T>(ref T value) where T : INetworkSerializable, new();
+        public void SerializeValue(ref byte value);
+        public void SerializeValue(ref UnityEngine.Color value);
+        public void SerializeValue(ref UnityEngine.Color[] value);
+        public void SerializeValue(ref UnityEngine.Color32 value);
+        public void SerializeValue(ref UnityEngine.Color32[] value);
+        public void SerializeValue(ref UnityEngine.Pose value);
+        public void SerializeValue(ref UnityEngine.Pose[] value);
+        public void SerializeValue(ref UnityEngine.Quaternion value);
+        public void SerializeValue(ref UnityEngine.Quaternion[] value);
+        public void SerializeValue(ref UnityEngine.Ray value);
+        public void SerializeValue(ref UnityEngine.Ray[] value);
+        public void SerializeValue(ref UnityEngine.Ray2D value);
+        public void SerializeValue(ref UnityEngine.Ray2D[] value);
+        public void SerializeValue(ref UnityEngine.Vector2 value);
+        public void SerializeValue(ref UnityEngine.Vector2[] value);
+        public void SerializeValue(ref UnityEngine.Vector2Int value);
+        public void SerializeValue(ref UnityEngine.Vector2Int[] value);
+        public void SerializeValue(ref UnityEngine.Vector3 value);
+        public void SerializeValue(ref UnityEngine.Vector3[] value);
+        public void SerializeValue(ref UnityEngine.Vector3Int value);
+        public void SerializeValue(ref UnityEngine.Vector3Int[] value);
+        public void SerializeValue(ref UnityEngine.Vector4 value);
+        public void SerializeValue(ref UnityEngine.Vector4[] value);
+        public void SerializeValue(ref string s, bool oneByteChars = false);
+        public void SerializeValue<T>(ref T value, FastBufferWriter.ForEnums unused = default(FastBufferWriter.ForEnums)) where T : struct, unmanaged, System.Enum, new();
+        public void SerializeValue<T>(ref T value, FastBufferWriter.ForFixedStrings unused = default(FastBufferWriter.ForFixedStrings)) where T : struct, unmanaged, Unity.Collections.INativeList<byte>, Unity.Collections.IUTF8Bytes, new();
+        public void SerializeValue<T>(ref T value, FastBufferWriter.ForNetworkSerializable unused = default(FastBufferWriter.ForNetworkSerializable)) where T : INetworkSerializable, new();
+        public void SerializeValue<T>(ref T value, FastBufferWriter.ForPrimitives unused = default(FastBufferWriter.ForPrimitives)) where T : struct, unmanaged, System.IComparable, System.IConvertible, System.IComparable<T>, System.IEquatable<T>, new();
+        public void SerializeValue<T>(ref T value, FastBufferWriter.ForStructs unused = default(FastBufferWriter.ForStructs)) where T : struct, unmanaged, INetworkSerializeByMemcpy, new();
+        public void SerializeValue<T>(ref T[] value, FastBufferWriter.ForEnums unused = default(FastBufferWriter.ForEnums)) where T : struct, unmanaged, System.Enum, new();
+        public void SerializeValue<T>(ref T[] value, FastBufferWriter.ForNetworkSerializable unused = default(FastBufferWriter.ForNetworkSerializable)) where T : INetworkSerializable, new();
+        public void SerializeValue<T>(ref T[] value, FastBufferWriter.ForPrimitives unused = default(FastBufferWriter.ForPrimitives)) where T : struct, unmanaged, System.IComparable, System.IConvertible, System.IComparable<T>, System.IEquatable<T>, new();
+        public void SerializeValue<T>(ref T[] value, FastBufferWriter.ForStructs unused = default(FastBufferWriter.ForStructs)) where T : struct, unmanaged, INetworkSerializeByMemcpy, new();
+        public void SerializeValue<T>(ref Unity.Collections.NativeArray<T> value, Unity.Collections.Allocator allocator) where T : struct, unmanaged, Unity.Collections.INativeList<byte>, Unity.Collections.IUTF8Bytes, new();
+        public void SerializeValue<T>(ref Unity.Collections.NativeArray<T> value, Unity.Collections.Allocator allocator, FastBufferWriter.ForGeneric unused = default(FastBufferWriter.ForGeneric)) where T : struct, unmanaged, new();
+        public void SerializeValuePreChecked(ref byte value);
+        public void SerializeValuePreChecked(ref UnityEngine.Color value);
+        public void SerializeValuePreChecked(ref UnityEngine.Color[] value);
+        public void SerializeValuePreChecked(ref UnityEngine.Color32 value);
+        public void SerializeValuePreChecked(ref UnityEngine.Color32[] value);
+        public void SerializeValuePreChecked(ref UnityEngine.Pose value);
+        public void SerializeValuePreChecked(ref UnityEngine.Pose[] value);
+        public void SerializeValuePreChecked(ref UnityEngine.Quaternion value);
+        public void SerializeValuePreChecked(ref UnityEngine.Quaternion[] value);
+        public void SerializeValuePreChecked(ref UnityEngine.Ray value);
+        public void SerializeValuePreChecked(ref UnityEngine.Ray[] value);
+        public void SerializeValuePreChecked(ref UnityEngine.Ray2D value);
+        public void SerializeValuePreChecked(ref UnityEngine.Ray2D[] value);
+        public void SerializeValuePreChecked(ref UnityEngine.Vector2 value);
+        public void SerializeValuePreChecked(ref UnityEngine.Vector2[] value);
+        public void SerializeValuePreChecked(ref UnityEngine.Vector2Int value);
+        public void SerializeValuePreChecked(ref UnityEngine.Vector2Int[] value);
+        public void SerializeValuePreChecked(ref UnityEngine.Vector3 value);
+        public void SerializeValuePreChecked(ref UnityEngine.Vector3[] value);
+        public void SerializeValuePreChecked(ref UnityEngine.Vector3Int value);
+        public void SerializeValuePreChecked(ref UnityEngine.Vector3Int[] value);
+        public void SerializeValuePreChecked(ref UnityEngine.Vector4 value);
+        public void SerializeValuePreChecked(ref UnityEngine.Vector4[] value);
+        public void SerializeValuePreChecked(ref string s, bool oneByteChars = false);
+        public void SerializeValuePreChecked<T>(ref T value, FastBufferWriter.ForEnums unused = default(FastBufferWriter.ForEnums)) where T : struct, unmanaged, System.Enum, new();
+        public void SerializeValuePreChecked<T>(ref T value, FastBufferWriter.ForFixedStrings unused = default(FastBufferWriter.ForFixedStrings)) where T : struct, unmanaged, Unity.Collections.INativeList<byte>, Unity.Collections.IUTF8Bytes, new();
+        public void SerializeValuePreChecked<T>(ref T value, FastBufferWriter.ForPrimitives unused = default(FastBufferWriter.ForPrimitives)) where T : struct, unmanaged, System.IComparable, System.IConvertible, System.IComparable<T>, System.IEquatable<T>, new();
+        public void SerializeValuePreChecked<T>(ref T value, FastBufferWriter.ForStructs unused = default(FastBufferWriter.ForStructs)) where T : struct, unmanaged, INetworkSerializeByMemcpy, new();
+        public void SerializeValuePreChecked<T>(ref T[] value, FastBufferWriter.ForEnums unused = default(FastBufferWriter.ForEnums)) where T : struct, unmanaged, System.Enum, new();
+        public void SerializeValuePreChecked<T>(ref T[] value, FastBufferWriter.ForPrimitives unused = default(FastBufferWriter.ForPrimitives)) where T : struct, unmanaged, System.IComparable, System.IConvertible, System.IComparable<T>, System.IEquatable<T>, new();
+        public void SerializeValuePreChecked<T>(ref T[] value, FastBufferWriter.ForStructs unused = default(FastBufferWriter.ForStructs)) where T : struct, unmanaged, INetworkSerializeByMemcpy, new();
+        public void SerializeValuePreChecked<T>(ref Unity.Collections.NativeArray<T> value, Unity.Collections.Allocator allocator, FastBufferWriter.ForGeneric unused = default(FastBufferWriter.ForGeneric)) where T : struct, unmanaged, new();
+    }
+
+    public enum LocalDeferMode
+    {
+        Default = 0,
+        Defer = 1,
+        SendImmediate = 2,
+    }
+
+    public enum LogLevel
+    {
+        Developer = 0,
+        Normal = 1,
+        Error = 2,
+        Nothing = 3,
+    }
+
+    public abstract class NetworkBehaviour : UnityEngine.MonoBehaviour
+    {
+        protected NetworkBehaviour.__RpcExecStage __rpc_exec_stage;
+        protected static readonly System.Collections.Generic.Dictionary<System.Type, System.Collections.Generic.Dictionary<uint, NetworkBehaviour.RpcReceiveHandler>> __rpc_func_table = new();
+        protected static readonly System.Collections.Generic.Dictionary<System.Type, System.Collections.Generic.Dictionary<uint, string>> __rpc_name_table = new();
+        protected readonly System.Collections.Generic.List<NetworkVariableBase> NetworkVariableFields = new();
+        public bool HasAuthority { get; }
+        public bool HasNetworkObject { get; }
+        public bool IsClient { get; }
+        public bool IsHost { get; }
+        public bool IsLocalPlayer { get; }
+        public bool IsOwnedByServer { get; }
+        public bool IsOwner { get; }
+        public bool IsServer { get; }
+        public bool IsSessionOwner { get; }
+        public bool IsSpawned { get; }
+        protected ulong m_TargetIdBeingSynchronized { get; }
+        public ushort NetworkBehaviourId { get; }
+        public NetworkManager NetworkManager { get; }
+        public NetworkObject NetworkObject { get; }
+        public ulong NetworkObjectId { get; }
+        public ulong OwnerClientId { get; }
+        public RpcTarget RpcTarget { get; }
+        public bool ServerIsHost { get; }
+        protected NetworkBehaviour() {}
+        protected FastBufferWriter __beginSendClientRpc(uint rpcMethodId, ClientRpcParams clientRpcParams, RpcDelivery rpcDelivery);
+        protected FastBufferWriter __beginSendRpc(uint rpcMethodId, RpcParams rpcParams, RpcAttribute.RpcAttributeParams attributeParams, SendTo defaultTarget, RpcDelivery rpcDelivery);
+        protected FastBufferWriter __beginSendServerRpc(uint rpcMethodId, ServerRpcParams serverRpcParams, RpcDelivery rpcDelivery);
+        protected static Unity.Collections.NativeList<T> __createNativeList<T>() where T : struct, unmanaged, new();
+        protected void __endSendClientRpc(ref FastBufferWriter bufferWriter, uint rpcMethodId, ClientRpcParams clientRpcParams, RpcDelivery rpcDelivery);
+        protected void __endSendRpc(ref FastBufferWriter bufferWriter, uint rpcMethodId, RpcParams rpcParams, RpcAttribute.RpcAttributeParams attributeParams, SendTo defaultTarget, RpcDelivery rpcDelivery);
+        protected void __endSendServerRpc(ref FastBufferWriter bufferWriter, uint rpcMethodId, ServerRpcParams serverRpcParams, RpcDelivery rpcDelivery);
+        protected virtual string __getTypeName();
+        protected virtual void __initializeRpcs();
+        protected virtual void __initializeVariables();
+        protected void __nameNetworkVariable(NetworkVariableBase variable, string varName);
+        protected void __registerRpc(uint hash, NetworkBehaviour.RpcReceiveHandler handler, string rpcMethodName);
+        protected void __registerRpc(uint hash, NetworkBehaviour.RpcReceiveHandler handler, string rpcMethodName, RpcInvokePermission permission);
+        protected NetworkBehaviour GetNetworkBehaviour(ushort behaviourId);
+        protected NetworkObject GetNetworkObject(ulong networkId);
+        protected virtual void InternalOnNetworkPostSpawn();
+        protected virtual void InternalOnNetworkSessionSynchronized();
+        public virtual void OnDeferringDespawn(int despawnTick);
+        public virtual void OnDestroy();
+        public virtual void OnGainedOwnership();
+        protected virtual void OnInSceneObjectsSpawned();
+        public virtual void OnLostOwnership();
+        public virtual void OnNetworkDespawn();
+        public virtual void OnNetworkObjectParentChanged(NetworkObject parentNetworkObject);
+        protected virtual void OnNetworkPostSpawn();
+        public virtual void OnNetworkPreDespawn();
+        protected virtual void OnNetworkPreSpawn(ref NetworkManager networkManager);
+        protected virtual void OnNetworkSessionSynchronized();
+        public virtual void OnNetworkSpawn();
+        protected virtual void OnOwnershipChanged(ulong previous, ulong current);
+        public virtual void OnReanticipate(double lastRoundTripTime);
+        protected virtual void OnSynchronize<T>(ref Unity.Netcode.BufferSerializer<T> serializer) where T : IReaderWriter;
+        protected enum __RpcExecStage
+        {
+            Send = 0,
+            None = 0,
+            Execute = 1,
+            Server = 1,
+            Client = 2,
+        }
+        public delegate void RpcReceiveHandler(NetworkBehaviour behaviour, FastBufferReader reader, __RpcParams parameters);
+    }
+
+    public struct NetworkBehaviourReference : INetworkSerializable, System.IEquatable<NetworkBehaviourReference>
+    {
+        public NetworkBehaviourReference(NetworkBehaviour networkBehaviour) {}
+        public override bool Equals(object obj);
+        public bool Equals(NetworkBehaviourReference other);
+        public override int GetHashCode();
+        public void NetworkSerialize<T>(Unity.Netcode.BufferSerializer<T> serializer) where T : IReaderWriter;
+        public static NetworkBehaviour op_Implicit(NetworkBehaviourReference networkBehaviourRef);
+        public static NetworkBehaviourReference op_Implicit(NetworkBehaviour networkBehaviour);
+        public bool TryGet<T>(out T networkBehaviour, NetworkManager networkManager = default(NetworkManager)) where T : NetworkBehaviour;
+        public bool TryGet(out NetworkBehaviour networkBehaviour, NetworkManager networkManager = default(NetworkManager));
+    }
+
+    public class NetworkBehaviourUpdater
+    {
+        public NetworkBehaviourUpdater() {}
+    }
+
+    public class NetworkClient
+    {
+        public ulong ClientId;
+        public NetworkObject PlayerObject;
+        public bool DAHost { get; }
+        public bool IsSessionOwner { get; }
+        public NetworkTopologyTypes NetworkTopologyType { get; }
+        public NetworkObject[] OwnedObjects { get; }
+        public NetworkClient() {}
+    }
+
+    public class NetworkConfig
+    {
+        [UnityEngine.Tooltip(@"When enabled (default), the player prefab will automatically be spawned (client-side) upon the client being approved and synchronized.")] public bool AutoSpawnPlayerPrefabClientSide = true;
+        [UnityEngine.Tooltip(@"The amount of seconds for the server to wait for the connection approval handshake to complete before the client is disconnected")] public int ClientConnectionBufferTimeout = 10;
+        [UnityEngine.Tooltip(@"Whether or not to force clients to be approved before they connect")] public bool ConnectionApproval;
+        [UnityEngine.Tooltip(@"The connection data sent along with connection requests")] public byte[] ConnectionData;
+        public bool EnableNetworkLogs = true;
+        [UnityEngine.Tooltip(@"Enables scene management. This will allow network scene switches and automatic scene difference corrections upon connect.SoftSynced scene objects wont work with this disabled. That means that disabling SceneManagement also enables PrefabSync.")] public bool EnableSceneManagement = true;
+        [UnityEngine.Tooltip(@"Enable this to re-sync the NetworkTime after the initial sync")] public bool EnableTimeResync;
+        [UnityEngine.Tooltip(@"Ensures that NetworkVariables can be read even if a client accidental writes where its not allowed to. This will cost some CPU time and bandwidth")] public bool EnsureNetworkVariableLengthSafety;
+        [UnityEngine.Tooltip(@"Whether or not the netcode should check for differences in the prefab lists at connection")] public bool ForceSamePrefabs = true;
+        [UnityEngine.Tooltip(@"The amount of seconds to wait for all clients to load or unload a requested scene (only when EnableSceneManagement is enabled)")] public int LoadSceneTimeOut = 120;
+        [UnityEngine.Tooltip(@"The amount of seconds a NetworkId has to unused in order for it to be reused")] public float NetworkIdRecycleDelay = 120f;
+        [UnityEngine.Tooltip(@"Enable (default) if you want to gather messaging metrics. Realtime Network Stats Monitor requires this to be enabled. Disabling this can improve performance in release builds.")] public bool NetworkMessageMetrics = true;
+        [UnityEngine.Tooltip(@"Enable (default) if you want to profile network messages with development builds and defaults to being disabled in release builds. When disabled, network messaging profiling will be disabled in development builds.")] public bool NetworkProfilingMetrics = true;
+        [UnityEngine.Tooltip(@"Determines whether to use the client-server or distributed authority network topology.")] public NetworkTopologyTypes NetworkTopology;
+        [UnityEngine.Tooltip(@"The NetworkTransport to use")] public NetworkTransport NetworkTransport;
+        [UnityEngine.Tooltip(@"When set, NetworkManager will automatically create and spawn the assigned player prefab. This can be overridden by adding it to the NetworkPrefabs list and selecting override.")] public UnityEngine.GameObject PlayerPrefab;
+        [UnityEngine.SerializeField] public NetworkPrefabs Prefabs = new();
+        [UnityEngine.Tooltip(@"Use this to make two builds incompatible with each other")] public ushort ProtocolVersion;
+        [UnityEngine.Tooltip(@"If true, NetworkIds will be reused after the NetworkIdRecycleDelay")] public bool RecycleNetworkIds = true;
+        [UnityEngine.Tooltip(@"The maximum amount of bytes to use for RPC messages.")] public HashSize RpcHashSize;
+        public const int RttAverageSamples = 5;
+        public const int RttWindowSize = 64;
+        [UnityEngine.Range(10f, 3600f)] [UnityEngine.Tooltip(@"The amount of time a message will be held (deferred) if the destination NetworkObject needed to process the message doesn't exist yet. If the NetworkObject is not spawned within this time period, all deferred messages for that NetworkObject will be dropped.")] public float SpawnTimeout = 10f;
+        [UnityEngine.Tooltip(@"The tickrate. This value controls how often netcode runs user code and sends out data. The value is in 'ticks per seconds' which means a value of 50 will result in 50 ticks being executed per second or a fixed delta time of 0.02.")] public uint TickRate = 30;
+        [UnityEngine.Tooltip(@"The amount of seconds between re-syncs of NetworkTime, if enabled")] public int TimeResyncInterval = 30;
+        [UnityEngine.HideInInspector] public bool UseCMBService;
+        public NetworkConfig() {}
+        public bool CompareConfig(ulong hash);
+        public void FromBase64(string base64);
+        public ulong GetConfig(bool cache = true);
+        public string ToBase64();
+    }
+
+    public class NetworkConfigurationException : System.Exception
+    {
+        public NetworkConfigurationException() {}
+        public NetworkConfigurationException(string message) {}
+        public NetworkConfigurationException(string message, System.Exception inner) {}
+    }
+
+    public sealed class NetworkConnectionManager
+    {
+        public event System.Action<ulong> OnClientConnectedCallback;
+        public event System.Action<ulong> OnClientDisconnectCallback;
+        public event System.Action<NetworkManager, ConnectionEventData> OnConnectionEvent;
+        public event System.Action OnTransportFailure;
+        public string DisconnectReason { get; }
+        public bool IsListening { get; }
+        public NetworkConnectionManager() {}
+    }
+
+    public enum NetworkDelivery
+    {
+        Unreliable = 0,
+        UnreliableSequenced = 1,
+        Reliable = 2,
+        ReliableSequenced = 3,
+        ReliableFragmentedSequenced = 4,
+    }
+
+    public enum NetworkEvent
+    {
+        Data = 0,
+        Connect = 1,
+        Disconnect = 2,
+        TransportFailure = 3,
+        Nothing = 4,
+    }
+
+    [GenerateSerializationForGenericParameter(0)] public class NetworkList<T> : NetworkVariableBase where T : struct, unmanaged, System.IEquatable<T>, new()
+    {
+        public event OnListChangedDelegate OnListChanged;
+        public int Count { get; }
+        public T this[int index] { get; set; }
+        public int LastModifiedTick { get; }
+        public NetworkList() {}
+        public NetworkList(System.Collections.Generic.IEnumerable<T> values = default(System.Collections.Generic.IEnumerable<T>), NetworkVariableReadPermission readPerm = NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission writePerm = NetworkVariableWritePermission.Server) {}
+        public void Add(T item);
+        public Unity.Collections.NativeArray<T>.ReadOnly AsNativeArray();
+        public void Clear();
+        public bool Contains(T item);
+        public override void Dispose();
+        protected override void Finalize();
+        public System.Collections.Generic.IEnumerator<T> GetEnumerator();
+        public int IndexOf(T item);
+        public void Insert(int index, T item);
+        public override bool IsDirty();
+        public override void ReadDelta(FastBufferReader reader, bool keepDirtyDelta);
+        public override void ReadField(FastBufferReader reader);
+        public bool Remove(T item);
+        public void RemoveAt(int index);
+        public override void ResetDirty();
+        public void Set(int index, T value, bool forceUpdate = false);
+        public override void WriteDelta(FastBufferWriter writer);
+        public override void WriteField(FastBufferWriter writer);
+        public delegate void OnListChangedDelegate(Unity.Netcode.NetworkListEvent<T> changeEvent);
+    }
+
+    public struct NetworkListEvent<T>
+    {
+        public int Index;
+        public T PreviousValue;
+        public EventType Type;
+        public T Value;
+        public enum EventType : byte
+        {
+            public const Unity.Netcode.NetworkListEvent<T>.EventType Add = NetworkListEvent<>.Add;
+            public const Unity.Netcode.NetworkListEvent<T>.EventType Insert = NetworkListEvent<>.Insert;
+            public const Unity.Netcode.NetworkListEvent<T>.EventType Remove = NetworkListEvent<>.Remove;
+            public const Unity.Netcode.NetworkListEvent<T>.EventType RemoveAt = NetworkListEvent<>.RemoveAt;
+            public const Unity.Netcode.NetworkListEvent<T>.EventType Value = NetworkListEvent<>.Value;
+            public const Unity.Netcode.NetworkListEvent<T>.EventType Clear = NetworkListEvent<>.Clear;
+            public const Unity.Netcode.NetworkListEvent<T>.EventType Full = NetworkListEvent<>.Full;
+        }
+    }
+
+    public static class NetworkLog
+    {
+        public static LogLevel CurrentLogLevel { get; }
+        public static void LogError(string message);
+        public static void LogErrorServer(string message);
+        public static void LogInfo(string message);
+        public static void LogInfoServer(string message);
+        public static void LogInfoSessionOwner(string message);
+        public static void LogWarning(string message);
+        public static void LogWarningServer(string message);
+    }
+
+    [UnityEngine.AddComponentMenu(@"Netcode/Network Manager", -100)] [UnityEngine.HelpURL(@"https://docs.unity3d.com/Packages/com.unity.netcode.gameobjects@latest/?subfolder=/manual/components/core/networkmanager.html")] public class NetworkManager : UnityEngine.MonoBehaviour, INetworkUpdateSystem
+    {
+        public static readonly System.Collections.Generic.Dictionary<uint, NetworkManager.RpcReceiveHandler> __rpc_func_table = new();
+        public static readonly System.Collections.Generic.Dictionary<uint, string> __rpc_name_table = new();
+        [UnityEngine.HideInInspector] public LogLevel LogLevel = LogLevel.Normal;
+        [UnityEngine.HideInInspector] public NetworkConfig NetworkConfig;
+        [UnityEngine.HideInInspector] public bool NetworkManagerExpanded;
+        public NetworkManager.OnFetchLocalPlayerPrefabToSpawnDelegateHandler OnFetchLocalPlayerPrefabToSpawn;
+        public readonly System.Collections.Generic.Dictionary<ulong, PendingClient> PendingClients = new();
+        public RpcTarget RpcTarget;
+        [UnityEngine.HideInInspector] public bool RunInBackground = true;
+        public const ulong ServerClientId = 0;
+        public event System.Action<ulong> OnClientConnectedCallback;
+        public event System.Action<ulong> OnClientDisconnectCallback;
+        public event System.Action OnClientStarted;
+        public event System.Action<bool> OnClientStopped;
+        public event System.Action<NetworkManager, ConnectionEventData> OnConnectionEvent;
+        public static event System.Action<NetworkManager> OnDestroying;
+        public static event System.Action<NetworkManager> OnInstantiated;
+        public event System.Action OnPreShutdown;
+        public event NetworkManager.ReanticipateDelegate OnReanticipate;
+        public event System.Action OnServerStarted;
+        public event System.Action<bool> OnServerStopped;
+        public event NetworkManager.OnSessionOwnerPromotedDelegateHandler OnSessionOwnerPromoted;
+        public event System.Action OnTransportFailure;
+        public bool AutoSpawnPlayerPrefabClientSide { get; }
+        public bool CMBServiceConnection { get; }
+        public System.Collections.Generic.IReadOnlyDictionary<ulong, NetworkClient> ConnectedClients { get; }
+        public System.Collections.Generic.IReadOnlyList<ulong> ConnectedClientsIds { get; }
+        public System.Collections.Generic.IReadOnlyList<NetworkClient> ConnectedClientsList { get; }
+        public string ConnectedHostname { get; }
+        public System.Action<NetworkManager.ConnectionApprovalRequest, NetworkManager.ConnectionApprovalResponse> ConnectionApprovalCallback { get; set; }
+        public ulong CurrentSessionOwner { get; }
+        public CustomMessagingManager CustomMessagingManager { get; }
+        public bool DAHost { get; }
+        public NetworkTransport.DisconnectEvents DisconnectEvent { get; }
+        public string DisconnectReason { get; }
+        public bool DistributedAuthorityMode { get; }
+        public bool IsApproved { get; }
+        public bool IsClient { get; }
+        public bool IsConnectedClient { get; }
+        public bool IsHost { get; }
+        public bool IsListening { get; }
+        public bool IsServer { get; }
+        public NetworkClient LocalClient { get; }
+        public ulong LocalClientId { get; }
+        public NetworkTime LocalTime { get; }
+        public int MaximumFragmentedMessageSize { get; set; }
+        public int MaximumTransmissionUnitSize { get; set; }
+        public NetworkTickSystem NetworkTickSystem { get; }
+        public NetworkTimeSystem NetworkTimeSystem { get; }
+        public NetworkPrefabHandler PrefabHandler { get; }
+        public NetworkSceneManager SceneManager { get; }
+        public bool ServerIsHost { get; }
+        public NetworkTime ServerTime { get; }
+        public bool ShutdownInProgress { get; }
+        public static NetworkManager Singleton { get; }
+        public NetworkSpawnManager SpawnManager { get; }
+        public NetworkManager() {}
+        public void AddNetworkPrefab(UnityEngine.GameObject prefab);
+        public void DisconnectClient(ulong clientId);
+        public void DisconnectClient(ulong clientId, string reason = default(string));
+        public ulong GetClientIdFromTransportId(ulong transportId);
+        public UnityEngine.GameObject GetNetworkPrefabOverride(UnityEngine.GameObject gameObject);
+        public int GetPeerMTU(ulong clientId);
+        public ulong GetTransportIdFromClientId(ulong clientId);
+        public void NetworkUpdate(NetworkUpdateStage updateStage);
+        protected virtual void OnValidateComponent();
+        public void RemoveNetworkPrefab(UnityEngine.GameObject prefab);
+        public void SetPeerMTU(ulong clientId, int size);
+        public void SetSingleton();
+        public void Shutdown(bool discardMessageQueue = false);
+        public bool StartClient();
+        public bool StartHost();
+        public bool StartServer();
+        public struct ConnectionApprovalRequest
+        {
+            public ulong ClientNetworkId;
+            public byte[] Payload;
+        }
+        public class ConnectionApprovalResponse
+        {
+            public bool Approved;
+            public bool CreatePlayerObject;
+            public bool Pending;
+            public System.Nullable<uint> PlayerPrefabHash;
+            public System.Nullable<UnityEngine.Vector3> Position;
+            public string Reason;
+            public System.Nullable<UnityEngine.Quaternion> Rotation;
+            public ConnectionApprovalResponse() {}
+        }
+        public delegate UnityEngine.GameObject OnFetchLocalPlayerPrefabToSpawnDelegateHandler();
+        public delegate void OnSessionOwnerPromotedDelegateHandler(ulong sessionOwnerPromoted);
+        public delegate void ReanticipateDelegate(double lastRoundTripTime);
+        public delegate void RpcReceiveHandler(NetworkBehaviour behaviour, FastBufferReader reader, __RpcParams parameters);
+    }
+
+    [UnityEngine.AddComponentMenu(@"Netcode/Network Object", -99)] [UnityEngine.DisallowMultipleComponent] [UnityEngine.HelpURL(@"https://docs.unity3d.com/Packages/com.unity.netcode.gameobjects@latest/?subfolder=/manual/components/core/networkobject.html")] public sealed class NetworkObject : UnityEngine.MonoBehaviour
+    {
+        [UnityEngine.Tooltip(@"When enabled (default disabled), spawned instances of this NetworkObject will automatically migrate to any newly assigned active scene.")] public bool ActiveSceneSynchronization;
+        [UnityEngine.Tooltip(@"When enabled (default disabled), owner's can parent a NetworkObject locally without having to send an RPC to the server or host. Only pertinent when using client-server network topology configurations.")] public bool AllowOwnerToParent;
+        [UnityEngine.Tooltip(@"If enabled (default disabled), instances of this NetworkObject will ignore any parent(s) it might have and replicate on clients as the root being its parent.")] public bool AlwaysReplicateAsRoot;
+        [UnityEngine.Tooltip(@"When disabled (default enabled), NetworkObject parenting will not be automatically synchronized. This is typically used when you want to implement your own custom parenting solution.")] public bool AutoObjectParentSync = true;
+        public NetworkObject.VisibilityDelegate CheckObjectVisibility;
+        [UnityEngine.HideInInspector] public int DeferredDespawnTick;
+        [UnityEngine.Tooltip(@"When enabled (default disabled), instances of this NetworkObject will not be destroyed if the owning client disconnects.")] public bool DontDestroyWithOwner;
+        public NetworkObject.SpawnDelegate IncludeTransformWhenSpawning;
+        public NetworkObject.OnDeferedDespawnCompleteDelegateHandler OnDeferredDespawnComplete;
+        public System.Action OnMigratedToNewScene;
+        public NetworkObject.OnOwnershipPermissionsFailureDelegateHandler OnOwnershipPermissionsFailure;
+        public NetworkObject.OnOwnershipRequestedDelegateHandler OnOwnershipRequested;
+        public NetworkObject.OnOwnershipRequestResponseDelegateHandler OnOwnershipRequestResponse;
+        [UnityEngine.Tooltip(@"When enabled (default enabled), dynamically spawned instances of this NetworkObject's migration to a different scene will automatically be synchonize amongst clients.")] public bool SceneMigrationSynchronization = true;
+        [UnityEngine.Tooltip(@"When disabled (default enabled), the NetworkObject will spawn with no observers. You control object visibility using NetworkShow. This applies to newly joining clients as well.")] public bool SpawnWithObservers = true;
+        [UnityEngine.Tooltip(@"If enabled (default enabled), newly joining clients will be synchronized with the transform of the associated GameObject this component is attached to. Typical use case scenario would be for managment objects or in-scene placed objects that don't move and already have their transform settings applied within the scene information.")] public bool SynchronizeTransform = true;
+        [UnityEngine.Tooltip(@"When disabled (default enabled), the owner will not apply a server or host's transform properties when parenting changes. Primarily useful for client-server network topology configurations.")] public bool SyncOwnerTransformWhenParented = true;
+        public NetworkObject CurrentParent { get; }
+        public bool DestroyWithScene { get; set; }
+        public bool HasAuthority { get; }
+        public bool IsLocalPlayer { get; }
+        public bool IsOwnedByServer { get; }
+        public bool IsOwner { get; }
+        public bool IsOwnershipDistributable { get; }
+        public bool IsOwnershipLocked { get; }
+        public bool IsOwnershipRequestRequired { get; }
+        public bool IsOwnershipSessionOwner { get; }
+        public bool IsOwnershipTransferable { get; }
+        public bool IsPlayerObject { get; }
+        public bool IsRequestInProgress { get; }
+        public System.Nullable<bool> IsSceneObject { get; }
+        public bool IsSpawned { get; }
+        public NetworkManager NetworkManager { get; }
+        public ulong NetworkObjectId { get; }
+        public System.Collections.Generic.List<Components.NetworkRigidbodyBase> NetworkRigidbodies { get; }
+        public System.Collections.Generic.List<Components.NetworkTransform> NetworkTransforms { get; }
+        public ulong OwnerClientId { get; }
+        [UnityEngine.HideInInspector] public uint PrefabIdHash { get; }
+        public NetworkObject() {}
+        public void ChangeOwnership(ulong newOwnerClientId);
+        public void DeferDespawn(int tickOffset, bool destroy = true);
+        public void Despawn(bool destroy = true);
+        public NetworkBehaviour GetNetworkBehaviourAtOrderIndex(ushort index);
+        public ushort GetNetworkBehaviourOrderIndex(NetworkBehaviour instance);
+        public System.Collections.Generic.HashSet<ulong>.Enumerator GetObservers();
+        public bool HasOwnershipStatus(NetworkObject.OwnershipStatus status);
+        public NetworkObject InstantiateAndSpawn(NetworkManager networkManager, ulong ownerClientId = 0, bool destroyWithScene = false, bool isPlayerObject = false, bool forceOverride = false, UnityEngine.Vector3 position = default(UnityEngine.Vector3), UnityEngine.Quaternion rotation = default(UnityEngine.Quaternion));
+        public static NetworkObject InstantiateAndSpawn(UnityEngine.GameObject networkPrefab, NetworkManager networkManager, ulong ownerClientId = 0, bool destroyWithScene = false, bool isPlayerObject = false, bool forceOverride = false, UnityEngine.Vector3 position = default(UnityEngine.Vector3), UnityEngine.Quaternion rotation = default(UnityEngine.Quaternion));
+        public bool IsNetworkVisibleTo(ulong clientId);
+        public void NetworkHide(ulong clientId);
+        public static void NetworkHide(System.Collections.Generic.List<NetworkObject> networkObjects, ulong clientId);
+        public void NetworkShow(ulong clientId);
+        public static void NetworkShow(System.Collections.Generic.List<NetworkObject> networkObjects, ulong clientId);
+        public void RemoveOwnership();
+        public bool RemoveOwnershipStatus(NetworkObject.OwnershipStatus status);
+        public NetworkObject.OwnershipRequestStatus RequestOwnership();
+        public bool SetOwnershipLock(bool lockOwnership = true);
+        public bool SetOwnershipStatus(NetworkObject.OwnershipStatus status, bool clearAndSet = false, NetworkObject.OwnershipLockActions lockAction = NetworkObject.OwnershipLockActions.None);
+        public void SetSceneObjectStatus(bool isSceneObject = false);
+        public void Spawn(bool destroyWithScene = false);
+        public void SpawnAsPlayerObject(ulong clientId, bool destroyWithScene = false);
+        public void SpawnWithOwnership(ulong clientId, bool destroyWithScene = false);
+        public bool TryRemoveParent(bool worldPositionStays = true);
+        public bool TrySetParent(NetworkObject parent, bool worldPositionStays = true);
+        public bool TrySetParent(UnityEngine.GameObject parent, bool worldPositionStays = true);
+        public bool TrySetParent(UnityEngine.Transform parent, bool worldPositionStays = true);
+        public bool WorldPositionStays();
+        public delegate bool OnDeferedDespawnCompleteDelegateHandler();
+        public delegate void OnOwnershipPermissionsFailureDelegateHandler(NetworkObject.OwnershipPermissionsFailureStatus changeOwnershipFailure);
+        public delegate bool OnOwnershipRequestedDelegateHandler(ulong clientRequesting);
+        public delegate void OnOwnershipRequestResponseDelegateHandler(NetworkObject.OwnershipRequestResponseStatus ownershipRequestResponse);
+        public enum OwnershipLockActions
+        {
+            None = 0,
+            SetAndLock = 1,
+            SetAndUnlock = 2,
+        }
+        public enum OwnershipPermissionsFailureStatus
+        {
+            Locked = 0,
+            RequestRequired = 1,
+            RequestInProgress = 2,
+            NotTransferrable = 3,
+            SessionOwnerOnly = 4,
+        }
+        public enum OwnershipRequestResponseStatus
+        {
+            Approved = 0,
+            Locked = 1,
+            RequestInProgress = 2,
+            CannotRequest = 3,
+            Denied = 4,
+        }
+        public enum OwnershipRequestStatus
+        {
+            RequestSent = 0,
+            AlreadyOwner = 1,
+            RequestRequiredNotSet = 2,
+            Locked = 3,
+            RequestInProgress = 4,
+            SessionOwnerOnly = 5,
+            InvalidOperation = 6,
+        }
+        [System.Flags] public enum OwnershipStatus
+        {
+            All = -1,
+            None = 0,
+            Distributable = 1 << 0,
+            Transferable = 1 << 1,
+            RequestRequired = 1 << 2,
+            SessionOwner = 1 << 3,
+        }
+        public delegate bool SpawnDelegate(ulong clientId);
+        public delegate bool VisibilityDelegate(ulong clientId);
+    }
+
+    public struct NetworkObjectReference : INetworkSerializable, System.IEquatable<NetworkObjectReference>
+    {
+        public ulong NetworkObjectId { get; }
+        public NetworkObjectReference(NetworkObject networkObject) {}
+        public NetworkObjectReference(UnityEngine.GameObject gameObject) {}
+        public override bool Equals(object obj);
+        public bool Equals(NetworkObjectReference other);
+        public override int GetHashCode();
+        public void NetworkSerialize<T>(Unity.Netcode.BufferSerializer<T> serializer) where T : IReaderWriter;
+        public static NetworkObject op_Implicit(NetworkObjectReference networkObjectRef);
+        public static NetworkObjectReference op_Implicit(NetworkObject networkObject);
+        public static NetworkObjectReference op_Implicit(UnityEngine.GameObject gameObject);
+        public static UnityEngine.GameObject op_Implicit(NetworkObjectReference networkObjectRef);
+        public bool TryGet(out NetworkObject networkObject, NetworkManager networkManager = default(NetworkManager));
+    }
+
+    public class NetworkPrefab
+    {
+        public NetworkPrefabOverride Override;
+        public UnityEngine.GameObject OverridingTargetPrefab;
+        public UnityEngine.GameObject Prefab;
+        public uint SourceHashToOverride;
+        public UnityEngine.GameObject SourcePrefabToOverride;
+        public uint SourcePrefabGlobalObjectIdHash { get; }
+        public uint TargetPrefabGlobalObjectIdHash { get; }
+        public NetworkPrefab() {}
+        public bool Equals(NetworkPrefab other);
+        public override string ToString();
+        public bool Validate(int index = -1);
+    }
+
+    public class NetworkPrefabHandler
+    {
+        public NetworkPrefabHandler() {}
+        public bool AddHandler(uint globalObjectIdHash, INetworkPrefabInstanceHandler instanceHandler);
+        public bool AddHandler(NetworkObject prefabAssetNetworkObject, INetworkPrefabInstanceHandler instanceHandler);
+        public bool AddHandler(UnityEngine.GameObject networkPrefabAsset, INetworkPrefabInstanceHandler instanceHandler);
+        public void AddNetworkPrefab(UnityEngine.GameObject prefab);
+        public UnityEngine.GameObject GetNetworkPrefabOverride(UnityEngine.GameObject gameObject);
+        public void RegisterHostGlobalObjectIdHashValues(UnityEngine.GameObject sourceNetworkPrefab, System.Collections.Generic.List<UnityEngine.GameObject> networkPrefabOverrides);
+        public bool RemoveHandler(uint globalObjectIdHash);
+        public bool RemoveHandler(NetworkObject networkObject);
+        public bool RemoveHandler(UnityEngine.GameObject networkPrefabAsset);
+        public void RemoveNetworkPrefab(UnityEngine.GameObject prefab);
+        public void SetInstantiationData<T>(NetworkObject networkObject, T instantiationData) where T : struct, INetworkSerializable, new();
+        public void SetInstantiationData<T>(UnityEngine.GameObject gameObject, T instantiationData) where T : struct, INetworkSerializable, new();
+    }
+
+    public abstract class NetworkPrefabInstanceHandlerWithData<T> : INetworkPrefabInstanceHandler where T : struct, INetworkSerializable, new()
+    {
+        protected NetworkPrefabInstanceHandlerWithData() {}
+        public abstract void Destroy(NetworkObject networkObject);
+        public abstract NetworkObject Instantiate(ulong ownerClientId, UnityEngine.Vector3 position, UnityEngine.Quaternion rotation, T instantiationData);
+    }
+
+    public enum NetworkPrefabOverride
+    {
+        None = 0,
+        Prefab = 1,
+        Hash = 2,
+    }
+
+    public class NetworkPrefabs
+    {
+        public System.Collections.Generic.Dictionary<uint, NetworkPrefab> NetworkPrefabOverrideLinks = new();
+        [UnityEngine.SerializeField] public System.Collections.Generic.List<NetworkPrefabsList> NetworkPrefabsLists = new();
+        public System.Collections.Generic.Dictionary<uint, uint> OverrideToNetworkPrefab = new();
+        public System.Collections.Generic.IReadOnlyList<NetworkPrefab> Prefabs { get; }
+        public NetworkPrefabs() {}
+        public bool Add(NetworkPrefab networkPrefab);
+        public bool Contains(NetworkPrefab prefab);
+        public bool Contains(UnityEngine.GameObject prefab);
+        protected override void Finalize();
+        public void Initialize(bool warnInvalid = true);
+        public void Remove(NetworkPrefab prefab);
+        public void Remove(UnityEngine.GameObject prefab);
+    }
+
+    [UnityEngine.CreateAssetMenu(fileName = @"NetworkPrefabsList", menuName = @"Netcode/Network Prefabs List")] public class NetworkPrefabsList : UnityEngine.ScriptableObject
+    {
+        public System.Collections.Generic.IReadOnlyList<NetworkPrefab> PrefabList { get; }
+        public NetworkPrefabsList() {}
+        public void Add(NetworkPrefab prefab);
+        public bool Contains(NetworkPrefab prefab);
+        public bool Contains(UnityEngine.GameObject prefab);
+        public void Remove(NetworkPrefab prefab);
+    }
+
+    public class NetworkSceneManager : System.IDisposable
+    {
+        public bool PostSynchronizationSceneUnloading;
+        public NetworkSceneManager.VerifySceneBeforeLoadingDelegateHandler VerifySceneBeforeLoading;
+        public NetworkSceneManager.VerifySceneBeforeUnloadingDelegateHandler VerifySceneBeforeUnloading;
+        public event NetworkSceneManager.OnLoadDelegateHandler OnLoad;
+        public event NetworkSceneManager.OnLoadCompleteDelegateHandler OnLoadComplete;
+        public event NetworkSceneManager.OnEventCompletedDelegateHandler OnLoadEventCompleted;
+        public event NetworkSceneManager.SceneEventDelegate OnSceneEvent;
+        public event NetworkSceneManager.OnSynchronizeDelegateHandler OnSynchronize;
+        public event NetworkSceneManager.OnSynchronizeCompleteDelegateHandler OnSynchronizeComplete;
+        public event NetworkSceneManager.OnUnloadDelegateHandler OnUnload;
+        public event NetworkSceneManager.OnUnloadCompleteDelegateHandler OnUnloadComplete;
+        public event NetworkSceneManager.OnEventCompletedDelegateHandler OnUnloadEventCompleted;
+        public bool ActiveSceneSynchronizationEnabled { get; set; }
+        public UnityEngine.SceneManagement.LoadSceneMode ClientSynchronizationMode { get; }
+        public void DisableValidationWarnings(bool disabled);
+        public void Dispose();
+        public System.Collections.Generic.List<NetworkSceneManager.SceneMap> GetSceneMapping(NetworkSceneManager.MapTypes mapType);
+        public System.Collections.Generic.List<UnityEngine.SceneManagement.Scene> GetSynchronizedScenes();
+        public SceneEventProgressStatus LoadScene(string sceneName, UnityEngine.SceneManagement.LoadSceneMode loadSceneMode);
+        public void SetClientSynchronizationMode(UnityEngine.SceneManagement.LoadSceneMode mode);
+        public SceneEventProgressStatus UnloadScene(UnityEngine.SceneManagement.Scene scene);
+        public enum MapTypes
+        {
+            ServerToClient = 0,
+            ClientToServer = 1,
+        }
+        public delegate void OnEventCompletedDelegateHandler(string sceneName, UnityEngine.SceneManagement.LoadSceneMode loadSceneMode, System.Collections.Generic.List<ulong> clientsCompleted, System.Collections.Generic.List<ulong> clientsTimedOut);
+        public delegate void OnLoadCompleteDelegateHandler(ulong clientId, string sceneName, UnityEngine.SceneManagement.LoadSceneMode loadSceneMode);
+        public delegate void OnLoadDelegateHandler(ulong clientId, string sceneName, UnityEngine.SceneManagement.LoadSceneMode loadSceneMode, UnityEngine.AsyncOperation asyncOperation);
+        public delegate void OnSynchronizeCompleteDelegateHandler(ulong clientId);
+        public delegate void OnSynchronizeDelegateHandler(ulong clientId);
+        public delegate void OnUnloadCompleteDelegateHandler(ulong clientId, string sceneName);
+        public delegate void OnUnloadDelegateHandler(ulong clientId, string sceneName, UnityEngine.AsyncOperation asyncOperation);
+        public delegate void SceneEventDelegate(SceneEvent sceneEvent);
+        public struct SceneMap : INetworkSerializable
+        {
+            [System.Obsolete(@"Int representation of a SceneHandle is deprecated, please use SceneHandle instead.")] public int LocalHandle;
+            public UnityEngine.SceneManagement.SceneHandle LocalSceneHandle;
+            [System.Obsolete(@"Int representation of a SceneHandle is deprecated, please use SceneHandle instead.")] public int MappedLocalHandle;
+            public UnityEngine.SceneManagement.SceneHandle MappedLocalSceneHandle;
+            public NetworkSceneManager.MapTypes MapType;
+            public UnityEngine.SceneManagement.Scene Scene;
+            public string SceneName;
+            public bool ScenePresent;
+            [System.Obsolete(@"Int representation of a SceneHandle is deprecated, please use SceneHandle instead.")] public int ServerHandle;
+            public UnityEngine.SceneManagement.SceneHandle ServerSceneHandle;
+            public void NetworkSerialize<T>(Unity.Netcode.BufferSerializer<T> serializer) where T : IReaderWriter;
+        }
+        public delegate bool VerifySceneBeforeLoadingDelegateHandler(int sceneIndex, string sceneName, UnityEngine.SceneManagement.LoadSceneMode loadSceneMode);
+        public delegate bool VerifySceneBeforeUnloadingDelegateHandler(UnityEngine.SceneManagement.Scene scene);
+    }
+
+    public class NetworkSpawnManager
+    {
+        public readonly System.Collections.Generic.Dictionary<ulong, System.Collections.Generic.Dictionary<ulong, NetworkObject>> OwnershipToObjectsTable = new();
+        public readonly System.Collections.Generic.Dictionary<ulong, NetworkObject> SpawnedObjects = new();
+        public readonly System.Collections.Generic.HashSet<NetworkObject> SpawnedObjectsList = new();
+        public NetworkManager NetworkManager { get; }
+        public System.Collections.Generic.IReadOnlyList<NetworkObject> PlayerObjects { get; }
+        protected override void Finalize();
+        public NetworkObject[] GetClientOwnedObjects(ulong clientId);
+        public System.Collections.Generic.List<ulong> GetConnectedPlayers();
+        public NetworkObject GetLocalPlayerObject();
+        public NetworkObject GetPlayerNetworkObject(ulong clientId);
+        public System.Collections.Generic.List<NetworkObject> GetPlayerNetworkObjects(ulong clientId);
+        public NetworkObject InstantiateAndSpawn(NetworkObject networkPrefab, ulong ownerClientId = 0, bool destroyWithScene = false, bool isPlayerObject = false, bool forceOverride = false, UnityEngine.Vector3 position = default(UnityEngine.Vector3), UnityEngine.Quaternion rotation = default(UnityEngine.Quaternion));
+        protected virtual void InternalOnOwnershipChanged(ulong perviousOwner, ulong newOwner);
+    }
+
+    public class NetworkTickSystem
+    {
+        public const int NoTick = int.MinValue;
+        public event System.Action Tick;
+        public NetworkTime LocalTime { get; }
+        public NetworkTime ServerTime { get; }
+        public uint TickRate { get; }
+        public NetworkTickSystem(uint tickRate, double localTimeSec, double serverTimeSec) {}
+        public void Reset(double localTimeSec, double serverTimeSec);
+        public void UpdateTick(double localTimeSec, double serverTimeSec);
+    }
+
+    public struct NetworkTime
+    {
+        public float FixedDeltaTime { get; }
+        public double FixedDeltaTimeAsDouble { get; }
+        public double FixedTime { get; }
+        public int Tick { get; }
+        public double TickOffset { get; }
+        public uint TickRate { get; }
+        public double TickWithPartial { get; }
+        public double Time { get; }
+        public float TimeAsFloat { get; }
+        public NetworkTime(uint tickRate) {}
+        public NetworkTime(uint tickRate, double timeSec) {}
+        public NetworkTime(uint tickRate, int tick, double tickOffset = 0d) {}
+        public static NetworkTime operator +(NetworkTime a, double b);
+        public static NetworkTime operator +(NetworkTime a, NetworkTime b);
+        public static NetworkTime operator -(NetworkTime a, double b);
+        public static NetworkTime operator -(NetworkTime a, NetworkTime b);
+        public NetworkTime TimeTicksAgo(int ticks, float offset = 0f);
+        public NetworkTime ToFixedTime();
+    }
+
+    public class NetworkTimeSystem
+    {
+        public int TickLatency = 1;
+        public double AdjustmentRatio { get; set; }
+        public double HardResetThresholdSec { get; set; }
+        public double LocalBufferSec { get; set; }
+        public double LocalTime { get; }
+        public double ServerBufferSec { get; set; }
+        public double ServerTime { get; }
+        public NetworkTimeSystem(double localBufferSec, double serverBufferSec = 0.0500000007450581d, double hardResetThresholdSec = 0.2d, double adjustmentRatio = 0.01d) {}
+        public bool Advance(double deltaTimeSec);
+        public void Reset(double serverTimeSec, double rttSec);
+        public static NetworkTimeSystem ServerTimeSystem();
+        public void Sync(double serverTimeSec, double rttSec);
+    }
+
+    public enum NetworkTopologyTypes
+    {
+        ClientServer = 0,
+        DistributedAuthority = 1,
+    }
+
+    public abstract class NetworkTransport : UnityEngine.MonoBehaviour
+    {
+        public event NetworkTransport.TransportEventDelegate OnTransportEvent;
+        public NetworkTransport.DisconnectEvents DisconnectEvent { get; }
+        public string DisconnectEventMessage { get; }
+        public virtual bool IsSupported { get; }
+        public abstract ulong ServerClientId { get; }
+        protected NetworkTransport() {}
+        public abstract void DisconnectLocalClient();
+        public abstract void DisconnectRemoteClient(ulong clientId);
+        public abstract ulong GetCurrentRtt(ulong clientId);
+        protected virtual string GetDisconnectEventMessage(NetworkTransport.DisconnectEvents disconnectEvent);
+        public abstract void Initialize(NetworkManager networkManager = default(NetworkManager));
+        protected void InvokeOnTransportEvent(NetworkEvent eventType, ulong clientId, System.ArraySegment<byte> payload, float receiveTime);
+        protected virtual NetworkTopologyTypes OnCurrentTopology();
+        protected virtual void OnEarlyUpdate();
+        protected virtual void OnPostLateUpdate();
+        public abstract NetworkEvent PollEvent(out ulong clientId, out System.ArraySegment<byte> payload, out float receiveTime);
+        public abstract void Send(ulong clientId, System.ArraySegment<byte> payload, NetworkDelivery networkDelivery);
+        protected void SetDisconnectEvent(NetworkTransport.DisconnectEvents disconnectEvent, string message = default(string));
+        public abstract void Shutdown();
+        public abstract bool StartClient();
+        public abstract bool StartServer();
+        public enum DisconnectEvents
+        {
+            TransportShutdown = 0,
+            Disconnected = 1,
+            ProtocolTimeout = 2,
+            MaxConnectionAttempts = 3,
+            ClosedByRemote = 4,
+            ClosedRemoteConnection = 5,
+            AuthenticationFailure = 6,
+            ProtocolError = 7,
+        }
+        public delegate void TransportEventDelegate(NetworkEvent eventType, ulong clientId, System.ArraySegment<byte> payload, float receiveTime);
+    }
+
+    public static class NetworkUpdateLoop
+    {
+        public static NetworkUpdateStage UpdateStage;
+        public static void RegisterAllNetworkUpdates(this INetworkUpdateSystem updateSystem);
+        public static void RegisterNetworkUpdate(this INetworkUpdateSystem updateSystem, NetworkUpdateStage updateStage = NetworkUpdateStage.Update);
+        public static void UnregisterAllNetworkUpdates(this INetworkUpdateSystem updateSystem);
+        public static void UnregisterNetworkUpdate(this INetworkUpdateSystem updateSystem, NetworkUpdateStage updateStage = NetworkUpdateStage.Update);
+    }
+
+    public enum NetworkUpdateStage : byte
+    {
+        Unset = 0,
+        Initialization = 1,
+        EarlyUpdate = 2,
+        FixedUpdate = 3,
+        PreUpdate = 4,
+        Update = 5,
+        PreLateUpdate = 6,
+        PostLateUpdate = 7,
+        PostScriptLateUpdate = 8,
+    }
+
+    [GenerateSerializationForGenericParameter(0)] public class NetworkVariable<T> : NetworkVariableBase
+    {
+        public CheckExceedsDirtinessThresholdDelegate CheckExceedsDirtinessThreshold;
+        public OnValueChangedDelegate OnValueChanged;
+        public virtual T Value { get; set; }
+        public NetworkVariable(T value = default(T), NetworkVariableReadPermission readPerm = NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission writePerm = NetworkVariableWritePermission.Server) {}
+        public bool CheckDirtyState(bool forceCheck = false);
+        public override void Dispose();
+        public override bool ExceedsDirtinessThreshold();
+        protected override void Finalize();
+        public override bool IsDirty();
+        public override void OnInitialize();
+        public override void ReadDelta(FastBufferReader reader, bool keepDirtyDelta);
+        public override void ReadField(FastBufferReader reader);
+        public void Reset(T value = default(T));
+        public override void ResetDirty();
+        public override void WriteDelta(FastBufferWriter writer);
+        public override void WriteField(FastBufferWriter writer);
+        public delegate void OnValueChangedDelegate(T previousValue, T newValue);
+        public delegate bool CheckExceedsDirtinessThresholdDelegate(ref readonly T previousValue, ref readonly T newValue);
+    }
+
+    public abstract class NetworkVariableBase : System.IDisposable
+    {
+        public const NetworkVariableReadPermission DefaultReadPerm = NetworkVariableReadPermission.Everyone;
+        public const NetworkVariableWritePermission DefaultWritePerm = NetworkVariableWritePermission.Server;
+        public readonly NetworkVariableReadPermission ReadPerm;
+        public string Name { get; }
+        public NetworkVariableWritePermission WritePerm { get; }
+        protected NetworkVariableBase(NetworkVariableReadPermission readPerm = NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission writePerm = NetworkVariableWritePermission.Server) {}
+        public bool CanClientRead(ulong clientId);
+        public bool CanClientWrite(ulong clientId);
+        public virtual void Dispose();
+        public virtual bool ExceedsDirtinessThreshold();
+        public NetworkBehaviour GetBehaviour();
+        public void Initialize(NetworkBehaviour networkBehaviour);
+        public virtual bool IsDirty();
+        protected void MarkNetworkBehaviourDirty();
+        public virtual void OnInitialize();
+        public abstract void ReadDelta(FastBufferReader reader, bool keepDirtyDelta);
+        public abstract void ReadField(FastBufferReader reader);
+        public virtual void ResetDirty();
+        public virtual void SetDirty(bool isDirty);
+        public void SetUpdateTraits(NetworkVariableUpdateTraits traits);
+        public abstract void WriteDelta(FastBufferWriter writer);
+        public abstract void WriteField(FastBufferWriter writer);
+    }
+
+    public enum NetworkVariableReadPermission
+    {
+        Everyone = 0,
+        Owner = 1,
+    }
+
+    public static class NetworkVariableSerialization<T>
+    {
+        public static EqualsDelegate AreEqual { get; }
+        public static void Duplicate(in T value, ref T duplicatedValue);
+        public static void Read(FastBufferReader reader, ref T value);
+        public static void ReadDelta(FastBufferReader reader, ref T value);
+        public static void Write(FastBufferWriter writer, ref T value);
+        public static void WriteDelta(FastBufferWriter writer, ref T value, ref T previousValue);
+        public delegate bool EqualsDelegate(ref T a, ref T b);
+    }
+
+    public static class NetworkVariableSerializationTypedInitializers
+    {
+        public static void InitializeEqualityChecker_Dictionary<TKey, TVal>() where TKey : System.IEquatable<TKey>;
+        public static void InitializeEqualityChecker_HashSet<T>() where T : System.IEquatable<T>;
+        public static void InitializeEqualityChecker_List<T>();
+        public static void InitializeEqualityChecker_ManagedClassEquals<T>() where T : class;
+        public static void InitializeEqualityChecker_ManagedIEquatable<T>() where T : class, System.IEquatable<T>;
+        public static void InitializeEqualityChecker_UnmanagedIEquatable<T>() where T : struct, unmanaged, System.IEquatable<T>, new();
+        public static void InitializeEqualityChecker_UnmanagedIEquatableArray<T>() where T : struct, unmanaged, System.IEquatable<T>, new();
+        public static void InitializeEqualityChecker_UnmanagedValueEquals<T>() where T : struct, unmanaged, new();
+        public static void InitializeEqualityChecker_UnmanagedValueEqualsArray<T>() where T : struct, unmanaged, new();
+        public static void InitializeSerializer_Dictionary<TKey, TVal>() where TKey : System.IEquatable<TKey>;
+        public static void InitializeSerializer_FixedString<T>() where T : struct, unmanaged, Unity.Collections.INativeList<byte>, Unity.Collections.IUTF8Bytes, new();
+        public static void InitializeSerializer_FixedStringArray<T>() where T : struct, unmanaged, Unity.Collections.INativeList<byte>, Unity.Collections.IUTF8Bytes, new();
+        public static void InitializeSerializer_HashSet<T>() where T : System.IEquatable<T>;
+        public static void InitializeSerializer_List<T>();
+        public static void InitializeSerializer_ManagedINetworkSerializable<T>() where T : class, INetworkSerializable, new();
+        public static void InitializeSerializer_UnmanagedByMemcpy<T>() where T : struct, unmanaged, new();
+        public static void InitializeSerializer_UnmanagedByMemcpyArray<T>() where T : struct, unmanaged, new();
+        public static void InitializeSerializer_UnmanagedINetworkSerializable<T>() where T : struct, unmanaged, INetworkSerializable, new();
+        public static void InitializeSerializer_UnmanagedINetworkSerializableArray<T>() where T : struct, unmanaged, INetworkSerializable, new();
+    }
+
+    public struct NetworkVariableUpdateTraits
+    {
+        [UnityEngine.Tooltip(@"The maximum amount of time that a variable can be dirty without sending an update. If this amount of time has passed since the last update, an update will be sent even if the dirtiness threshold has not been met.")] public float MaxSecondsBetweenUpdates;
+        [UnityEngine.Tooltip(@"The minimum amount of time that must pass between sending updates. If this amount of time has not passed since the last update, dirtiness will be ignored.")] public float MinSecondsBetweenUpdates;
+    }
+
+    public enum NetworkVariableWritePermission
+    {
+        Server = 0,
+        Owner = 1,
+    }
+
+    public class NotListeningException : System.Exception
+    {
+        public NotListeningException() {}
+        public NotListeningException(string message) {}
+        public NotListeningException(string message, System.Exception inner) {}
+    }
+
+    public class NotServerException : System.Exception
+    {
+        public NotServerException() {}
+        public NotServerException(string message) {}
+        public NotServerException(string message, System.Exception inner) {}
+    }
+
+    public class PendingClient
+    {
+        public ulong ClientId { get; }
+        public PendingClient.State ConnectionState { get; }
+        public PendingClient() {}
+        public enum State
+        {
+            PendingConnection = 0,
+            PendingApproval = 1,
+        }
+    }
+
+    public static class QuaternionCompressor
+    {
+        public static uint CompressQuaternion(ref UnityEngine.Quaternion quaternion);
+        public static void DecompressQuaternion(ref UnityEngine.Quaternion quaternion, uint compressed);
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Method)] public class RpcAttribute : System.Attribute
+    {
+        public bool AllowTargetOverride;
+        public bool DeferLocal;
+        public RpcDelivery Delivery;
+        public RpcInvokePermission InvokePermission;
+        [System.Obsolete(@"RequireOwnership is deprecated. Please use InvokePermission = RpcInvokePermission.Owner or InvokePermission = RpcInvokePermission.Everyone instead.")] public bool RequireOwnership;
+        public RpcAttribute() {}
+        public RpcAttribute(SendTo target) {}
+        public struct RpcAttributeParams
+        {
+            public bool AllowTargetOverride;
+            public bool DeferLocal;
+            public RpcDelivery Delivery;
+            public RpcInvokePermission InvokePermission;
+            [System.Obsolete(@"RequireOwnership is deprecated. Please use InvokePermission instead.")] public bool RequireOwnership;
+        }
+    }
+
+    public enum RpcDelivery
+    {
+        Reliable = 0,
+        Unreliable = 1,
+    }
+
+    public class RpcException : System.Exception
+    {
+        public RpcException(string message) {}
+    }
+
+    public class RpcFallbackSerialization
+    {
+        public RpcFallbackSerialization() {}
+        public static void Read<T>(FastBufferReader reader, ref T value);
+        public static void Write<T>(FastBufferWriter writer, ref T value);
+    }
+
+    public enum RpcInvokePermission
+    {
+        Everyone = 0,
+        Server = 1,
+        Owner = 2,
+    }
+
+    public struct RpcParams
+    {
+        public RpcReceiveParams Receive;
+        public RpcSendParams Send;
+        public static RpcParams op_Implicit(BaseRpcTarget target);
+        public static RpcParams op_Implicit(LocalDeferMode deferMode);
+        public static RpcParams op_Implicit(RpcReceiveParams receive);
+        public static RpcParams op_Implicit(RpcSendParams send);
+    }
+
+    public struct RpcReceiveParams
+    {
+        public ulong SenderClientId;
+    }
+
+    public struct RpcSendParams
+    {
+        public LocalDeferMode LocalDeferMode;
+        public BaseRpcTarget Target;
+        public static RpcSendParams op_Implicit(BaseRpcTarget target);
+        public static RpcSendParams op_Implicit(LocalDeferMode deferMode);
+    }
+
+    public class RpcTarget
+    {
+        public BaseRpcTarget Authority;
+        public BaseRpcTarget ClientsAndHost;
+        public BaseRpcTarget Everyone;
+        public BaseRpcTarget Me;
+        public BaseRpcTarget NotAuthority;
+        public BaseRpcTarget NotMe;
+        public BaseRpcTarget NotOwner;
+        public BaseRpcTarget NotServer;
+        public BaseRpcTarget Owner;
+        public BaseRpcTarget Server;
+        public void Dispose();
+        public BaseRpcTarget Group(ulong[] clientIds, RpcTargetUse use);
+        public BaseRpcTarget Group<T>(T clientIds, RpcTargetUse use) where T : System.Collections.Generic.IEnumerable<ulong>;
+        public BaseRpcTarget Group(Unity.Collections.NativeArray<ulong> clientIds, RpcTargetUse use);
+        public BaseRpcTarget Group(Unity.Collections.NativeList<ulong> clientIds, RpcTargetUse use);
+        public BaseRpcTarget Not(ulong excludedClientId, RpcTargetUse use);
+        public BaseRpcTarget Not(ulong[] excludedClientIds, RpcTargetUse use);
+        public BaseRpcTarget Not<T>(T excludedClientIds, RpcTargetUse use) where T : System.Collections.Generic.IEnumerable<ulong>;
+        public BaseRpcTarget Not(Unity.Collections.NativeArray<ulong> excludedClientIds, RpcTargetUse use);
+        public BaseRpcTarget Not(Unity.Collections.NativeList<ulong> excludedClientIds, RpcTargetUse use);
+        public BaseRpcTarget Single(ulong clientId, RpcTargetUse use);
+    }
+
+    public enum RpcTargetUse
+    {
+        Temp = 0,
+        Persistent = 1,
+    }
+
+    public class SceneEvent
+    {
+        public UnityEngine.AsyncOperation AsyncOperation;
+        public ulong ClientId;
+        public System.Collections.Generic.List<ulong> ClientsThatCompleted;
+        public System.Collections.Generic.List<ulong> ClientsThatTimedOut;
+        public UnityEngine.SceneManagement.LoadSceneMode LoadSceneMode;
+        public UnityEngine.SceneManagement.Scene Scene;
+        public SceneEventType SceneEventType;
+        public string SceneName;
+        public string ScenePath;
+        public SceneEvent() {}
+    }
+
+    public enum SceneEventProgressStatus
+    {
+        None = 0,
+        Started = 1,
+        SceneNotLoaded = 2,
+        SceneEventInProgress = 3,
+        InvalidSceneName = 4,
+        SceneFailedVerification = 5,
+        InternalNetcodeError = 6,
+        SceneManagementNotEnabled = 7,
+        ServerOnlyAction = 8,
+        SessionOwnerOnlyAction = 9,
+    }
+
+    public enum SceneEventType : byte
+    {
+        Load = 0,
+        Unload = 1,
+        Synchronize = 2,
+        ReSynchronize = 3,
+        LoadEventCompleted = 4,
+        UnloadEventCompleted = 5,
+        LoadComplete = 6,
+        UnloadComplete = 7,
+        SynchronizeComplete = 8,
+        ActiveSceneChanged = 9,
+        ObjectSceneChanged = 10,
+    }
+
+    public enum SendTo
+    {
+        Owner = 0,
+        NotOwner = 1,
+        Server = 2,
+        NotServer = 3,
+        Me = 4,
+        NotMe = 5,
+        Everyone = 6,
+        ClientsAndHost = 7,
+        Authority = 8,
+        NotAuthority = 9,
+        SpecifiedInParams = 10,
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Method)] public class ServerRpcAttribute : RpcAttribute
+    {
+        [System.Obsolete(@"ServerRpc with RequireOwnership is deprecated. Use [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)] or [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Owner)] instead.)]")] public bool RequireOwnership;
+        public ServerRpcAttribute() {}
+    }
+
+    public struct ServerRpcParams
+    {
+        public ServerRpcReceiveParams Receive;
+        public ServerRpcSendParams Send;
+    }
+
+    public struct ServerRpcReceiveParams
+    {
+        public ulong SenderClientId;
+    }
+
+    public struct ServerRpcSendParams
+    {
+    }
+
+    public class SpawnStateException : System.Exception
+    {
+        public SpawnStateException() {}
+        public SpawnStateException(string message) {}
+        public SpawnStateException(string message, System.Exception inner) {}
+    }
+
+    public enum StaleDataHandling
+    {
+        Ignore = 0,
+        Reanticipate = 1,
+    }
+
+    public abstract class TestingNetworkTransport : NetworkTransport
+    {
+        protected TestingNetworkTransport() {}
+    }
+
+    public class UserNetworkVariableSerialization<T>
+    {
+        public static DuplicateValueDelegate DuplicateValue;
+        public static ReadDeltaDelegate ReadDelta;
+        public static ReadValueDelegate ReadValue;
+        public static WriteDeltaDelegate WriteDelta;
+        public static WriteValueDelegate WriteValue;
+        public UserNetworkVariableSerialization() {}
+        public delegate void WriteValueDelegate(FastBufferWriter writer, ref readonly T value);
+        public delegate void WriteDeltaDelegate(FastBufferWriter writer, ref readonly T value, ref readonly T previousValue);
+        public delegate void ReadValueDelegate(FastBufferReader reader, out T value);
+        public delegate void ReadDeltaDelegate(FastBufferReader reader, ref T value);
+        public delegate void DuplicateValueDelegate(ref readonly T value, ref T duplicatedValue);
+    }
+
+    public class VisibilityChangeException : System.Exception
+    {
+        public VisibilityChangeException() {}
+        public VisibilityChangeException(string message) {}
+        public VisibilityChangeException(string message, System.Exception inner) {}
+    }
+}
+
+namespace Unity.Netcode.Components
+{
+    [UnityEngine.AddComponentMenu(@"Netcode/Anticipated Network Transform")] [UnityEngine.DisallowMultipleComponent] [UnityEngine.HelpURL(@"https://docs.unity3d.com/Packages/com.unity.netcode.gameobjects@latest/?subfolder=/manual/advanced-topics/client-anticipation.html")] public class AnticipatedNetworkTransform : NetworkTransform
+    {
+        public StaleDataHandling StaleDataHandling = StaleDataHandling.Reanticipate;
+        public AnticipatedNetworkTransform.TransformState AnticipatedState { get; }
+        public AnticipatedNetworkTransform.TransformState AuthoritativeState { get; }
+        public AnticipatedNetworkTransform.TransformState PreviousAnticipatedState { get; }
+        public bool ShouldReanticipate { get; }
+        public AnticipatedNetworkTransform() {}
+        protected override string __getTypeName();
+        protected override void __initializeRpcs();
+        protected override void __initializeVariables();
+        public void AnticipateMove(UnityEngine.Vector3 newPosition);
+        public void AnticipateRotate(UnityEngine.Quaternion newRotation);
+        public void AnticipateScale(UnityEngine.Vector3 newScale);
+        public void AnticipateState(AnticipatedNetworkTransform.TransformState newState);
+        protected override void InternalOnNetworkPostSpawn();
+        protected override void InternalOnNetworkSessionSynchronized();
+        protected override void OnBeforeUpdateTransformState();
+        public override void OnDestroy();
+        public override void OnNetworkDespawn();
+        public override void OnNetworkSpawn();
+        protected override void OnNetworkTransformStateUpdated(ref NetworkTransform.NetworkTransformState oldState, ref NetworkTransform.NetworkTransformState newState);
+        protected override void OnTransformUpdated();
+        public override void OnUpdate();
+        public void Smooth(AnticipatedNetworkTransform.TransformState from, AnticipatedNetworkTransform.TransformState to, float durationSeconds);
+        public struct TransformState
+        {
+            public UnityEngine.Vector3 Position;
+            public UnityEngine.Quaternion Rotation;
+            public UnityEngine.Vector3 Scale;
+        }
+    }
+
+    public class AttachableBehaviour : NetworkBehaviour
+    {
+        public AttachableBehaviour.AutoDetachTypes AutoDetach = AttachableBehaviour.AutoDetachTypes.OnAttachNodeDestroy;
+        public event System.Action<AttachableBehaviour.AttachState, AttachableNode> AttachStateChange;
+        protected AttachableNode m_AttachableNode { get; }
+        protected AttachableBehaviour.AttachState m_AttachState { get; }
+        protected UnityEngine.GameObject m_DefaultParent { get; }
+        public AttachableBehaviour() {}
+        protected override string __getTypeName();
+        protected override void __initializeRpcs();
+        protected override void __initializeVariables();
+        public void Attach(AttachableNode attachableNode);
+        protected virtual void Awake();
+        public void Detach();
+        protected virtual void OnAttachStateChanged(AttachableBehaviour.AttachState attachState, AttachableNode attachableNode);
+        protected virtual void OnAwake();
+        protected virtual bool OnHasAuthority();
+        public override void OnNetworkPreDespawn();
+        protected override void OnNetworkSessionSynchronized();
+        protected override void OnOwnershipChanged(ulong previous, ulong current);
+        protected override void OnSynchronize<T>(ref Unity.Netcode.BufferSerializer<T> serializer) where T : IReaderWriter;
+        protected virtual void OnValidate();
+        public enum AttachState
+        {
+            Detached = 0,
+            Attaching = 1,
+            Attached = 2,
+            Detaching = 3,
+        }
+        [System.Flags] public enum AutoDetachTypes
+        {
+            None = 0,
+            OnOwnershipChange = 1 << 0,
+            OnDespawn = 1 << 1,
+            OnAttachNodeDestroy = 0x3,
+        }
+    }
+
+    public class ComponentController : NetworkBehaviour
+    {
+        [UnityEngine.Tooltip(@"The initial state of the component controllers enabled status when instantiated.")] public bool StartEnabled = true;
+        public bool EnabledState { get; }
+        public ComponentController() {}
+        protected override string __getTypeName();
+        protected override void __initializeRpcs();
+        protected override void __initializeVariables();
+        protected virtual void OnAwake();
+        public override void OnDestroy();
+        protected virtual bool OnHasAuthority();
+        protected override void OnNetworkPostSpawn();
+        public override void OnNetworkSpawn();
+        protected override void OnSynchronize<T>(ref Unity.Netcode.BufferSerializer<T> serializer) where T : IReaderWriter;
+        protected virtual void OnValidate();
+        public void SetEnabled(bool isEnabled);
+    }
+
+    public struct ContactEventHandlerInfo
+    {
+        public bool HasContactEventPriority;
+        public bool ProvideNonRigidBodyContactEvents;
+    }
+
+    public struct HalfVector3 : INetworkSerializable
+    {
+        public Unity.Mathematics.half3 Axis;
+        public Unity.Mathematics.bool3 AxisToSynchronize;
+        public Unity.Mathematics.half X { get; }
+        public Unity.Mathematics.half Y { get; }
+        public Unity.Mathematics.half Z { get; }
+        public HalfVector3(UnityEngine.Vector3 vector3) {}
+        public HalfVector3(UnityEngine.Vector3 vector3, Unity.Mathematics.bool3 axisToSynchronize) {}
+        public HalfVector3(float x, float y, float z) {}
+        public HalfVector3(float x, float y, float z, Unity.Mathematics.bool3 axisToSynchronize) {}
+        public void NetworkSerialize<T>(Unity.Netcode.BufferSerializer<T> serializer) where T : IReaderWriter;
+        public UnityEngine.Vector3 ToVector3();
+        public void UpdateFrom(ref UnityEngine.Vector3 vector3);
+    }
+
+    public struct HalfVector4 : INetworkSerializable
+    {
+        public Unity.Mathematics.half4 Axis;
+        public Unity.Mathematics.half W { get; }
+        public Unity.Mathematics.half X { get; }
+        public Unity.Mathematics.half Y { get; }
+        public Unity.Mathematics.half Z { get; }
+        public HalfVector4(UnityEngine.Vector4 vector4) {}
+        public HalfVector4(float x, float y, float z, float w) {}
+        public void NetworkSerialize<T>(Unity.Netcode.BufferSerializer<T> serializer) where T : IReaderWriter;
+        public UnityEngine.Quaternion ToQuaternion();
+        public UnityEngine.Vector4 ToVector4();
+        public void UpdateFrom(ref UnityEngine.Quaternion quaternion);
+        public void UpdateFrom(ref UnityEngine.Vector4 vector4);
+    }
+
+    public interface IContactEventHandler
+    {
+        public void ContactEvent(ulong eventId, UnityEngine.Vector3 averagedCollisionNormal, UnityEngine.Rigidbody collidingBody, UnityEngine.Vector3 contactPoint, bool hasCollisionStay = false, UnityEngine.Vector3 averagedCollisionStayNormal = default(UnityEngine.Vector3));
+        public UnityEngine.Rigidbody GetRigidbody();
+    }
+
+    public interface IContactEventHandlerWithInfo : IContactEventHandler
+    {
+        public ContactEventHandlerInfo GetContactEventHandlerInfo();
+    }
+
+    [UnityEngine.AddComponentMenu(@"Netcode/Network Animator")] [UnityEngine.HelpURL(@"https://docs.unity3d.com/Packages/com.unity.netcode.gameobjects@latest/?subfolder=/manual/components/helper/networkanimator.html")] public class NetworkAnimator : NetworkBehaviour, UnityEngine.ISerializationCallbackReceiver
+    {
+        [UnityEngine.Tooltip(@"Selects who has authority (sends state updates) over the <see cref=""NetworkAnimator""/> instance. If server (the default), then only server-side adjustments to the <see cref=""NetworkAnimator""/> instance will be synchronized with clients. If owner (or client), then only the owner-side adjustments to the <see cref=""NetworkAnimator""/> instance will be synchronized with both the server and other clients.")] public NetworkAnimator.AuthorityModes AuthorityMode;
+        public UnityEngine.Animator Animator { get; set; }
+        public NetworkAnimator() {}
+        protected override string __getTypeName();
+        protected override void __initializeRpcs();
+        protected override void __initializeVariables();
+        protected virtual void Awake();
+        public void EnableParameterSynchronization(int parameterNameHash, bool isEnabled);
+        public void EnableParameterSynchronization(string parameterName, bool isEnabled);
+        public bool IsServerAuthoritative();
+        public void OnAfterDeserialize();
+        public void OnBeforeSerialize();
+        public override void OnDestroy();
+        protected virtual bool OnIsServerAuthoritative();
+        public override void OnNetworkDespawn();
+        public override void OnNetworkSpawn();
+        protected override void OnSynchronize<T>(ref Unity.Netcode.BufferSerializer<T> serializer) where T : IReaderWriter;
+        protected virtual void OnValidate();
+        public void ResetTrigger(int hash);
+        public void ResetTrigger(string triggerName);
+        public void SetTrigger(string triggerName);
+        public void SetTrigger(int hash, bool setTrigger = true);
+        public enum AuthorityModes
+        {
+            Server = 0,
+            Owner = 1,
+        }
+    }
+
+    public struct NetworkDeltaPosition : INetworkSerializable
+    {
+        public HalfVector3 HalfVector3;
+        public NetworkDeltaPosition(UnityEngine.Vector3 vector3, int networkTick) {}
+        public NetworkDeltaPosition(UnityEngine.Vector3 vector3, int networkTick, Unity.Mathematics.bool3 axisToSynchronize) {}
+        public NetworkDeltaPosition(float x, float y, float z, int networkTick) {}
+        public NetworkDeltaPosition(float x, float y, float z, int networkTick, Unity.Mathematics.bool3 axisToSynchronize) {}
+        public UnityEngine.Vector3 GetConvertedDelta();
+        public UnityEngine.Vector3 GetCurrentBasePosition();
+        public UnityEngine.Vector3 GetDeltaPosition();
+        public UnityEngine.Vector3 GetFullPosition();
+        public void NetworkSerialize<T>(Unity.Netcode.BufferSerializer<T> serializer) where T : IReaderWriter;
+        public UnityEngine.Vector3 ToVector3(int networkTick);
+        public void UpdateFrom(ref UnityEngine.Vector3 vector3, int networkTick);
+    }
+
+    [UnityEngine.AddComponentMenu(@"Netcode/Network Rigidbody")] [UnityEngine.HelpURL(@"https://docs.unity3d.com/Packages/com.unity.netcode.gameobjects@latest/?subfolder=/manual/components/helper/networkrigidbody.html")] [UnityEngine.RequireComponent(typeof(NetworkTransform))] [UnityEngine.RequireComponent(typeof(UnityEngine.Rigidbody))] public class NetworkRigidbody : NetworkRigidbodyBase
+    {
+        public UnityEngine.Rigidbody Rigidbody { get; }
+        public NetworkRigidbody() {}
+        protected override string __getTypeName();
+        protected override void __initializeRpcs();
+        protected override void __initializeVariables();
+        protected virtual void Awake();
+    }
+
+    [UnityEngine.AddComponentMenu(@"Netcode/Network Rigidbody 2D")] [UnityEngine.HelpURL(@"https://docs.unity3d.com/Packages/com.unity.netcode.gameobjects@latest/?subfolder=/manual/components/helper/networkrigidbody.html#networkrigidbody2d")] [UnityEngine.RequireComponent(typeof(NetworkTransform))] [UnityEngine.RequireComponent(typeof(UnityEngine.Rigidbody2D))] public class NetworkRigidbody2D : NetworkRigidbodyBase
+    {
+        public UnityEngine.Rigidbody2D Rigidbody2D { get; }
+        public NetworkRigidbody2D() {}
+        protected override string __getTypeName();
+        protected override void __initializeRpcs();
+        protected override void __initializeVariables();
+        protected virtual void Awake();
+    }
+
+    public abstract class NetworkRigidbodyBase : NetworkBehaviour
+    {
+        public bool AutoSetKinematicOnDespawn = true;
+        public bool AutoUpdateKinematicState = true;
+        [UnityEngine.Tooltip(@"When enabled and a NetworkTransform component is attached, the NetworkTransform will use the rigid body for motion and detecting changes in state.")] public bool UseRigidBodyForMotion;
+        public UnityEngine.FixedJoint FixedJoint { get; }
+        public UnityEngine.FixedJoint2D FixedJoint2D { get; }
+        protected UnityEngine.Rigidbody m_InternalRigidbody { get; }
+        protected UnityEngine.Rigidbody2D m_InternalRigidbody2D { get; }
+        public NetworkRigidbodyBase.RigidbodyTypes RigidbodyType { get; }
+        protected NetworkRigidbodyBase() {}
+        protected override string __getTypeName();
+        protected override void __initializeRpcs();
+        protected override void __initializeVariables();
+        public void ApplyCurrentTransform();
+        public bool AttachToFixedJoint(NetworkRigidbodyBase objectToConnectTo, UnityEngine.Vector3 positionOfConnection, float connectedMassScale = 0f, float massScale = 1f, bool useGravity = false, bool zeroVelocity = true, bool teleportObject = true);
+        public void DetachFromFixedJoint();
+        public UnityEngine.Vector3 GetAngularVelocity();
+        public UnityEngine.Vector3 GetLinearVelocity();
+        public UnityEngine.Vector3 GetPosition();
+        public UnityEngine.Quaternion GetRotation();
+        protected void Initialize(NetworkRigidbodyBase.RigidbodyTypes rigidbodyType, NetworkTransform networkTransform = default(NetworkTransform), UnityEngine.Rigidbody2D rigidbody2D = default(UnityEngine.Rigidbody2D), UnityEngine.Rigidbody rigidbody = default(UnityEngine.Rigidbody));
+        public bool IsKinematic();
+        public void MovePosition(UnityEngine.Vector3 position);
+        public void MoveRotation(UnityEngine.Quaternion rotation);
+        protected virtual void OnFixedJoint2DCreated();
+        protected virtual void OnFixedJointCreated();
+        public override void OnNetworkDespawn();
+        public override void OnNetworkSpawn();
+        protected override void OnOwnershipChanged(ulong previous, ulong current);
+        public void ResetInterpolation();
+        public void SetAngularVelocity(UnityEngine.Vector3 angularVelocity);
+        public void SetIsKinematic(bool isKinematic);
+        public void SetLinearVelocity(UnityEngine.Vector3 linearVelocity);
+        public void SetPosition(UnityEngine.Vector3 position);
+        public void SetRotation(UnityEngine.Quaternion rotation);
+        public void SleepRigidbody();
+        public void WakeIfSleeping();
+        public enum RigidbodyTypes
+        {
+            Rigidbody = 0,
+            Rigidbody2D = 1,
+        }
+    }
+
+    [UnityEngine.AddComponentMenu(@"Netcode/Network Transform")] [UnityEngine.DisallowMultipleComponent] [UnityEngine.HelpURL(@"https://docs.unity3d.com/Packages/com.unity.netcode.gameobjects@latest/?subfolder=/manual/components/helper/networktransform.html")] public class NetworkTransform : NetworkBehaviour
+    {
+        [UnityEngine.Tooltip(@"Selects who has authority (sends state updates) over the transform. If server (the default), then only server-side adjustments to the transform will be synchronized with clients. If owner (or client), then only the owner-side adjustments to the transform will be synchronized with both the server and other clients.")] public NetworkTransform.AuthorityModes AuthorityMode;
+        public bool AutoOwnerAuthorityTickOffset = true;
+        [UnityEngine.Tooltip(@"Sets whether this transform should sync in local space or in world space")] public bool InLocalSpace;
+        public bool Interpolate = true;
+        public static int InterpolationBufferTickOffset;
+        protected NetworkTransform.AddLogEntryHandler m_AddLogEntry;
+        protected NetworkManager m_CachedNetworkManager;
+        public NetworkTransform.OnClientRequestChangeDelegate OnClientRequestChange;
+        [UnityEngine.Tooltip(@"Lerping yields a traditional linear result where smooth dampening will adjust based on the rate of change. You can mix interpolation types for position, rotation, and scale.")] public NetworkTransform.InterpolationTypes PositionInterpolationType;
+        public bool PositionLerpSmoothing = true;
+        [UnityEngine.Range(0.01f, 1f)] [UnityEngine.Tooltip(@"The higher the value the smoother, but can result in lost data points (i.e. quick changes in direct). The lower the value the more accurate/precise, but can result in slight stutter (i.e. due to jitter, latency, or a high threshold value).")] public float PositionMaxInterpolationTime = 0.1f;
+        public float PositionThreshold = 0.001f;
+        public const float PositionThresholdDefault = 0.001f;
+        [UnityEngine.Range(1E-05f, 360f)] public float RotAngleThreshold = 0.01f;
+        public const float RotAngleThresholdDefault = 0.01f;
+        [UnityEngine.Tooltip(@"Lerping yields a traditional linear result where smooth dampening will adjust based on the rate of change. You can mix interpolation types for position, rotation, and scale.")] public NetworkTransform.InterpolationTypes RotationInterpolationType;
+        public bool RotationLerpSmoothing = true;
+        [UnityEngine.Range(0.01f, 1f)] [UnityEngine.Tooltip(@"The higher the value the smoother, but can result in lost data points (i.e. quick changes in direct). The lower the value the more accurate/precise, but can result in slight stutter (i.e. due to jitter, latency, or a high threshold value).")] public float RotationMaxInterpolationTime = 0.1f;
+        [UnityEngine.Tooltip(@"Lerping yields a traditional linear result where smooth dampening will adjust based on the rate of change. You can mix interpolation types for position, rotation, and scale.")] public NetworkTransform.InterpolationTypes ScaleInterpolationType;
+        public bool ScaleLerpSmoothing = true;
+        [UnityEngine.Range(0.01f, 1f)] [UnityEngine.Tooltip(@"The higher the value the smoother, but can result in lost data points (i.e. quick changes in direct). The lower the value the more accurate/precise, but can result in slight stutter (i.e. due to jitter, latency, or a high threshold value).")] public float ScaleMaxInterpolationTime = 0.1f;
+        public float ScaleThreshold = 0.01f;
+        public const float ScaleThresholdDefault = 0.01f;
+        [UnityEngine.Tooltip(@"When enabled the position interpolator will Slerp towards its current target position.")] public bool SlerpPosition;
+        [UnityEngine.Tooltip(@"When enabled, NetworkTransform controls world or local space settings while also providing smooth parenting transitions.When disabled, world or local space settings have to be adjusted by script or in the inspector view.")] public bool SwitchTransformSpaceWhenParented;
+        public bool SyncPositionX = true;
+        public bool SyncPositionY = true;
+        public bool SyncPositionZ = true;
+        public bool SyncRotAngleX = true;
+        public bool SyncRotAngleY = true;
+        public bool SyncRotAngleZ = true;
+        public bool SyncScaleX = true;
+        public bool SyncScaleY = true;
+        public bool SyncScaleZ = true;
+        [UnityEngine.Tooltip(@"When enabled, any parented children of this instance will send a state update when this instance sends a state update. If this instance doesn't send a state update, the children will still send state updates when reaching their axis specified threshold delta. Children do not have to have this setting enabled.")] public bool TickSyncChildren;
+        [UnityEngine.Tooltip(@"When enabled, this will use half float precision values for position (uses delta position updating), rotation (except when Quaternion compression is enabled), and scale.")] public bool UseHalfFloatPrecision;
+        [UnityEngine.Tooltip(@"When enabled, this uses a smallest three implementation that reduces full Quaternion updates down to the size of an unsigned integer (ignores half float precision settings).")] public bool UseQuaternionCompression;
+        [UnityEngine.Tooltip(@"When enabled, this will synchronize the full Quaternion (i.e. all Euler rotation axis are updated if one axis has a delta)")] public bool UseQuaternionSynchronization;
+        [UnityEngine.Tooltip(@"When set, NetworkTransform will send common state updates using unreliable network delivery to provide a higher tolerance to poor network conditions (especially packet loss). When disabled, all state updates are sent using reliable fragmented sequenced network delivery. Note: This will change the order of operations between transform state updates and other messages sent reliably.")] public bool UseUnreliableDeltas;
+        public bool CanCommitToTransform { get; protected set; }
+        protected bool PositionInLocalSpace { get; }
+        protected bool RotationInLocalSpace { get; }
+        public NetworkTransform() {}
+        protected override string __getTypeName();
+        protected override void __initializeRpcs();
+        protected override void __initializeVariables();
+        protected void ApplyAuthoritativeState();
+        protected virtual void Awake();
+        protected NetworkDeltaPosition GetHalfPositionState();
+        public UnityEngine.Vector3 GetScale(bool getCurrentState = false);
+        public UnityEngine.Vector3 GetSpaceRelativePosition(bool getCurrentState = false);
+        public UnityEngine.Quaternion GetSpaceRelativeRotation(bool getCurrentState = false);
+        protected int GetStateId(ref NetworkTransform.NetworkTransformState state);
+        public static float GetTickLatency();
+        public static float GetTickLatencyInSeconds();
+        protected void Initialize();
+        protected override void InternalOnNetworkPostSpawn();
+        protected override void InternalOnNetworkSessionSynchronized();
+        public bool IsServerAuthoritative();
+        protected virtual void OnAuthorityPushTransformState(ref NetworkTransform.NetworkTransformState networkTransformState);
+        protected virtual void OnBeforeUpdateTransformState();
+        public override void OnDestroy();
+        public virtual void OnFixedUpdate();
+        public override void OnGainedOwnership();
+        protected virtual void OnInitialize(ref NetworkTransform.NetworkTransformState replicatedState);
+        protected virtual void OnInitialize(ref Unity.Netcode.NetworkVariable<NetworkTransform.NetworkTransformState> replicatedState);
+        protected virtual bool OnIsServerAuthoritative();
+        public override void OnLostOwnership();
+        public override void OnNetworkDespawn();
+        public override void OnNetworkObjectParentChanged(NetworkObject parentNetworkObject);
+        public override void OnNetworkSpawn();
+        protected virtual void OnNetworkTransformStateUpdated(ref NetworkTransform.NetworkTransformState oldState, ref NetworkTransform.NetworkTransformState newState);
+        protected override void OnOwnershipChanged(ulong previous, ulong current);
+        protected override void OnSynchronize<T>(ref Unity.Netcode.BufferSerializer<T> serializer) where T : IReaderWriter;
+        protected virtual void OnTransformUpdated();
+        public virtual void OnUpdate();
+        public void SetMaxInterpolationBound(float maxInterpolationBound);
+        public void SetState(System.Nullable<UnityEngine.Vector3> posIn = default(System.Nullable<UnityEngine.Vector3>), System.Nullable<UnityEngine.Quaternion> rotIn = default(System.Nullable<UnityEngine.Quaternion>), System.Nullable<UnityEngine.Vector3> scaleIn = default(System.Nullable<UnityEngine.Vector3>), bool teleportDisabled = true);
+        public void Teleport(UnityEngine.Vector3 newPosition, UnityEngine.Quaternion newRotation, UnityEngine.Vector3 newScale);
+        protected delegate void AddLogEntryHandler(ref NetworkTransform.NetworkTransformState networkTransformState, ulong targetClient, bool preUpdate = false);
+        public enum AuthorityModes
+        {
+            Server = 0,
+            Owner = 1,
+        }
+        public enum InterpolationTypes
+        {
+            LegacyLerp = 0,
+            Lerp = 1,
+            SmoothDampening = 2,
+        }
+        public struct NetworkTransformState : INetworkSerializable
+        {
+            public bool HasPositionChange { get; }
+            public bool HasPositionX { get; }
+            public bool HasPositionY { get; }
+            public bool HasPositionZ { get; }
+            public bool HasRotAngleChange { get; }
+            public bool HasRotAngleX { get; }
+            public bool HasRotAngleY { get; }
+            public bool HasRotAngleZ { get; }
+            public bool HasScaleChange { get; }
+            public bool HasScaleX { get; }
+            public bool HasScaleY { get; }
+            public bool HasScaleZ { get; }
+            public bool InLocalSpace { get; }
+            public bool IsSynchronizing { get; }
+            public bool IsTeleportingNextFrame { get; }
+            public int LastSerializedSize { get; }
+            public bool QuaternionCompression { get; }
+            public bool QuaternionSync { get; }
+            public bool UseHalfFloatPrecision { get; }
+            public bool UseInterpolation { get; }
+            public bool UsePositionSlerp { get; }
+            public bool WasTeleported { get; }
+            public int GetNetworkTick();
+            public UnityEngine.Vector3 GetPosition();
+            public UnityEngine.Quaternion GetRotation();
+            public UnityEngine.Vector3 GetScale();
+            public bool IsReliableStateUpdate();
+            public bool IsUnreliableFrameSync();
+            public void NetworkSerialize<T>(Unity.Netcode.BufferSerializer<T> serializer) where T : IReaderWriter;
+        }
+        public delegate System.ValueTuple<UnityEngine.Vector3, UnityEngine.Quaternion, UnityEngine.Vector3> OnClientRequestChangeDelegate(UnityEngine.Vector3 pos, UnityEngine.Quaternion rot, UnityEngine.Vector3 scale);
+    }
+
+    [UnityEngine.AddComponentMenu(@"Netcode/Rigidbody Contact Event Manager")] [UnityEngine.HelpURL(@"https://docs.unity3d.com/Packages/com.unity.netcode.gameobjects@latest/?subfolder=/api/Unity.Netcode.Components.RigidbodyContactEventManager.html")] public class RigidbodyContactEventManager : UnityEngine.MonoBehaviour
+    {
+        public static RigidbodyContactEventManager Instance { get; }
+        public RigidbodyContactEventManager() {}
+        public void RegisterHandler(IContactEventHandler contactEventHandler, bool register = true);
+    }
+}
+
+namespace Unity.Netcode.Transports.SinglePlayer
+{
+    [UnityEngine.AddComponentMenu(@"Netcode/Single Player Transport")] [UnityEngine.HelpURL(@"https://docs.unity3d.com/Packages/com.unity.netcode.gameobjects@latest/?subfolder=/api/Unity.Netcode.Transports.SinglePlayer.SinglePlayerTransport.html")] public class SinglePlayerTransport : NetworkTransport
+    {
+        public override ulong ServerClientId { get; }
+        public SinglePlayerTransport() {}
+        public override void DisconnectLocalClient();
+        public override void DisconnectRemoteClient(ulong clientId);
+        public override ulong GetCurrentRtt(ulong clientId);
+        public override void Initialize(NetworkManager networkManager = default(NetworkManager));
+        protected override NetworkTopologyTypes OnCurrentTopology();
+        public override NetworkEvent PollEvent(out ulong clientId, out System.ArraySegment<byte> payload, out float receiveTime);
+        public override void Send(ulong clientId, System.ArraySegment<byte> payload, NetworkDelivery networkDelivery);
+        public override void Shutdown();
+        public override bool StartClient();
+        public override bool StartServer();
+    }
+}
+
+namespace Unity.Netcode.Transports.UTP
+{
+    public static class ErrorUtilities
+    {
+        public static string ErrorToString(Unity.Networking.Transport.Error.StatusCode error, ulong connectionId);
+    }
+
+    public interface INetworkStreamDriverConstructor
+    {
+        public void CreateDriver(UnityTransport transport, out Unity.Networking.Transport.NetworkDriver driver, out Unity.Networking.Transport.NetworkPipeline unreliableFragmentedPipeline, out Unity.Networking.Transport.NetworkPipeline unreliableSequencedFragmentedPipeline, out Unity.Networking.Transport.NetworkPipeline reliableSequencedPipeline);
+    }
+
+    public struct NetworkMetricsContext
+    {
+        public uint PacketReceivedCount;
+        public uint PacketSentCount;
+    }
+
+    [UnityEngine.HelpURL(@"https://docs.unity3d.com/Packages/com.unity.netcode.gameobjects@latest/?subfolder=/api/Unity.Netcode.Transports.UTP.SecretsLoaderHelper.html")] public class SecretsLoaderHelper : UnityEngine.MonoBehaviour
+    {
+        public string ClientCA { get; set; }
+        public string ClientCAFilePath { get; set; }
+        public string ClientCAOverride { get; set; }
+        public string ServerCertificate { get; set; }
+        public string ServerCertificateFilePath { get; set; }
+        public string ServerCommonName { get; set; }
+        public string ServerPrivate { get; set; }
+        public string ServerPrivateFilePath { get; set; }
+        public SecretsLoaderHelper() {}
+    }
+
+    [UnityEngine.AddComponentMenu(@"Netcode/Unity Transport")] [UnityEngine.HelpURL(@"https://docs.unity3d.com/Packages/com.unity.netcode.gameobjects@latest/?subfolder=/api/Unity.Netcode.Transports.UTP.UnityTransport.html")] public class UnityTransport : NetworkTransport, INetworkStreamDriverConstructor
+    {
+        public UnityTransport.ConnectionAddressData ConnectionData;
+        [System.Obsolete(@"DebugSimulator is no longer supported and has no effect. Use Network Simulator from the Multiplayer Tools package.", false)] [UnityEngine.HideInInspector] public UnityTransport.SimulatorParameters DebugSimulator;
+        public const int InitialMaxPacketQueueSize = 128;
+        public const int InitialMaxPayloadSize = 6144;
+        [System.Obsolete(@"MaxSendQueueSize is now determined dynamically (can still be set programmatically using the MaxSendQueueSize property). This initial value is not used anymore.", false)] public const int InitialMaxSendQueueSize = 98304;
+        protected Unity.Networking.Transport.NetworkDriver m_Driver;
+        protected NetworkManager m_NetworkManager;
+        public static INetworkStreamDriverConstructor s_DriverConstructor;
+        public int ConnectTimeoutMS { get; set; }
+        public int DisconnectTimeoutMS { get; set; }
+        public INetworkStreamDriverConstructor DriverConstructor { get; }
+        public int HeartbeatTimeoutMS { get; set; }
+        public int MaxConnectAttempts { get; set; }
+        public int MaxPacketQueueSize { get; set; }
+        public int MaxPayloadSize { get; set; }
+        public int MaxSendQueueSize { get; set; }
+        public UnityTransport.ProtocolType Protocol { get; }
+        public override ulong ServerClientId { get; }
+        public bool UseEncryption { get; set; }
+        public bool UseWebSockets { get; set; }
+        public UnityTransport() {}
+        protected virtual Unity.Networking.Transport.NetworkConnection Connect(Unity.Networking.Transport.NetworkEndpoint serverEndpoint);
+        public void CreateDriver(UnityTransport transport, out Unity.Networking.Transport.NetworkDriver driver, out Unity.Networking.Transport.NetworkPipeline unreliableFragmentedPipeline, out Unity.Networking.Transport.NetworkPipeline unreliableSequencedFragmentedPipeline, out Unity.Networking.Transport.NetworkPipeline reliableSequencedPipeline);
+        public override void DisconnectLocalClient();
+        public override void DisconnectRemoteClient(ulong clientId);
+        public override ulong GetCurrentRtt(ulong clientId);
+        public Unity.Networking.Transport.NetworkSettings GetDefaultNetworkSettings();
+        public void GetDefaultPipelineConfigurations(out Unity.Collections.NativeArray<Unity.Networking.Transport.NetworkPipelineStageId> unreliableFragmentedPipelineStages, out Unity.Collections.NativeArray<Unity.Networking.Transport.NetworkPipelineStageId> unreliableSequencedFragmentedPipelineStages, out Unity.Collections.NativeArray<Unity.Networking.Transport.NetworkPipelineStageId> reliableSequencedPipelineStages);
+        protected override string GetDisconnectEventMessage(NetworkTransport.DisconnectEvents disconnectEvent);
+        public Unity.Networking.Transport.NetworkEndpoint GetEndpoint(ulong clientId);
+        public Unity.Networking.Transport.NetworkEndpoint GetLocalEndpoint();
+        public ref Unity.Networking.Transport.NetworkDriver GetNetworkDriver();
+        public override void Initialize(NetworkManager networkManager = default(NetworkManager));
+        protected override NetworkTopologyTypes OnCurrentTopology();
+        protected override void OnEarlyUpdate();
+        protected override void OnPostLateUpdate();
+        public override NetworkEvent PollEvent(out ulong clientId, out System.ArraySegment<byte> payload, out float receiveTime);
+        public override void Send(ulong clientId, System.ArraySegment<byte> payload, NetworkDelivery networkDelivery);
+        public void SetClientRelayData(string ipAddress, ushort port, byte[] allocationId, byte[] key, byte[] connectionData, byte[] hostConnectionData, bool isSecure = false);
+        public void SetClientSecrets(string serverCommonName, string caCertificate = default(string));
+        public void SetConnectionData(Unity.Networking.Transport.NetworkEndpoint endPoint, Unity.Networking.Transport.NetworkEndpoint listenEndPoint = default(Unity.Networking.Transport.NetworkEndpoint));
+        public void SetConnectionData(string ipv4Address, ushort port, string listenAddress = default(string));
+        public void SetConnectionData(bool forceOverrideCommandLineArgs, string ipv4Address, ushort port, string listenAddress = default(string));
+        [System.Obsolete(@"SetDebugSimulatorParameters is no longer supported and has no effect. Use Network Simulator from the Multiplayer Tools package.", false)] public void SetDebugSimulatorParameters(int packetDelay, int packetJitter, int dropRate);
+        public void SetHostRelayData(string ipAddress, ushort port, byte[] allocationId, byte[] key, byte[] connectionData, bool isSecure = false);
+        public void SetRelayServerData(Unity.Networking.Transport.Relay.RelayServerData serverData);
+        public void SetRelayServerData(string ipv4Address, ushort port, byte[] allocationIdBytes, byte[] keyBytes, byte[] connectionDataBytes, byte[] hostConnectionDataBytes = default(byte[]), bool isSecure = false);
+        public void SetServerSecrets(string serverCertificate, string serverPrivateKey);
+        public override void Shutdown();
+        public override bool StartClient();
+        public override bool StartServer();
+        public struct ConnectionAddressData
+        {
+            [UnityEngine.SerializeField] [UnityEngine.Tooltip(@"IP address of the server (address to which clients will connect to).")] public string Address;
+            [UnityEngine.SerializeField] public ushort ClientBindPort;
+            [UnityEngine.SerializeField] [UnityEngine.Tooltip(@"UDP port of the server.")] public ushort Port;
+            [UnityEngine.SerializeField] [UnityEngine.Tooltip(@"IP address the server will listen on. If not provided, will use localhost.")] public string ServerListenAddress;
+            public bool IsIpv6 { get; }
+            public Unity.Networking.Transport.NetworkEndpoint ListenEndPoint { get; }
+            [System.Obsolete(@"Use NetworkEndpoint.Parse on the Address field instead.")] public Unity.Networking.Transport.NetworkEndpoint ServerEndPoint { get; }
+        }
+        public enum ProtocolType
+        {
+            UnityTransport = 0,
+            RelayUnityTransport = 1,
+        }
+        public struct SimulatorParameters
+        {
+            [UnityEngine.SerializeField] [UnityEngine.Tooltip(@"Delay to add to every send and received packet (in milliseconds). Only applies in the editor and in development builds. The value is ignored in production builds.")] public int PacketDelayMS;
+            [UnityEngine.SerializeField] [UnityEngine.Tooltip(@"Percentage of sent and received packets to drop. Only applies in the editor and in the editor and in developments builds.")] public int PacketDropRate;
+            [UnityEngine.SerializeField] [UnityEngine.Tooltip(@"Jitter (random variation) to add/substract to the packet delay (in milliseconds). Only applies in the editor and in development builds. The value is ignored in production builds.")] public int PacketJitterMS;
+        }
+    }
+}

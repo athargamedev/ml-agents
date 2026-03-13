@@ -49,6 +49,7 @@ namespace Unity.MLAgents.Analytics
         {
             s_SendEditorAnalytics = true;
         }
+
 #endif
 
         /// <summary>

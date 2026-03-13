@@ -1,0 +1,17 @@
+@import url("unity-theme://default");
+
+@import url("BlocksShared.uss");
+@import url("Theme/Content/stylesheets/buttons.uss");
+@import url("Theme/Content/stylesheets/copy-session--header.uss");
+@import url("Theme/Content/stylesheets/core.uss");
+@import url("Theme/Content/stylesheets/icons.uss");
+@import url("Theme/Content/stylesheets/inputs.uss");
+@import url("Theme/Content/stylesheets/labels.uss");
+@import url("Theme/Content/stylesheets/list-view.uss");
+@import url("Theme/Content/stylesheets/modals.uss");
+@import url("Theme/Content/stylesheets/progressbar.uss");
+@import url("Theme/Content/stylesheets/scroll-view.uss");
+@import url("Theme/Content/stylesheets/utilities.uss");
+
+
+VisualElement {}

@@ -2,8 +2,48 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
 TagManager:
-  serializedVersion: 2
-  tags: []
+  serializedVersion: 3
+  tags:
+  - agent
+  - ground
+  - goal
+  - block
+  - wall
+  - symbol_O_Goal
+  - symbol_X_Goal
+  - symbol_O
+  - symbol_X
+  - key
+  - walkableSurface
+  - blueGoal
+  - purpleGoal
+  - purpleAgent
+  - blueAgent
+  - ball
+  - target
+  - blockLarge
+  - blockSmall
+  - blockVeryLarge
+  - lock
+  - dragon
+  - portal
+  - CinemachineTarget
+  - tile
+  - switchOff
+  - Lights
+  - Waypoints
+  - CinemachineCamera
+  - SpawnPoint
+  - Wallls
+  - Effects
+  - NPC
+  - pyramid
+  - stone
+  - plus
+  - ex
+  - food
+  - badFood
+  - switchOn
   layers:
   - Default
   - TransparentFX
@@ -11,7 +51,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Ground
   - 
   - 
   - 
@@ -41,3 +81,6 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  m_RenderingLayers:
+  - Default
+  m_MigratedRenderPipelines: []

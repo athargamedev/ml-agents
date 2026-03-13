@@ -1,0 +1,168 @@
+behaviors:
+  NpcDialogue:
+    trainer_type: ppo
+
+    hyperparameters:
+      # batch_size: how many steps are used per gradient update.
+      # Small because we have one agent and long real-time episodes (LLM latency).
+      batch_size: 256           # doubled from 128 — more gradient signal per update
+
+      # buffer_size: steps collected before any gradient update.
+      # 4096 gives richer conversational variety per update cycle.
+      # buffer_size: reduced from 4096 to 1024.
+      # With 11s LLM latency and 1 turn/episode, policy updates happen only every
+      # 4096 steps under the old config (16 updates in 34K steps). Cutting to 1024
+      # quadruples the update frequency so the policy learns from each LLM interaction faster.
+      buffer_size: 1024
+
+      learning_rate: 0.0002    # slightly reduced from 0.0003 — more stable long-run convergence
+      learning_rate_schedule: linear   # decays to 0 over max_steps — good for fine convergence
+
+      # beta: entropy bonus — raised to 0.05 to combat the entropy collapse observed in
+      # training (entropy reached 0.0035 vs theoretical max of 1.099 for 3 actions).
+      # The policy collapsed to always-idle; high beta forces the gradient to keep
+      # exploring. Reduce to 0.01 once entropy stabilises above 0.5.
+      beta: 0.05
+
+      # epsilon: PPO clipping range. Standard 0.2.
+      epsilon: 0.2
+
+      # lambd: GAE lambda — trades off bias vs variance in advantage estimation.
+      # 0.95 is the standard value; higher = lower bias, higher variance.
+      lambd: 0.95
+
+      num_epoch: 3
+
+    network_settings:
+      # normalize: true — even though obs [0-6] are roughly in [0,1], normalization
+      # helps gradient flow and handles soft-unbounded obs like [3] turns/10
+      # which can exceed 1.0 in long conversations.
+      normalize: true
+
+      # hidden_units/num_layers: input is small (7 obs, 3 actions).
+      # 128 units x 2 layers is sufficient — keep it lightweight so training
+      # is fast and doesn't overfit to early data.
+      hidden_units: 256         # doubled from 128 — richer representations for dialogue context
+      num_layers: 3             # deeper network; 3 layers matches typical NLP policy depth
+
+      # memory (LSTM): critical for this task. The 7-float obs is a snapshot —
+      # the policy needs to remember what happened earlier in the conversation
+      # (e.g., "effects already fired this episode", "player has been idle for 4 turns").
+      # Mirrors the Hallway config which uses LSTM for the same reason.
+      #
+      # sequence_length: 64 steps — covers full realistic conversations including LLM latency
+      #   spikes. Was 32; doubled so the LSTM sees the full conversation arc in one window.
+      # memory_size: 256 matches the wider hidden_units above.
+      memory:
+        sequence_length: 64
+        memory_size: 256
+
+    reward_signals:
+      extrinsic:
+        # gamma: discount factor. 0.99 = agent values future rewards nearly as
+        # much as immediate ones — correct for long conversations where quality
+        # feedback arrives several turns after the decision that caused it.
+        gamma: 0.99
+        strength: 1.0
+
+      # curiosity: intrinsic reward for visiting novel (obs, action) pairs.
+      # Reduced from 0.01 to 0.005 as the policy has started learning.
+      # Too-strong curiosity at this stage fights the extrinsic signal.
+      curiosity:
+        gamma: 0.99
+        strength: 0.005
+        network_settings:
+          hidden_units: 128
+        learning_rate: 0.0002
+
+    # keep_checkpoints: save last N policy checkpoints.
+    # Lets you roll back to an earlier policy if a training run diverges.
+    keep_checkpoints: 5
+
+    # max_steps: committing to a real training run.
+    # Previous runs were stopped manually at ~34K steps — far too early for
+    # PPO to converge on a task with sparse rewards and LLM latency variance.
+    # 5M steps gives the policy room to actually learn conversation arcs.
+    max_steps: 5000000
+
+    # time_horizon: 128 steps — covers the full realistic conversation arc
+    # including multi-turn exchanges and LLM latency spikes before bootstrapping.
+    time_horizon: 128
+
+    # summary_freq: 1000 steps — finer TensorBoard resolution for early monitoring.
+    # Was 5000; finer resolution lets us catch reward collapses sooner.
+    summary_freq: 1000
+
+  NpcDialogueAnimation:
+    trainer_type: ppo
+
+    hyperparameters:
+      # Small discrete action space (5 actions), single-NPC local context,
+      # and short dialogue reaction windows. Keep updates frequent.
+      batch_size: 256
+      buffer_size: 1024
+      learning_rate: 0.0002
+      learning_rate_schedule: linear
+      beta: 0.02
+      epsilon: 0.2
+      lambd: 0.95
+      num_epoch: 3
+
+    network_settings:
+      normalize: true
+      hidden_units: 128
+      num_layers: 2
+
+      # Dialogue body-language still benefits from memory because the agent needs
+      # to remember the recent speaking beat and avoid repetitive animations.
+      memory:
+        sequence_length: 32
+        memory_size: 128
+
+    reward_signals:
+      extrinsic:
+        gamma: 0.99
+        strength: 1.0
+
+      curiosity:
+        gamma: 0.99
+        strength: 0.003
+        network_settings:
+          hidden_units: 64
+        learning_rate: 0.0002
+
+    keep_checkpoints: 5
+    max_steps: 2000000
+    time_horizon: 64
+    summary_freq: 1000
+
+# ── Future: Curriculum via EnvironmentParameters ────────────────────────────
+# Uncomment to gradually increase dialogue complexity during training.
+# Control these from Python via Academy.EnvironmentParameters.
+#
+# environment_parameters:
+#   dialogue_complexity:          # controls NPC personality depth / prompt length
+#     curriculum:
+#       - name: SimpleNPCs
+#         completion_criteria:
+#           measure: reward
+#           behavior: NpcDialogue
+#           signal_smoothing: true
+#           min_lesson_length: 100
+#           threshold: 0.25
+#         value: 0.3             # short, simple NPC prompts
+#       - name: ComplexNPCs
+#         value: 1.0             # full personality + history context
+#
+#   effect_frequency:            # how often effects are available in scene
+#     curriculum:
+#       - name: RareEffects
+#         completion_criteria:
+#           measure: reward
+#           behavior: NpcDialogue
+#           signal_smoothing: true
+#           min_lesson_length: 100
+#           threshold: 0.4
+#         value: 0.2
+#       - name: FrequentEffects
+#         value: 1.0

@@ -1,0 +1,105 @@
+// This file is generated. Do not modify by hand.
+// XML documentation file not found. To check if public methods have XML comments,
+// make sure the XML doc file is present and located next to the scraped dll
+namespace Unity.Multiplayer.Tools.NetStatsMonitor
+{
+    public enum AggregationMethod
+    {
+        Sum = 0,
+        Average = 1,
+    }
+
+    public sealed class CounterConfiguration
+    {
+        public AggregationMethod AggregationMethod { get; set; }
+        public ExponentialMovingAverageParams ExponentialMovingAverageParams { get; set; }
+        public float HighlightLowerBound { get; set; }
+        public float HighlightUpperBound { get; set; }
+        public int SampleCount { get; }
+        public int SignificantDigits { get; set; }
+        public SimpleMovingAverageParams SimpleMovingAverageParams { get; set; }
+        public SmoothingMethod SmoothingMethod { get; set; }
+        public CounterConfiguration() {}
+    }
+
+    public sealed class DisplayElementConfiguration : UnityEngine.ISerializationCallbackReceiver
+    {
+        public CounterConfiguration CounterConfiguration { get; set; }
+        public GraphConfiguration GraphConfiguration { get; set; }
+        public string Label { get; set; }
+        public System.Collections.Generic.List<Unity.Multiplayer.Tools.NetStats.MetricId> Stats { get; set; }
+        [UnityEngine.Tooltip(@"The label to display for this visual element in the on-screen display. For graphs this field is optional, as the variables displayed in the graph are shown in the legend. Consider leaving this field blank for graphs if you would like to make them more compact.")] public DisplayElementType Type { get; set; }
+        public DisplayElementConfiguration() {}
+        public void OnAfterDeserialize();
+        public void OnBeforeSerialize();
+    }
+
+    public enum DisplayElementType
+    {
+        Counter = 0,
+        LineGraph = 1,
+        StackedAreaGraph = 2,
+    }
+
+    public sealed class ExponentialMovingAverageParams
+    {
+        public double HalfLife { get; set; }
+        public ExponentialMovingAverageParams() {}
+    }
+
+    public sealed class GraphConfiguration
+    {
+        public LineGraphConfiguration LineGraphConfiguration { get; set; }
+        public int SampleCount { get; set; }
+        [UnityEngine.Tooltip(@"The sample rate of the graph. If the sample rate is Per Second then each point in the graph corresponds to data collected over a full second, whereas if the sample rate is Per Frame then each point in the graph corresponds to data collected within a single frame.")] public SampleRate SampleRate { get; set; }
+        public System.Collections.Generic.List<UnityEngine.Color> VariableColors { get; set; }
+        public GraphXAxisType XAxisType { get; set; }
+        public GraphConfiguration() {}
+    }
+
+    public enum GraphXAxisType
+    {
+        Samples = 0,
+        Time = 1,
+    }
+
+    public sealed class LineGraphConfiguration
+    {
+        public float LineThickness { get; set; }
+        public LineGraphConfiguration() {}
+    }
+
+    [UnityEngine.CreateAssetMenu(fileName = @"NetStatsMonitorConfiguration", menuName = @"Multiplayer/NetStatsMonitorConfiguration", order = 900)] public class NetStatsMonitorConfiguration : UnityEngine.ScriptableObject
+    {
+        public System.Collections.Generic.List<DisplayElementConfiguration> DisplayElements { get; set; }
+        public NetStatsMonitorConfiguration() {}
+        public void OnConfigurationModified();
+    }
+
+    public class PositionConfiguration
+    {
+        public bool OverridePosition { get; set; }
+        public float PositionLeftToRight { get; set; }
+        public float PositionTopToBottom { get; set; }
+        public PositionConfiguration() {}
+    }
+
+    public enum SampleRate
+    {
+        PerFrame = 0,
+        PerSecond = 1,
+    }
+
+    public sealed class SimpleMovingAverageParams
+    {
+        public int SampleCount { get; set; }
+        [UnityEngine.Tooltip(@"The sample rate of the counter. If the sample rate is Per Second then each sample in the counter is collected over a full second, whereas if the sample rate is Per Frame then each sample in the counter is collected during a single frame.")] public SampleRate SampleRate { get; set; }
+        public SimpleMovingAverageParams() {}
+    }
+
+    public enum SmoothingMethod
+    {
+        ExponentialMovingAverage = 0,
+        SimpleMovingAverage = 1,
+    }
+}

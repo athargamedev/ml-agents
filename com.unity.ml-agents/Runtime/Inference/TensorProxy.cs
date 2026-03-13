@@ -25,17 +25,17 @@ namespace Unity.MLAgents.Inference
 
         static readonly Dictionary<TensorType, Type> k_TypeMap =
             new Dictionary<TensorType, Type>()
-            {
-                { TensorType.FloatingPoint, typeof(float) },
-                { TensorType.Integer, typeof(int) }
-            };
+        {
+            { TensorType.FloatingPoint, typeof(float) },
+            { TensorType.Integer, typeof(int) }
+        };
 
         static readonly Dictionary<TensorType, DataType> k_DTypeMap =
             new Dictionary<TensorType, DataType>()
-            {
-                { TensorType.FloatingPoint, InferenceEngine.DataType.Float },
-                { TensorType.Integer, InferenceEngine.DataType.Int }
-            };
+        {
+            { TensorType.FloatingPoint, InferenceEngine.DataType.Float },
+            { TensorType.Integer, InferenceEngine.DataType.Int }
+        };
 
         public string name;
         public TensorType valueType;
@@ -50,21 +50,21 @@ namespace Unity.MLAgents.Inference
 
         public long Height
         {
-            get { return shape.Length >= 4 ? shape[^2] : 1; }
+            get { return shape.Length >= 4 ? shape[^ 2] : 1; }
         }
 
         public long Width
         {
-            get { return shape.Length >= 3 ? shape[^1] : 1; }
+            get { return shape.Length >= 3 ? shape[^ 1] : 1; }
         }
 
         public long Channels
         {
             get
             {
-                return shape.Length >= 4 ? shape[^3] :
-                    shape.Length == 3 ? shape[^2] :
-                    shape.Length == 2 ? shape[^1] : 1;
+                return shape.Length >= 4 ? shape[^ 3] :
+                    shape.Length == 3 ? shape[^ 2] :
+                    shape.Length == 2 ? shape[^ 1] : 1;
             }
         }
 

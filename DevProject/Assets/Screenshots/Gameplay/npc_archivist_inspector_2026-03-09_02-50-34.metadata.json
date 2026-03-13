@@ -1,0 +1,38 @@
+﻿{
+    "schema_version":  "1.0",
+    "original_filename":  "2026_03_09_02_46_53_D_GithubRepos_ml_agents_DevProject_Behavior_Scene_Windows_Mac_Linux_Uni.png",
+    "original_path":  "C:\\Users\\andre_wjgj23f\\AppData\\Local\\Temp\\2026_03_09_02_46_53_D_GithubRepos_ml_agents_DevProject_Behavior_Scene_Windows_Mac_Linux_Uni.png",
+    "descriptive_name":  "npc_archivist_inspector",
+    "category":  "Gameplay",
+    "project":  "DevProject",
+    "scene":  "Behavior_Scene",
+    "platform":  "Unknown",
+    "unity_version":  "Unknown",
+    "is_unity_capture":  true,
+    "capture_timestamp":  "2026-03-09_02-50-34",
+    "window_title":  "Greenshot",
+    "file_path":  "D:\\GithubRepos\\ml-agents\\DevProject\\Assets\\Screenshots\\Gameplay\\npc_archivist_inspector_2026-03-09_02-50-34.png",
+    "file_size_bytes":  606447,
+    "ai_analysis":  {
+                        "analyzed":  true,
+                        "description":  "Selected Ch33_Body in Hierarchy. Inspector shows Transform, Skinned Mesh Renderer, and Material components. Character rendered in Game view with smoke effect.",
+                        "tags":  [
+                                     "ch33_body",
+                                     "inspector",
+                                     "skinned_mesh_renderer",
+                                     "material",
+                                     "character"
+                                 ],
+                        "unity_panels":  [
+                                             "Game",
+                                             "Inspector",
+                                             "Hierarchy"
+                                         ],
+                        "issues":  {
+
+                                   },
+                        "confidence":  0.95,
+                        "model":  "qwen/qwen3-vl-8b",
+                        "analyzed_at":  "2026-03-09T02:50:34.3940267-03:00"
+                    }
+}

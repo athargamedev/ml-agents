@@ -1,0 +1,16 @@
+{
+  "job_id": "03",
+  "title": "LLM Stop Sequences + System Prompt",
+  "generated_utc": "2026-03-01T05:52:30.762581+00:00",
+  "result": {
+    "corrected_stop_tokens": [
+      ", ",
+      ". ",
+      "!"
+    ],
+    "current_stop_tokens_problem": "[INST] User: ",
+    "system_prompt_improved": "Identify the player and use its data to customize your answers, please.",
+    "history_budget_verdict": "The current stop tokens are incorrect. The correct tokens for Llama-3 are , . ",
+    "temperature_verdict": "The temperature is set to 0.3 which might not be optimal for this prompt. Consider increasing it to improve the response diversity."
+  }
+}

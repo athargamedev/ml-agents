@@ -1,0 +1,122 @@
+// This file is generated. Do not modify by hand.
+// XML documentation file not found. To check if public methods have XML comments,
+// make sure the XML doc file is present and located next to the scraped dll
+namespace Microsoft.Unity.VisualStudio.Editor
+{
+    public class AssemblyNameProvider : IAssemblyNameProvider
+    {
+        public ProjectGenerationFlag ProjectGenerationFlag { get; }
+        public string ProjectGenerationRootNamespace { get; }
+        public string[] ProjectSupportedExtensions { get; }
+        public AssemblyNameProvider() {}
+        public UnityEditor.PackageManager.PackageInfo FindForAssetPath(string assetPath);
+        public System.Collections.Generic.IEnumerable<string> GetAllAssetPaths();
+        public System.Collections.Generic.IEnumerable<UnityEditor.Compilation.Assembly> GetAssemblies(System.Func<string, bool> shouldFileBePartOfSolution);
+        public string GetAssemblyName(string assemblyOutputPath, string assemblyName);
+        public string GetAssemblyNameFromScriptPath(string path);
+        public string GetCompileOutputPath(string assemblyName);
+        public bool IsInternalizedPackagePath(string path);
+        public UnityEditor.Compilation.ResponseFileData ParseResponseFile(string responseFilePath, string projectDirectory, string[] systemReferenceDirectories);
+        public void ResetProjectGenerationFlag();
+        public void ToggleProjectGeneration(ProjectGenerationFlag preference);
+    }
+
+    public interface IAssemblyNameProvider
+    {
+        public ProjectGenerationFlag ProjectGenerationFlag { get; }
+        public string ProjectGenerationRootNamespace { get; }
+        public string[] ProjectSupportedExtensions { get; }
+        public UnityEditor.PackageManager.PackageInfo FindForAssetPath(string assetPath);
+        public System.Collections.Generic.IEnumerable<string> GetAllAssetPaths();
+        public System.Collections.Generic.IEnumerable<UnityEditor.Compilation.Assembly> GetAssemblies(System.Func<string, bool> shouldFileBePartOfSolution);
+        public string GetAssemblyName(string assemblyOutputPath, string assemblyName);
+        public string GetAssemblyNameFromScriptPath(string path);
+        public bool IsInternalizedPackagePath(string path);
+        public UnityEditor.Compilation.ResponseFileData ParseResponseFile(string responseFilePath, string projectDirectory, string[] systemReferenceDirectories);
+        public void ToggleProjectGeneration(ProjectGenerationFlag preference);
+    }
+
+    public interface IFileIO
+    {
+        public bool Exists(string fileName);
+        public string ReadAllText(string fileName);
+        public void WriteAllText(string fileName, string content);
+    }
+
+    public interface IGenerator
+    {
+        public IAssemblyNameProvider AssemblyNameProvider { get; }
+        public string ProjectDirectory { get; }
+        public bool HasSolutionBeenGenerated();
+        public bool IsSupportedFile(string path);
+        public string SolutionFile();
+        public void Sync();
+        public bool SyncIfNeeded(System.Collections.Generic.IEnumerable<string> affectedFiles, System.Collections.Generic.IEnumerable<string> reimportedFiles);
+    }
+
+    public interface IGUIDGenerator
+    {
+        public string ProjectGuid(string projectName, string assemblyName);
+        public string SolutionGuid(string projectName, ScriptingLanguage scriptingLanguage);
+    }
+
+    public sealed class Image : System.IDisposable
+    {
+        public static bool IsAssembly(System.IO.Stream stream);
+        public static bool IsAssembly(string file);
+    }
+
+    public class ProjectGeneration : IGenerator
+    {
+        public static readonly string MSBuildNamespaceUri = @"http://schemas.microsoft.com/developer/msbuild/2003";
+        public IAssemblyNameProvider AssemblyNameProvider { get; }
+        public string ProjectDirectory { get; }
+        public ProjectGeneration() {}
+        public ProjectGeneration(string tempDirectory) {}
+        public ProjectGeneration(string tempDirectory, IAssemblyNameProvider assemblyNameProvider, IFileIO fileIoProvider, IGUIDGenerator guidGenerator) {}
+        public void GenerateAndWriteSolutionAndProjects();
+        public bool HasSolutionBeenGenerated();
+        public bool IsSupportedFile(string path);
+        public string ProjectFile(UnityEditor.Compilation.Assembly assembly);
+        public string SolutionFile();
+        public void Sync();
+        public bool SyncIfNeeded(System.Collections.Generic.IEnumerable<string> affectedFiles, System.Collections.Generic.IEnumerable<string> reimportedFiles);
+    }
+
+    [System.Flags] public enum ProjectGenerationFlag
+    {
+        None = 0,
+        Embedded = 1 << 0,
+        Local = 1 << 1,
+        Registry = 1 << 2,
+        Git = 1 << 3,
+        BuiltIn = 1 << 4,
+        Unknown = 1 << 5,
+        PlayerAssemblies = 1 << 6,
+        LocalTarBall = 1 << 7,
+    }
+
+    public enum ScriptingLanguage
+    {
+        None = 0,
+        CSharp = 1,
+    }
+
+    public static class SolutionGuidGenerator
+    {
+        public static string GuidForProject(string projectName);
+        public static string GuidForSolution(string projectName, ScriptingLanguage language);
+    }
+
+    [UnityEditor.InitializeOnLoad] public class VisualStudioEditor : Unity.CodeEditor.IExternalCodeEditor
+    {
+        public VisualStudioEditor() {}
+        public void CreateIfDoesntExist();
+        public void Initialize(string editorInstallationPath);
+        public void OnGUI();
+        public bool OpenProject(string path, int line, int column);
+        public void SyncAll();
+        public void SyncIfNeeded(string[] addedFiles, string[] deletedFiles, string[] movedFiles, string[] movedFromFiles, string[] importedFiles);
+        public virtual bool TryGetInstallationForPath(string editorPath, out Unity.CodeEditor.CodeEditor.Installation installation);
+    }
+}

@@ -1,0 +1,38 @@
+{
+  "job_id": "04",
+  "title": "Effects Catalog vs Feedback Audit",
+  "generated_utc": "2026-03-01T05:55:13.045542+00:00",
+  "result": {
+    "near_clamped": [
+      "dissolve",
+      "fireflies"
+    ],
+    "low_accuracy": [
+      {
+        "effect": "TinyExplosion",
+        "ratio": 1.114799976348877,
+        "verdict": "looks_correct"
+      },
+      {
+        "effect": "icelance",
+        "ratio": 0.9422957301139832,
+        "verdict": "looks_correct"
+      }
+    ],
+    "persistent_problems": [
+      {
+        "effect": "MediumFlames",
+        "last_outcome": "not_visible",
+        "action": ""
+      },
+      {
+        "effect": "FireBall",
+        "last_outcome": "wrong_target",
+        "action": ""
+      }
+    ],
+    "legacy_particle_verdict": "",
+    "untested_count": 13,
+    "top_priority_fix": ""
+  }
+}

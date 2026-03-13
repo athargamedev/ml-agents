@@ -1,0 +1,55 @@
+// This file is generated. Do not modify by hand.
+// XML documentation file not found. To check if public methods have XML comments,
+// make sure the XML doc file is present and located next to the scraped dll
+namespace Unity.Multiplayer.Tools.NetStats
+{
+    [System.AttributeUsage(System.AttributeTargets.Assembly)] public class AssemblyRequiresTypeRegistrationAttribute : System.Attribute
+    {
+        public AssemblyRequiresTypeRegistrationAttribute() {}
+    }
+
+    public struct MetricId : System.IEquatable<MetricId>
+    {
+        public static MetricId Create<T>(T value) where T : struct, unmanaged, System.Enum, new();
+        public override bool Equals(object obj);
+        public bool Equals(MetricId other);
+        public override int GetHashCode();
+        public static string op_Implicit(MetricId metricId);
+        public override string ToString();
+    }
+
+    public static class MetricIdTypeLibrary
+    {
+        public static void RegisterType<TEnumType>();
+    }
+
+    public enum MetricKind
+    {
+        Counter = 0,
+        Gauge = 1,
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Field)] public class MetricMetadataAttribute : System.Attribute
+    {
+        public bool DisplayAsPercentage { get; set; }
+        public string DisplayName { get; set; }
+        public MetricKind MetricKind { get; set; }
+        public Units Units { get; set; }
+        public MetricMetadataAttribute() {}
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Enum)] public class MetricTypeEnumAttribute : System.Attribute
+    {
+        public string DisplayName { get; set; }
+        public MetricTypeEnumAttribute() {}
+    }
+
+    public enum Units
+    {
+        None = 0,
+        Bytes = 1,
+        BytesPerSecond = 2,
+        Seconds = 3,
+        Hertz = 4,
+    }
+}

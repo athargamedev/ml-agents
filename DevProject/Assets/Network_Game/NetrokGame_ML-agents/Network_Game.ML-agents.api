@@ -1,0 +1,100 @@
+// This file is generated. Do not modify by hand.
+// XML documentation file not found. To check if public methods have XML comments,
+// make sure the XML doc file is present and located next to the scraped dll
+[UnityEngine.CreateAssetMenu(fileName = @"DialogueAgentProfile", menuName = @"Network Game/Dialogue/Dialogue Agent Profile", order = 0)] public class DialogueAgentProfile : UnityEngine.ScriptableObject
+{
+    [UnityEngine.Tooltip(@"Small bonus for acceptable-but-not-fast responses.")] public float AcceptableResponseBonus = 0.01f;
+    [UnityEngine.Header(@"Behavior")] [UnityEngine.Tooltip(@"ML-Agents behavior name expected by the trainer config (e.g. NpcDialogue).")] public string BehaviorName = @"NpcDialogue";
+    [UnityEngine.Header(@"Decisioning")] [UnityEngine.Min(1f)] [UnityEngine.Tooltip(@"How often the agent makes decisions (frames between decisions).")] public int DecisionPeriod = 5;
+    [UnityEngine.Tooltip(@"Bonus for very fast LLM responses (under FastResponseThresholdMs).")] public float FastResponseBonus = 0.03f;
+    [UnityEngine.Tooltip(@"Scale for normalized player feedback scores (-1..1).")] public float FeedbackScoreRewardScale = 0.1f;
+    [UnityEngine.Header(@"Training Reward Shaping")] [UnityEngine.Tooltip(@"Scale for outcome-based rewards (success/failure of dialogue turns).")] public float OutcomeRewardScale = 1f;
+    [UnityEngine.Tooltip(@"Penalty applied per LLM retry attempt.")] public float RetryPenaltyPerAttempt = 0.02f;
+    [UnityEngine.Tooltip(@"Penalty for very slow responses (over SlowResponseThresholdMs).")] public float SlowResponsePenalty = 0.03f;
+    [UnityEngine.Tooltip(@"Whether to apply actions on intermediate steps between decisions.")] public bool TakeActionsBetweenDecisions = true;
+    [UnityEngine.Tooltip(@"Penalty when a request times out entirely.")] public float TimeoutPenalty = 0.08f;
+    public DialogueAgentProfile() {}
+}
+
+public class GameStateProvider : UnityEngine.MonoBehaviour
+{
+    public bool IsPlayerInCombat { get; }
+    public float NormalizedPlayerHealth { get; }
+    public UnityEngine.Vector3 PlayerPosition { get; }
+    public GameStateProvider() {}
+    public string BuildDynamicContext();
+    public void SetInCombat(bool inCombat);
+    public void SetPlayerHealth(float current);
+    public void SetPlayerTransform(UnityEngine.Transform t);
+}
+
+[UnityEngine.RequireComponent(typeof(Unity.MLAgents.Policies.BehaviorParameters))] public class NpcDialogueAgent : Unity.MLAgents.Agent
+{
+    public NpcDialogueAgent() {}
+    public override void CollectObservations(Unity.MLAgents.Sensors.VectorSensor sensor);
+    public override void Heuristic(ref readonly Unity.MLAgents.Actuators.ActionBuffers actionsOut);
+    public override void Initialize();
+    public override void OnActionReceived(Unity.MLAgents.Actuators.ActionBuffers actions);
+    public void OnDialogueTurnComplete(bool playerReplied);
+    protected override void OnDisable();
+    protected override void OnEnable();
+    public override void OnEpisodeBegin();
+    public override void WriteDiscreteActionMask(Unity.MLAgents.Actuators.IDiscreteActionMask actionMask);
+}
+
+[UnityEngine.DisallowMultipleComponent] [UnityEngine.RequireComponent(typeof(Unity.MLAgents.Policies.BehaviorParameters))] public class NpcDialogueAnimationAgent : Unity.MLAgents.Agent
+{
+    public bool DrivesAnimator { get; }
+    public NpcDialogueAnimationAgent() {}
+    public override void CollectObservations(Unity.MLAgents.Sensors.VectorSensor sensor);
+    public override void Heuristic(ref readonly Unity.MLAgents.Actuators.ActionBuffers actionsOut);
+    public override void Initialize();
+    public override void OnActionReceived(Unity.MLAgents.Actuators.ActionBuffers actions);
+    protected override void OnDisable();
+    public override void OnEpisodeBegin();
+    public override void WriteDiscreteActionMask(Unity.MLAgents.Actuators.IDiscreteActionMask actionMask);
+}
+
+public class SideChannelDialogueClient : Network_Game.Dialogue.IDialogueInferenceClient
+{
+    public event System.Action<Unity.MLAgents.NpcDialogue.DialogueResponse> OnStructuredDialogueResponseReceived;
+    public string BackendName { get; }
+    public bool ManagesHistoryInternally { get; }
+    public SideChannelDialogueClient(Unity.MLAgents.NpcDialogue.LlmDialogueChannel channel) {}
+    public void ApplyConfig(Network_Game.Dialogue.DialogueInferenceRuntimeConfig config);
+    public System.Threading.Tasks.Task<string> ChatAsync(string systemPrompt, System.Collections.Generic.IReadOnlyList<Network_Game.Dialogue.DialogueInferenceMessage> history, string userPrompt, bool addToHistory = true, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken));
+    public async System.Threading.Tasks.Task<bool> CheckConnectionAsync(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken));
+    public void Dispose();
+    public void SetGameStateProvider(GameStateProvider provider);
+}
+
+namespace Unity.MLAgents.NpcDialogue
+{
+    public class DialogueRequest
+    {
+        public string conversationHistory;
+        public string messageType;
+        public string npcId;
+        public string npcPersonality;
+        public string playerInput;
+        public DialogueRequest() {}
+    }
+
+    public class DialogueResponse
+    {
+        public float confidence;
+        public string emotion;
+        public string npcId;
+        public string responseText;
+        public DialogueResponse() {}
+    }
+
+    public class LlmDialogueChannel : Unity.MLAgents.SideChannels.SideChannel
+    {
+        public static readonly System.Guid k_ChannelId;
+        public event System.Action<DialogueResponse> OnResponseReceived;
+        public LlmDialogueChannel() {}
+        protected override void OnMessageReceived(Unity.MLAgents.SideChannels.IncomingMessage msg);
+        public void SendRequest(DialogueRequest request);
+    }
+}

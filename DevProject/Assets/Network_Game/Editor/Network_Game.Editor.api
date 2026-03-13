@@ -1,0 +1,245 @@
+// This file is generated. Do not modify by hand.
+// XML documentation file not found. To check if public methods have XML comments,
+// make sure the XML doc file is present and located next to the scraped dll
+namespace Network_Game.Editor
+{
+    [UnityEditor.InitializeOnLoad] public static class InspectorSelectionGuard
+    {
+    }
+
+    public static class LODGroupAutoSetup
+    {
+        public enum LODPreset
+        {
+            Character = 0,
+            Environment = 1,
+            SmallProp = 2,
+            VFX = 3,
+        }
+    }
+
+    public sealed class NetworkGameMcpAutomationConsoleWindow : UnityEditor.EditorWindow
+    {
+        public NetworkGameMcpAutomationConsoleWindow() {}
+        [UnityEditor.MenuItem(@"Network Game/MCP/Multiplayer Automation Console")] public static void Open();
+    }
+
+    public static class WebGLOptimizationTool
+    {
+        [UnityEditor.MenuItem(@"Tools/Optimize For WebGL")] public static void OptimizeEverything();
+    }
+}
+
+namespace Network_Game.Editor.CustomTools
+{
+    [MCPForUnity.Editor.Tools.McpForUnityTool(@"ng_bulk_validate_effects", Description = @"Validate all EffectDefinitions in the catalog and all NPC profile powers: missing prefabs, duplicate tags, unregistered effects. Full health report in one call.")] public static class BulkValidateEffectsTool
+    {
+        public static object HandleCommand(Newtonsoft.Json.Linq.JObject @params);
+    }
+
+    [MCPForUnity.Editor.Tools.McpForUnityTool(@"ng_catalog_summary", Description = @"Get the full EffectCatalog as structured data: all tags, descriptions, prefab status, placement modes, and the LLM-ready prompt string.")] public static class CatalogSummaryTool
+    {
+        public static object HandleCommand(Newtonsoft.Json.Linq.JObject @params);
+    }
+
+    [MCPForUnity.Editor.Tools.McpForUnityTool(@"ng_create_effect_definition", Description = @"Create a new EffectDefinition asset, link its prefab from ParticlePack, register it in the EffectCatalog, and save — all in one call. Params: effect_tag (required), description, prefab_name, placement_mode (Auto/AttachMesh/GroundAoe/SkyVolume/Projectile), target_type (Auto/Player/Floor/Npc/WorldPoint), default_scale, default_duration, alternative_tags (comma-separated), enable_damage, damage_amount.")] public static class CreateEffectDefinitionTool
+    {
+        public static object HandleCommand(Newtonsoft.Json.Linq.JObject @params);
+    }
+
+    [MCPForUnity.Editor.Tools.McpForUnityTool(@"ng_create_npc_profile", Description = @"Create a complete NPC dialogue profile with persona, system prompt, lore, powers, and keywords — all in one call. Params: profile_id (required), display_name, system_prompt, lore, bored_keywords (comma-separated), enable_bored_light, enable_dynamic_params, powers (JSON array of {name, keywords, prefab_name, element}).")] public static class CreateNpcProfileTool
+    {
+        public static object HandleCommand(Newtonsoft.Json.Linq.JObject @params);
+    }
+
+    [MCPForUnity.Editor.Tools.McpForUnityTool(@"ng_disable_effect_feedback_prompt", Description = @"Disable the runtime Dialogue Effect Feedback prompt overlay in the current Play Mode session so gameplay effects remain visible.")] public static class DisableEffectFeedbackPromptTool
+    {
+        public static object HandleCommand(Newtonsoft.Json.Linq.JObject @params);
+    }
+
+    [MCPForUnity.Editor.Tools.McpForUnityTool(@"ng_effects_test_mode", Description = @"Composite workflow tool for multiplayer effects testing: disables feedback prompt, starts/stops direct effect suite, and reports session status.")] public static class EffectsTestModeTool
+    {
+        public static object HandleCommand(Newtonsoft.Json.Linq.JObject @params);
+        public class Parameters
+        {
+            [MCPForUnity.Editor.Tools.ToolParameter(@"Action to run: start, stop, status, spawn_once", Required = false)] public string action { get; set; }
+            [MCPForUnity.Editor.Tools.ToolParameter(@"Disable feedback prompt while testing (default true for start/spawn_once)", Required = false)] public System.Nullable<bool> disable_feedback_prompt { get; set; }
+            [MCPForUnity.Editor.Tools.ToolParameter(@"Restore prompt state captured at start when stopping (default true)", Required = false)] public System.Nullable<bool> restore_prompt_on_stop { get; set; }
+            [MCPForUnity.Editor.Tools.ToolParameter(@"Start direct all-effects suite on start (default true)", Required = false)] public System.Nullable<bool> start_suite { get; set; }
+            [MCPForUnity.Editor.Tools.ToolParameter(@"Stop direct all-effects suite on stop (default true)", Required = false)] public System.Nullable<bool> stop_suite { get; set; }
+            public Parameters() {}
+        }
+    }
+
+    [MCPForUnity.Editor.Tools.McpForUnityTool(@"ng_enable_effect_feedback_prompt", Description = @"Enable the runtime Dialogue Effect Feedback prompt overlay in the current Play Mode session.")] public static class EnableEffectFeedbackPromptTool
+    {
+        public static object HandleCommand(Newtonsoft.Json.Linq.JObject @params);
+    }
+
+    [MCPForUnity.Editor.Tools.McpForUnityTool(@"ng_get_full_diagnostics", Description = @"Complete dialogue system diagnostic dump: pipeline stats, LLM health, catalog validation, NPC profiles, conversation keys, effect types — all in one call.")] public static class FullDiagnosticsTool
+    {
+        public static object HandleCommand(Newtonsoft.Json.Linq.JObject @params);
+    }
+
+    [MCPForUnity.Editor.Tools.McpForUnityTool(@"ng_get_effect_feedback_prompt_status", Description = @"Get current runtime status of the Dialogue Effect Feedback prompt instance in Play Mode.")] public static class GetEffectFeedbackPromptStatusTool
+    {
+        public static object HandleCommand(Newtonsoft.Json.Linq.JObject @params);
+    }
+
+    [MCPForUnity.Editor.Tools.McpForUnityTool(@"ng_modify_npc_profile", Description = @"Patch NPC dialogue profile fields (prompt, lore, display_name, bored_keywords, etc.) by profile_id. Params: profile_id (required), fields (JSON object with field names and values, e.g. {""system_prompt"": ""You are..."", ""lore"": ""Ancient wizard...""}). Supported fields: system_prompt, display_name, lore, enable_bored_light, enable_dynamic_params, bored_light_color, bored_light_intensity.")] public static class ModifyNpcProfileTool
+    {
+        public static object HandleCommand(Newtonsoft.Json.Linq.JObject @params);
+    }
+
+    [MCPForUnity.Editor.Tools.McpForUnityTool(@"ng_pipeline_status", Description = @"Get complete dialogue pipeline status in one call: LLM state, queue, stats, catalog health, active NPCs, and errors. Use this instead of multiple separate queries.")] public static class PipelineStatusTool
+    {
+        public static object HandleCommand(Newtonsoft.Json.Linq.JObject @params);
+    }
+
+    [MCPForUnity.Editor.Tools.McpForUnityTool(@"ng_probe_effect_targets", Description = @"Probe NPC/player/surface targets in the current play scene. Resolves P1/P2 ordering, target player selection, floor under player, and wall between NPC and player.")] public static class ProbeEffectTargetsTool
+    {
+        public static object HandleCommand(Newtonsoft.Json.Linq.JObject @params);
+        public class Parameters
+        {
+            [MCPForUnity.Editor.Tools.ToolParameter(@"Downward floor ray distance in meters (default 8).", Required = false)] public System.Nullable<float> floor_ray_distance { get; set; }
+            [MCPForUnity.Editor.Tools.ToolParameter(@"Optional NPC GameObject name fallback selector.", Required = false)] public string npc_name { get; set; }
+            [MCPForUnity.Editor.Tools.ToolParameter(@"Optional NPC profile id (e.g. npc.storm_oracle). If empty, uses first active NPC.", Required = false)] public string npc_profile_id { get; set; }
+            [MCPForUnity.Editor.Tools.ToolParameter(@"Player selector: p1, p2, nearest_to_npc, client:<id>, network:<id>.", Required = false)] public string player_selector { get; set; }
+            [MCPForUnity.Editor.Tools.ToolParameter(@"Resolve floor under selected player (default true).", Required = false)] public System.Nullable<bool> resolve_floor { get; set; }
+            [MCPForUnity.Editor.Tools.ToolParameter(@"Resolve wall between NPC and player (default true).", Required = false)] public System.Nullable<bool> resolve_wall { get; set; }
+            [MCPForUnity.Editor.Tools.ToolParameter(@"Physics layer mask integer used for floor/wall probes (default all layers).", Required = false)] public System.Nullable<int> surface_layer_mask { get; set; }
+            [MCPForUnity.Editor.Tools.ToolParameter(@"Max wall probe distance in meters (default 40).", Required = false)] public System.Nullable<float> wall_max_distance { get; set; }
+            [MCPForUnity.Editor.Tools.ToolParameter(@"Sphere radius for wall probe. Use 0 for pure raycast (default 0.15).", Required = false)] public System.Nullable<float> wall_sphere_radius { get; set; }
+            public Parameters() {}
+        }
+    }
+
+    [MCPForUnity.Editor.Tools.McpForUnityTool(@"ng_probe_npc_dialogue", Description = @"Send a player message to an NPC via the dialogue pipeline and get the full response with parsed effect intents. Play Mode only. Params: player_message (required), npc_profile_id (optional, uses first found NPC if omitted).")] public static class ProbeNpcDialogueTool
+    {
+        public static object HandleCommand(Newtonsoft.Json.Linq.JObject @params);
+    }
+
+    [MCPForUnity.Editor.Tools.McpForUnityTool(@"ng_run_all_effects_direct", Description = @"Start direct all-effects automation (no LLM) using the Network Game MCP test menu.")] public static class RunAllEffectsDirectTool
+    {
+        public static object HandleCommand(Newtonsoft.Json.Linq.JObject @params);
+    }
+
+    [MCPForUnity.Editor.Tools.McpForUnityTool(@"ng_simulate_llm_response", Description = @"Parse a simulated LLM response through the full effect pipeline: extract [EFFECT:] tags, validate against catalog, report intents and parameters. Params: response_text (required), spawn_effects (bool, default false).")] public static class SimulateLlmResponseTool
+    {
+        public static object HandleCommand(Newtonsoft.Json.Linq.JObject @params);
+    }
+
+    [MCPForUnity.Editor.Tools.McpForUnityTool(@"ng_spawn_direct_npc_power", Description = @"Spawn one direct NPC prefab power effect (no LLM) using the Network Game MCP test menu.")] public static class SpawnDirectNpcPowerTool
+    {
+        public static object HandleCommand(Newtonsoft.Json.Linq.JObject @params);
+    }
+
+    [MCPForUnity.Editor.Tools.McpForUnityTool(@"ng_stop_all_effects_direct", Description = @"Stop the direct all-effects automation (no LLM) using the Network Game MCP test menu.")] public static class StopAllEffectsDirectTool
+    {
+        public static object HandleCommand(Newtonsoft.Json.Linq.JObject @params);
+    }
+
+    [MCPForUnity.Editor.Tools.McpForUnityTool(@"ng_test_effect_tag", Description = @"Validate an effect tag against the catalog and spawn it in-scene. PlayMode: networked dispatch. EditMode: sandbox preview. Params: effect_tag (required), spawn_preview (bool, default true).")] public static class TestEffectTagTool
+    {
+        public static object HandleCommand(Newtonsoft.Json.Linq.JObject @params);
+    }
+
+    [MCPForUnity.Editor.Tools.McpForUnityTool(@"ng_toggle_effect_feedback_prompt", Description = @"Toggle the runtime Dialogue Effect Feedback prompt overlay in the current Play Mode session.")] public static class ToggleEffectFeedbackPromptTool
+    {
+        public static object HandleCommand(Newtonsoft.Json.Linq.JObject @params);
+    }
+}
+
+namespace Network_Game.Editor.CustomTools.Services
+{
+    public static class DialoguePipelineInspector
+    {
+        public static System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, object>> GetActiveNpcSummary();
+        public static System.Collections.Generic.Dictionary<string, object> GetCatalogSummary();
+        public static System.Collections.Generic.Dictionary<string, object> GetPipelineSnapshot();
+    }
+
+    public static class EffectDefinitionFactory
+    {
+        [return: System.Runtime.CompilerServices.TupleElementNames(new[] {@"definition", @"assetPath", @"warnings"})] public static System.ValueTuple<Network_Game.Dialogue.Effects.EffectDefinition, string, System.Collections.Generic.List<string>> Create(string effectTag, string description, string prefabName, Network_Game.Dialogue.Effects.EffectPlacementMode placementMode = Network_Game.Dialogue.Effects.EffectPlacementMode.Auto, Network_Game.Dialogue.Effects.EffectTargetType targetType = Network_Game.Dialogue.Effects.EffectTargetType.Auto, float defaultScale = 1f, float defaultDuration = 4f, System.Nullable<UnityEngine.Color> defaultColor = default(System.Nullable<UnityEngine.Color>), string[] alternativeTags = default(string[]), bool enableDamage = false, float damageAmount = 10f, bool registerInCatalog = true);
+        public static string RegisterInCatalog(Network_Game.Dialogue.Effects.EffectDefinition definition);
+        public static UnityEngine.GameObject ResolvePrefabByName(string name);
+    }
+
+    public static class EffectValidationService
+    {
+        public static System.Collections.Generic.Dictionary<string, object> ReportToDict(EffectValidationService.ValidationReport report);
+        public static EffectValidationService.ValidationReport ValidateAll();
+        [return: System.Runtime.CompilerServices.TupleElementNames(new[] {@"valid", @"resolvedTag", @"issues"})] public static System.ValueTuple<bool, string, System.Collections.Generic.List<string>> ValidateTag(string tag);
+        public sealed class ValidationIssue
+        {
+            public string Message;
+            public string Severity;
+            public string Source;
+            public ValidationIssue() {}
+        }
+        public sealed class ValidationReport
+        {
+            public System.Collections.Generic.List<EffectValidationService.ValidationIssue> Issues = new();
+            public int TotalEffects;
+            public int TotalProfiles;
+            public int ValidEffects;
+            public int ValidProfiles;
+            public ValidationReport() {}
+        }
+    }
+
+    public static class ProfileAutomationService
+    {
+        public static System.Collections.Generic.List<string> AddPowersToProfile(string profileId, [System.Runtime.CompilerServices.TupleElementNames(new[] {@"powerName", @"keywords", @"prefabName", @"element"})] System.Collections.Generic.List<System.ValueTuple<string, string[], string, string>> powers);
+        [return: System.Runtime.CompilerServices.TupleElementNames(new[] {@"profile", @"assetPath", @"warnings"})] public static System.ValueTuple<Network_Game.Dialogue.NpcDialogueProfile, string, System.Collections.Generic.List<string>> CreateProfile(string profileId, string displayName, string systemPrompt, string lore = @"", string[] boredKeywords = default(string[]), bool enableBoredLight = true, bool enableDynamicParams = true);
+        public static System.Collections.Generic.Dictionary<string, object> GetProfileSummary(Network_Game.Dialogue.NpcDialogueProfile profile);
+        [return: System.Runtime.CompilerServices.TupleElementNames(new[] {@"success", @"warnings"})] public static System.ValueTuple<bool, System.Collections.Generic.List<string>> PatchProfile(string profileId, System.Collections.Generic.Dictionary<string, object> fieldPatches);
+    }
+}
+
+namespace Network_Game.EditorTools
+{
+    public sealed class MixamoImportAutomation : UnityEditor.AssetPostprocessor
+    {
+        public MixamoImportAutomation() {}
+    }
+}
+
+namespace NetworkGame.Editor
+{
+    public class WebGLMaterialAudit : UnityEditor.EditorWindow
+    {
+        public WebGLMaterialAudit() {}
+        [UnityEditor.MenuItem(@"Tools/Performance/WebGL Material Audit")] public static void Open();
+    }
+
+    public class WebGLShaderStripper : UnityEditor.Build.IOrderedCallback, UnityEditor.Build.IPreprocessShaders
+    {
+        public int callbackOrder { get; }
+        public WebGLShaderStripper() {}
+        public void OnProcessShader(UnityEngine.Shader shader, UnityEditor.Rendering.ShaderSnippetData snippet, System.Collections.Generic.IList<UnityEditor.Rendering.ShaderCompilerData> data);
+    }
+
+    public class WebGLShaderStripperReport : UnityEditor.Build.IOrderedCallback, UnityEditor.Build.IPreprocessShaders
+    {
+        public int callbackOrder { get; }
+        public WebGLShaderStripperReport() {}
+        [UnityEditor.Callbacks.PostProcessBuild(1)] public static void OnPostprocessBuild(UnityEditor.BuildTarget target, string path);
+        public void OnProcessShader(UnityEngine.Shader shader, UnityEditor.Rendering.ShaderSnippetData snippet, System.Collections.Generic.IList<UnityEditor.Rendering.ShaderCompilerData> data);
+    }
+
+    public class WebGLTextureOptimizer : UnityEditor.EditorWindow
+    {
+        public WebGLTextureOptimizer() {}
+        [UnityEditor.MenuItem(@"Tools/Performance/WebGL Texture Optimizer")] public static void Open();
+    }
+}
+
+namespace NetworkGame.EditorTools
+{
+    public static class UnityMcpCustomToolRegistrar
+    {
+        [UnityEditor.MenuItem(@"Network Game/MCP/Admin/Register All Custom Tools")] public static void RegisterAllCustomTools();
+    }
+}

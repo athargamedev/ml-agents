@@ -1,0 +1,2009 @@
+// This file is generated. Do not modify by hand.
+// XML documentation file not found. To check if public methods have XML comments,
+// make sure the XML doc file is present and located next to the scraped dll
+namespace UnityEngine.EventSystems
+{
+    public abstract class AbstractEventData
+    {
+        protected bool m_Used;
+        public virtual bool used { get; }
+        protected AbstractEventData() {}
+        public virtual void Reset();
+        public virtual void Use();
+    }
+
+    public class AxisEventData : BaseEventData
+    {
+        public MoveDirection moveDir { get; set; }
+        public Vector2 moveVector { get; set; }
+        public AxisEventData(EventSystem eventSystem) {}
+    }
+
+    public class BaseEventData : AbstractEventData
+    {
+        public BaseInputModule currentInputModule { get; }
+        public GameObject selectedObject { get; set; }
+        public BaseEventData(EventSystem eventSystem) {}
+    }
+
+    public class BaseInput : UIBehaviour
+    {
+        public virtual Vector2 compositionCursorPos { get; set; }
+        public virtual string compositionString { get; }
+        public virtual IMECompositionMode imeCompositionMode { get; set; }
+        public virtual Vector2 mousePosition { get; }
+        public virtual bool mousePresent { get; }
+        public virtual Vector2 mouseScrollDelta { get; }
+        public virtual float mouseScrollDeltaPerTick { get; }
+        public virtual int touchCount { get; }
+        public virtual bool touchSupported { get; }
+        public BaseInput() {}
+        public virtual float GetAxisRaw(string axisName);
+        public virtual bool GetButtonDown(string buttonName);
+        public virtual bool GetMouseButton(int button);
+        public virtual bool GetMouseButtonDown(int button);
+        public virtual bool GetMouseButtonUp(int button);
+        public virtual Touch GetTouch(int index);
+    }
+
+    [RequireComponent(typeof(EventSystem))] public abstract class BaseInputModule : UIBehaviour
+    {
+        protected BaseInput m_InputOverride;
+        protected System.Collections.Generic.List<RaycastResult> m_RaycastResultCache = new();
+        protected EventSystem eventSystem { get; }
+        public BaseInput input { get; }
+        public BaseInput inputOverride { get; set; }
+        protected bool sendPointerHoverToParent { get; set; }
+        protected BaseInputModule() {}
+        public virtual void ActivateModule();
+        public virtual Vector2 ConvertPointerEventScrollDeltaToTicks(Vector2 scrollDelta);
+        public virtual int ConvertUIToolkitPointerId(PointerEventData sourcePointerData);
+        public virtual void DeactivateModule();
+        protected static MoveDirection DetermineMoveDirection(float x, float y);
+        protected static MoveDirection DetermineMoveDirection(float x, float y, float deadZone);
+        protected static GameObject FindCommonRoot(GameObject g1, GameObject g2);
+        protected static RaycastResult FindFirstRaycast(System.Collections.Generic.List<RaycastResult> candidates);
+        protected virtual AxisEventData GetAxisEventData(float x, float y, float moveDeadZone);
+        protected virtual BaseEventData GetBaseEventData();
+        public virtual NavigationDeviceType GetNavigationEventDeviceType(BaseEventData eventData);
+        protected void HandlePointerExitAndEnter(PointerEventData currentPointerData, GameObject newEnterTarget);
+        public virtual bool IsModuleSupported();
+        public virtual bool IsPointerOverGameObject(int pointerId);
+        protected override void OnDisable();
+        protected override void OnEnable();
+        public abstract void Process();
+        public virtual bool ShouldActivateModule();
+        public virtual void UpdateModule();
+    }
+
+    public abstract class BaseRaycaster : UIBehaviour
+    {
+        public abstract Camera eventCamera { get; }
+        [System.Obsolete(@"Please use sortOrderPriority and renderOrderPriority", false)] public virtual int priority { get; }
+        public virtual int renderOrderPriority { get; }
+        public BaseRaycaster rootRaycaster { get; }
+        public virtual int sortOrderPriority { get; }
+        protected BaseRaycaster() {}
+        protected override void OnCanvasHierarchyChanged();
+        protected override void OnDisable();
+        protected override void OnEnable();
+        protected override void OnTransformParentChanged();
+        public abstract void Raycast(PointerEventData eventData, System.Collections.Generic.List<RaycastResult> resultAppendList);
+        public override string ToString();
+    }
+
+    [System.Flags] public enum EventHandle
+    {
+        Unused = 0,
+        Used = 1 << 0,
+    }
+
+    [AddComponentMenu(@"Event/Event System")] [DisallowMultipleComponent] public class EventSystem : UIBehaviour
+    {
+        public bool alreadySelecting { get; }
+        public static EventSystem current { get; set; }
+        public BaseInputModule currentInputModule { get; }
+        public GameObject currentSelectedGameObject { get; }
+        public GameObject firstSelectedGameObject { get; set; }
+        public bool isFocused { get; }
+        [System.Obsolete(@"lastSelectedGameObject is no longer supported")] public GameObject lastSelectedGameObject { get; }
+        public int pixelDragThreshold { get; set; }
+        public bool sendNavigationEvents { get; set; }
+        protected EventSystem() {}
+        public bool IsPointerOverGameObject();
+        public bool IsPointerOverGameObject(int pointerId);
+        protected virtual void OnApplicationFocus(bool hasFocus);
+        protected override void OnDisable();
+        protected override void OnEnable();
+        public void RaycastAll(PointerEventData eventData, System.Collections.Generic.List<RaycastResult> raycastResults);
+        public void SetSelectedGameObject(GameObject selected);
+        public void SetSelectedGameObject(GameObject selected, BaseEventData pointer);
+        [System.Obsolete(@"Use PanelInputConfiguration component instead.")] public static void SetUITookitEventSystemOverride(EventSystem activeEventSystem, bool sendEvents = true, bool createPanelGameObjectsOnStart = true);
+        protected override void Start();
+        public override string ToString();
+        protected virtual void Update();
+        public void UpdateModules();
+    }
+
+    [AddComponentMenu(@"Event/Event Trigger")] public class EventTrigger : MonoBehaviour, IBeginDragHandler, ICancelHandler, IDeselectHandler, IDragHandler, IDropHandler, IEndDragHandler, IEventSystemHandler, IInitializePotentialDragHandler, IMoveHandler, IPointerClickHandler, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler, IPointerUpHandler, IScrollHandler, ISelectHandler, ISubmitHandler, IUpdateSelectedHandler
+    {
+        [System.Obsolete(@"Please use triggers instead (UnityUpgradable) -> triggers", true)] public System.Collections.Generic.List<EventTrigger.Entry> delegates { get; set; }
+        public System.Collections.Generic.List<EventTrigger.Entry> triggers { get; set; }
+        protected EventTrigger() {}
+        public virtual void OnBeginDrag(PointerEventData eventData);
+        public virtual void OnCancel(BaseEventData eventData);
+        public virtual void OnDeselect(BaseEventData eventData);
+        public virtual void OnDrag(PointerEventData eventData);
+        public virtual void OnDrop(PointerEventData eventData);
+        public virtual void OnEndDrag(PointerEventData eventData);
+        public virtual void OnInitializePotentialDrag(PointerEventData eventData);
+        public virtual void OnMove(AxisEventData eventData);
+        public virtual void OnPointerClick(PointerEventData eventData);
+        public virtual void OnPointerDown(PointerEventData eventData);
+        public virtual void OnPointerEnter(PointerEventData eventData);
+        public virtual void OnPointerExit(PointerEventData eventData);
+        public virtual void OnPointerUp(PointerEventData eventData);
+        public virtual void OnScroll(PointerEventData eventData);
+        public virtual void OnSelect(BaseEventData eventData);
+        public virtual void OnSubmit(BaseEventData eventData);
+        public virtual void OnUpdateSelected(BaseEventData eventData);
+        public class Entry
+        {
+            public EventTrigger.TriggerEvent callback = new();
+            public EventTriggerType eventID = EventTriggerType.PointerClick;
+            public Entry() {}
+        }
+        public class TriggerEvent : UnityEngine.Events.UnityEvent<BaseEventData>
+        {
+            public TriggerEvent() {}
+        }
+    }
+
+    public enum EventTriggerType
+    {
+        PointerEnter = 0,
+        PointerExit = 1,
+        PointerDown = 2,
+        PointerUp = 3,
+        PointerClick = 4,
+        Drag = 5,
+        Drop = 6,
+        Scroll = 7,
+        UpdateSelected = 8,
+        Select = 9,
+        Deselect = 10,
+        Move = 11,
+        InitializePotentialDrag = 12,
+        BeginDrag = 13,
+        EndDrag = 14,
+        Submit = 15,
+        Cancel = 16,
+    }
+
+    public static class ExecuteEvents
+    {
+        public static EventFunction<IBeginDragHandler> beginDragHandler { get; }
+        public static EventFunction<ICancelHandler> cancelHandler { get; }
+        public static EventFunction<IDeselectHandler> deselectHandler { get; }
+        public static EventFunction<IDragHandler> dragHandler { get; }
+        public static EventFunction<IDropHandler> dropHandler { get; }
+        public static EventFunction<IEndDragHandler> endDragHandler { get; }
+        public static EventFunction<IInitializePotentialDragHandler> initializePotentialDrag { get; }
+        public static EventFunction<IMoveHandler> moveHandler { get; }
+        public static EventFunction<IPointerClickHandler> pointerClickHandler { get; }
+        public static EventFunction<IPointerDownHandler> pointerDownHandler { get; }
+        public static EventFunction<IPointerEnterHandler> pointerEnterHandler { get; }
+        public static EventFunction<IPointerExitHandler> pointerExitHandler { get; }
+        public static EventFunction<IPointerMoveHandler> pointerMoveHandler { get; }
+        public static EventFunction<IPointerUpHandler> pointerUpHandler { get; }
+        public static EventFunction<IScrollHandler> scrollHandler { get; }
+        public static EventFunction<ISelectHandler> selectHandler { get; }
+        public static EventFunction<ISubmitHandler> submitHandler { get; }
+        public static EventFunction<IUpdateSelectedHandler> updateSelectedHandler { get; }
+        public static bool CanHandleEvent<T>(GameObject go) where T : IEventSystemHandler;
+        public static bool Execute<T>(GameObject target, BaseEventData eventData, EventFunction<T> functor) where T : IEventSystemHandler;
+        public static GameObject ExecuteHierarchy<T>(GameObject root, BaseEventData eventData, EventFunction<T> callbackFunction) where T : IEventSystemHandler;
+        public static GameObject GetEventHandler<T>(GameObject root) where T : IEventSystemHandler;
+        public static T ValidateEventData<T>(BaseEventData data) where T : class;
+        public delegate void EventFunction<T1>(T1 handler, BaseEventData eventData);
+    }
+
+    public interface IBeginDragHandler : IEventSystemHandler
+    {
+        public void OnBeginDrag(PointerEventData eventData);
+    }
+
+    public interface ICancelHandler : IEventSystemHandler
+    {
+        public void OnCancel(BaseEventData eventData);
+    }
+
+    public interface IDeselectHandler : IEventSystemHandler
+    {
+        public void OnDeselect(BaseEventData eventData);
+    }
+
+    public interface IDragHandler : IEventSystemHandler
+    {
+        public void OnDrag(PointerEventData eventData);
+    }
+
+    public interface IDropHandler : IEventSystemHandler
+    {
+        public void OnDrop(PointerEventData eventData);
+    }
+
+    public interface IEndDragHandler : IEventSystemHandler
+    {
+        public void OnEndDrag(PointerEventData eventData);
+    }
+
+    public interface IEventSystemHandler
+    {
+    }
+
+    public interface IInitializePotentialDragHandler : IEventSystemHandler
+    {
+        public void OnInitializePotentialDrag(PointerEventData eventData);
+    }
+
+    public interface IMoveHandler : IEventSystemHandler
+    {
+        public void OnMove(AxisEventData eventData);
+    }
+
+    public interface IPointerClickHandler : IEventSystemHandler
+    {
+        public void OnPointerClick(PointerEventData eventData);
+    }
+
+    public interface IPointerDownHandler : IEventSystemHandler
+    {
+        public void OnPointerDown(PointerEventData eventData);
+    }
+
+    public interface IPointerEnterHandler : IEventSystemHandler
+    {
+        public void OnPointerEnter(PointerEventData eventData);
+    }
+
+    public interface IPointerExitHandler : IEventSystemHandler
+    {
+        public void OnPointerExit(PointerEventData eventData);
+    }
+
+    public interface IPointerMoveHandler : IEventSystemHandler
+    {
+        public void OnPointerMove(PointerEventData eventData);
+    }
+
+    public interface IPointerUpHandler : IEventSystemHandler
+    {
+        public void OnPointerUp(PointerEventData eventData);
+    }
+
+    public interface IScrollHandler : IEventSystemHandler
+    {
+        public void OnScroll(PointerEventData eventData);
+    }
+
+    public interface ISelectHandler : IEventSystemHandler
+    {
+        public void OnSelect(BaseEventData eventData);
+    }
+
+    public interface ISubmitHandler : IEventSystemHandler
+    {
+        public void OnSubmit(BaseEventData eventData);
+    }
+
+    public interface IUpdateSelectedHandler : IEventSystemHandler
+    {
+        public void OnUpdateSelected(BaseEventData eventData);
+    }
+
+    public enum MoveDirection
+    {
+        Left = 0,
+        Up = 1,
+        Right = 2,
+        Down = 3,
+        None = 4,
+    }
+
+    public enum NavigationDeviceType
+    {
+        Unknown = 0,
+        Keyboard = 1,
+        NonKeyboard = 2,
+    }
+
+    [AddComponentMenu(@"Event/Physics 2D Raycaster")] [RequireComponent(typeof(Camera))] public class Physics2DRaycaster : PhysicsRaycaster
+    {
+        protected Physics2DRaycaster() {}
+        public override void Raycast(PointerEventData eventData, System.Collections.Generic.List<RaycastResult> resultAppendList);
+    }
+
+    [AddComponentMenu(@"Event/Physics Raycaster")] [RequireComponent(typeof(Camera))] public class PhysicsRaycaster : BaseRaycaster
+    {
+        protected const int kNoEventMaskSet = -1;
+        protected Camera m_EventCamera;
+        [SerializeField] protected LayerMask m_EventMask;
+        protected int m_LastMaxRayIntersections;
+        [SerializeField] protected int m_MaxRayIntersections;
+        public virtual int depth { get; }
+        public override Camera eventCamera { get; }
+        public LayerMask eventMask { get; set; }
+        public int finalEventMask { get; }
+        public int maxRayIntersections { get; set; }
+        protected PhysicsRaycaster() {}
+        protected bool ComputeRayAndDistance(PointerEventData eventData, ref Ray ray, ref int eventDisplayIndex, ref float distanceToClipPlane);
+        public override void Raycast(PointerEventData eventData, System.Collections.Generic.List<RaycastResult> resultAppendList);
+    }
+
+    public class PointerEventData : BaseEventData
+    {
+        public System.Collections.Generic.List<GameObject> hovered = new();
+        public float altitudeAngle { get; set; }
+        public float azimuthAngle { get; set; }
+        public PointerEventData.InputButton button { get; set; }
+        public int clickCount { get; set; }
+        public float clickTime { get; set; }
+        public Vector2 delta { get; set; }
+        public int displayIndex { get; set; }
+        public bool dragging { get; set; }
+        public bool eligibleForClick { get; set; }
+        public Camera enterEventCamera { get; }
+        public bool fullyExited { get; set; }
+        public GameObject lastPress { get; }
+        public PenStatus penStatus { get; set; }
+        public GameObject pointerClick { get; set; }
+        public RaycastResult pointerCurrentRaycast { get; set; }
+        public GameObject pointerDrag { get; set; }
+        public GameObject pointerEnter { get; set; }
+        public int pointerId { get; set; }
+        public GameObject pointerPress { get; set; }
+        public RaycastResult pointerPressRaycast { get; set; }
+        public Vector2 position { get; set; }
+        public Camera pressEventCamera { get; }
+        public Vector2 pressPosition { get; set; }
+        public float pressure { get; set; }
+        public Vector2 radius { get; set; }
+        public Vector2 radiusVariance { get; set; }
+        public GameObject rawPointerPress { get; set; }
+        public bool reentered { get; set; }
+        public Vector2 scrollDelta { get; set; }
+        public float tangentialPressure { get; set; }
+        public Vector2 tilt { get; set; }
+        public float twist { get; set; }
+        public bool useDragThreshold { get; set; }
+        [System.Obsolete(@"Use either pointerCurrentRaycast.worldNormal or pointerPressRaycast.worldNormal")] public Vector3 worldNormal { get; set; }
+        [System.Obsolete(@"Use either pointerCurrentRaycast.worldPosition or pointerPressRaycast.worldPosition")] public Vector3 worldPosition { get; set; }
+        public PointerEventData(EventSystem eventSystem) {}
+        public bool IsPointerMoving();
+        public bool IsScrolling();
+        public override string ToString();
+        public enum FramePressState
+        {
+            Pressed = 0,
+            Released = 1,
+            PressedAndReleased = 2,
+            NotChanged = 3,
+        }
+        public enum InputButton
+        {
+            Left = 0,
+            Right = 1,
+            Middle = 2,
+        }
+    }
+
+    public abstract class PointerInputModule : BaseInputModule
+    {
+        public const int kFakeTouchesId = -4;
+        public const int kMouseLeftId = -1;
+        public const int kMouseMiddleId = -3;
+        public const int kMouseRightId = -2;
+        protected System.Collections.Generic.Dictionary<int, PointerEventData> m_PointerData = new();
+        protected PointerInputModule() {}
+        protected void ClearSelection();
+        protected void CopyFromTo(PointerEventData from, PointerEventData to);
+        protected void DeselectIfSelectionChanged(GameObject currentOverGo, BaseEventData pointerEvent);
+        protected PointerEventData GetLastPointerEventData(int id);
+        protected virtual PointerInputModule.MouseState GetMousePointerEventData();
+        protected virtual PointerInputModule.MouseState GetMousePointerEventData(int id);
+        protected bool GetPointerData(int id, out PointerEventData data, bool create);
+        protected PointerEventData GetTouchPointerEventData(Touch input, out bool pressed, out bool released);
+        public override bool IsPointerOverGameObject(int pointerId);
+        protected virtual void ProcessDrag(PointerEventData pointerEvent);
+        protected virtual void ProcessMove(PointerEventData pointerEvent);
+        protected void RemovePointerData(PointerEventData data);
+        protected PointerEventData.FramePressState StateForMouseButton(int buttonId);
+        public override string ToString();
+        protected class ButtonState
+        {
+            public PointerEventData.InputButton button { get; set; }
+            public PointerInputModule.MouseButtonEventData eventData { get; set; }
+            public ButtonState() {}
+        }
+        public class MouseButtonEventData
+        {
+            public PointerEventData buttonData;
+            public PointerEventData.FramePressState buttonState;
+            public MouseButtonEventData() {}
+            public bool PressedThisFrame();
+            public bool ReleasedThisFrame();
+        }
+        protected class MouseState
+        {
+            public MouseState() {}
+            public bool AnyPressesThisFrame();
+            public bool AnyReleasesThisFrame();
+            public PointerInputModule.ButtonState GetButtonState(PointerEventData.InputButton button);
+            public void SetButtonState(PointerEventData.InputButton button, PointerEventData.FramePressState stateForMouseButton, PointerEventData data);
+        }
+    }
+
+    public static class RaycasterManager
+    {
+        public static System.Collections.Generic.List<BaseRaycaster> GetRaycasters();
+    }
+
+    public struct RaycastResult
+    {
+        public int depth;
+        public int displayIndex;
+        public float distance;
+        public UnityEngine.UIElements.UIDocument document;
+        public UnityEngine.UIElements.VisualElement element;
+        public float index;
+        public BaseRaycaster module;
+        public Vector3 origin;
+        public Vector2 screenPosition;
+        public int sortingGroupID;
+        public int sortingGroupOrder;
+        public int sortingLayer;
+        public int sortingOrder;
+        public Vector3 worldNormal;
+        public Vector3 worldPosition;
+        public GameObject gameObject { get; set; }
+        public bool isValid { get; }
+        public void Clear();
+        public override string ToString();
+    }
+
+    [AddComponentMenu(@"Event/Standalone Input Module")] public class StandaloneInputModule : PointerInputModule
+    {
+        [System.Obsolete(@"allowActivationOnMobileDevice has been deprecated. Use forceModuleActive instead (UnityUpgradable) -> forceModuleActive")] public bool allowActivationOnMobileDevice { get; set; }
+        public string cancelButton { get; set; }
+        [System.Obsolete(@"forceModuleActive has been deprecated. There is no need to force the module awake as StandaloneInputModule works for all platforms")] public bool forceModuleActive { get; set; }
+        public string horizontalAxis { get; set; }
+        public float inputActionsPerSecond { get; set; }
+        [System.Obsolete(@"Mode is no longer needed on input module as it handles both mouse and keyboard simultaneously.", false)] public StandaloneInputModule.InputMode inputMode { get; }
+        public float repeatDelay { get; set; }
+        public string submitButton { get; set; }
+        public string verticalAxis { get; set; }
+        protected StandaloneInputModule() {}
+        public override void ActivateModule();
+        public override void DeactivateModule();
+        [System.Obsolete(@"This method is no longer checked, overriding it with return true does nothing!")] protected virtual bool ForceAutoSelect();
+        protected GameObject GetCurrentFocusedGameObject();
+        public override void Process();
+        protected void ProcessMouseEvent();
+        protected void ProcessMouseEvent(int id);
+        protected void ProcessMousePress(PointerInputModule.MouseButtonEventData data);
+        protected void ProcessTouchPress(PointerEventData pointerEvent, bool pressed, bool released);
+        protected bool SendMoveEventToSelectedObject();
+        protected bool SendSubmitEventToSelectedObject();
+        protected bool SendUpdateEventToSelectedObject();
+        public override bool ShouldActivateModule();
+        public override void UpdateModule();
+        [System.Obsolete(@"Mode is no longer needed on input module as it handles both mouse and keyboard simultaneously.", false)] public enum InputMode
+        {
+            Mouse = 0,
+            Buttons = 1,
+        }
+    }
+
+    [AddComponentMenu(@"Event/Touch Input Module")] [System.Obsolete(@"TouchInputModule is no longer required as Touch input is now handled in StandaloneInputModule.")] public class TouchInputModule : PointerInputModule
+    {
+        [System.Obsolete(@"allowActivationOnStandalone has been deprecated. Use forceModuleActive instead (UnityUpgradable) -> forceModuleActive")] public bool allowActivationOnStandalone { get; set; }
+        public bool forceModuleActive { get; set; }
+        protected TouchInputModule() {}
+        public override void DeactivateModule();
+        public override bool IsModuleSupported();
+        public override void Process();
+        protected void ProcessTouchPress(PointerEventData pointerEvent, bool pressed, bool released);
+        public override bool ShouldActivateModule();
+        public override string ToString();
+        public override void UpdateModule();
+    }
+
+    public abstract class UIBehaviour : MonoBehaviour
+    {
+        protected UIBehaviour() {}
+        protected virtual void Awake();
+        public virtual bool IsActive();
+        public bool IsDestroyed();
+        protected virtual void OnBeforeTransformParentChanged();
+        protected virtual void OnCanvasGroupChanged();
+        protected virtual void OnCanvasHierarchyChanged();
+        protected virtual void OnDestroy();
+        protected virtual void OnDidApplyAnimationProperties();
+        protected virtual void OnDisable();
+        protected virtual void OnEnable();
+        protected virtual void OnRectTransformDimensionsChange();
+        protected virtual void OnTransformParentChanged();
+        protected virtual void OnValidate();
+        protected virtual void Reset();
+        protected virtual void Start();
+    }
+}
+
+namespace UnityEngine.UI
+{
+    public class AnimationTriggers
+    {
+        public string disabledTrigger { get; set; }
+        public string highlightedTrigger { get; set; }
+        public string normalTrigger { get; set; }
+        public string pressedTrigger { get; set; }
+        public string selectedTrigger { get; set; }
+        public AnimationTriggers() {}
+    }
+
+    [AddComponentMenu(@"Layout/Aspect Ratio Fitter", 142)] [DisallowMultipleComponent] [ExecuteAlways] [RequireComponent(typeof(RectTransform))] public class AspectRatioFitter : UnityEngine.EventSystems.UIBehaviour, ILayoutController, ILayoutSelfController
+    {
+        public AspectRatioFitter.AspectMode aspectMode { get; set; }
+        public float aspectRatio { get; set; }
+        protected AspectRatioFitter() {}
+        public bool IsAspectModeValid();
+        public bool IsComponentValidOnObject();
+        protected override void OnDisable();
+        protected override void OnEnable();
+        protected override void OnRectTransformDimensionsChange();
+        protected override void OnTransformParentChanged();
+        protected override void OnValidate();
+        protected void SetDirty();
+        public virtual void SetLayoutHorizontal();
+        public virtual void SetLayoutVertical();
+        protected override void Start();
+        protected virtual void Update();
+        public enum AspectMode
+        {
+            None = 0,
+            WidthControlsHeight = 1,
+            HeightControlsWidth = 2,
+            FitInParent = 3,
+            EnvelopeParent = 4,
+        }
+    }
+
+    [ExecuteAlways] public abstract class BaseMeshEffect : UnityEngine.EventSystems.UIBehaviour, IMeshModifier
+    {
+        protected Graphic graphic { get; }
+        protected BaseMeshEffect() {}
+        public virtual void ModifyMesh(Mesh mesh);
+        public abstract void ModifyMesh(VertexHelper vh);
+        protected override void OnDidApplyAnimationProperties();
+        protected override void OnDisable();
+        protected override void OnEnable();
+        protected override void OnValidate();
+    }
+
+    [System.Obsolete(@"Use BaseMeshEffect instead", true)] public abstract class BaseVertexEffect
+    {
+        protected BaseVertexEffect() {}
+        [System.Obsolete(@"Use BaseMeshEffect.ModifyMeshes instead", true)] public abstract void ModifyVertices(System.Collections.Generic.List<UIVertex> vertices);
+    }
+
+    [AddComponentMenu(@"UI (Canvas)/Button", 30)] public class Button : Selectable, UnityEngine.EventSystems.IEventSystemHandler, UnityEngine.EventSystems.IPointerClickHandler, UnityEngine.EventSystems.ISubmitHandler
+    {
+        public Button.ButtonClickedEvent onClick { get; set; }
+        protected Button() {}
+        public virtual void OnPointerClick(UnityEngine.EventSystems.PointerEventData eventData);
+        public virtual void OnSubmit(UnityEngine.EventSystems.BaseEventData eventData);
+        public class ButtonClickedEvent : UnityEngine.Events.UnityEvent
+        {
+            public ButtonClickedEvent() {}
+        }
+    }
+
+    [AddComponentMenu(@"Layout/Canvas Scaler", 101)] [DisallowMultipleComponent] [ExecuteAlways] [RequireComponent(typeof(Canvas))] public class CanvasScaler : UnityEngine.EventSystems.UIBehaviour
+    {
+        [SerializeField] [Tooltip(@"The pixels per inch to use for sprites that have a 'Pixels Per Unit' setting that matches the 'Reference Pixels Per Unit' setting.")] protected float m_DefaultSpriteDPI = 96f;
+        [SerializeField] [Tooltip(@"The amount of pixels per unit to use for dynamically created bitmaps in the UI, such as Text.")] protected float m_DynamicPixelsPerUnit = 1f;
+        [SerializeField] [Tooltip(@"The DPI to assume if the screen DPI is not known.")] protected float m_FallbackScreenDPI = 96f;
+        [Range(0f, 1f)] [SerializeField] [Tooltip(@"Determines if the scaling is using the width or height as reference, or a mix in between.")] protected float m_MatchWidthOrHeight;
+        [SerializeField] [Tooltip(@"The physical unit to specify positions and sizes in.")] protected CanvasScaler.Unit m_PhysicalUnit = CanvasScaler.Unit.Points;
+        [SerializeField] protected bool m_PresetInfoIsWorld;
+        [SerializeField] [Tooltip(@"If a sprite has this 'Pixels Per Unit' setting, then one pixel in the sprite will cover one unit in the UI.")] protected float m_ReferencePixelsPerUnit = 100f;
+        [SerializeField] [Tooltip(@"The resolution the UI layout is designed for. If the screen resolution is larger, the UI will be scaled up, and if it's smaller, the UI will be scaled down. This is done in accordance with the Screen Match Mode.")] protected Vector2 m_ReferenceResolution;
+        [SerializeField] [Tooltip(@"Scales all UI elements in the Canvas by this factor.")] protected float m_ScaleFactor = 1f;
+        [SerializeField] [Tooltip(@"A mode used to scale the canvas area if the aspect ratio of the current resolution doesn't fit the reference resolution.")] protected CanvasScaler.ScreenMatchMode m_ScreenMatchMode;
+        public float defaultSpriteDPI { get; set; }
+        public float dynamicPixelsPerUnit { get; set; }
+        public float fallbackScreenDPI { get; set; }
+        public float matchWidthOrHeight { get; set; }
+        public CanvasScaler.Unit physicalUnit { get; set; }
+        public float referencePixelsPerUnit { get; set; }
+        public Vector2 referenceResolution { get; set; }
+        public float scaleFactor { get; set; }
+        public CanvasScaler.ScreenMatchMode screenMatchMode { get; set; }
+        public CanvasScaler.ScaleMode uiScaleMode { get; set; }
+        protected CanvasScaler() {}
+        protected virtual void Handle();
+        protected virtual void HandleConstantPhysicalSize();
+        protected virtual void HandleConstantPixelSize();
+        protected virtual void HandleScaleWithScreenSize();
+        protected virtual void HandleWorldCanvas();
+        protected override void OnDisable();
+        protected override void OnEnable();
+        protected override void OnValidate();
+        protected void SetReferencePixelsPerUnit(float referencePixelsPerUnit);
+        protected void SetScaleFactor(float scaleFactor);
+        public enum ScaleMode
+        {
+            ConstantPixelSize = 0,
+            ScaleWithScreenSize = 1,
+            ConstantPhysicalSize = 2,
+        }
+        public enum ScreenMatchMode
+        {
+            MatchWidthOrHeight = 0,
+            Expand = 1,
+            Shrink = 2,
+        }
+        public enum Unit
+        {
+            Centimeters = 0,
+            Millimeters = 1,
+            Inches = 2,
+            Points = 3,
+            Picas = 4,
+        }
+    }
+
+    public enum CanvasUpdate
+    {
+        Prelayout = 0,
+        Layout = 1,
+        PostLayout = 2,
+        PreRender = 3,
+        LatePreRender = 4,
+        MaxUpdateValue = 5,
+    }
+
+    public class CanvasUpdateRegistry
+    {
+        public static CanvasUpdateRegistry instance { get; }
+        protected CanvasUpdateRegistry() {}
+        public static void DisableCanvasElementForRebuild(ICanvasElement element);
+        public static bool IsRebuildingGraphics();
+        public static bool IsRebuildingLayout();
+        public static void RegisterCanvasElementForGraphicRebuild(ICanvasElement element);
+        public static void RegisterCanvasElementForLayoutRebuild(ICanvasElement element);
+        public static bool TryRegisterCanvasElementForGraphicRebuild(ICanvasElement element);
+        public static bool TryRegisterCanvasElementForLayoutRebuild(ICanvasElement element);
+        public static void UnRegisterCanvasElementForRebuild(ICanvasElement element);
+    }
+
+    public class ClipperRegistry
+    {
+        public static ClipperRegistry instance { get; }
+        protected ClipperRegistry() {}
+        public void Cull();
+        public static void Disable(IClipper c);
+        public static void Register(IClipper c);
+        public static void Unregister(IClipper c);
+    }
+
+    public static class Clipping
+    {
+        public static Rect FindCullAndClipWorldRect(System.Collections.Generic.List<RectMask2D> rectMaskParents, out bool validRect);
+    }
+
+    public struct ColorBlock : System.IEquatable<ColorBlock>
+    {
+        public static ColorBlock defaultColorBlock;
+        public float colorMultiplier { get; set; }
+        public Color disabledColor { get; set; }
+        public float fadeDuration { get; set; }
+        public Color highlightedColor { get; set; }
+        public Color normalColor { get; set; }
+        public Color pressedColor { get; set; }
+        public Color selectedColor { get; set; }
+        public override bool Equals(object obj);
+        public bool Equals(ColorBlock other);
+        public override int GetHashCode();
+        public static bool operator ==(ColorBlock point1, ColorBlock point2);
+        public static bool operator !=(ColorBlock point1, ColorBlock point2);
+    }
+
+    [AddComponentMenu(@"Layout/Content Size Fitter", 141)] [ExecuteAlways] [RequireComponent(typeof(RectTransform))] public class ContentSizeFitter : UnityEngine.EventSystems.UIBehaviour, ILayoutController, ILayoutSelfController
+    {
+        [SerializeField] protected ContentSizeFitter.FitMode m_HorizontalFit;
+        [SerializeField] protected ContentSizeFitter.FitMode m_VerticalFit;
+        public ContentSizeFitter.FitMode horizontalFit { get; set; }
+        public ContentSizeFitter.FitMode verticalFit { get; set; }
+        protected ContentSizeFitter() {}
+        protected override void OnDisable();
+        protected override void OnEnable();
+        protected override void OnRectTransformDimensionsChange();
+        protected override void OnValidate();
+        protected void SetDirty();
+        public virtual void SetLayoutHorizontal();
+        public virtual void SetLayoutVertical();
+        public enum FitMode
+        {
+            Unconstrained = 0,
+            MinSize = 1,
+            PreferredSize = 2,
+        }
+    }
+
+    public static class DefaultControls
+    {
+        public static DefaultControls.IFactoryControls factory { get; set; }
+        public static GameObject CreateButton(DefaultControls.Resources resources);
+        public static GameObject CreateDropdown(DefaultControls.Resources resources);
+        public static GameObject CreateImage(DefaultControls.Resources resources);
+        public static GameObject CreateInputField(DefaultControls.Resources resources);
+        public static GameObject CreatePanel(DefaultControls.Resources resources);
+        public static GameObject CreateRawImage(DefaultControls.Resources resources);
+        public static GameObject CreateScrollbar(DefaultControls.Resources resources);
+        public static GameObject CreateScrollView(DefaultControls.Resources resources);
+        public static GameObject CreateSlider(DefaultControls.Resources resources);
+        public static GameObject CreateText(DefaultControls.Resources resources);
+        public static GameObject CreateToggle(DefaultControls.Resources resources);
+        public interface IFactoryControls
+        {
+            public GameObject CreateGameObject(string name, params System.Type[] components);
+        }
+        public struct Resources
+        {
+            public Sprite background;
+            public Sprite checkmark;
+            public Sprite dropdown;
+            public Sprite inputField;
+            public Sprite knob;
+            public Sprite mask;
+            public Sprite standard;
+        }
+    }
+
+    [AddComponentMenu(@"UI (Canvas)/Legacy/Dropdown", 102)] [RequireComponent(typeof(RectTransform))] public class Dropdown : Selectable, UnityEngine.EventSystems.ICancelHandler, UnityEngine.EventSystems.IEventSystemHandler, UnityEngine.EventSystems.IPointerClickHandler, UnityEngine.EventSystems.ISubmitHandler
+    {
+        public float alphaFadeSpeed { get; set; }
+        public Image captionImage { get; set; }
+        public Text captionText { get; set; }
+        public Image itemImage { get; set; }
+        public Text itemText { get; set; }
+        public Dropdown.DropdownEvent onValueChanged { get; set; }
+        public System.Collections.Generic.List<Dropdown.OptionData> options { get; set; }
+        public RectTransform template { get; set; }
+        public int value { get; set; }
+        protected Dropdown() {}
+        public void AddOptions(System.Collections.Generic.List<string> options);
+        public void AddOptions(System.Collections.Generic.List<Sprite> options);
+        public void AddOptions(System.Collections.Generic.List<Dropdown.OptionData> options);
+        protected override void Awake();
+        public void ClearOptions();
+        protected virtual GameObject CreateBlocker(Canvas rootCanvas);
+        protected virtual GameObject CreateDropdownList(GameObject template);
+        protected virtual Dropdown.DropdownItem CreateItem(Dropdown.DropdownItem itemTemplate);
+        protected virtual void DestroyBlocker(GameObject blocker);
+        protected virtual void DestroyDropdownList(GameObject dropdownList);
+        protected virtual void DestroyItem(Dropdown.DropdownItem item);
+        public void Hide();
+        public virtual void OnCancel(UnityEngine.EventSystems.BaseEventData eventData);
+        protected override void OnDisable();
+        public virtual void OnPointerClick(UnityEngine.EventSystems.PointerEventData eventData);
+        public virtual void OnSubmit(UnityEngine.EventSystems.BaseEventData eventData);
+        protected override void OnValidate();
+        public void RefreshShownValue();
+        public void SetValueWithoutNotify(int input);
+        public void Show();
+        protected override void Start();
+        public class DropdownEvent : UnityEngine.Events.UnityEvent<int>
+        {
+            public DropdownEvent() {}
+        }
+        protected class DropdownItem : MonoBehaviour, UnityEngine.EventSystems.ICancelHandler, UnityEngine.EventSystems.IEventSystemHandler, UnityEngine.EventSystems.IPointerEnterHandler
+        {
+            public Image image { get; set; }
+            public RectTransform rectTransform { get; set; }
+            public Text text { get; set; }
+            public Toggle toggle { get; set; }
+            public DropdownItem() {}
+            public virtual void OnCancel(UnityEngine.EventSystems.BaseEventData eventData);
+            public virtual void OnPointerEnter(UnityEngine.EventSystems.PointerEventData eventData);
+        }
+        public class OptionData
+        {
+            public Sprite image { get; set; }
+            public string text { get; set; }
+            public OptionData() {}
+            public OptionData(string text) {}
+            public OptionData(Sprite image) {}
+            public OptionData(string text, Sprite image) {}
+        }
+        public class OptionDataList
+        {
+            public System.Collections.Generic.List<Dropdown.OptionData> options { get; set; }
+            public OptionDataList() {}
+        }
+    }
+
+    public class FontData : ISerializationCallbackReceiver
+    {
+        public bool alignByGeometry { get; set; }
+        public TextAnchor alignment { get; set; }
+        public bool bestFit { get; set; }
+        public static FontData defaultFontData { get; }
+        public Font font { get; set; }
+        public int fontSize { get; set; }
+        public FontStyle fontStyle { get; set; }
+        public HorizontalWrapMode horizontalOverflow { get; set; }
+        public float lineSpacing { get; set; }
+        public int maxSize { get; set; }
+        public int minSize { get; set; }
+        public bool richText { get; set; }
+        public VerticalWrapMode verticalOverflow { get; set; }
+        public FontData() {}
+    }
+
+    public static class FontUpdateTracker
+    {
+        public static void TrackText(Text t);
+        public static void UntrackText(Text t);
+    }
+
+    [DisallowMultipleComponent] [ExecuteAlways] [RequireComponent(typeof(RectTransform))] public abstract class Graphic : UnityEngine.EventSystems.UIBehaviour, ICanvasElement
+    {
+        protected Mesh m_CachedMesh;
+        protected Vector2[] m_CachedUvs;
+        [SerializeField] [UnityEngine.Serialization.FormerlySerializedAs(@"m_Mat")] protected Material m_Material;
+        protected UnityEngine.Events.UnityAction m_OnDirtyLayoutCallback;
+        protected UnityEngine.Events.UnityAction m_OnDirtyMaterialCallback;
+        protected UnityEngine.Events.UnityAction m_OnDirtyVertsCallback;
+        protected bool m_SkipLayoutUpdate;
+        protected bool m_SkipMaterialUpdate;
+        protected static Material s_DefaultUI;
+        protected static Mesh s_Mesh;
+        protected static Texture2D s_WhiteTexture;
+        public Canvas canvas { get; }
+        public CanvasRenderer canvasRenderer { get; }
+        public virtual Color color { get; set; }
+        public static Material defaultGraphicMaterial { get; }
+        public virtual Material defaultMaterial { get; }
+        public int depth { get; }
+        public virtual Texture mainTexture { get; }
+        public virtual Material material { get; set; }
+        public virtual Material materialForRendering { get; }
+        public Vector4 raycastPadding { get; set; }
+        public virtual bool raycastTarget { get; set; }
+        public RectTransform rectTransform { get; }
+        protected bool useLegacyMeshGeneration { get; set; }
+        protected static Mesh workerMesh { get; }
+        protected Graphic() {}
+        public virtual void CrossFadeAlpha(float alpha, float duration, bool ignoreTimeScale);
+        public virtual void CrossFadeColor(Color targetColor, float duration, bool ignoreTimeScale, bool useAlpha);
+        public virtual void CrossFadeColor(Color targetColor, float duration, bool ignoreTimeScale, bool useAlpha, bool useRGB);
+        public Rect GetPixelAdjustedRect();
+        public virtual void GraphicUpdateComplete();
+        public virtual void LayoutComplete();
+        protected override void OnBeforeTransformParentChanged();
+        protected override void OnCanvasHierarchyChanged();
+        public virtual void OnCullingChanged();
+        protected override void OnDestroy();
+        protected override void OnDidApplyAnimationProperties();
+        protected override void OnDisable();
+        protected override void OnEnable();
+        [System.Obsolete(@"Use OnPopulateMesh instead.", true)] protected virtual void OnFillVBO(System.Collections.Generic.List<UIVertex> vbo);
+        [System.Obsolete(@"Use OnPopulateMesh(VertexHelper vh) instead.", false)] protected virtual void OnPopulateMesh(Mesh m);
+        protected virtual void OnPopulateMesh(VertexHelper vh);
+        public virtual void OnRebuildRequested();
+        protected override void OnRectTransformDimensionsChange();
+        protected override void OnTransformParentChanged();
+        protected override void OnValidate();
+        public Vector2 PixelAdjustPoint(Vector2 point);
+        public virtual bool Raycast(Vector2 sp, Camera eventCamera);
+        protected bool Raycast(Vector2 sp, Camera eventCamera, bool ignoreMasks);
+        public virtual void Rebuild(CanvasUpdate update);
+        public void RegisterDirtyLayoutCallback(UnityEngine.Events.UnityAction action);
+        public void RegisterDirtyMaterialCallback(UnityEngine.Events.UnityAction action);
+        public void RegisterDirtyVerticesCallback(UnityEngine.Events.UnityAction action);
+        protected override void Reset();
+        public virtual void SetAllDirty();
+        public virtual void SetLayoutDirty();
+        public virtual void SetMaterialDirty();
+        public virtual void SetNativeSize();
+        public void SetRaycastDirty();
+        public virtual void SetVerticesDirty();
+        public void UnregisterDirtyLayoutCallback(UnityEngine.Events.UnityAction action);
+        public void UnregisterDirtyMaterialCallback(UnityEngine.Events.UnityAction action);
+        public void UnregisterDirtyVerticesCallback(UnityEngine.Events.UnityAction action);
+        protected virtual void UpdateGeometry();
+        protected virtual void UpdateMaterial();
+    }
+
+    [AddComponentMenu(@"Event/Graphic Raycaster")] [RequireComponent(typeof(Canvas))] public class GraphicRaycaster : UnityEngine.EventSystems.BaseRaycaster
+    {
+        protected const int kNoEventMaskSet = -1;
+        [SerializeField] protected LayerMask m_BlockingMask;
+        public LayerMask blockingMask { get; set; }
+        public GraphicRaycaster.BlockingObjects blockingObjects { get; set; }
+        public override Camera eventCamera { get; }
+        public bool ignoreReversedGraphics { get; set; }
+        public override int renderOrderPriority { get; }
+        public override int sortOrderPriority { get; }
+        protected GraphicRaycaster() {}
+        public override void Raycast(UnityEngine.EventSystems.PointerEventData eventData, System.Collections.Generic.List<UnityEngine.EventSystems.RaycastResult> resultAppendList);
+        public enum BlockingObjects
+        {
+            None = 0,
+            TwoD = 1,
+            ThreeD = 2,
+            All = 3,
+        }
+    }
+
+    public static class GraphicRebuildTracker
+    {
+        public static void DisableTrackGraphic(Graphic g);
+        public static void TrackGraphic(Graphic g);
+        public static void UnTrackGraphic(Graphic g);
+    }
+
+    public class GraphicRegistry
+    {
+        public static GraphicRegistry instance { get; }
+        protected GraphicRegistry() {}
+        public static void DisableGraphicForCanvas(Canvas c, Graphic graphic);
+        public static void DisableRaycastGraphicForCanvas(Canvas c, Graphic graphic);
+        public static System.Collections.Generic.IList<Graphic> GetGraphicsForCanvas(Canvas canvas);
+        public static System.Collections.Generic.IList<Graphic> GetRaycastableGraphicsForCanvas(Canvas canvas);
+        public static void RegisterGraphicForCanvas(Canvas c, Graphic graphic);
+        public static void RegisterRaycastGraphicForCanvas(Canvas c, Graphic graphic);
+        public static void UnregisterGraphicForCanvas(Canvas c, Graphic graphic);
+        public static void UnregisterRaycastGraphicForCanvas(Canvas c, Graphic graphic);
+    }
+
+    [AddComponentMenu(@"Layout/Grid Layout Group", 152)] public class GridLayoutGroup : LayoutGroup
+    {
+        [SerializeField] protected Vector2 m_CellSize;
+        [SerializeField] protected GridLayoutGroup.Constraint m_Constraint;
+        [SerializeField] protected int m_ConstraintCount = 2;
+        [SerializeField] protected Vector2 m_Spacing;
+        [SerializeField] protected GridLayoutGroup.Axis m_StartAxis;
+        [SerializeField] protected GridLayoutGroup.Corner m_StartCorner;
+        public Vector2 cellSize { get; set; }
+        public GridLayoutGroup.Constraint constraint { get; set; }
+        public int constraintCount { get; set; }
+        public Vector2 spacing { get; set; }
+        public GridLayoutGroup.Axis startAxis { get; set; }
+        public GridLayoutGroup.Corner startCorner { get; set; }
+        protected GridLayoutGroup() {}
+        public override void CalculateLayoutInputHorizontal();
+        public override void CalculateLayoutInputVertical();
+        protected override void OnValidate();
+        public override void SetLayoutHorizontal();
+        public override void SetLayoutVertical();
+        public enum Axis
+        {
+            Horizontal = 0,
+            Vertical = 1,
+        }
+        public enum Constraint
+        {
+            Flexible = 0,
+            FixedColumnCount = 1,
+            FixedRowCount = 2,
+        }
+        public enum Corner
+        {
+            UpperLeft = 0,
+            UpperRight = 1,
+            LowerLeft = 2,
+            LowerRight = 3,
+        }
+    }
+
+    [AddComponentMenu(@"Layout/Horizontal Layout Group", 150)] public class HorizontalLayoutGroup : HorizontalOrVerticalLayoutGroup
+    {
+        protected HorizontalLayoutGroup() {}
+        public override void CalculateLayoutInputHorizontal();
+        public override void CalculateLayoutInputVertical();
+        public override void SetLayoutHorizontal();
+        public override void SetLayoutVertical();
+    }
+
+    [ExecuteAlways] public abstract class HorizontalOrVerticalLayoutGroup : LayoutGroup
+    {
+        [SerializeField] protected bool m_ChildControlHeight = true;
+        [SerializeField] protected bool m_ChildControlWidth = true;
+        [SerializeField] protected bool m_ChildForceExpandHeight = true;
+        [SerializeField] protected bool m_ChildForceExpandWidth = true;
+        [SerializeField] protected bool m_ChildScaleHeight;
+        [SerializeField] protected bool m_ChildScaleWidth;
+        [SerializeField] protected bool m_ReverseArrangement;
+        [SerializeField] protected float m_Spacing;
+        public bool childControlHeight { get; set; }
+        public bool childControlWidth { get; set; }
+        public bool childForceExpandHeight { get; set; }
+        public bool childForceExpandWidth { get; set; }
+        public bool childScaleHeight { get; set; }
+        public bool childScaleWidth { get; set; }
+        public bool reverseArrangement { get; set; }
+        public float spacing { get; set; }
+        protected HorizontalOrVerticalLayoutGroup() {}
+        protected void CalcAlongAxis(int axis, bool isVertical);
+        protected override void Reset();
+        protected void SetChildrenAlongAxis(int axis, bool isVertical);
+        protected virtual void Update();
+    }
+
+    public interface ICanvasElement
+    {
+        public Transform transform { get; }
+        public void GraphicUpdateComplete();
+        public bool IsDestroyed();
+        public void LayoutComplete();
+        public void Rebuild(CanvasUpdate executing);
+    }
+
+    public interface IClippable
+    {
+        public GameObject gameObject { get; }
+        public RectTransform rectTransform { get; }
+        public void Cull(Rect clipRect, bool validRect);
+        public void RecalculateClipping();
+        public void SetClipRect(Rect value, bool validRect);
+        public void SetClipSoftness(Vector2 clipSoftness);
+    }
+
+    public interface IClipper
+    {
+        public void PerformClipping();
+    }
+
+    public interface ILayoutController
+    {
+        public void SetLayoutHorizontal();
+        public void SetLayoutVertical();
+    }
+
+    public interface ILayoutElement
+    {
+        public float flexibleHeight { get; }
+        public float flexibleWidth { get; }
+        public int layoutPriority { get; }
+        public float minHeight { get; }
+        public float minWidth { get; }
+        public float preferredHeight { get; }
+        public float preferredWidth { get; }
+        public void CalculateLayoutInputHorizontal();
+        public void CalculateLayoutInputVertical();
+    }
+
+    public interface ILayoutGroup : ILayoutController
+    {
+    }
+
+    public interface ILayoutIgnorer
+    {
+        public bool ignoreLayout { get; }
+    }
+
+    public interface ILayoutSelfController : ILayoutController
+    {
+    }
+
+    [AddComponentMenu(@"UI (Canvas)/Image", 11)] [RequireComponent(typeof(CanvasRenderer))] public class Image : MaskableGraphic, ICanvasRaycastFilter, ILayoutElement, ISerializationCallbackReceiver
+    {
+        protected static Material s_ETC1DefaultUI;
+        public float alphaHitTestMinimumThreshold { get; set; }
+        public static Material defaultETC1GraphicMaterial { get; }
+        [System.Obsolete(@"eventAlphaThreshold has been deprecated. Use eventMinimumAlphaThreshold instead (UnityUpgradable) -> alphaHitTestMinimumThreshold")] public float eventAlphaThreshold { get; set; }
+        public float fillAmount { get; set; }
+        public bool fillCenter { get; set; }
+        public bool fillClockwise { get; set; }
+        public Image.FillMethod fillMethod { get; set; }
+        public int fillOrigin { get; set; }
+        public virtual float flexibleHeight { get; }
+        public virtual float flexibleWidth { get; }
+        public bool hasBorder { get; }
+        public virtual int layoutPriority { get; }
+        public override Texture mainTexture { get; }
+        public override Material material { get; set; }
+        public virtual float minHeight { get; }
+        public virtual float minWidth { get; }
+        protected float multipliedPixelsPerUnit { get; }
+        public Sprite overrideSprite { get; set; }
+        public float pixelsPerUnit { get; }
+        public float pixelsPerUnitMultiplier { get; set; }
+        public virtual float preferredHeight { get; }
+        public virtual float preferredWidth { get; }
+        public bool preserveAspect { get; set; }
+        public Sprite sprite { get; set; }
+        public Image.Type type { get; set; }
+        public bool useSpriteMesh { get; set; }
+        protected Image() {}
+        public virtual void CalculateLayoutInputHorizontal();
+        public virtual void CalculateLayoutInputVertical();
+        public void DisableSpriteOptimizations();
+        public virtual bool IsRaycastLocationValid(Vector2 screenPoint, Camera eventCamera);
+        public virtual void OnAfterDeserialize();
+        public virtual void OnBeforeSerialize();
+        protected override void OnCanvasHierarchyChanged();
+        protected override void OnDidApplyAnimationProperties();
+        protected override void OnDisable();
+        protected override void OnEnable();
+        protected override void OnPopulateMesh(VertexHelper toFill);
+        protected override void OnValidate();
+        public override void SetNativeSize();
+        protected override void UpdateMaterial();
+        public enum FillMethod
+        {
+            Horizontal = 0,
+            Vertical = 1,
+            Radial90 = 2,
+            Radial180 = 3,
+            Radial360 = 4,
+        }
+        public enum Origin180
+        {
+            Bottom = 0,
+            Left = 1,
+            Top = 2,
+            Right = 3,
+        }
+        public enum Origin360
+        {
+            Bottom = 0,
+            Right = 1,
+            Top = 2,
+            Left = 3,
+        }
+        public enum Origin90
+        {
+            BottomLeft = 0,
+            TopLeft = 1,
+            TopRight = 2,
+            BottomRight = 3,
+        }
+        public enum OriginHorizontal
+        {
+            Left = 0,
+            Right = 1,
+        }
+        public enum OriginVertical
+        {
+            Bottom = 0,
+            Top = 1,
+        }
+        public enum Type
+        {
+            Simple = 0,
+            Sliced = 1,
+            Tiled = 2,
+            Filled = 3,
+        }
+    }
+
+    [System.Obsolete(@"Not supported anymore.", true)] public interface IMask
+    {
+        public RectTransform rectTransform { get; }
+        public bool Enabled();
+    }
+
+    public interface IMaskable
+    {
+        public void RecalculateMasking();
+    }
+
+    public interface IMaterialModifier
+    {
+        public Material GetModifiedMaterial(Material baseMaterial);
+    }
+
+    public interface IMeshModifier
+    {
+        [System.Obsolete(@"use IMeshModifier.ModifyMesh (VertexHelper verts) instead", false)] public void ModifyMesh(Mesh mesh);
+        public void ModifyMesh(VertexHelper verts);
+    }
+
+    [AddComponentMenu(@"UI (Canvas)/Legacy/Input Field", 103)] public class InputField : Selectable, ICanvasElement, ILayoutElement, UnityEngine.EventSystems.IBeginDragHandler, UnityEngine.EventSystems.IDragHandler, UnityEngine.EventSystems.IEndDragHandler, UnityEngine.EventSystems.IEventSystemHandler, UnityEngine.EventSystems.IPointerClickHandler, UnityEngine.EventSystems.ISubmitHandler, UnityEngine.EventSystems.IUpdateSelectedHandler
+    {
+        protected int m_CaretPosition;
+        protected int m_CaretSelectPosition;
+        protected bool m_CaretVisible;
+        protected UIVertex[] m_CursorVerts;
+        protected int m_DrawEnd;
+        protected int m_DrawStart;
+        protected TouchScreenKeyboard m_Keyboard;
+        protected Mesh m_Mesh;
+        [SerializeField] protected Graphic m_Placeholder;
+        [Multiline] [SerializeField] [UnityEngine.Serialization.FormerlySerializedAs(@"mValue")] protected string m_Text;
+        [SerializeField] [UnityEngine.Serialization.FormerlySerializedAs(@"text")] protected Text m_TextComponent;
+        public char asteriskChar { get; set; }
+        protected TextGenerator cachedInputTextGenerator { get; }
+        public float caretBlinkRate { get; set; }
+        public Color caretColor { get; set; }
+        public int caretPosition { get; set; }
+        protected int caretPositionInternal { get; set; }
+        [System.Obsolete(@"caretSelectPosition has been deprecated. Use selectionFocusPosition instead (UnityUpgradable) -> selectionFocusPosition", true)] public int caretSelectPosition { get; protected set; }
+        protected int caretSelectPositionInternal { get; set; }
+        public int caretWidth { get; set; }
+        public int characterLimit { get; set; }
+        public InputField.CharacterValidation characterValidation { get; set; }
+        public InputField.ContentType contentType { get; set; }
+        public bool customCaretColor { get; set; }
+        public virtual float flexibleHeight { get; }
+        public virtual float flexibleWidth { get; }
+        public InputField.InputType inputType { get; set; }
+        public bool isFocused { get; }
+        public TouchScreenKeyboardType keyboardType { get; set; }
+        public virtual int layoutPriority { get; }
+        public InputField.LineType lineType { get; set; }
+        protected Mesh mesh { get; }
+        public virtual float minHeight { get; }
+        public virtual float minWidth { get; }
+        public bool multiLine { get; }
+        public InputField.EndEditEvent onEndEdit { get; set; }
+        public InputField.SubmitEvent onSubmit { get; set; }
+        public InputField.OnValidateInput onValidateInput { get; set; }
+        [System.Obsolete(@"onValueChange has been renamed to onValueChanged")] public InputField.OnChangeEvent onValueChange { get; set; }
+        public InputField.OnChangeEvent onValueChanged { get; set; }
+        public Graphic placeholder { get; set; }
+        public virtual float preferredHeight { get; }
+        public virtual float preferredWidth { get; }
+        public bool readOnly { get; set; }
+        public int selectionAnchorPosition { get; set; }
+        public Color selectionColor { get; set; }
+        public int selectionFocusPosition { get; set; }
+        public virtual bool shouldActivateOnSelect { get; set; }
+        public bool shouldHideMobileInput { get; set; }
+        public string text { get; set; }
+        public Text textComponent { get; set; }
+        public TouchScreenKeyboard touchScreenKeyboard { get; }
+        public bool wasCanceled { get; }
+        protected InputField() {}
+        public void ActivateInputField();
+        protected virtual void Append(char input);
+        protected virtual void Append(string input);
+        public virtual void CalculateLayoutInputHorizontal();
+        public virtual void CalculateLayoutInputVertical();
+        protected void ClampPos(ref int pos);
+        public void DeactivateInputField();
+        protected override void DoStateTransition(Selectable.SelectionState state, bool instant);
+        public void ForceLabelUpdate();
+        protected int GetCharacterIndexFromPosition(Vector2 pos);
+        public virtual void GraphicUpdateComplete();
+        protected InputField.EditState KeyPressed(Event evt);
+        protected virtual void LateUpdate();
+        public virtual void LayoutComplete();
+        public void MoveTextEnd(bool shift);
+        public void MoveTextStart(bool shift);
+        public virtual void OnBeginDrag(UnityEngine.EventSystems.PointerEventData eventData);
+        public override void OnDeselect(UnityEngine.EventSystems.BaseEventData eventData);
+        protected override void OnDestroy();
+        protected override void OnDisable();
+        public virtual void OnDrag(UnityEngine.EventSystems.PointerEventData eventData);
+        protected override void OnEnable();
+        public virtual void OnEndDrag(UnityEngine.EventSystems.PointerEventData eventData);
+        protected void OnFocus();
+        public virtual void OnPointerClick(UnityEngine.EventSystems.PointerEventData eventData);
+        public override void OnPointerDown(UnityEngine.EventSystems.PointerEventData eventData);
+        public override void OnSelect(UnityEngine.EventSystems.BaseEventData eventData);
+        public virtual void OnSubmit(UnityEngine.EventSystems.BaseEventData eventData);
+        public virtual void OnUpdateSelected(UnityEngine.EventSystems.BaseEventData eventData);
+        protected override void OnValidate();
+        public void ProcessEvent(Event e);
+        public virtual void Rebuild(CanvasUpdate update);
+        [System.Obsolete(@"This function is no longer used. Please use RectTransformUtility.ScreenPointToLocalPointInRectangle() instead.")] public Vector2 ScreenToLocal(Vector2 screen);
+        protected void SelectAll();
+        protected void SendOnEndEdit();
+        protected void SendOnSubmit();
+        public void SetTextWithoutNotify(string input);
+        protected void UpdateLabel();
+        protected char Validate(string text, int pos, char ch);
+        public enum CharacterValidation
+        {
+            None = 0,
+            Integer = 1,
+            Decimal = 2,
+            Alphanumeric = 3,
+            Name = 4,
+            EmailAddress = 5,
+        }
+        public enum ContentType
+        {
+            Standard = 0,
+            Autocorrected = 1,
+            IntegerNumber = 2,
+            DecimalNumber = 3,
+            Alphanumeric = 4,
+            Name = 5,
+            EmailAddress = 6,
+            Password = 7,
+            Pin = 8,
+            Custom = 9,
+        }
+        protected enum EditState
+        {
+            Continue = 0,
+            Finish = 1,
+        }
+        public class EndEditEvent : UnityEngine.Events.UnityEvent<string>
+        {
+            public EndEditEvent() {}
+        }
+        public enum InputType
+        {
+            Standard = 0,
+            AutoCorrect = 1,
+            Password = 2,
+        }
+        public enum LineType
+        {
+            SingleLine = 0,
+            MultiLineSubmit = 1,
+            MultiLineNewline = 2,
+        }
+        public class OnChangeEvent : UnityEngine.Events.UnityEvent<string>
+        {
+            public OnChangeEvent() {}
+        }
+        public delegate char OnValidateInput(string text, int charIndex, char addedChar);
+        public class SubmitEvent : UnityEngine.Events.UnityEvent<string>
+        {
+            public SubmitEvent() {}
+        }
+    }
+
+    [System.Obsolete(@"Use IMeshModifier instead", true)] public interface IVertexModifier
+    {
+        [System.Obsolete(@"use IMeshModifier.ModifyMesh (VertexHelper verts)  instead", true)] public void ModifyVertices(System.Collections.Generic.List<UIVertex> verts);
+    }
+
+    [AddComponentMenu(@"Layout/Layout Element", 140)] [ExecuteAlways] [RequireComponent(typeof(RectTransform))] public class LayoutElement : UnityEngine.EventSystems.UIBehaviour, ILayoutElement, ILayoutIgnorer
+    {
+        public virtual float flexibleHeight { get; set; }
+        public virtual float flexibleWidth { get; set; }
+        public virtual bool ignoreLayout { get; set; }
+        public virtual int layoutPriority { get; set; }
+        public virtual float minHeight { get; set; }
+        public virtual float minWidth { get; set; }
+        public virtual float preferredHeight { get; set; }
+        public virtual float preferredWidth { get; set; }
+        protected LayoutElement() {}
+        public virtual void CalculateLayoutInputHorizontal();
+        public virtual void CalculateLayoutInputVertical();
+        protected override void OnBeforeTransformParentChanged();
+        protected override void OnDidApplyAnimationProperties();
+        protected override void OnDisable();
+        protected override void OnEnable();
+        protected override void OnTransformParentChanged();
+        protected override void OnValidate();
+        protected void SetDirty();
+    }
+
+    [DisallowMultipleComponent] [ExecuteAlways] [RequireComponent(typeof(RectTransform))] public abstract class LayoutGroup : UnityEngine.EventSystems.UIBehaviour, ILayoutController, ILayoutElement, ILayoutGroup
+    {
+        [SerializeField] protected TextAnchor m_ChildAlignment;
+        [SerializeField] protected RectOffset m_Padding = new(); // warning: this initializer is overridden in at least one ctor
+        protected DrivenRectTransformTracker m_Tracker;
+        public TextAnchor childAlignment { get; set; }
+        public virtual float flexibleHeight { get; }
+        public virtual float flexibleWidth { get; }
+        public virtual int layoutPriority { get; }
+        public virtual float minHeight { get; }
+        public virtual float minWidth { get; }
+        public RectOffset padding { get; set; }
+        public virtual float preferredHeight { get; }
+        public virtual float preferredWidth { get; }
+        protected System.Collections.Generic.List<RectTransform> rectChildren { get; }
+        protected RectTransform rectTransform { get; }
+        protected LayoutGroup() {}
+        public virtual void CalculateLayoutInputHorizontal();
+        public abstract void CalculateLayoutInputVertical();
+        protected float GetAlignmentOnAxis(int axis);
+        protected float GetStartOffset(int axis, float requiredSpaceWithoutPadding);
+        protected float GetTotalFlexibleSize(int axis);
+        protected float GetTotalMinSize(int axis);
+        protected float GetTotalPreferredSize(int axis);
+        protected virtual void OnChildRectTransformDimensionsChange();
+        protected override void OnDidApplyAnimationProperties();
+        protected override void OnDisable();
+        protected override void OnEnable();
+        protected override void OnRectTransformDimensionsChange();
+        protected virtual void OnTransformChildrenChanged();
+        protected override void OnValidate();
+        protected void SetChildAlongAxis(RectTransform rect, int axis, float pos);
+        protected void SetChildAlongAxis(RectTransform rect, int axis, float pos, float size);
+        protected void SetChildAlongAxisWithScale(RectTransform rect, int axis, float pos, float scaleFactor);
+        protected void SetChildAlongAxisWithScale(RectTransform rect, int axis, float pos, float size, float scaleFactor);
+        protected void SetDirty();
+        public abstract void SetLayoutHorizontal();
+        protected void SetLayoutInputForAxis(float totalMin, float totalPreferred, float totalFlexible, int axis);
+        public abstract void SetLayoutVertical();
+        protected void SetProperty<T>(ref T currentValue, T newValue);
+    }
+
+    public class LayoutRebuilder : ICanvasElement
+    {
+        public Transform transform { get; }
+        public LayoutRebuilder() {}
+        public override bool Equals(object obj);
+        public static void ForceRebuildLayoutImmediate(RectTransform layoutRoot);
+        public override int GetHashCode();
+        public void GraphicUpdateComplete();
+        public bool IsDestroyed();
+        public void LayoutComplete();
+        public static void MarkLayoutForRebuild(RectTransform rect);
+        public void Rebuild(CanvasUpdate executing);
+        public override string ToString();
+    }
+
+    public static class LayoutUtility
+    {
+        public static float GetFlexibleHeight(RectTransform rect);
+        public static float GetFlexibleSize(RectTransform rect, int axis);
+        public static float GetFlexibleWidth(RectTransform rect);
+        public static float GetLayoutProperty(RectTransform rect, System.Func<ILayoutElement, float> property, float defaultValue);
+        public static float GetLayoutProperty(RectTransform rect, System.Func<ILayoutElement, float> property, float defaultValue, out ILayoutElement source);
+        public static float GetMinHeight(RectTransform rect);
+        public static float GetMinSize(RectTransform rect, int axis);
+        public static float GetMinWidth(RectTransform rect);
+        public static float GetPreferredHeight(RectTransform rect);
+        public static float GetPreferredSize(RectTransform rect, int axis);
+        public static float GetPreferredWidth(RectTransform rect);
+    }
+
+    [AddComponentMenu(@"UI (Canvas)/Mask", 13)] [DisallowMultipleComponent] [ExecuteAlways] [RequireComponent(typeof(RectTransform))] public class Mask : UnityEngine.EventSystems.UIBehaviour, ICanvasRaycastFilter, IMaterialModifier
+    {
+        public Graphic graphic { get; }
+        public RectTransform rectTransform { get; }
+        public bool showMaskGraphic { get; set; }
+        protected Mask() {}
+        public virtual Material GetModifiedMaterial(Material baseMaterial);
+        public virtual bool IsRaycastLocationValid(Vector2 sp, Camera eventCamera);
+        public virtual bool MaskEnabled();
+        protected override void OnDisable();
+        protected override void OnEnable();
+        [System.Obsolete(@"Not used anymore.")] public virtual void OnSiblingGraphicEnabledDisabled();
+        protected override void OnValidate();
+    }
+
+    public abstract class MaskableGraphic : Graphic, IClippable, IMaskable, IMaterialModifier
+    {
+        [System.Obsolete(@"Not used anymore.", true)] protected bool m_IncludeForMasking;
+        protected Material m_MaskMaterial;
+        [System.Obsolete(@"Not used anymore", true)] protected bool m_ShouldRecalculate = true;
+        protected bool m_ShouldRecalculateStencil = true;
+        protected int m_StencilValue;
+        public bool isMaskingGraphic { get; set; }
+        public bool maskable { get; set; }
+        public MaskableGraphic.CullStateChangedEvent onCullStateChanged { get; set; }
+        protected MaskableGraphic() {}
+        public virtual void Cull(Rect clipRect, bool validRect);
+        public virtual Material GetModifiedMaterial(Material baseMaterial);
+        protected override void OnCanvasHierarchyChanged();
+        protected override void OnDisable();
+        protected override void OnEnable();
+        protected override void OnTransformParentChanged();
+        protected override void OnValidate();
+        [System.Obsolete(@"Not used anymore.", true)] public virtual void ParentMaskStateChanged();
+        public override bool Raycast(Vector2 sp, Camera eventCamera);
+        public virtual void RecalculateClipping();
+        public virtual void RecalculateMasking();
+        public virtual void SetClipRect(Rect clipRect, bool validRect);
+        public virtual void SetClipSoftness(Vector2 clipSoftness);
+        public class CullStateChangedEvent : UnityEngine.Events.UnityEvent<bool>
+        {
+            public CullStateChangedEvent() {}
+        }
+    }
+
+    public class MaskUtilities
+    {
+        public MaskUtilities() {}
+        public static Transform FindRootSortOverrideCanvas(Transform start);
+        public static RectMask2D GetRectMaskForClippable(IClippable clippable);
+        public static void GetRectMasksForClip(RectMask2D clipper, System.Collections.Generic.List<RectMask2D> masks);
+        public static int GetStencilDepth(Transform transform, Transform stopAfter);
+        public static bool IsDescendantOrSelf(Transform father, Transform child);
+        public static void Notify2DMaskStateChanged(Component mask);
+        public static void NotifyStencilStateChanged(Component mask);
+    }
+
+    public struct Navigation : System.IEquatable<Navigation>
+    {
+        public static Navigation defaultNavigation { get; }
+        public Navigation.Mode mode { get; set; }
+        public Selectable selectOnDown { get; set; }
+        public Selectable selectOnLeft { get; set; }
+        public Selectable selectOnRight { get; set; }
+        public Selectable selectOnUp { get; set; }
+        public bool wrapAround { get; set; }
+        public bool Equals(Navigation other);
+        [System.Flags] public enum Mode
+        {
+            None = 0,
+            Horizontal = 1 << 0,
+            Vertical = 1 << 1,
+            Automatic = 0x3,
+            Explicit = 1 << 2,
+        }
+    }
+
+    [AddComponentMenu(@"UI (Canvas)/Effects/Outline", 81)] public class Outline : Shadow
+    {
+        protected Outline() {}
+        public override void ModifyMesh(VertexHelper vh);
+    }
+
+    [AddComponentMenu(@"UI (Canvas)/Effects/Position As UV1", 82)] public class PositionAsUV1 : BaseMeshEffect
+    {
+        protected PositionAsUV1() {}
+        public override void ModifyMesh(VertexHelper vh);
+    }
+
+    [AddComponentMenu(@"UI (Canvas)/Raw Image", 12)] [RequireComponent(typeof(CanvasRenderer))] public class RawImage : MaskableGraphic
+    {
+        public override Texture mainTexture { get; }
+        public Texture texture { get; set; }
+        public Rect uvRect { get; set; }
+        protected RawImage() {}
+        protected override void OnDidApplyAnimationProperties();
+        protected override void OnPopulateMesh(VertexHelper vh);
+        public override void SetNativeSize();
+    }
+
+    [AddComponentMenu(@"UI (Canvas)/Rect Mask 2D", 14)] [DisallowMultipleComponent] [ExecuteAlways] [RequireComponent(typeof(RectTransform))] public class RectMask2D : UnityEngine.EventSystems.UIBehaviour, ICanvasRaycastFilter, IClipper
+    {
+        public Rect canvasRect { get; }
+        public Vector4 padding { get; set; }
+        public RectTransform rectTransform { get; }
+        public Vector2Int softness { get; set; }
+        protected RectMask2D() {}
+        public void AddClippable(IClippable clippable);
+        public virtual bool IsRaycastLocationValid(Vector2 sp, Camera eventCamera);
+        protected override void OnCanvasHierarchyChanged();
+        protected override void OnDestroy();
+        protected override void OnDisable();
+        protected override void OnEnable();
+        protected override void OnTransformParentChanged();
+        protected override void OnValidate();
+        public virtual void PerformClipping();
+        public void RemoveClippable(IClippable clippable);
+        public virtual void UpdateClipSoftness();
+    }
+
+    [AddComponentMenu(@"UI (Canvas)/Scrollbar", 36)] [ExecuteAlways] [RequireComponent(typeof(RectTransform))] public class Scrollbar : Selectable, ICanvasElement, UnityEngine.EventSystems.IBeginDragHandler, UnityEngine.EventSystems.IDragHandler, UnityEngine.EventSystems.IEventSystemHandler, UnityEngine.EventSystems.IInitializePotentialDragHandler
+    {
+        public Scrollbar.Direction direction { get; set; }
+        public RectTransform handleRect { get; set; }
+        public int numberOfSteps { get; set; }
+        public Scrollbar.ScrollEvent onValueChanged { get; set; }
+        public float size { get; set; }
+        public float value { get; set; }
+        protected Scrollbar() {}
+        protected System.Collections.IEnumerator ClickRepeat(UnityEngine.EventSystems.PointerEventData eventData);
+        protected System.Collections.IEnumerator ClickRepeat(Vector2 screenPosition, Camera camera);
+        public override Selectable FindSelectableOnDown();
+        public override Selectable FindSelectableOnLeft();
+        public override Selectable FindSelectableOnRight();
+        public override Selectable FindSelectableOnUp();
+        public virtual void GraphicUpdateComplete();
+        public virtual void LayoutComplete();
+        public virtual void OnBeginDrag(UnityEngine.EventSystems.PointerEventData eventData);
+        protected override void OnDisable();
+        public virtual void OnDrag(UnityEngine.EventSystems.PointerEventData eventData);
+        protected override void OnEnable();
+        public virtual void OnInitializePotentialDrag(UnityEngine.EventSystems.PointerEventData eventData);
+        public override void OnMove(UnityEngine.EventSystems.AxisEventData eventData);
+        public override void OnPointerDown(UnityEngine.EventSystems.PointerEventData eventData);
+        public override void OnPointerUp(UnityEngine.EventSystems.PointerEventData eventData);
+        protected override void OnRectTransformDimensionsChange();
+        protected override void OnValidate();
+        public virtual void Rebuild(CanvasUpdate executing);
+        public void SetDirection(Scrollbar.Direction direction, bool includeRectLayouts);
+        public virtual void SetValueWithoutNotify(float input);
+        protected virtual void Update();
+        public enum Direction
+        {
+            LeftToRight = 0,
+            RightToLeft = 1,
+            BottomToTop = 2,
+            TopToBottom = 3,
+        }
+        public class ScrollEvent : UnityEngine.Events.UnityEvent<float>
+        {
+            public ScrollEvent() {}
+        }
+    }
+
+    [AddComponentMenu(@"UI (Canvas)/Scroll Rect", 37)] [DisallowMultipleComponent] [ExecuteAlways] [RequireComponent(typeof(RectTransform))] [SelectionBase] public class ScrollRect : UnityEngine.EventSystems.UIBehaviour, ICanvasElement, ILayoutController, ILayoutElement, ILayoutGroup, UnityEngine.EventSystems.IBeginDragHandler, UnityEngine.EventSystems.IDragHandler, UnityEngine.EventSystems.IEndDragHandler, UnityEngine.EventSystems.IEventSystemHandler, UnityEngine.EventSystems.IInitializePotentialDragHandler, UnityEngine.EventSystems.IScrollHandler
+    {
+        protected Bounds m_ContentBounds;
+        protected Vector2 m_ContentStartPosition;
+        public RectTransform content { get; set; }
+        public float decelerationRate { get; set; }
+        public float elasticity { get; set; }
+        public virtual float flexibleHeight { get; }
+        public virtual float flexibleWidth { get; }
+        public bool horizontal { get; set; }
+        public float horizontalNormalizedPosition { get; set; }
+        public Scrollbar horizontalScrollbar { get; set; }
+        public float horizontalScrollbarSpacing { get; set; }
+        public ScrollRect.ScrollbarVisibility horizontalScrollbarVisibility { get; set; }
+        public bool inertia { get; set; }
+        public virtual int layoutPriority { get; }
+        public virtual float minHeight { get; }
+        public virtual float minWidth { get; }
+        public ScrollRect.MovementType movementType { get; set; }
+        public Vector2 normalizedPosition { get; set; }
+        public ScrollRect.ScrollRectEvent onValueChanged { get; set; }
+        public virtual float preferredHeight { get; }
+        public virtual float preferredWidth { get; }
+        public float scrollSensitivity { get; set; }
+        public Vector2 velocity { get; set; }
+        public bool vertical { get; set; }
+        public float verticalNormalizedPosition { get; set; }
+        public Scrollbar verticalScrollbar { get; set; }
+        public float verticalScrollbarSpacing { get; set; }
+        public ScrollRect.ScrollbarVisibility verticalScrollbarVisibility { get; set; }
+        public RectTransform viewport { get; set; }
+        protected RectTransform viewRect { get; }
+        protected ScrollRect() {}
+        public virtual void CalculateLayoutInputHorizontal();
+        public virtual void CalculateLayoutInputVertical();
+        public virtual void GraphicUpdateComplete();
+        public override bool IsActive();
+        protected virtual void LateUpdate();
+        public virtual void LayoutComplete();
+        public virtual void OnBeginDrag(UnityEngine.EventSystems.PointerEventData eventData);
+        protected override void OnDisable();
+        public virtual void OnDrag(UnityEngine.EventSystems.PointerEventData eventData);
+        protected override void OnEnable();
+        public virtual void OnEndDrag(UnityEngine.EventSystems.PointerEventData eventData);
+        public virtual void OnInitializePotentialDrag(UnityEngine.EventSystems.PointerEventData eventData);
+        protected override void OnRectTransformDimensionsChange();
+        public virtual void OnScroll(UnityEngine.EventSystems.PointerEventData data);
+        protected override void OnValidate();
+        public virtual void Rebuild(CanvasUpdate executing);
+        protected virtual void SetContentAnchoredPosition(Vector2 position);
+        protected void SetDirty();
+        protected void SetDirtyCaching();
+        public virtual void SetLayoutHorizontal();
+        public virtual void SetLayoutVertical();
+        protected virtual void SetNormalizedPosition(float value, int axis);
+        public virtual void StopMovement();
+        protected void UpdateBounds();
+        protected void UpdatePrevData();
+        public enum MovementType
+        {
+            Unrestricted = 0,
+            Elastic = 1,
+            Clamped = 2,
+        }
+        public enum ScrollbarVisibility
+        {
+            Permanent = 0,
+            AutoHide = 1,
+            AutoHideAndExpandViewport = 2,
+        }
+        public class ScrollRectEvent : UnityEngine.Events.UnityEvent<Vector2>
+        {
+            public ScrollRectEvent() {}
+        }
+    }
+
+    [AddComponentMenu(@"UI (Canvas)/Selectable", 35)] [DisallowMultipleComponent] [ExecuteAlways] [SelectionBase] public class Selectable : UnityEngine.EventSystems.UIBehaviour, UnityEngine.EventSystems.IDeselectHandler, UnityEngine.EventSystems.IEventSystemHandler, UnityEngine.EventSystems.IMoveHandler, UnityEngine.EventSystems.IPointerDownHandler, UnityEngine.EventSystems.IPointerEnterHandler, UnityEngine.EventSystems.IPointerExitHandler, UnityEngine.EventSystems.IPointerUpHandler, UnityEngine.EventSystems.ISelectHandler
+    {
+        protected int m_CurrentIndex = -1;
+        protected static int s_SelectableCount;
+        protected static Selectable[] s_Selectables;
+        public static int allSelectableCount { get; }
+        [System.Obsolete(@"Replaced with allSelectablesArray to have better performance when disabling a element", false)] public static System.Collections.Generic.List<Selectable> allSelectables { get; }
+        public static Selectable[] allSelectablesArray { get; }
+        public AnimationTriggers animationTriggers { get; set; }
+        public Animator animator { get; }
+        public ColorBlock colors { get; set; }
+        protected Selectable.SelectionState currentSelectionState { get; }
+        public Image image { get; set; }
+        public bool interactable { get; set; }
+        public Navigation navigation { get; set; }
+        public SpriteState spriteState { get; set; }
+        public Graphic targetGraphic { get; set; }
+        public Selectable.Transition transition { get; set; }
+        protected Selectable() {}
+        public static int AllSelectablesNoAlloc(Selectable[] selectables);
+        protected override void Awake();
+        protected virtual void DoStateTransition(Selectable.SelectionState state, bool instant);
+        public Selectable FindSelectable(Vector3 dir);
+        public virtual Selectable FindSelectableOnDown();
+        public virtual Selectable FindSelectableOnLeft();
+        public virtual Selectable FindSelectableOnRight();
+        public virtual Selectable FindSelectableOnUp();
+        protected virtual void InstantClearState();
+        protected bool IsHighlighted();
+        public virtual bool IsInteractable();
+        protected bool IsPressed();
+        protected override void OnCanvasGroupChanged();
+        public virtual void OnDeselect(UnityEngine.EventSystems.BaseEventData eventData);
+        protected override void OnDidApplyAnimationProperties();
+        protected override void OnDisable();
+        protected override void OnEnable();
+        public virtual void OnMove(UnityEngine.EventSystems.AxisEventData eventData);
+        public virtual void OnPointerDown(UnityEngine.EventSystems.PointerEventData eventData);
+        public virtual void OnPointerEnter(UnityEngine.EventSystems.PointerEventData eventData);
+        public virtual void OnPointerExit(UnityEngine.EventSystems.PointerEventData eventData);
+        public virtual void OnPointerUp(UnityEngine.EventSystems.PointerEventData eventData);
+        public virtual void OnSelect(UnityEngine.EventSystems.BaseEventData eventData);
+        protected override void OnTransformParentChanged();
+        protected override void OnValidate();
+        protected override void Reset();
+        public virtual void Select();
+        protected enum SelectionState
+        {
+            Normal = 0,
+            Highlighted = 1,
+            Pressed = 2,
+            Selected = 3,
+            Disabled = 4,
+        }
+        public enum Transition
+        {
+            None = 0,
+            ColorTint = 1,
+            SpriteSwap = 2,
+            Animation = 3,
+        }
+    }
+
+    [AddComponentMenu(@"UI (Canvas)/Effects/Shadow", 80)] public class Shadow : BaseMeshEffect
+    {
+        public Color effectColor { get; set; }
+        public Vector2 effectDistance { get; set; }
+        public bool useGraphicAlpha { get; set; }
+        protected Shadow() {}
+        protected void ApplyShadow(System.Collections.Generic.List<UIVertex> verts, Color32 color, int start, int end, float x, float y);
+        protected void ApplyShadowZeroAlloc(System.Collections.Generic.List<UIVertex> verts, Color32 color, int start, int end, float x, float y);
+        public override void ModifyMesh(VertexHelper vh);
+        protected override void OnValidate();
+    }
+
+    [AddComponentMenu(@"UI (Canvas)/Slider", 34)] [ExecuteAlways] [RequireComponent(typeof(RectTransform))] public class Slider : Selectable, ICanvasElement, UnityEngine.EventSystems.IDragHandler, UnityEngine.EventSystems.IEventSystemHandler, UnityEngine.EventSystems.IInitializePotentialDragHandler
+    {
+        [SerializeField] protected float m_Value;
+        public Slider.Direction direction { get; set; }
+        public RectTransform fillRect { get; set; }
+        public RectTransform handleRect { get; set; }
+        public float maxValue { get; set; }
+        public float minValue { get; set; }
+        public float normalizedValue { get; set; }
+        public Slider.SliderEvent onValueChanged { get; set; }
+        public virtual float value { get; set; }
+        public bool wholeNumbers { get; set; }
+        protected Slider() {}
+        public override Selectable FindSelectableOnDown();
+        public override Selectable FindSelectableOnLeft();
+        public override Selectable FindSelectableOnRight();
+        public override Selectable FindSelectableOnUp();
+        public virtual void GraphicUpdateComplete();
+        public virtual void LayoutComplete();
+        protected override void OnDidApplyAnimationProperties();
+        protected override void OnDisable();
+        public virtual void OnDrag(UnityEngine.EventSystems.PointerEventData eventData);
+        protected override void OnEnable();
+        public virtual void OnInitializePotentialDrag(UnityEngine.EventSystems.PointerEventData eventData);
+        public override void OnMove(UnityEngine.EventSystems.AxisEventData eventData);
+        public override void OnPointerDown(UnityEngine.EventSystems.PointerEventData eventData);
+        protected override void OnRectTransformDimensionsChange();
+        protected override void OnValidate();
+        public virtual void Rebuild(CanvasUpdate executing);
+        protected virtual void Set(float input, bool sendCallback = true);
+        public void SetDirection(Slider.Direction direction, bool includeRectLayouts);
+        public virtual void SetValueWithoutNotify(float input);
+        protected virtual void Update();
+        public enum Direction
+        {
+            LeftToRight = 0,
+            RightToLeft = 1,
+            BottomToTop = 2,
+            TopToBottom = 3,
+        }
+        public class SliderEvent : UnityEngine.Events.UnityEvent<float>
+        {
+            public SliderEvent() {}
+        }
+    }
+
+    public struct SpriteState : System.IEquatable<SpriteState>
+    {
+        public Sprite disabledSprite { get; set; }
+        public Sprite highlightedSprite { get; set; }
+        public Sprite pressedSprite { get; set; }
+        public Sprite selectedSprite { get; set; }
+        public bool Equals(SpriteState other);
+    }
+
+    public static class StencilMaterial
+    {
+        [System.Obsolete(@"Use Material.Add instead.", true)] public static Material Add(Material baseMat, int stencilID);
+        public static Material Add(Material baseMat, int stencilID, UnityEngine.Rendering.StencilOp operation, UnityEngine.Rendering.CompareFunction compareFunction, UnityEngine.Rendering.ColorWriteMask colorWriteMask);
+        public static Material Add(Material baseMat, int stencilID, UnityEngine.Rendering.StencilOp operation, UnityEngine.Rendering.CompareFunction compareFunction, UnityEngine.Rendering.ColorWriteMask colorWriteMask, int readMask, int writeMask);
+        public static void ClearAll();
+        public static void Remove(Material customMat);
+    }
+
+    [AddComponentMenu(@"UI (Canvas)/Legacy/Text", 100)] [RequireComponent(typeof(CanvasRenderer))] public class Text : MaskableGraphic, ILayoutElement
+    {
+        protected bool m_DisableFontTextureRebuiltCallback;
+        [SerializeField] [TextArea(3, 10)] protected string m_Text;
+        protected static Material s_DefaultText;
+        public bool alignByGeometry { get; set; }
+        public TextAnchor alignment { get; set; }
+        public TextGenerator cachedTextGenerator { get; }
+        public TextGenerator cachedTextGeneratorForLayout { get; }
+        public virtual float flexibleHeight { get; }
+        public virtual float flexibleWidth { get; }
+        public Font font { get; set; }
+        public int fontSize { get; set; }
+        public FontStyle fontStyle { get; set; }
+        public HorizontalWrapMode horizontalOverflow { get; set; }
+        public virtual int layoutPriority { get; }
+        public float lineSpacing { get; set; }
+        public override Texture mainTexture { get; }
+        public virtual float minHeight { get; }
+        public virtual float minWidth { get; }
+        public float pixelsPerUnit { get; }
+        public virtual float preferredHeight { get; }
+        public virtual float preferredWidth { get; }
+        public bool resizeTextForBestFit { get; set; }
+        public int resizeTextMaxSize { get; set; }
+        public int resizeTextMinSize { get; set; }
+        public bool supportRichText { get; set; }
+        public virtual string text { get; set; }
+        public VerticalWrapMode verticalOverflow { get; set; }
+        protected Text() {}
+        public virtual void CalculateLayoutInputHorizontal();
+        public virtual void CalculateLayoutInputVertical();
+        public void FontTextureChanged();
+        public TextGenerationSettings GetGenerationSettings(Vector2 extents);
+        public static Vector2 GetTextAnchorPivot(TextAnchor anchor);
+        protected override void OnDisable();
+        protected override void OnEnable();
+        protected override void OnPopulateMesh(VertexHelper toFill);
+        public override void OnRebuildRequested();
+        protected override void OnValidate();
+        protected override void Reset();
+        protected override void UpdateGeometry();
+    }
+
+    [AddComponentMenu(@"UI (Canvas)/Toggle", 30)] [RequireComponent(typeof(RectTransform))] public class Toggle : Selectable, ICanvasElement, UnityEngine.EventSystems.IEventSystemHandler, UnityEngine.EventSystems.IPointerClickHandler, UnityEngine.EventSystems.ISubmitHandler
+    {
+        public Graphic graphic;
+        public Toggle.ToggleEvent onValueChanged = new();
+        public Toggle.ToggleTransition toggleTransition = Toggle.ToggleTransition.Fade;
+        public ToggleGroup group { get; set; }
+        public bool isOn { get; set; }
+        protected Toggle() {}
+        public virtual void GraphicUpdateComplete();
+        public virtual void LayoutComplete();
+        protected override void OnDestroy();
+        protected override void OnDidApplyAnimationProperties();
+        protected override void OnDisable();
+        protected override void OnEnable();
+        public virtual void OnPointerClick(UnityEngine.EventSystems.PointerEventData eventData);
+        public virtual void OnSubmit(UnityEngine.EventSystems.BaseEventData eventData);
+        protected override void OnValidate();
+        public virtual void Rebuild(CanvasUpdate executing);
+        public void SetIsOnWithoutNotify(bool value);
+        protected override void Start();
+        public class ToggleEvent : UnityEngine.Events.UnityEvent<bool>
+        {
+            public ToggleEvent() {}
+        }
+        public enum ToggleTransition
+        {
+            None = 0,
+            Fade = 1,
+        }
+    }
+
+    [AddComponentMenu(@"UI (Canvas)/Toggle Group", 31)] [DisallowMultipleComponent] public class ToggleGroup : UnityEngine.EventSystems.UIBehaviour
+    {
+        protected System.Collections.Generic.List<Toggle> m_Toggles = new();
+        public bool allowSwitchOff { get; set; }
+        protected ToggleGroup() {}
+        public System.Collections.Generic.IEnumerable<Toggle> ActiveToggles();
+        public bool AnyTogglesOn();
+        public void EnsureValidState();
+        public Toggle GetFirstActiveToggle();
+        public void NotifyToggleOn(Toggle toggle, bool sendCallback = true);
+        protected override void OnEnable();
+        public void RegisterToggle(Toggle toggle);
+        public void SetAllTogglesOff(bool sendCallback = true);
+        protected override void Start();
+        public void UnregisterToggle(Toggle toggle);
+    }
+
+    public class VertexHelper : System.IDisposable
+    {
+        public int currentIndexCount { get; }
+        public int currentVertCount { get; }
+        public VertexHelper() {}
+        public VertexHelper(Mesh m) {}
+        public void AddTriangle(int idx0, int idx1, int idx2);
+        public void AddUIVertexQuad(UIVertex[] verts);
+        public void AddUIVertexStream(System.Collections.Generic.List<UIVertex> verts, System.Collections.Generic.List<int> indices);
+        public void AddUIVertexTriangleStream(System.Collections.Generic.List<UIVertex> verts);
+        public void AddVert(UIVertex v);
+        public void AddVert(Vector3 position, Color32 color, Vector4 uv0);
+        public void AddVert(Vector3 position, Color32 color, Vector4 uv0, Vector4 uv1, Vector3 normal, Vector4 tangent);
+        public void AddVert(Vector3 position, Color32 color, Vector4 uv0, Vector4 uv1, Vector4 uv2, Vector4 uv3, Vector3 normal, Vector4 tangent);
+        public void Clear();
+        public void Dispose();
+        public void FillMesh(Mesh mesh);
+        public void GetUIVertexStream(System.Collections.Generic.List<UIVertex> stream);
+        public void PopulateUIVertex(ref UIVertex vertex, int i);
+        public void SetUIVertex(UIVertex vertex, int i);
+    }
+
+    [AddComponentMenu(@"Layout/Vertical Layout Group", 151)] public class VerticalLayoutGroup : HorizontalOrVerticalLayoutGroup
+    {
+        protected VerticalLayoutGroup() {}
+        public override void CalculateLayoutInputHorizontal();
+        public override void CalculateLayoutInputVertical();
+        public override void SetLayoutHorizontal();
+        public override void SetLayoutVertical();
+    }
+}
+
+namespace UnityEngine.UIElements
+{
+    [AddComponentMenu(@"UI Toolkit/Panel Event Handler (UI Toolkit)")] public class PanelEventHandler : UnityEngine.EventSystems.UIBehaviour, UnityEngine.EventSystems.ICancelHandler, UnityEngine.EventSystems.IDeselectHandler, UnityEngine.EventSystems.IEventSystemHandler, UnityEngine.EventSystems.IMoveHandler, UnityEngine.EventSystems.IPointerClickHandler, UnityEngine.EventSystems.IPointerDownHandler, UnityEngine.EventSystems.IPointerEnterHandler, UnityEngine.EventSystems.IPointerExitHandler, UnityEngine.EventSystems.IPointerMoveHandler, UnityEngine.EventSystems.IPointerUpHandler, UnityEngine.EventSystems.IScrollHandler, UnityEngine.EventSystems.ISelectHandler, UnityEngine.EventSystems.ISubmitHandler
+    {
+        public IPanel panel { get; set; }
+        public PanelEventHandler() {}
+        public void OnCancel(UnityEngine.EventSystems.BaseEventData eventData);
+        public void OnDeselect(UnityEngine.EventSystems.BaseEventData eventData);
+        protected override void OnDisable();
+        protected override void OnEnable();
+        public void OnMove(UnityEngine.EventSystems.AxisEventData eventData);
+        public void OnPointerClick(UnityEngine.EventSystems.PointerEventData eventData);
+        public void OnPointerDown(UnityEngine.EventSystems.PointerEventData eventData);
+        public void OnPointerEnter(UnityEngine.EventSystems.PointerEventData eventData);
+        public void OnPointerExit(UnityEngine.EventSystems.PointerEventData eventData);
+        public void OnPointerMove(UnityEngine.EventSystems.PointerEventData eventData);
+        public void OnPointerUp(UnityEngine.EventSystems.PointerEventData eventData);
+        public void OnScroll(UnityEngine.EventSystems.PointerEventData eventData);
+        public void OnSelect(UnityEngine.EventSystems.BaseEventData eventData);
+        public void OnSubmit(UnityEngine.EventSystems.BaseEventData eventData);
+        public void Update();
+    }
+
+    [AddComponentMenu(@"UI Toolkit/Panel Raycaster (UI Toolkit)")] public class PanelRaycaster : UnityEngine.EventSystems.BaseRaycaster
+    {
+        public override Camera eventCamera { get; }
+        public IPanel panel { get; set; }
+        public override int renderOrderPriority { get; }
+        public override int sortOrderPriority { get; }
+        public PanelRaycaster() {}
+        public override void Raycast(UnityEngine.EventSystems.PointerEventData eventData, System.Collections.Generic.List<UnityEngine.EventSystems.RaycastResult> resultAppendList);
+    }
+
+    [AddComponentMenu(@"UI Toolkit/World Document Raycaster (UI Toolkit)")] public class WorldDocumentRaycaster : UnityEngine.EventSystems.BaseRaycaster
+    {
+        public override Camera eventCamera { get; }
+        public Camera raycastCamera { get; set; }
+        public WorldDocumentRaycaster() {}
+        protected virtual bool GetWorldRay(UnityEngine.EventSystems.PointerEventData eventData, out Ray worldRay, out float maxDistance, out int layerMask);
+        public override void Raycast(UnityEngine.EventSystems.PointerEventData eventData, System.Collections.Generic.List<UnityEngine.EventSystems.RaycastResult> resultAppendList);
+    }
+}

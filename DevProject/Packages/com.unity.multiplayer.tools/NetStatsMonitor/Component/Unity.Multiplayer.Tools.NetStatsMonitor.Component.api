@@ -1,0 +1,18 @@
+// This file is generated. Do not modify by hand.
+// XML documentation file not found. To check if public methods have XML comments,
+// make sure the XML doc file is present and located next to the scraped dll
+namespace Unity.Multiplayer.Tools.NetStatsMonitor
+{
+    [UnityEngine.AddComponentMenu(@"Netcode/Runtime Network Stats Monitor")] [UnityEngine.HelpURL(@"https://docs.unity3d.com/Packages/com.unity.multiplayer.tools@latest/?subfolder=/manual/runtime-stats-monitor.html")] public class RuntimeNetStatsMonitor : UnityEngine.MonoBehaviour
+    {
+        [JetBrains.Annotations.CanBeNull] public NetStatsMonitorConfiguration Configuration { get; set; }
+        public UnityEngine.UIElements.StyleSheet CustomStyleSheet { get; set; }
+        public double MaxRefreshRate { get; set; }
+        public UnityEngine.UIElements.PanelSettings PanelSettingsOverride { get; set; }
+        public PositionConfiguration Position { get; set; }
+        public bool Visible { get; set; }
+        public RuntimeNetStatsMonitor() {}
+        public void AddCustomValue(Unity.Multiplayer.Tools.NetStats.MetricId metricId, float value);
+        public void ApplyConfiguration();
+    }
+}

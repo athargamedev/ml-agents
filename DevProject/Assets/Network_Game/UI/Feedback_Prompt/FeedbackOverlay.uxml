@@ -1,0 +1,28 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uix="UnityEngine.UIElements" editor-extension-mode="True">
+    <Style src="project://database/Assets/Network_Game/UI/BlocksShared.uss?fileID=7433441132597879392&amp;guid=5b446a577d2cebf4d8d926d521552982&amp;type=3#BlocksShared"/>
+    <ui:VisualElement name="feedback-overlay" class="feedback-overlay" style="font-size: 15px; min-width: 500px; align-content: auto; align-items: stretch; height: 190px; flex-shrink: 0; margin-top: 100px;">
+        <ui:VisualElement name="feedback-header" class="feedback-overlay__header">
+            <ui:Label name="feedback-title" text="EFFECT FEEDBACK" class="feedback-overlay__title"/>
+            <ui:Label name="feedback-queue" text="Queue: 0" class="feedback-overlay__queue"/>
+            <ui:Label name="feedback-mode" text="" class="feedback-overlay__mode"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="feedback-summary" class="feedback-overlay__row feedback-overlay__summary">
+            <ui:Label name="feedback-effect" text="Effect: -" class="feedback-overlay__info-label"/>
+            <ui:Label name="feedback-source" text="Source: -" class="feedback-overlay__info-label"/>
+            <ui:Label name="feedback-target" text="Target: -" class="feedback-overlay__info-label"/>
+            <ui:Label name="feedback-metrics" text="Metrics: -" class="feedback-overlay__info-label"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="feedback-actions" class="feedback-overlay__row feedback-overlay__actions">
+            <ui:Button name="btn-correct" text="CORRECT" class="blocks-button feedback-overlay__action-btn"/>
+            <ui:Button name="btn-hidden" text="HIDDEN" class="blocks-button feedback-overlay__action-btn"/>
+            <ui:Button name="btn-target" text="TARGET" class="blocks-button feedback-overlay__action-btn"/>
+            <ui:Button name="btn-place" text="PLACE" class="blocks-button feedback-overlay__action-btn"/>
+            <ui:Button name="btn-mesh" text="MESH" class="blocks-button feedback-overlay__action-btn"/>
+            <ui:Button name="btn-skip" text="SKIP" class="blocks-button feedback-overlay__action-btn"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="feedback-notes" class="feedback-overlay__row feedback-overlay__notes">
+            <ui:TextField name="feedback-comment" placeholder-text="Add note..." class="blocks-textfield feedback-overlay__comment" style="min-width: 120px; min-height: 30px; height: 30px;"/>
+            <ui:Button name="btn-note" text="NOTE" class="blocks-button feedback-overlay__note-btn"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

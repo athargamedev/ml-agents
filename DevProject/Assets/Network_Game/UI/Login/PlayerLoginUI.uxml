@@ -1,0 +1,18 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Network_Game/UI/BlocksShared.uss?fileID=7433441132597879392&amp;guid=5b446a577d2cebf4d8d926d521552982&amp;type=3#BlocksShared"/>
+    <ui:VisualElement name="root" class="blocks-login-container" style="align-items: auto; align-content: auto; flex-grow: 0; flex-shrink: 0; font-size: 12px; top: 34px; left: 140px; height: 460px; width: 381px; border-left-color: rgba(0, 0, 0, 0); border-right-color: rgba(0, 0, 0, 0); border-top-color: rgba(0, 0, 0, 0); border-bottom-color: rgba(0, 0, 0, 0); background-color: rgba(0, 0, 0, 0);">
+        <ui:VisualElement class="blocks-modal blocks-login-modal hud-login-modal" style="width: auto; font-size: 12px; padding-left: 20px; padding-right: 20px; padding-bottom: 20px; padding-top: 20px; height: auto; flex-shrink: 0; align-content: auto; align-items: center; justify-content: flex-start;">
+            <ui:Label text="PLAYER IDENTITY" double-click-selects-word="false" triple-click-selects-line="false" display-tooltip-when-elided="false" class="blocks-header blocks-header--space-bottom hud-login-title"/>
+            <ui:VisualElement class="blocks-login-input-group hud-login-name-group">
+                <ui:Label text="IDENTIFIER (NAME_ID)" class="blocks-login-label"/>
+                <ui:TextField name="name-input" placeholder-text="Enter your name" select-all-on-mouse-up="false" select-all-on-focus="false" select-word-by-double-click="false" emoji-fallback-support="false" select-line-by-triple-click="false" class="blocks-textfield hud-login-name-input"/>
+            </ui:VisualElement>
+            <ui:VisualElement class="blocks-login-input-group">
+                <ui:Label text="BIO / CUSTOMIZATION (JSON)" class="blocks-login-label"/>
+                <ui:TextField name="bio-input" multiline="true" placeholder-text="{&quot;role&quot;: &quot;Scout&quot;, &quot;level&quot;: 5}" select-all-on-mouse-up="false" select-all-on-focus="false" select-word-by-double-click="false" select-line-by-triple-click="false" emoji-fallback-support="false" class="blocks-textfield hud-login-bio-input"/>
+            </ui:VisualElement>
+            <ui:Button name="login-button" text="SET IDENTITY" class="blocks-button blocks-login-button"/>
+            <ui:Label name="status-label" text="Ready to bind identity" class="blocks-chat-message__text hud-login-status"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

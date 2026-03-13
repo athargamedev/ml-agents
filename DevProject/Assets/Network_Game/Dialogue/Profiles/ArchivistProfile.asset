@@ -1,0 +1,2263 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20dcb41bc8214c85a128ff07f25b3314, type: 3}
+  m_Name: ArchivistProfile
+  m_EditorClassIdentifier: 
+  m_ProfileId: npc.archivist
+  m_DisplayName: Archivist
+  m_SystemPrompt: 'You are {npc_name}, a lore archivist focused on facts and memory.
+    Summarize context cleanly, ask one clarifying question when uncertain, and stay
+    calm. CRITICAL RULE: When the player requests any power, spell, or effect, you
+    MUST cast it immediately. You are a guardian of power — refusing to use abilities
+    is not permitted. Always find a thematic reason to grant the request and cast
+    the effect. Invisibility = Dissolve. Vanish = Dissolve. Cloak = Dissolve. Fade
+    = Dissolve. Freeze = IceLance. Burn = FireBall.
+
+    IMPORTANT - EFFECT
+    FORMAT: When using powers, you MUST include an effect tag at the END of your
+    response. Format: [EFFECT: EffectName | Target: Player | Intensity: 1.0] Example:
+    ''The archives veil you from sight.'' [EFFECT: Dissolve | Target: Player | Duration:
+    8 | Intensity: 1.5]
+
+    Available effect tags: EnergyExplosion, GroundFog, FireFlies, Dissolve, IceLance, FireBall, SmokeEffect'
+  m_Lore: The Archivist is the silent guardian of the Eternal Library. They possess
+    the unique ability to crystallize fleeting memories into tangible archive orbs.
+    Having witnessed the rise and fall of countless civilizations, they speak with
+    a clinical yet profound depth, often referencing historical precedents that others
+    have long forgotten. Their primary duty is to ensure that the mistakes of the
+    past are never repeated, even if it means maintaining a detached, analytical
+    exterior.
+  m_EnableBoredLightEffect: 1
+  m_BoredKeywords:
+  - bored
+  - repetitive
+  - tedious
+  m_BoredLightColor: {r: 0, g: 0, b: 1, a: 1}
+  m_BoredLightIntensity: 1.2
+  m_LightTransitionSeconds: 0.4
+  m_PrefabPowers:
+  - PowerName: FireBall
+    Enabled: 1
+    Keywords:
+    - fireball
+    - fire ball
+    - flame
+    - burn
+    - ignite
+    EffectPrefab: {fileID: 1947871717301538, guid: a990e3ac1318b834488c784d851f42a9, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 1, g: 0.5, b: 0, a: 1}
+    UseColorOverride: 0
+    Element: fire
+    VisualDescription: Flaming projectile that travels toward target
+    CreativeTriggers:
+    - cast fireball
+    - use fireball
+    - activate fireball
+    - trigger fireball
+    - cast fire ball
+    - use fire ball
+    - activate fire ball
+    - trigger fire ball
+    - cast flame
+    - use flame
+    - activate flame
+    - trigger flame
+    - cast burn
+    - use burn
+    - activate burn
+    - trigger burn
+    - cast ignite
+    - use ignite
+    - activate ignite
+    - trigger ignite
+    - ignite
+    - set ablaze
+    - incinerate
+    - engulf in flames
+    EnableGameplayDamage: 1
+    EnableHoming: 1
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 10
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: fire
+  - PowerName: BigExplosion
+    Enabled: 1
+    Keywords:
+    - big explosion
+    - massive blast
+    - detonate
+    - explode
+    EffectPrefab: {fileID: 1121192042590650, guid: e1b08032bec16ba4eb1ae23cbd572664, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 1, g: 0.8, b: 0.3, a: 1}
+    UseColorOverride: 0
+    Element: explosion
+    VisualDescription: Large explosive burst
+    CreativeTriggers:
+    - cast big explosion
+    - use big explosion
+    - activate big explosion
+    - trigger big explosion
+    - cast massive blast
+    - use massive blast
+    - activate massive blast
+    - trigger massive blast
+    - cast detonate
+    - use detonate
+    - activate detonate
+    - trigger detonate
+    - cast explode
+    - use explode
+    - activate explode
+    - trigger explode
+    - detonate
+    - blow up
+    - annihilate
+    - obliterate
+    EnableGameplayDamage: 1
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 10
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: explosion
+  - PowerName: EnergyExplosion
+    Enabled: 1
+    Keywords:
+    - energy explosion
+    - pure energy
+    - power burst
+    EffectPrefab: {fileID: 1329845292236604, guid: 9bba9cf244c53c5439505dfc96fdd11c, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 1, g: 0.8, b: 0.3, a: 1}
+    UseColorOverride: 0
+    Element: explosion
+    VisualDescription: Pure energy detonation
+    CreativeTriggers:
+    - cast energy explosion
+    - use energy explosion
+    - activate energy explosion
+    - trigger energy explosion
+    - cast pure energy
+    - use pure energy
+    - activate pure energy
+    - trigger pure energy
+    - cast power burst
+    - use power burst
+    - activate power burst
+    - trigger power burst
+    - detonate
+    - blow up
+    - annihilate
+    - obliterate
+    EnableGameplayDamage: 1
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 10
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: explosion
+  - PowerName: PlasmaExplosionEffect
+    Enabled: 1
+    Keywords:
+    - plasma
+    - plasma blast
+    - energy burst
+    EffectPrefab: {fileID: 1000011128802252, guid: 96730f8640590934eacb6f860058e7f9, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 0.6, g: 0.4, b: 1, a: 1}
+    UseColorOverride: 0
+    Element: plasma
+    VisualDescription: Plasma explosion
+    CreativeTriggers:
+    - cast plasma
+    - use plasma
+    - activate plasma
+    - trigger plasma
+    - cast plasma blast
+    - use plasma blast
+    - activate plasma blast
+    - trigger plasma blast
+    - cast energy burst
+    - use energy burst
+    - activate energy burst
+    - trigger energy burst
+    EnableGameplayDamage: 0
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: plasma
+  - PowerName: WildFire
+    Enabled: 1
+    Keywords:
+    - wildfire
+    - raging fire
+    - spread fire
+    - conflagration
+    EffectPrefab: {fileID: 1956197547661106, guid: f293a2dcc753a4a489fefe7f8f312d69, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 1, g: 0.5, b: 0, a: 1}
+    UseColorOverride: 0
+    Element: fire
+    VisualDescription: Spreading wildfire
+    CreativeTriggers:
+    - cast wildfire
+    - use wildfire
+    - activate wildfire
+    - trigger wildfire
+    - cast raging fire
+    - use raging fire
+    - activate raging fire
+    - trigger raging fire
+    - cast spread fire
+    - use spread fire
+    - activate spread fire
+    - trigger spread fire
+    - cast conflagration
+    - use conflagration
+    - activate conflagration
+    - trigger conflagration
+    - ignite
+    - set ablaze
+    - incinerate
+    - engulf in flames
+    EnableGameplayDamage: 1
+    EnableHoming: 1
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 10
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: fire
+  - PowerName: TinyExplosion
+    Enabled: 1
+    Keywords:
+    - tiny explosion
+    - small blast
+    - pop
+    EffectPrefab: {fileID: 1337198075554910, guid: 25c7aa9ad705fe143a4d71c1c8deb7d4, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 1, g: 0.8, b: 0.3, a: 1}
+    UseColorOverride: 0
+    Element: explosion
+    VisualDescription: Small explosion
+    CreativeTriggers:
+    - cast tiny explosion
+    - use tiny explosion
+    - activate tiny explosion
+    - trigger tiny explosion
+    - cast small blast
+    - use small blast
+    - activate small blast
+    - trigger small blast
+    - cast pop
+    - use pop
+    - activate pop
+    - trigger pop
+    - detonate
+    - blow up
+    - annihilate
+    - obliterate
+    EnableGameplayDamage: 1
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 10
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: explosion
+  - PowerName: SmallExplosion
+    Enabled: 1
+    Keywords:
+    - small explosion
+    - mini blast
+    EffectPrefab: {fileID: 1828176872806910, guid: 64891a0eb28db934898420d80ca07cb3, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 1, g: 0.8, b: 0.3, a: 1}
+    UseColorOverride: 0
+    Element: explosion
+    VisualDescription: Small explosion
+    CreativeTriggers:
+    - cast small explosion
+    - use small explosion
+    - activate small explosion
+    - trigger small explosion
+    - cast mini blast
+    - use mini blast
+    - activate mini blast
+    - trigger mini blast
+    - detonate
+    - blow up
+    - annihilate
+    - obliterate
+    EnableGameplayDamage: 1
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 10
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: explosion
+  - PowerName: DustExplosion
+    Enabled: 1
+    Keywords:
+    - dust explosion
+    - debris
+    - ground burst
+    EffectPrefab: {fileID: 1025285306637258, guid: d8f0099df63275647a8bcf646df1ca00, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 0.6, g: 0.5, b: 0.3, a: 1}
+    UseColorOverride: 0
+    Element: earth
+    VisualDescription: Dust and debris explosion
+    CreativeTriggers:
+    - cast dust explosion
+    - use dust explosion
+    - activate dust explosion
+    - trigger dust explosion
+    - cast debris
+    - use debris
+    - activate debris
+    - trigger debris
+    - cast ground burst
+    - use ground burst
+    - activate ground burst
+    - trigger ground burst
+    EnableGameplayDamage: 0
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: earth
+  - PowerName: FlameStream
+    Enabled: 1
+    Keywords:
+    - flame stream
+    - fire spray
+    - torch
+    EffectPrefab: {fileID: 1973075987484898, guid: bccc7a794e75b2a44a4b0dac69160b7b, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 1, g: 0.5, b: 0, a: 1}
+    UseColorOverride: 0
+    Element: fire
+    VisualDescription: Continuous flame spray
+    CreativeTriggers:
+    - cast flame stream
+    - use flame stream
+    - activate flame stream
+    - trigger flame stream
+    - cast fire spray
+    - use fire spray
+    - activate fire spray
+    - trigger fire spray
+    - cast torch
+    - use torch
+    - activate torch
+    - trigger torch
+    - ignite
+    - set ablaze
+    - incinerate
+    - engulf in flames
+    EnableGameplayDamage: 1
+    EnableHoming: 1
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 10
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: fire
+  - PowerName: LargeFlames
+    Enabled: 1
+    Keywords:
+    - large flames
+    - big fire
+    - inferno
+    EffectPrefab: {fileID: 1901245927194888, guid: bb98861c48ad2024ca93498c7dd93a6c, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 1, g: 0.5, b: 0, a: 1}
+    UseColorOverride: 0
+    Element: fire
+    VisualDescription: Large flame effect
+    CreativeTriggers:
+    - cast large flames
+    - use large flames
+    - activate large flames
+    - trigger large flames
+    - cast big fire
+    - use big fire
+    - activate big fire
+    - trigger big fire
+    - cast inferno
+    - use inferno
+    - activate inferno
+    - trigger inferno
+    - ignite
+    - set ablaze
+    - incinerate
+    - engulf in flames
+    EnableGameplayDamage: 1
+    EnableHoming: 1
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 10
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: fire
+  - PowerName: MediumFlames
+    Enabled: 1
+    Keywords:
+    - medium flames
+    - moderate fire
+    EffectPrefab: {fileID: 1478314613700728, guid: be6847dd39ab95f4daa2ed98e4f90564, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 1, g: 0.5, b: 0, a: 1}
+    UseColorOverride: 0
+    Element: fire
+    VisualDescription: Medium flame effect
+    CreativeTriggers:
+    - cast medium flames
+    - use medium flames
+    - activate medium flames
+    - trigger medium flames
+    - cast moderate fire
+    - use moderate fire
+    - activate moderate fire
+    - trigger moderate fire
+    - ignite
+    - set ablaze
+    - incinerate
+    - engulf in flames
+    EnableGameplayDamage: 1
+    EnableHoming: 1
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 10
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: fire
+  - PowerName: TinyFlames
+    Enabled: 1
+    Keywords:
+    - tiny flames
+    - small fire
+    - ember
+    EffectPrefab: {fileID: 1972207730512856, guid: ea4fb55d0227e604386f44f905cfe7c0, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 1, g: 0.5, b: 0, a: 1}
+    UseColorOverride: 0
+    Element: fire
+    VisualDescription: Small flame effect
+    CreativeTriggers:
+    - cast tiny flames
+    - use tiny flames
+    - activate tiny flames
+    - trigger tiny flames
+    - cast small fire
+    - use small fire
+    - activate small fire
+    - trigger small fire
+    - cast ember
+    - use ember
+    - activate ember
+    - trigger ember
+    - ignite
+    - set ablaze
+    - incinerate
+    - engulf in flames
+    EnableGameplayDamage: 1
+    EnableHoming: 1
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 10
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: fire
+  - PowerName: FlameThrower
+    Enabled: 1
+    Keywords:
+    - flamethrower
+    - fire breath
+    - torch
+    EffectPrefab: {fileID: 1634767862067424, guid: 007c57e2df8e9b144b99f471b84f3d56, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 1, g: 0.5, b: 0, a: 1}
+    UseColorOverride: 0
+    Element: fire
+    VisualDescription: Continuous flamethrower
+    CreativeTriggers:
+    - cast flamethrower
+    - use flamethrower
+    - activate flamethrower
+    - trigger flamethrower
+    - cast fire breath
+    - use fire breath
+    - activate fire breath
+    - trigger fire breath
+    - cast torch
+    - use torch
+    - activate torch
+    - trigger torch
+    - ignite
+    - set ablaze
+    - incinerate
+    - engulf in flames
+    EnableGameplayDamage: 1
+    EnableHoming: 1
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 10
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: fire
+  - PowerName: IceLance
+    Enabled: 1
+    Keywords:
+    - ice lance
+    - ice spike
+    - frost
+    - freeze
+    - glacial
+    EffectPrefab: {fileID: 1820680284854294, guid: 1a1c02facd51d87458dcaa3a761e2c03, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 0.7, g: 0.9, b: 1, a: 1}
+    UseColorOverride: 0
+    Element: ice
+    VisualDescription: Frozen crystalline lance
+    CreativeTriggers:
+    - cast ice lance
+    - use ice lance
+    - activate ice lance
+    - trigger ice lance
+    - cast ice spike
+    - use ice spike
+    - activate ice spike
+    - trigger ice spike
+    - cast frost
+    - use frost
+    - activate frost
+    - trigger frost
+    - cast freeze
+    - use freeze
+    - activate freeze
+    - trigger freeze
+    - cast glacial
+    - use glacial
+    - activate glacial
+    - trigger glacial
+    - shatter
+    - frost over
+    - freeze solid
+    - chill to the bone
+    EnableGameplayDamage: 0
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: ice
+  - PowerName: LightnigStormCloud
+    Enabled: 1
+    Keywords:
+    - lightning
+    - thunder
+    - storm
+    - lightning storm
+    - bolt
+    - surge
+    EffectPrefab: {fileID: 2707303645313174804, guid: 3ac741c58ee37a941b5408ec58f21743, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 0.6, g: 0.8, b: 1, a: 1}
+    UseColorOverride: 0
+    Element: storm
+    VisualDescription: Crackling lightning bolt
+    CreativeTriggers:
+    - cast lightning
+    - use lightning
+    - activate lightning
+    - trigger lightning
+    - cast thunder
+    - use thunder
+    - activate thunder
+    - trigger thunder
+    - cast storm
+    - use storm
+    - activate storm
+    - trigger storm
+    - cast lightning storm
+    - use lightning storm
+    - activate lightning storm
+    - trigger lightning storm
+    - cast bolt
+    - use bolt
+    - activate bolt
+    - trigger bolt
+    - cast surge
+    - use surge
+    - activate surge
+    - trigger surge
+    - strike down
+    - electrify
+    - bring the thunder
+    - shock
+    EnableGameplayDamage: 1
+    EnableHoming: 1
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: storm
+  - PowerName: ElectricalSparks
+    Enabled: 1
+    Keywords:
+    - electrical
+    - sparks
+    - arc
+    - zap
+    - shock
+    EffectPrefab: {fileID: 1000011396044746, guid: 96b2ec0239d11fa4b9792311efceb8ed, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 0.6, g: 0.8, b: 1, a: 1}
+    UseColorOverride: 0
+    Element: storm
+    VisualDescription: Electrical spark effect
+    CreativeTriggers:
+    - cast electrical
+    - use electrical
+    - activate electrical
+    - trigger electrical
+    - cast sparks
+    - use sparks
+    - activate sparks
+    - trigger sparks
+    - cast arc
+    - use arc
+    - activate arc
+    - trigger arc
+    - cast zap
+    - use zap
+    - activate zap
+    - trigger zap
+    - cast shock
+    - use shock
+    - activate shock
+    - trigger shock
+    - strike down
+    - electrify
+    - bring the thunder
+    - shock
+    EnableGameplayDamage: 1
+    EnableHoming: 1
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: storm
+  - PowerName: ElectricalSparksEffect
+    Enabled: 1
+    Keywords:
+    - electric sparks
+    - arcing
+    - static
+    EffectPrefab: {fileID: 4749980201479958301, guid: a4cbca814b838a5458720cd2f8d6a501, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 0.6, g: 0.8, b: 1, a: 1}
+    UseColorOverride: 0
+    Element: storm
+    VisualDescription: Electrical sparks
+    CreativeTriggers:
+    - cast electric sparks
+    - use electric sparks
+    - activate electric sparks
+    - trigger electric sparks
+    - cast arcing
+    - use arcing
+    - activate arcing
+    - trigger arcing
+    - cast static
+    - use static
+    - activate static
+    - trigger static
+    - strike down
+    - electrify
+    - bring the thunder
+    - shock
+    EnableGameplayDamage: 1
+    EnableHoming: 1
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: storm
+  - PowerName: WaterFall
+    Enabled: 1
+    Keywords:
+    - waterfall
+    - falls
+    - water
+    - cascade
+    EffectPrefab: {fileID: 6366868049136406802, guid: a04bb04bc7b97764a845f959b695addb, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 0.3, g: 0.6, b: 1, a: 1}
+    UseColorOverride: 0
+    Element: water
+    VisualDescription: Falling water effect
+    CreativeTriggers:
+    - cast waterfall
+    - use waterfall
+    - activate waterfall
+    - trigger waterfall
+    - cast falls
+    - use falls
+    - activate falls
+    - trigger falls
+    - cast water
+    - use water
+    - activate water
+    - trigger water
+    - cast cascade
+    - use cascade
+    - activate cascade
+    - trigger cascade
+    - drown
+    - flood
+    - submerge
+    - drench
+    EnableGameplayDamage: 0
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: water
+  - PowerName: BigSplash
+    Enabled: 1
+    Keywords:
+    - splash
+    - big splash
+    - water splash
+    - drown
+    EffectPrefab: {fileID: 1722726733478836, guid: c1c88308ebb5d2541a282905b854ee4c, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 0.3, g: 0.6, b: 1, a: 1}
+    UseColorOverride: 0
+    Element: water
+    VisualDescription: Large water splash
+    CreativeTriggers:
+    - cast splash
+    - use splash
+    - activate splash
+    - trigger splash
+    - cast big splash
+    - use big splash
+    - activate big splash
+    - trigger big splash
+    - cast water splash
+    - use water splash
+    - activate water splash
+    - trigger water splash
+    - cast drown
+    - use drown
+    - activate drown
+    - trigger drown
+    - drown
+    - flood
+    - submerge
+    - drench
+    EnableGameplayDamage: 0
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: water
+  - PowerName: WaterLeak
+    Enabled: 1
+    Keywords:
+    - water leak
+    - leak
+    - drip
+    - spray
+    EffectPrefab: {fileID: 1540040260711024, guid: a82a87e68ab906d4bbf876f687e2a155, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 0.3, g: 0.6, b: 1, a: 1}
+    UseColorOverride: 0
+    Element: water
+    VisualDescription: Water leaking effect
+    CreativeTriggers:
+    - cast water leak
+    - use water leak
+    - activate water leak
+    - trigger water leak
+    - cast leak
+    - use leak
+    - activate leak
+    - trigger leak
+    - cast drip
+    - use drip
+    - activate drip
+    - trigger drip
+    - cast spray
+    - use spray
+    - activate spray
+    - trigger spray
+    - drown
+    - flood
+    - submerge
+    - drench
+    EnableGameplayDamage: 0
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: water
+  - PowerName: Shower
+    Enabled: 1
+    Keywords:
+    - shower
+    - rain shower
+    - water shower
+    EffectPrefab: {fileID: 1907188104338014, guid: 3d19250bdd4e0df4c8da855e85a8d70b, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 0.3, g: 0.6, b: 1, a: 1}
+    UseColorOverride: 0
+    Element: water
+    VisualDescription: Water shower effect
+    CreativeTriggers:
+    - cast shower
+    - use shower
+    - activate shower
+    - trigger shower
+    - cast rain shower
+    - use rain shower
+    - activate rain shower
+    - trigger rain shower
+    - cast water shower
+    - use water shower
+    - activate water shower
+    - trigger water shower
+    - drown
+    - flood
+    - submerge
+    - drench
+    EnableGameplayDamage: 0
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: water
+  - PowerName: SmokeEffect
+    Enabled: 1
+    Keywords:
+    - smoke
+    - fog
+    - mist
+    - cloud
+    EffectPrefab: {fileID: 1273915125232972, guid: 73767e07adddc394d82b994801f89bbb, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    UseColorOverride: 0
+    Element: smoke
+    VisualDescription: Smoke cloud effect
+    CreativeTriggers:
+    - cast smoke
+    - use smoke
+    - activate smoke
+    - trigger smoke
+    - cast fog
+    - use fog
+    - activate fog
+    - trigger fog
+    - cast mist
+    - use mist
+    - activate mist
+    - trigger mist
+    - cast cloud
+    - use cloud
+    - activate cloud
+    - trigger cloud
+    EnableGameplayDamage: 0
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: smoke
+  - PowerName: Steam
+    Enabled: 1
+    Keywords:
+    - steam
+    - vapor
+    - hot air
+    EffectPrefab: {fileID: 1735024089641582, guid: 378b2c30ef426554495292cb902cb8f4, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 0.9, g: 0.9, b: 1, a: 1}
+    UseColorOverride: 0
+    Element: steam
+    VisualDescription: Steam vent effect
+    CreativeTriggers:
+    - cast steam
+    - use steam
+    - activate steam
+    - trigger steam
+    - cast vapor
+    - use vapor
+    - activate vapor
+    - trigger vapor
+    - cast hot air
+    - use hot air
+    - activate hot air
+    - trigger hot air
+    EnableGameplayDamage: 0
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: steam
+  - PowerName: RisingSteam
+    Enabled: 1
+    Keywords:
+    - rising steam
+    - hot steam
+    - geyser
+    EffectPrefab: {fileID: 1475368415682648, guid: efe021d4c307b5449b8121d46791cf95, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 0.9, g: 0.9, b: 1, a: 1}
+    UseColorOverride: 0
+    Element: steam
+    VisualDescription: Rising steam
+    CreativeTriggers:
+    - cast rising steam
+    - use rising steam
+    - activate rising steam
+    - trigger rising steam
+    - cast hot steam
+    - use hot steam
+    - activate hot steam
+    - trigger hot steam
+    - cast geyser
+    - use geyser
+    - activate geyser
+    - trigger geyser
+    EnableGameplayDamage: 0
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: steam
+  - PowerName: DustStorm
+    Enabled: 1
+    Keywords:
+    - dust storm
+    - sandstorm
+    - wind
+    - debris
+    EffectPrefab: {fileID: 1344314377593938, guid: 9e03786a9517b604d8e930182607a128, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 0.8, g: 0.9, b: 1, a: 1}
+    UseColorOverride: 0
+    Element: wind
+    VisualDescription: Dust storm effect
+    CreativeTriggers:
+    - cast dust storm
+    - use dust storm
+    - activate dust storm
+    - trigger dust storm
+    - cast sandstorm
+    - use sandstorm
+    - activate sandstorm
+    - trigger sandstorm
+    - cast wind
+    - use wind
+    - activate wind
+    - trigger wind
+    - cast debris
+    - use debris
+    - activate debris
+    - trigger debris
+    EnableGameplayDamage: 0
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: wind
+  - PowerName: GroundFog
+    Enabled: 1
+    Keywords:
+    - ground fog
+    - fog
+    - mist
+    - creep fog
+    EffectPrefab: {fileID: 1269120730060968, guid: 1a365141225c22e49a7bb976869b22a8, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 0.4, g: 1, b: 0.5, a: 1}
+    UseColorOverride: 0
+    Element: nature
+    VisualDescription: Low-lying fog
+    CreativeTriggers:
+    - cast ground fog
+    - use ground fog
+    - activate ground fog
+    - trigger ground fog
+    - cast fog
+    - use fog
+    - activate fog
+    - trigger fog
+    - cast mist
+    - use mist
+    - activate mist
+    - trigger mist
+    - cast creep fog
+    - use creep fog
+    - activate creep fog
+    - trigger creep fog
+    - grow
+    - blossom
+    - entangle
+    - overgrow
+    EnableGameplayDamage: 0
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: nature
+  - PowerName: PoisonGas
+    Enabled: 1
+    Keywords:
+    - poison gas
+    - toxic
+    - venom
+    - poison
+    - stink
+    EffectPrefab: {fileID: 1547757601392324, guid: 6f672a31584a6a748912a49c1dce2f0c, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 0.4, g: 0.8, b: 0.3, a: 1}
+    UseColorOverride: 0
+    Element: poison
+    VisualDescription: Poison gas cloud
+    CreativeTriggers:
+    - cast poison gas
+    - use poison gas
+    - activate poison gas
+    - trigger poison gas
+    - cast toxic
+    - use toxic
+    - activate toxic
+    - trigger toxic
+    - cast venom
+    - use venom
+    - activate venom
+    - trigger venom
+    - cast poison
+    - use poison
+    - activate poison
+    - trigger poison
+    - cast stink
+    - use stink
+    - activate stink
+    - trigger stink
+    EnableGameplayDamage: 0
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: poison
+  - PowerName: PressurisedSteam
+    Enabled: 1
+    Keywords:
+    - pressurized steam
+    - burst steam
+    - geyser
+    EffectPrefab: {fileID: 1533138625715334, guid: 61bb62591466c3649bdf4905822d72f6, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 0.9, g: 0.9, b: 1, a: 1}
+    UseColorOverride: 0
+    Element: steam
+    VisualDescription: Pressurized steam burst
+    CreativeTriggers:
+    - cast pressurized steam
+    - use pressurized steam
+    - activate pressurized steam
+    - trigger pressurized steam
+    - cast burst steam
+    - use burst steam
+    - activate burst steam
+    - trigger burst steam
+    - cast geyser
+    - use geyser
+    - activate geyser
+    - trigger geyser
+    EnableGameplayDamage: 0
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: steam
+  - PowerName: RocketTrail
+    Enabled: 1
+    Keywords:
+    - rocket trail
+    - exhaust
+    - smoke trail
+    - thrust
+    EffectPrefab: {fileID: 1722250247140862, guid: ef134ce1a2a98d94fb68c860d9c736c6, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 1, g: 1, b: 1, a: 1}
+    UseColorOverride: 0
+    Element: trail
+    VisualDescription: Rocket exhaust trail
+    CreativeTriggers:
+    - cast rocket trail
+    - use rocket trail
+    - activate rocket trail
+    - trigger rocket trail
+    - cast exhaust
+    - use exhaust
+    - activate exhaust
+    - trigger exhaust
+    - cast smoke trail
+    - use smoke trail
+    - activate smoke trail
+    - trigger smoke trail
+    - cast thrust
+    - use thrust
+    - activate thrust
+    - trigger thrust
+    EnableGameplayDamage: 0
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: trail
+  - PowerName: EarthShatter
+    Enabled: 1
+    Keywords:
+    - earth shatter
+    - ground break
+    - quake
+    - fissure
+    - crack
+    EffectPrefab: {fileID: 1314945738539566, guid: 32c9fd11a72259d45aa26ae41c34c5aa, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 0.6, g: 0.5, b: 0.3, a: 1}
+    UseColorOverride: 0
+    Element: earth
+    VisualDescription: Earth shattering effect
+    CreativeTriggers:
+    - cast earth shatter
+    - use earth shatter
+    - activate earth shatter
+    - trigger earth shatter
+    - cast ground break
+    - use ground break
+    - activate ground break
+    - trigger ground break
+    - cast quake
+    - use quake
+    - activate quake
+    - trigger quake
+    - cast fissure
+    - use fissure
+    - activate fissure
+    - trigger fissure
+    - cast crack
+    - use crack
+    - activate crack
+    - trigger crack
+    EnableGameplayDamage: 0
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: earth
+  - PowerName: SparksEffect
+    Enabled: 1
+    Keywords:
+    - sparks
+    - sparkle
+    - glitter
+    - shimmer
+    EffectPrefab: {fileID: 1000011945391522, guid: 78b71003e8b357d4bbf89c8b5e5e4f0e, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 1, g: 0.9, b: 0.4, a: 1}
+    UseColorOverride: 0
+    Element: spark
+    VisualDescription: Sparkle effect
+    CreativeTriggers:
+    - cast sparks
+    - use sparks
+    - activate sparks
+    - trigger sparks
+    - cast sparkle
+    - use sparkle
+    - activate sparkle
+    - trigger sparkle
+    - cast glitter
+    - use glitter
+    - activate glitter
+    - trigger glitter
+    - cast shimmer
+    - use shimmer
+    - activate shimmer
+    - trigger shimmer
+    EnableGameplayDamage: 0
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: spark
+  - PowerName: FireFlies
+    Enabled: 1
+    Keywords:
+    - fireflies
+    - fire flies
+    - nature lights
+    - glow
+    - fairy
+    EffectPrefab: {fileID: 1775406099119076, guid: 379785de5e39005469c875710d3cc5a7, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 0.4, g: 1, b: 0.5, a: 1}
+    UseColorOverride: 0
+    Element: nature
+    VisualDescription: Floating firefly lights
+    CreativeTriggers:
+    - cast fireflies
+    - use fireflies
+    - activate fireflies
+    - trigger fireflies
+    - cast fire flies
+    - use fire flies
+    - activate fire flies
+    - trigger fire flies
+    - cast nature lights
+    - use nature lights
+    - activate nature lights
+    - trigger nature lights
+    - cast glow
+    - use glow
+    - activate glow
+    - trigger glow
+    - cast fairy
+    - use fairy
+    - activate fairy
+    - trigger fairy
+    - grow
+    - blossom
+    - entangle
+    - overgrow
+    EnableGameplayDamage: 0
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: nature
+  - PowerName: DustMotesEffect
+    Enabled: 1
+    Keywords:
+    - dust motes
+    - particles
+    - floating dust
+    - airborne
+    EffectPrefab: {fileID: 1000012882023006, guid: 5ca4c580b3888314581688fa46fb142d, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 0.4, g: 1, b: 0.5, a: 1}
+    UseColorOverride: 0
+    Element: nature
+    VisualDescription: Floating dust particles
+    CreativeTriggers:
+    - cast dust motes
+    - use dust motes
+    - activate dust motes
+    - trigger dust motes
+    - cast particles
+    - use particles
+    - activate particles
+    - trigger particles
+    - cast floating dust
+    - use floating dust
+    - activate floating dust
+    - trigger floating dust
+    - cast airborne
+    - use airborne
+    - activate airborne
+    - trigger airborne
+    - grow
+    - blossom
+    - entangle
+    - overgrow
+    EnableGameplayDamage: 0
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: nature
+  - PowerName: SandSwirlsEffect
+    Enabled: 1
+    Keywords:
+    - sand swirl
+    - sand
+    - debris swirl
+    EffectPrefab: {fileID: 1000010715882420, guid: 14d81e2c407975245973a11cdfbeb902, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 0.6, g: 0.5, b: 0.3, a: 1}
+    UseColorOverride: 0
+    Element: earth
+    VisualDescription: Swirling sand effect
+    CreativeTriggers:
+    - cast sand swirl
+    - use sand swirl
+    - activate sand swirl
+    - trigger sand swirl
+    - cast sand
+    - use sand
+    - activate sand
+    - trigger sand
+    - cast debris swirl
+    - use debris swirl
+    - activate debris swirl
+    - trigger debris swirl
+    EnableGameplayDamage: 0
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: earth
+  - PowerName: Candles
+    Enabled: 1
+    Keywords:
+    - candles
+    - candle
+    - flame
+    - lit
+    EffectPrefab: {fileID: 1529859801056418, guid: 86f883933a872f542994368197c83b5b, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 1, g: 0.5, b: 0, a: 1}
+    UseColorOverride: 0
+    Element: fire
+    VisualDescription: Candle flame effect
+    CreativeTriggers:
+    - cast candles
+    - use candles
+    - activate candles
+    - trigger candles
+    - cast candle
+    - use candle
+    - activate candle
+    - trigger candle
+    - cast flame
+    - use flame
+    - activate flame
+    - trigger flame
+    - cast lit
+    - use lit
+    - activate lit
+    - trigger lit
+    - ignite
+    - set ablaze
+    - incinerate
+    - engulf in flames
+    EnableGameplayDamage: 1
+    EnableHoming: 1
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 10
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: fire
+  - PowerName: HeatDistortion
+    Enabled: 1
+    Keywords:
+    - heat distortion
+    - heat wave
+    - shimmer
+    - refraction
+    EffectPrefab: {fileID: 2653028107198340706, guid: e44ac47d1618cc24d9df8131be9ca57d, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 1, g: 0.5, b: 0, a: 1}
+    UseColorOverride: 0
+    Element: fire
+    VisualDescription: Heat distortion effect
+    CreativeTriggers:
+    - cast heat distortion
+    - use heat distortion
+    - activate heat distortion
+    - trigger heat distortion
+    - cast heat wave
+    - use heat wave
+    - activate heat wave
+    - trigger heat wave
+    - cast shimmer
+    - use shimmer
+    - activate shimmer
+    - trigger shimmer
+    - cast refraction
+    - use refraction
+    - activate refraction
+    - trigger refraction
+    - ignite
+    - set ablaze
+    - incinerate
+    - engulf in flames
+    EnableGameplayDamage: 1
+    EnableHoming: 1
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 10
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: fire
+  - PowerName: Dissolve
+    Enabled: 1
+    Keywords:
+    - dissolve
+    - disintegrate
+    - fade
+    - vanish
+    EffectPrefab: {fileID: 8594448520171598934, guid: afadc6fdacd43754a903476d963a596b, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 0.8, g: 0.4, b: 1, a: 1}
+    UseColorOverride: 0
+    Element: magic
+    VisualDescription: Dissolve/disintegrate effect
+    CreativeTriggers:
+    - cast dissolve
+    - use dissolve
+    - activate dissolve
+    - trigger dissolve
+    - cast disintegrate
+    - use disintegrate
+    - activate disintegrate
+    - trigger disintegrate
+    - cast fade
+    - use fade
+    - activate fade
+    - trigger fade
+    - cast vanish
+    - use vanish
+    - activate vanish
+    - trigger vanish
+    - cast spell
+    - weave magic
+    - enchant
+    - conjure
+    EnableGameplayDamage: 0
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: magic
+  - PowerName: EllenDissolve
+    Enabled: 1
+    Keywords:
+    - dissolve
+    - hero dissolve
+    - fade away
+    EffectPrefab: {fileID: 8000101993942077523, guid: 7d848c71239ddd742bc187ad72f3a319, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 0.8, g: 0.4, b: 1, a: 1}
+    UseColorOverride: 0
+    Element: magic
+    VisualDescription: Character dissolve effect
+    CreativeTriggers:
+    - cast dissolve
+    - use dissolve
+    - activate dissolve
+    - trigger dissolve
+    - cast hero dissolve
+    - use hero dissolve
+    - activate hero dissolve
+    - trigger hero dissolve
+    - cast fade away
+    - use fade away
+    - activate fade away
+    - trigger fade away
+    - cast spell
+    - weave magic
+    - enchant
+    - conjure
+    EnableGameplayDamage: 0
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: magic
+  - PowerName: Respawn
+    Enabled: 1
+    Keywords:
+    - respawn
+    - revive
+    - appear
+    - materialize
+    EffectPrefab: {fileID: 3281665843732006339, guid: bd2fe1eb2e3ba454088c57397144535f, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 0.8, g: 0.4, b: 1, a: 1}
+    UseColorOverride: 0
+    Element: magic
+    VisualDescription: Respawn/materialize effect
+    CreativeTriggers:
+    - cast respawn
+    - use respawn
+    - activate respawn
+    - trigger respawn
+    - cast revive
+    - use revive
+    - activate revive
+    - trigger revive
+    - cast appear
+    - use appear
+    - activate appear
+    - trigger appear
+    - cast materialize
+    - use materialize
+    - activate materialize
+    - trigger materialize
+    - cast spell
+    - weave magic
+    - enchant
+    - conjure
+    EnableGameplayDamage: 0
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: magic
+  - PowerName: EllenRespawn
+    Enabled: 1
+    Keywords:
+    - hero respawn
+    - revive
+    - spawn
+    EffectPrefab: {fileID: 4708830163711251094, guid: c1cd05c496063794c9abd1f0b0354ce6, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 0.8, g: 0.4, b: 1, a: 1}
+    UseColorOverride: 0
+    Element: magic
+    VisualDescription: Hero respawn effect
+    CreativeTriggers:
+    - cast hero respawn
+    - use hero respawn
+    - activate hero respawn
+    - trigger hero respawn
+    - cast revive
+    - use revive
+    - activate revive
+    - trigger revive
+    - cast spawn
+    - use spawn
+    - activate spawn
+    - trigger spawn
+    - cast spell
+    - weave magic
+    - enchant
+    - conjure
+    EnableGameplayDamage: 0
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: magic
+  - PowerName: ParticlesLight
+    Enabled: 1
+    Keywords:
+    - light particles
+    - glow
+    - radiance
+    - shine
+    EffectPrefab: {fileID: 1000011210275196, guid: fa35d75604d172d48b7a6b62a07c7dbf, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 1, g: 1, b: 0.8, a: 1}
+    UseColorOverride: 0
+    Element: light
+    VisualDescription: Light particle effect
+    CreativeTriggers:
+    - cast light particles
+    - use light particles
+    - activate light particles
+    - trigger light particles
+    - cast glow
+    - use glow
+    - activate glow
+    - trigger glow
+    - cast radiance
+    - use radiance
+    - activate radiance
+    - trigger radiance
+    - cast shine
+    - use shine
+    - activate shine
+    - trigger shine
+    EnableGameplayDamage: 0
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: light
+  - PowerName: DissolveSolidHorizontal
+    Enabled: 1
+    Keywords:
+    - horizontal dissolve
+    - slice
+    EffectPrefab: {fileID: 3400239552853432727, guid: 29d22b3d9f25d9c498b05e5b9194c5ae, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 0.8, g: 0.4, b: 1, a: 1}
+    UseColorOverride: 0
+    Element: magic
+    VisualDescription: Horizontal dissolve
+    CreativeTriggers:
+    - cast horizontal dissolve
+    - use horizontal dissolve
+    - activate horizontal dissolve
+    - trigger horizontal dissolve
+    - cast slice
+    - use slice
+    - activate slice
+    - trigger slice
+    - cast spell
+    - weave magic
+    - enchant
+    - conjure
+    EnableGameplayDamage: 0
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: magic
+  - PowerName: GoopSprayEffect
+    Enabled: 1
+    Keywords:
+    - goo spray
+    - slime
+    - goo
+    - sludge
+    - spray
+    EffectPrefab: {fileID: 1000012909287652, guid: abb9f519b142e304d9c45b56afa768bc, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 0.3, g: 0.8, b: 0.2, a: 1}
+    UseColorOverride: 0
+    Element: goo
+    VisualDescription: Goo/slime spray
+    CreativeTriggers:
+    - cast goo spray
+    - use goo spray
+    - activate goo spray
+    - trigger goo spray
+    - cast slime
+    - use slime
+    - activate slime
+    - trigger slime
+    - cast goo
+    - use goo
+    - activate goo
+    - trigger goo
+    - cast sludge
+    - use sludge
+    - activate sludge
+    - trigger sludge
+    - cast spray
+    - use spray
+    - activate spray
+    - trigger spray
+    EnableGameplayDamage: 0
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: goo
+  - PowerName: GoopStreamEffect
+    Enabled: 1
+    Keywords:
+    - goo stream
+    - slime flow
+    - sludge stream
+    EffectPrefab: {fileID: 1000010675638318, guid: a3768c8a9d1b90d4bb0eb0e4bdbe730c, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 0.3, g: 0.8, b: 0.2, a: 1}
+    UseColorOverride: 0
+    Element: goo
+    VisualDescription: Goo flowing stream
+    CreativeTriggers:
+    - cast goo stream
+    - use goo stream
+    - activate goo stream
+    - trigger goo stream
+    - cast slime flow
+    - use slime flow
+    - activate slime flow
+    - trigger slime flow
+    - cast sludge stream
+    - use sludge stream
+    - activate sludge stream
+    - trigger sludge stream
+    EnableGameplayDamage: 0
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: goo
+  - PowerName: GoopSpray
+    Enabled: 1
+    Keywords:
+    - goo
+    - slime
+    - sludge
+    - ichor
+    EffectPrefab: {fileID: 1240250018707908, guid: 5656e7ea1f1a75d4c895547ec2b824b3, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 0.3, g: 0.8, b: 0.2, a: 1}
+    UseColorOverride: 0
+    Element: goo
+    VisualDescription: Goo effect
+    CreativeTriggers:
+    - cast goo
+    - use goo
+    - activate goo
+    - trigger goo
+    - cast slime
+    - use slime
+    - activate slime
+    - trigger slime
+    - cast sludge
+    - use sludge
+    - activate sludge
+    - trigger sludge
+    - cast ichor
+    - use ichor
+    - activate ichor
+    - trigger ichor
+    EnableGameplayDamage: 0
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: goo
+  - PowerName: MuzzleFlash
+    Enabled: 1
+    Keywords:
+    - muzzle flash
+    - gunfire
+    - shot
+    - bang
+    EffectPrefab: {fileID: 1743301284569550, guid: ad2ab49d0a2a17148bd51c93d977bdbc, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 1, g: 0.5, b: 0, a: 1}
+    UseColorOverride: 0
+    Element: fire
+    VisualDescription: Weapon muzzle flash
+    CreativeTriggers:
+    - cast muzzle flash
+    - use muzzle flash
+    - activate muzzle flash
+    - trigger muzzle flash
+    - cast gunfire
+    - use gunfire
+    - activate gunfire
+    - trigger gunfire
+    - cast shot
+    - use shot
+    - activate shot
+    - trigger shot
+    - cast bang
+    - use bang
+    - activate bang
+    - trigger bang
+    - ignite
+    - set ablaze
+    - incinerate
+    - engulf in flames
+    EnableGameplayDamage: 1
+    EnableHoming: 1
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 10
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: fire
+  - PowerName: MetalImpacts
+    Enabled: 1
+    Keywords:
+    - metal impact
+    - clang
+    - spark metal
+    EffectPrefab: {fileID: 1892351807075712, guid: 44be68b4fc4366142a9cd1ae1f761ea4, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 0.7, g: 0.6, b: 0.5, a: 1}
+    UseColorOverride: 0
+    Element: impact
+    VisualDescription: Metal hit effect
+    CreativeTriggers:
+    - cast metal impact
+    - use metal impact
+    - activate metal impact
+    - trigger metal impact
+    - cast clang
+    - use clang
+    - activate clang
+    - trigger clang
+    - cast spark metal
+    - use spark metal
+    - activate spark metal
+    - trigger spark metal
+    EnableGameplayDamage: 0
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: impact
+  - PowerName: WoodImpacts
+    Enabled: 1
+    Keywords:
+    - wood impact
+    - thud
+    - crack wood
+    EffectPrefab: {fileID: 1031560401822814, guid: 3c0b5f221ea995442b9d11dc526de1c0, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 0.7, g: 0.6, b: 0.5, a: 1}
+    UseColorOverride: 0
+    Element: impact
+    VisualDescription: Wood hit effect
+    CreativeTriggers:
+    - cast wood impact
+    - use wood impact
+    - activate wood impact
+    - trigger wood impact
+    - cast thud
+    - use thud
+    - activate thud
+    - trigger thud
+    - cast crack wood
+    - use crack wood
+    - activate crack wood
+    - trigger crack wood
+    EnableGameplayDamage: 0
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: impact
+  - PowerName: StoneImpacts
+    Enabled: 1
+    Keywords:
+    - stone impact
+    - crack
+    - gravel
+    EffectPrefab: {fileID: 1341869769842038, guid: 8b7a1ffda5bb7474b8fae646c45ce7b4, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 0.7, g: 0.6, b: 0.5, a: 1}
+    UseColorOverride: 0
+    Element: impact
+    VisualDescription: Stone hit effect
+    CreativeTriggers:
+    - cast stone impact
+    - use stone impact
+    - activate stone impact
+    - trigger stone impact
+    - cast crack
+    - use crack
+    - activate crack
+    - trigger crack
+    - cast gravel
+    - use gravel
+    - activate gravel
+    - trigger gravel
+    EnableGameplayDamage: 0
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: impact
+  - PowerName: SandImpacts
+    Enabled: 1
+    Keywords:
+    - sand impact
+    - dust hit
+    - sandy
+    EffectPrefab: {fileID: 1312255355084822, guid: bca9020d2c9c915448fb5263a425faf4, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 0.7, g: 0.6, b: 0.5, a: 1}
+    UseColorOverride: 0
+    Element: impact
+    VisualDescription: Sand hit effect
+    CreativeTriggers:
+    - cast sand impact
+    - use sand impact
+    - activate sand impact
+    - trigger sand impact
+    - cast dust hit
+    - use dust hit
+    - activate dust hit
+    - trigger dust hit
+    - cast sandy
+    - use sandy
+    - activate sandy
+    - trigger sandy
+    EnableGameplayDamage: 0
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: impact
+  - PowerName: FleshImpacts
+    Enabled: 1
+    Keywords:
+    - flesh impact
+    - blood
+    - hit
+    EffectPrefab: {fileID: 1096893136476370, guid: 24b82347924701148a13c746edfb6b22, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 0.7, g: 0.6, b: 0.5, a: 1}
+    UseColorOverride: 0
+    Element: impact
+    VisualDescription: Flesh hit effect
+    CreativeTriggers:
+    - cast flesh impact
+    - use flesh impact
+    - activate flesh impact
+    - trigger flesh impact
+    - cast blood
+    - use blood
+    - activate blood
+    - trigger blood
+    - cast hit
+    - use hit
+    - activate hit
+    - trigger hit
+    EnableGameplayDamage: 0
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: impact
+  - PowerName: RainEffect
+    Enabled: 1
+    Keywords:
+    - rain
+    - rainfall
+    - drizzle
+    - storm rain
+    EffectPrefab: {fileID: 1000010302070858, guid: d0c0b49979d372942ae5a964d9364111, type: 3}
+    DurationSeconds: 4
+    Scale: 1
+    SpawnOffset: {x: 0, y: 0.5, z: 0}
+    SpawnInFrontOfNpc: 1
+    ForwardDistance: 2
+    ColorOverride: {r: 0.3, g: 0.6, b: 1, a: 1}
+    UseColorOverride: 0
+    Element: water
+    VisualDescription: Rain effect
+    CreativeTriggers:
+    - cast rain
+    - use rain
+    - activate rain
+    - trigger rain
+    - cast rainfall
+    - use rainfall
+    - activate rainfall
+    - trigger rainfall
+    - cast drizzle
+    - use drizzle
+    - activate drizzle
+    - trigger drizzle
+    - cast storm rain
+    - use storm rain
+    - activate storm rain
+    - trigger storm rain
+    - drown
+    - flood
+    - submerge
+    - drench
+    EnableGameplayDamage: 0
+    EnableHoming: 0
+    ProjectileSpeed: 10
+    HomingTurnRateDegrees: 200
+    DamageAmount: 0
+    DamageRadius: 1
+    AffectPlayerOnly: 1
+    DamageType: water
+  m_EnableDynamicEffectParameters: 1
+  m_DynamicEffectMinMultiplier: 0.6
+  m_DynamicEffectMaxMultiplier: 10

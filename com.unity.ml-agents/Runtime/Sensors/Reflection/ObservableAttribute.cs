@@ -133,7 +133,7 @@ namespace Unity.MLAgents.Sensors.Reflection
         internal static List<ISensor> CreateObservableSensors(object o, bool excludeInherited)
         {
             var sensorsOut = new List<ISensor>();
-            foreach (var (field, attr) in GetObservableFields(o, excludeInherited))
+            foreach (var(field, attr) in GetObservableFields(o, excludeInherited))
             {
                 var sensor = CreateReflectionSensor(o, field, null, attr);
                 if (sensor != null)
@@ -142,7 +142,7 @@ namespace Unity.MLAgents.Sensors.Reflection
                 }
             }
 
-            foreach (var (prop, attr) in GetObservableProperties(o, excludeInherited))
+            foreach (var(prop, attr) in GetObservableProperties(o, excludeInherited))
             {
                 if (!prop.CanRead)
                 {
@@ -219,7 +219,7 @@ namespace Unity.MLAgents.Sensors.Reflection
             }
             else
             {
-                var (_, sensorType) = s_TypeToSensorInfo[memberType];
+                var(_, sensorType) = s_TypeToSensorInfo[memberType];
                 sensor = (ISensor)Activator.CreateInstance(sensorType, reflectionSensorInfo);
             }
 
@@ -243,11 +243,11 @@ namespace Unity.MLAgents.Sensors.Reflection
         internal static int GetTotalObservationSize(object o, bool excludeInherited, List<string> errorsOut)
         {
             int sizeOut = 0;
-            foreach (var (field, attr) in GetObservableFields(o, excludeInherited))
+            foreach (var(field, attr) in GetObservableFields(o, excludeInherited))
             {
                 if (s_TypeToSensorInfo.ContainsKey(field.FieldType))
                 {
-                    var (obsSize, _) = s_TypeToSensorInfo[field.FieldType];
+                    var(obsSize, _) = s_TypeToSensorInfo[field.FieldType];
                     sizeOut += obsSize * attr.m_NumStackedObservations;
                 }
                 else if (field.FieldType.IsEnum)
@@ -260,7 +260,7 @@ namespace Unity.MLAgents.Sensors.Reflection
                 }
             }
 
-            foreach (var (prop, attr) in GetObservableProperties(o, excludeInherited))
+            foreach (var(prop, attr) in GetObservableProperties(o, excludeInherited))
             {
                 if (!prop.CanRead)
                 {
@@ -268,7 +268,7 @@ namespace Unity.MLAgents.Sensors.Reflection
                 }
                 else if (s_TypeToSensorInfo.ContainsKey(prop.PropertyType))
                 {
-                    var (obsSize, _) = s_TypeToSensorInfo[prop.PropertyType];
+                    var(obsSize, _) = s_TypeToSensorInfo[prop.PropertyType];
                     sizeOut += obsSize * attr.m_NumStackedObservations;
                 }
                 else if (prop.PropertyType.IsEnum)

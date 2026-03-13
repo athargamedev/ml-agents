@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37b197c3f6ce41a2b77f0f75f1c692f4, type: 3}
+  m_Name: ModernHudLayoutProfile
+  m_EditorClassIdentifier: Network_Game::Network_Game.UI.ModernHudLayoutProfile
+  OuterMarginPercent: 0.0125
+  DockGapPercent: 0.008
+  TopBarTopPercent: 0.008
+  TopBarReservedHeightPercent: 0.18
+  TopBarMinHeightPx: 118
+  LeftDockWidthPercent: 0.28
+  RightDockWidthPercent: 0.36
+  MinDockWidthPx: 260
+  BottomBarHeightPercent: 0.24
+  FeedbackSummaryRowPercent: 0.34
+  FeedbackActionsRowPercent: 0.31
+  FeedbackNotesRowPercent: 0.35
+  AccentColorProperty: --hud-accent-color
+  AccentColor: {r: 0.2, g: 0.6, b: 1, a: 1}
+  BackgroundOpacityProperty: --hud-background-opacity
+  BackgroundOpacity: 0.85
+  FontScaleProperty: --hud-font-scale
+  FontScale: 1
+  BorderRadiusProperty: --hud-border-radius
+  BorderRadius: 10
+  TransitionDurationProperty: --hud-transition-duration
+  TransitionDuration: 0.2

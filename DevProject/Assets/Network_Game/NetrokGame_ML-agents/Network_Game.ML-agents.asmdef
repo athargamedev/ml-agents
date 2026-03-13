@@ -1,0 +1,26 @@
+{
+    "name": "Network_Game.ML-agents",
+    "rootNamespace": "Network_Game",
+    "references": [
+        "Network_Game",
+        "Unity.ML-Agents",
+        "Unity.Netcode.Runtime",
+        "Unity.Networking.Transport",
+        "Unity.Cinemachine",
+        "Unity.AI.Navigation",
+        "Unity.InputSystem",
+        "Unity.TextMeshPro",
+        "UnityEngine.UI",
+        "Unity.Addressables",
+        "Unity.ResourceManager"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

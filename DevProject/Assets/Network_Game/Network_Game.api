@@ -1,0 +1,1495 @@
+// This file is generated. Do not modify by hand.
+// XML documentation file not found. To check if public methods have XML comments,
+// make sure the XML doc file is present and located next to the scraped dll
+public static class FaceMapperEditorTool
+{
+    [UnityEditor.MenuItem(@"Tools/Face Mapper/1. Sync Generated Face Materials")] public static void BakeFaceMaterials();
+    [UnityEditor.MenuItem(@"Tools/Face Mapper/3. Clear Generated Face Assets")] public static void ClearBaked();
+    [UnityEditor.MenuItem(@"Tools/Face Mapper/1b. Import Blender-Baked Atlases")] public static void ImportBlenderBakedAtlases();
+    [UnityEditor.MenuItem(@"Tools/Face Mapper/4. Preview First Face In Open Scene")] public static void PreviewFirstFaceInOpenScene();
+    [UnityEditor.MenuItem(@"Tools/Face Mapper/5. Restore Base Heads In Open Scene")] public static void RestoreBaseHeadsInOpenScene();
+    [UnityEditor.MenuItem(@"Tools/Face Mapper/2. Auto-Setup Characters")] public static void SetupAllCharacters();
+    [UnityEditor.MenuItem(@"Tools/Face Mapper/Deprecated/Legacy Unity Bake")] public static void ShowLegacyBakeRemoved();
+}
+
+public sealed class FaceMapperImportPostprocessor : UnityEditor.AssetPostprocessor
+{
+    public FaceMapperImportPostprocessor() {}
+}
+
+[UnityEngine.CreateAssetMenu] public class RampAsset : UnityEngine.ScriptableObject
+{
+    public UnityEngine.Gradient gradient = new();
+    public bool overwriteExisting = true;
+    public int size = 16;
+    public bool up;
+    public RampAsset() {}
+}
+
+public class SpawnEffect : UnityEngine.MonoBehaviour
+{
+    public UnityEngine.AnimationCurve fadeIn;
+    public float pause = 1f;
+    public float spawnEffectTime = 2f;
+    public SpawnEffect() {}
+}
+
+namespace Network_Game
+{
+    public class PerformanceCullingSetup : UnityEngine.MonoBehaviour
+    {
+        public PerformanceCullingSetup() {}
+    }
+}
+
+namespace Network_Game.Auth
+{
+    [UnityEngine.DefaultExecutionOrder(-220)] public class LocalPlayerAuthService : UnityEngine.MonoBehaviour
+    {
+        public static event System.Action<LocalPlayerAuthService.LocalPlayerRecord> OnPlayerLoggedIn;
+        public static event System.Action OnPlayerLoggedOut;
+        public LocalPlayerAuthService.LocalPlayerRecord CurrentPlayer { get; }
+        public bool HasCurrentPlayer { get; }
+        public static LocalPlayerAuthService Instance { get; }
+        public string LastLoginNameId { get; }
+        public LocalPlayerAuthService() {}
+        public bool AddInventoryTag(string tag);
+        public void AttachLocalPlayer(UnityEngine.GameObject playerObject);
+        public bool ClearInventoryTags();
+        public bool ClearQuestFlag(string flag);
+        public static LocalPlayerAuthService EnsureInstance();
+        public bool EnsureLoggedIn();
+        public bool EnsurePromptContextInitialized();
+        public System.Collections.Generic.Dictionary<string, string> GetAllCustomization();
+        public string GetCustomizationJson();
+        public int GetReputation(string npcId);
+        public bool HasQuestFlag(string flag);
+        public bool Login(string nameId);
+        public void Logout();
+        public bool RemoveInventoryTag(string tag);
+        public bool SetCurrentPlayerMirrorLora(string loraPath, float weight = -1f, string profileVersion = default(string), string baseModelId = default(string));
+        public bool SetCustomizationJson(string json);
+        public bool SetCustomizationValue(string key, string value);
+        public bool SetLastAction(string action);
+        public bool SetPlayerClass(string className);
+        public bool SetQuestFlag(string flag);
+        public bool SetReputation(string npcId, int value);
+        public bool TryGetCustomizationValue(string key, out string value);
+        public struct LocalPlayerRecord
+        {
+            public string BaseModelId;
+            public string MirrorLoraPath;
+            public float MirrorLoraWeight;
+            public string NameId;
+            public long PlayerId;
+            public string ProfileVersion;
+        }
+    }
+}
+
+namespace Network_Game.Behavior
+{
+    [UnityEngine.DefaultExecutionOrder(-220)] public class AuthBootstrap : UnityEngine.MonoBehaviour
+    {
+        [UnityEngine.SerializeField] public bool m_BlockNetworkStartUntilAuthenticated = true;
+        [UnityEngine.SerializeField] public bool m_RequireExplicitLoginEachSession = true;
+        [UnityEngine.Header(@"Configuration")] [UnityEngine.Min(0.5f)] [UnityEngine.SerializeField] public float m_TimeoutSeconds = 15f;
+        public bool IsAuthenticated { get; }
+        public AuthBootstrap() {}
+        public void AttachAuthToPlayer(UnityEngine.GameObject player);
+    }
+
+    [UnityEngine.DefaultExecutionOrder(0)] public class BehaviorSceneBootstrap : UnityEngine.MonoBehaviour
+    {
+        [UnityEngine.SerializeField] public bool m_EnableDebugAssistantOnClients;
+        public BehaviorSceneBootstrap() {}
+    }
+
+    [UnityEngine.DefaultExecutionOrder(-100)] public class NetworkBootstrap : UnityEngine.MonoBehaviour
+    {
+        [UnityEngine.SerializeField] public bool m_AvoidHostStartWhenPortIsInUse = true;
+        [UnityEngine.SerializeField] public string m_ClientModeTag = @"Client";
+        [UnityEngine.Header(@"Configuration")] [UnityEngine.SerializeField] public bool m_ForceClientMode;
+        [UnityEngine.Range(1f, 32f)] [UnityEngine.SerializeField] public int m_HostFallbackPortAttempts = 8;
+        [UnityEngine.Min(1024f)] [UnityEngine.SerializeField] public int m_HostFallbackPortStart = 7778;
+        [UnityEngine.Header(@"Spawn Point")] [UnityEngine.SerializeField] public UnityEngine.Transform m_PlayerSpawnPoint;
+        [UnityEngine.SerializeField] public string m_PlayerTag = @"Player";
+        [UnityEngine.SerializeField] public bool m_TryHostPortFallbackOnStartFailure = true;
+        public bool IsClientMode { get; }
+        public Unity.Netcode.NetworkManager NetworkManager { get; }
+        public NetworkBootstrap() {}
+    }
+
+    public class NetworkBootstrapEvents : UnityEngine.MonoBehaviour
+    {
+        public event System.Action OnAuthGatePassed;
+        public event System.Action<bool> OnClientModeDetermined;
+        public event System.Action OnClientStarted;
+        public event System.Action OnHostStarted;
+        public event System.Action<UnityEngine.GameObject> OnLocalPlayerReady;
+        public event System.Action<UnityEngine.GameObject> OnLocalPlayerSpawned;
+        public event System.Action<string> OnNetworkError;
+        public event System.Action<Unity.Netcode.NetworkManager> OnNetworkReady;
+        public static NetworkBootstrapEvents Instance { get; }
+        public NetworkBootstrapEvents() {}
+        public void PublishAuthGatePassed();
+        public void PublishClientModeDetermined(bool isClient);
+        public void PublishClientStarted();
+        public void PublishHostStarted();
+        public void PublishLocalPlayerReady(UnityEngine.GameObject player);
+        public void PublishLocalPlayerSpawned(UnityEngine.GameObject player);
+        public void PublishNetworkError(string error);
+        public void PublishNetworkReady(Unity.Netcode.NetworkManager manager);
+    }
+
+    [UnityEngine.DisallowMultipleComponent] public sealed class NPCAgentBootstrap : UnityEngine.MonoBehaviour
+    {
+        public NPCAgentBootstrap() {}
+        public System.Collections.Generic.List<UnityEngine.GameObject> CollectAndPrioritizeNpcs(UnityEngine.GameObject primaryNpc = default(UnityEngine.GameObject));
+        public bool ConfigureDialogueUiParticipants(UnityEngine.GameObject player, UnityEngine.GameObject npcObject);
+        public void DisableLlmAgent(UnityEngine.GameObject target);
+    }
+
+    [UnityEngine.DefaultExecutionOrder(-50)] public class PlayerBootstrap : UnityEngine.MonoBehaviour
+    {
+        [UnityEngine.SerializeField] public bool m_AlignLocalPlayerToSpawnPoint = true;
+        [UnityEngine.SerializeField] public UnityEngine.Transform m_PlayerSpawnPoint;
+        [UnityEngine.Header(@"Configuration")] [UnityEngine.SerializeField] public string m_PlayerTag = @"Player";
+        public PlayerBootstrap() {}
+    }
+
+    [UnityEngine.DefaultExecutionOrder(100)] public class RuntimeBinder : UnityEngine.MonoBehaviour
+    {
+        [UnityEngine.Header(@"Diagnostics")] [UnityEngine.SerializeField] public bool m_AutoCreateLlmDebugAssistant;
+        [UnityEngine.SerializeField] public bool m_EnableDebugAssistantOnClients;
+        [UnityEngine.Header(@"NPC Configuration")] [UnityEngine.SerializeField] public UnityEngine.GameObject m_PrimaryNpc;
+        public RuntimeBinder() {}
+        public void RebindCamera();
+    }
+
+    public class SceneCameraManager : UnityEngine.MonoBehaviour
+    {
+        public SceneCameraManager() {}
+        public bool ConfigureCamera(UnityEngine.GameObject player);
+        [UnityEngine.ContextMenu(@"Log Camera Binding Snapshot")] public void LogCameraBindingSnapshot();
+        public void StartMonitoring(Unity.Netcode.NetworkManager manager);
+        public void StopMonitoring();
+    }
+}
+
+namespace Network_Game.Combat
+{
+    [UnityEngine.DisallowMultipleComponent] public class CombatHealth : Unity.Netcode.NetworkBehaviour
+    {
+        public static event System.Action<CombatHealth.DamageEvent> OnDamageApplied;
+        public static event System.Action<CombatHealth.LifeStateEvent> OnDied;
+        public static event System.Action<CombatHealth.HealthChangedEvent> OnHealthChanged;
+        public static event System.Action<CombatHealth.LifeStateEvent> OnRespawned;
+        public Unity.Netcode.NetworkObject CachedNetworkObject { get; }
+        public float CurrentHealth { get; }
+        public bool IsDead { get; }
+        public float MaxHealth { get; }
+        public float NormalizedHealth { get; }
+        public CombatHealth() {}
+        protected override string __getTypeName();
+        protected override void __initializeRpcs();
+        protected override void __initializeVariables();
+        public void ApplyDamage(float amount, ulong sourceNetworkObjectId = 0, string damageType = @"effect");
+        public override void OnDestroy();
+        public override void OnNetworkDespawn();
+        public override void OnNetworkSpawn();
+        public struct DamageEvent
+        {
+            public float CurrentHealth;
+            public float DamageAmount;
+            public string DamageType;
+            public float PreviousHealth;
+            public ulong SourceNetworkObjectId;
+            public CombatHealth Target;
+        }
+        public struct HealthChangedEvent
+        {
+            public float CurrentHealth;
+            public float MaxHealth;
+            public float PreviousHealth;
+            public CombatHealth Target;
+        }
+        public struct LifeStateEvent
+        {
+            public float CurrentHealth;
+            public float MaxHealth;
+            public CombatHealth Target;
+        }
+    }
+
+    public static class CombatHealthRegistry
+    {
+        public static event System.Action<CombatHealth> OnRegistered;
+        public static event System.Action<CombatHealth> OnUnregistered;
+        public static System.Collections.Generic.IReadOnlyList<CombatHealth> Items { get; }
+        public static void CopyTo(System.Collections.Generic.List<CombatHealth> target);
+        public static void Register(CombatHealth health);
+        public static void Unregister(CombatHealth health);
+    }
+
+    [UnityEngine.DefaultExecutionOrder(550)] [UnityEngine.DisallowMultipleComponent] public sealed class CombatRuntimeOverlay : UnityEngine.MonoBehaviour
+    {
+        public CombatRuntimeOverlay() {}
+    }
+}
+
+namespace Network_Game.Core
+{
+    [UnityEngine.RequireComponent(typeof(Unity.Netcode.NetworkManager))] [UnityEngine.RequireComponent(typeof(Unity.Netcode.Transports.UTP.UnityTransport))] public class WebGLTransportAdapter : UnityEngine.MonoBehaviour
+    {
+        public WebGLTransportAdapter() {}
+    }
+}
+
+namespace Network_Game.Diagnostics
+{
+    public class DebugWatchdog : UnityEngine.MonoBehaviour
+    {
+        public DebugWatchdog() {}
+    }
+
+    public class LlmDebugAssistant : UnityEngine.MonoBehaviour
+    {
+        public LlmDebugAssistant() {}
+        public LlmDebugAssistant.WatchSnapshot GetWatchSnapshot();
+        public struct WatchSnapshot
+        {
+            public int AnalysisCount;
+            public int BudgetLeft;
+            public bool IsAnalyzing;
+            public string LastSuggestion;
+            public int PendingQueueDepth;
+        }
+    }
+
+    public enum LogLevel
+    {
+        Debug = 0,
+        Info = 1,
+        Warning = 2,
+        Error = 3,
+    }
+
+    public static class NGLog
+    {
+        public static System.IDisposable BeginScope(string category, string operation, int requestId = 0, UnityEngine.Object context = default(UnityEngine.Object), LogLevel startLevel = LogLevel.Debug, LogLevel endLevel = LogLevel.Debug, [System.Runtime.CompilerServices.TupleElementNames(new[] {@"key", @"value"})] params System.ValueTuple<string, object>[] data);
+        public static void Debug(string category, string message, UnityEngine.Object context = default(UnityEngine.Object));
+        public static void Error(string category, string message, UnityEngine.Object context = default(UnityEngine.Object));
+        public static string Format(string message, [System.Runtime.CompilerServices.TupleElementNames(new[] {@"key", @"value"})] params System.ValueTuple<string, object>[] data);
+        public static void Info(string category, string message, UnityEngine.Object context = default(UnityEngine.Object));
+        public static void Log(string category, string message, UnityEngine.Object context = default(UnityEngine.Object));
+        public static void LogDataflowStep(string category, string flow, string step, LogLevel level = LogLevel.Info, int requestId = 0, UnityEngine.Object context = default(UnityEngine.Object), [System.Runtime.CompilerServices.TupleElementNames(new[] {@"key", @"value"})] params System.ValueTuple<string, object>[] data);
+        public static void LogError(string category, string message, UnityEngine.Object context = default(UnityEngine.Object));
+        public static void LogWarning(string category, string message, UnityEngine.Object context = default(UnityEngine.Object));
+        public static void Warn(string category, string message, UnityEngine.Object context = default(UnityEngine.Object));
+    }
+}
+
+namespace Network_Game.Dialogue
+{
+    public enum DialogueAnimationAction
+    {
+        HoldNeutral = 0,
+        IdleVariant = 1,
+        TurnLeft = 2,
+        TurnRight = 3,
+        EmphasisReact = 4,
+    }
+
+    [UnityEngine.DisallowMultipleComponent] public sealed class DialogueAnimationContextBuilder : UnityEngine.MonoBehaviour
+    {
+        public DialogueAnimationContextSnapshot CurrentSnapshot { get; }
+        public string LastResponsePreview { get; }
+        public DialogueAnimationContextBuilder() {}
+        public void InjectSyntheticContext(string responseText);
+    }
+
+    public struct DialogueAnimationContextSnapshot
+    {
+        public bool HasExclamation;
+        public bool HasQuestion;
+        public float Intensity;
+        public bool IsFresh;
+        public bool IsSpeaking;
+        public float ResponseLengthNormalized;
+        public float SecondsSinceUpdate;
+        public DialogueAnimationTone Tone;
+        public static DialogueAnimationContextSnapshot Empty { get; }
+    }
+
+    public static class DialogueAnimationDecisionPolicy
+    {
+        public static bool ContainsAnimationTag(string responseText);
+        public static bool ContainsEffectTag(string responseText);
+        public static bool IsLikelyAnimationIntentPrompt(string promptText);
+        public static DialogueAnimationAction RecommendAction(DialogueAnimationContextSnapshot snapshot, DialogueAnimationAction lastChosenAction);
+        public static string StripAnimationTags(string text);
+        public static bool TryParseFirstAnimationTag(string responseText, out DialogueAnimationDecisionPolicy.AnimationIntent intent);
+        public readonly struct AnimationIntent
+        {
+            public DialogueAnimationAction Action { get; }
+            public string Target { get; }
+            public bool TargetsSelf { get; }
+            public AnimationIntent(DialogueAnimationAction action, string target) {}
+        }
+    }
+
+    public enum DialogueAnimationTone
+    {
+        Neutral = 0,
+        Greeting = 1,
+        Question = 2,
+        Warning = 3,
+        Aggressive = 4,
+        Positive = 5,
+    }
+
+    [UnityEngine.DisallowMultipleComponent] public sealed class DialogueBackendConfig : UnityEngine.MonoBehaviour
+    {
+        public string ApiKey { get; }
+        public bool CachePrompt { get; }
+        public float FrequencyPenalty { get; }
+        public string Grammar { get; }
+        public string Host { get; }
+        public bool IgnoreEos { get; }
+        public int MaxTokens { get; }
+        public float MinP { get; }
+        public int Mirostat { get; }
+        public float MirostatEta { get; }
+        public float MirostatTau { get; }
+        public string Model { get; }
+        public int NProbs { get; }
+        public int Port { get; }
+        public float PresencePenalty { get; }
+        public int RepeatLastN { get; }
+        public float RepeatPenalty { get; }
+        public int Seed { get; }
+        public string SystemPrompt { get; }
+        public float Temperature { get; }
+        public int TopK { get; }
+        public float TopP { get; }
+        public float TypicalP { get; }
+        public DialogueBackendConfig() {}
+        public string[] GetStopSequences();
+        public void SetSystemPrompt(string value);
+    }
+
+    [UnityEngine.DefaultExecutionOrder(-60)] public class DialogueClientUI : UnityEngine.MonoBehaviour
+    {
+        public static event System.Action<bool> OnDialogueVisibilityChanged;
+        public static DialogueClientUI Instance { get; }
+        public bool IsDialogueVisible { get; }
+        public DialogueClientUI() {}
+        public void CloseDialoguePanel();
+        public void ConfigureParticipants(Unity.Netcode.NetworkObject speaker, Unity.Netcode.NetworkObject listener);
+        public static string FormatErrorMessage(string error, bool includeTechnicalCode = false);
+        public void OpenDialoguePanel();
+        public void SendPrompt();
+        public void SetDialogueVisible(bool visible);
+        public void SetNpc(UnityEngine.GameObject npc);
+        public void SetPlayer(UnityEngine.GameObject player);
+        public void ToggleDialoguePanel();
+    }
+
+    public static class DialogueConstants
+    {
+        public const int DefaultBroadcastMaxCharacters = 180;
+        public const int DefaultDegradedWarmupFailureThreshold = 3;
+        public const int DefaultLatencySampleWindow = 256;
+        public const int DefaultMaxConcurrentRequests = 1;
+        public const int DefaultMaxHistoryMessages = 20;
+        public const int DefaultMaxPendingRequests = 32;
+        public const int DefaultMaxPlayerCustomizationChars = 720;
+        public const int DefaultMaxRequestsPerClient = 4;
+        public const int DefaultMaxRetries = 3;
+        public const float DefaultMinSecondsBetweenRequests = 0.2f;
+        public const int DefaultRejectionReasonWindow = 256;
+        public const int DefaultRemoteHistoryHardCapMessages = 8;
+        public const int DefaultRemoteHistoryMessageCharBudget = 320;
+        public const int DefaultRemoteMaxHistoryMessages = 6;
+        public const int DefaultRemoteMaxPlayerCustomizationChars = 220;
+        public const float DefaultRemoteMinRequestTimeoutSeconds = 240f;
+        public const int DefaultRemoteSystemPromptCharBudget = 8000;
+        public const int DefaultRemoteSystemPromptHardCapChars = 3200;
+        public const int DefaultRemoteUserPromptCharBudget = 520;
+        public const float DefaultRequestTimeoutSeconds = 90f;
+        public const float DefaultRetryBackoffSeconds = 2f;
+        public const float DefaultRetryJitterSeconds = 1f;
+        public const float DefaultSummaryLogIntervalSeconds = 30f;
+        public const float DefaultWarmupRetryCooldownSeconds = 5f;
+        public const float DefaultWarmupTimeoutSeconds = 60f;
+        public const int GameplayProbeClientRequestIdMin = 99400;
+        public const float StuckCheckInterval = 1f;
+        public const float StuckConversationTimeout = 60f;
+    }
+
+    public class DialogueDebugPanel : UnityEngine.MonoBehaviour
+    {
+        public DialogueDebugPanel() {}
+    }
+
+    [UnityEngine.DefaultExecutionOrder(5000)] [UnityEngine.DisallowMultipleComponent] public sealed class DialogueEffectFeedbackPrompt : UnityEngine.MonoBehaviour
+    {
+        public static event System.Action<DialogueEffectFeedbackPrompt.FeedbackSubmission> OnFeedbackSubmitted;
+        public static bool IsBlockingPromptActive { get; }
+        public DialogueEffectFeedbackPrompt() {}
+        public static DialogueEffectFeedbackPrompt EnsureForAutomation();
+        public void ForceEnablePrompt(bool enabled = true);
+        public struct FeedbackSubmission
+        {
+            public string Comment;
+            public DialogueSceneEffectsController.AppliedEffectInfo Effect;
+            public string Outcome;
+        }
+    }
+
+    [UnityEngine.DefaultExecutionOrder(4900)] [UnityEngine.DisallowMultipleComponent] public sealed class DialogueEffectFeedbackRuntimeTuner : UnityEngine.MonoBehaviour
+    {
+        public DialogueEffectFeedbackRuntimeTuner() {}
+        public static bool TryGetAdjustment(string effectName, string effectType, out DialogueEffectFeedbackRuntimeTuner.TuningAdjustment adjustment);
+        public struct TuningAdjustment
+        {
+            public float DurationMultiplier;
+            public bool PreferAttachToTarget;
+            public bool PreferFitToTargetMesh;
+            public int SampleCount;
+            public float ScaleMultiplier;
+        }
+    }
+
+    [UnityEngine.DisallowMultipleComponent] public class DialogueEffectProjectile : UnityEngine.MonoBehaviour
+    {
+        public DialogueEffectProjectile() {}
+        public void Configure(ulong sourceNetworkObjectId, ulong targetNetworkObjectId, UnityEngine.Transform targetTransform, bool enableHoming, float speed, float homingTurnRateDegrees, float damageAmount, float damageRadius, float lifetimeSeconds, bool affectPlayerOnly, bool restrictDamageToTarget, string damageType, bool logDebug);
+    }
+
+    public static class DialogueEffectSpatialResolver
+    {
+        public static DialogueEffectSpatialResolver.ResolveResult Resolve(DialogueEffectSpatialResolver.ResolveRequest request);
+        public static bool TryParseCollisionPolicy(string rawPolicy, out DialogueEffectSpatialResolver.CollisionPolicy policy);
+        public enum CollisionPolicy
+        {
+            Strict = 0,
+            Relaxed = 1,
+            AllowOverlap = 2,
+        }
+        public struct ResolveRequest
+        {
+            public float ClearanceRadius;
+            public UnityEngine.LayerMask CollisionMask;
+            public DialogueEffectSpatialResolver.CollisionPolicy CollisionPolicy;
+            public UnityEngine.Vector3 DesiredForward;
+            public UnityEngine.Vector3 DesiredPosition;
+            public UnityEngine.Vector3 FallbackForward;
+            public float FallbackForwardDistance;
+            public UnityEngine.Vector3 FallbackOrigin;
+            public UnityEngine.LayerMask GroundMask;
+            public float GroundOffset;
+            public float GroundProbeDown;
+            public float GroundProbeUp;
+            public bool GroundSnap;
+            public UnityEngine.Transform IgnoreRootA;
+            public UnityEngine.Transform IgnoreRootB;
+            public UnityEngine.Transform IgnoreRootC;
+            public UnityEngine.LayerMask LineOfSightMask;
+            public UnityEngine.Vector3 LineOfSightOrigin;
+            public bool RequireLineOfSight;
+            public bool UseFallback;
+        }
+        public struct ResolveResult
+        {
+            public bool CollisionAdjusted;
+            public UnityEngine.Vector3 Forward;
+            public bool GroundSnapped;
+            public bool IsValid;
+            public UnityEngine.Vector3 Position;
+            public string Reason;
+            public bool UsedFallback;
+        }
+    }
+
+    [UnityEngine.DefaultExecutionOrder(-440)] public class DialogueFeedbackCollector : UnityEngine.MonoBehaviour
+    {
+        public static event System.Action<DialogueFeedbackCollector.FeedbackScoreSummary> OnFeedbackScored;
+        public DialogueFeedbackCollector() {}
+        public struct FeedbackScoreSummary
+        {
+            public bool HasEffect;
+            public bool IsUserInitiated;
+            public int RequestId;
+            public int Score;
+            public string[] Signals;
+            public ulong SpeakerNetworkId;
+            public string TagName;
+            public bool TagValid;
+        }
+    }
+
+    public sealed class DialogueHistoryEntry
+    {
+        public string content;
+        public string role;
+        public DialogueHistoryEntry(string role, string content) {}
+    }
+
+    public readonly struct DialogueInferenceMessage
+    {
+        public readonly string Content;
+        public readonly string Role = @"user";
+        public DialogueInferenceMessage(string role, string content) {}
+    }
+
+    public sealed class DialogueInferenceRequestOptions
+    {
+        public int MaxTokensOverride = -1;
+        public bool PreferJsonResponse;
+        public string StructuredResponseInstruction;
+        public DialogueInferenceRequestOptions() {}
+    }
+
+    public sealed class DialogueInferenceRuntimeConfig
+    {
+        public string ApiKey;
+        public bool CachePrompt = true;
+        public float FrequencyPenalty;
+        public string Grammar;
+        public string Host = @"127.0.0.1";
+        public bool IgnoreEos;
+        public int MaxTokens = -1;
+        public float MinP = 0.05f;
+        public int Mirostat;
+        public float MirostatEta = 0.1f;
+        public float MirostatTau = 5f;
+        public string Model;
+        public int NProbs;
+        public int Port = 7002;
+        public float PresencePenalty;
+        public int RepeatLastN = 64;
+        public float RepeatPenalty = 1.1f;
+        public int Seed;
+        public string[] StopSequences;
+        public float Temperature = 0.2f;
+        public int TopK = 40;
+        public float TopP = 0.9f;
+        public float TypicalP = 1f;
+        public DialogueInferenceRuntimeConfig() {}
+    }
+
+    [UnityEngine.DisallowMultipleComponent] public sealed class DialogueParticleCollisionDamage : UnityEngine.MonoBehaviour
+    {
+        public DialogueParticleCollisionDamage() {}
+        public void Configure(ulong sourceNetworkObjectId, ulong targetNetworkObjectId, bool restrictDamageToTarget, float damagePerHit, float hitCooldownSeconds, float proximityRadius, bool affectPlayerOnly, string damageType, bool logDebug);
+    }
+
+    [UnityEngine.DefaultExecutionOrder(-460)] [UnityEngine.DisallowMultipleComponent] public class DialogueSceneEffectsController : UnityEngine.MonoBehaviour
+    {
+        public static event System.Action<DialogueSceneEffectsController.AppliedEffectInfo> OnEffectApplied;
+        public static DialogueSceneEffectsController Instance { get; }
+        public DialogueSceneEffectsController() {}
+        public void ApplyBoredLighting(UnityEngine.Color color, float intensity, float transitionSeconds = 0f);
+        public void ApplyDissolveEffect(ulong targetNetworkObjectId, float durationSeconds = 5f);
+        public void ApplyFloorDissolveEffect(float durationSeconds = 8f);
+        public void ApplyFloorFreezeSurfaceMaterial(string surfaceId, string rendererHierarchyPath, int materialSlotIndex, float durationSeconds, ulong sourceNetworkObjectId = 0, ulong targetNetworkObjectId = 0);
+        public void ApplyPrefabPower(string prefabName, UnityEngine.Vector3 position, UnityEngine.Vector3 forward, float scale, float durationSeconds, UnityEngine.Color color, bool useColorOverride, bool enableGameplayDamage = false, bool enableHoming = false, float projectileSpeed = 10f, float homingTurnRateDegrees = 240f, float damageAmount = 0f, float damageRadius = 1f, bool affectPlayerOnly = false, string damageType = @"effect", ulong sourceNetworkObjectId = 0, ulong targetNetworkObjectId = 0, bool attachToTarget = false, bool fitToTargetMesh = false, float serverSpawnTimeSeconds = -1f, uint effectSeed = 0);
+        public void ApplyRespawnEffect(ulong targetNetworkObjectId);
+        public static string[] GetAvailableEffects();
+        public void RestoreDefaults(float transitionSeconds = 0f);
+        [UnityEngine.ContextMenu(@"Test Dissolve Effect (5s)")] public void TestDissolveEffect();
+        [UnityEngine.ContextMenu(@"Test Respawn Effect")] public void TestRespawnEffect();
+        public struct AppliedEffectInfo
+        {
+            public float AppliedAtRealtime;
+            public bool AttachToTarget;
+            public float DurationSeconds;
+            public string EffectName;
+            public string EffectType;
+            public float FeedbackDelaySeconds;
+            public bool FitToTargetMesh;
+            public UnityEngine.Vector3 Position;
+            public float Scale;
+            public ulong SourceNetworkObjectId;
+            public ulong TargetNetworkObjectId;
+        }
+    }
+
+    public enum DialogueSemanticRole
+    {
+        Unknown = 0,
+        Player = 1,
+        Npc = 2,
+        Boss = 3,
+        Floor = 4,
+        Terrain = 5,
+        Structure = 6,
+        Interactable = 7,
+        Objective = 8,
+        Hazard = 9,
+        Prop = 10,
+        Water = 11,
+        SpawnPoint = 12,
+        Cover = 13,
+        VfxAnchor = 14,
+    }
+
+    [UnityEngine.DisallowMultipleComponent] public sealed class DialogueSemanticTag : UnityEngine.MonoBehaviour
+    {
+        public string[] Aliases { get; }
+        public string Description { get; }
+        public string DisplayName { get; }
+        public bool IncludeInSceneSnapshots { get; }
+        public int Priority { get; }
+        public DialogueSemanticRole Role { get; }
+        public string RoleKey { get; }
+        public string SemanticId { get; }
+        public DialogueSemanticTag() {}
+        public string[] GetCompactAliases(int max = 3);
+        public string ResolveDisplayName(UnityEngine.GameObject fallbackObject);
+    }
+
+    public class EffectDispatcher
+    {
+        public EffectDispatcher(DialogueSceneEffectsController sceneEffects, Effects.EffectCatalog catalog, bool enableContextSceneEffects = true, bool logDebug = false) {}
+        public void Dispatch(EffectDispatcher.DispatchContext context);
+        public void Dispatch(EffectDispatcher.DispatchContext context, System.Collections.Generic.List<Effects.EffectIntent> catalogIntents);
+        public struct DispatchContext
+        {
+            public NpcDialogueActor Actor;
+            public string EffectAnchorLabel;
+            public UnityEngine.Vector3 EffectForward;
+            public UnityEngine.Vector3 EffectOrigin;
+            public ulong ListenerNetworkId;
+            public UnityEngine.GameObject ListenerObject;
+            public EffectDispatcher.EffectModifier Modifier;
+            public NpcDialogueProfile Profile;
+            public string Prompt;
+            public ulong RequestingClientId;
+            public string ResponseText;
+            public ulong SpeakerNetworkId;
+            public UnityEngine.GameObject SpeakerObject;
+        }
+        public struct EffectModifier
+        {
+            public float DamageScaleReceived;
+            public float EffectDurationScale;
+            public float EffectSizeScale;
+            public bool IsShielded;
+            public System.Nullable<UnityEngine.Color> PreferredColor;
+            public string PreferredElement;
+            public static EffectDispatcher.EffectModifier Neutral { get; }
+        }
+        public enum PlayerSpecialEffectMode
+        {
+            None = 0,
+            Dissolve = 1,
+            Respawn = 2,
+        }
+    }
+
+    public class EffectIntentBuilder
+    {
+        public EffectIntentBuilder(Effects.EffectCatalog catalog, bool enableDynamicParameters = true) {}
+        public Effects.EffectIntent[] Build(string responseText, NpcDialogueProfile profile, string prompt = default(string));
+        public Effects.EffectIntent[] BuildWithCache(string responseText, NpcDialogueProfile profile, string prompt = default(string));
+        public void ClearCache();
+    }
+
+    public interface IDialogueInferenceClient
+    {
+        public string BackendName { get; }
+        public bool ManagesHistoryInternally { get; }
+        public void ApplyConfig(DialogueInferenceRuntimeConfig config);
+        public System.Threading.Tasks.Task<string> ChatAsync(string systemPrompt, System.Collections.Generic.IReadOnlyList<DialogueInferenceMessage> history, string userPrompt, bool addToHistory = true, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken));
+        public System.Threading.Tasks.Task<bool> CheckConnectionAsync(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken));
+    }
+
+    [UnityEngine.DefaultExecutionOrder(-450)] public class NetworkDialogueService : Unity.Netcode.NetworkBehaviour
+    {
+        public static event System.Action<NetworkDialogueService.DialogueResponse> OnDialogueResponse;
+        public static event System.Action<NetworkDialogueService.DialogueResponseTelemetry> OnDialogueResponseTelemetry;
+        public static event System.Action<NetworkDialogueService.DialogueResponse> OnRawDialogueResponse;
+        public string ActiveInferenceBackendName { get; }
+        public int ActiveRequestCount { get; }
+        public bool HasDialogueBackendConfig { get; }
+        public static NetworkDialogueService Instance { get; }
+        public bool IsLLMReady { get; }
+        public bool IsWarmupDegraded { get; }
+        public int PendingRequestCount { get; }
+        public string RemoteInferenceEndpoint { get; }
+        public int TimeoutCount { get; }
+        public int TotalCompleted { get; }
+        public int TotalFailed { get; }
+        public int TotalRequestsEnqueued { get; }
+        public int TotalRequestsFinished { get; }
+        public bool UsesRemoteInference { get; }
+        public int WarmupFailureCount { get; }
+        public NetworkDialogueService() {}
+        protected override string __getTypeName();
+        protected override void __initializeRpcs();
+        protected override void __initializeVariables();
+        public async System.Threading.Tasks.Task<string> AnalyzeDebugLog(string logContext, string errorMessage);
+        public bool AppendMessage(string conversationKey, string role, string content);
+        public string BuildPlayerIdentityReport();
+        public void CancelRequest(int requestId);
+        public void ClearHistory(string conversationKey);
+        public void ClearPendingRequests();
+        public bool ClearPlayerPromptContext(ulong playerNetworkId);
+        public bool ClearPlayerPromptContextForClient(ulong clientId);
+        public int EnqueueRequest(NetworkDialogueService.DialogueRequest request);
+        public System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<DialogueHistoryEntry>> GetAllHistory();
+        public string[] GetConversationKeys();
+        public System.Collections.Generic.List<DialogueHistoryEntry> GetHistoryPublic(string conversationKey);
+        public System.Collections.Generic.Dictionary<string, int> GetRejectionReasons();
+        public NetworkDialogueService.DialogueStats GetStats();
+        public bool IsClientRequestInFlight(int clientRequestId, ulong requestingClientId = ulong.MaxValue);
+        [UnityEngine.ContextMenu(@"Dialogue/Log Player Identity Report")] public void LogPlayerIdentityReport();
+        public bool RequestClearPlayerPromptContextFromClient();
+        public void RequestDialogue(NetworkDialogueService.DialogueRequest request);
+        public bool RequestSetPlayerPromptContextFromClient(string nameId, string customizationJson);
+        public string ResolveConversationKey(ulong speakerNetworkId, ulong listenerNetworkId, ulong requestingClientId, string conversationKeyOverride = default(string));
+        public void SetMLAgentsSideChannelClient(IDialogueInferenceClient client);
+        public bool SetPlayerPromptContext(ulong playerNetworkId, string nameId, string customizationJson);
+        public bool SetPlayerPromptContextForClient(ulong clientId, string nameId, string customizationJson);
+        public bool TryConsumeResponse(int requestId, out NetworkDialogueService.DialogueResponse response);
+        public bool TryConsumeResponseByClientRequestId(int clientRequestId, out NetworkDialogueService.DialogueResponse response, ulong requestingClientId = ulong.MaxValue);
+        public bool TryEnqueueRequest(NetworkDialogueService.DialogueRequest request, out int requestId, out string rejectionReason);
+        public bool TryGetAutoRequestBlockReason(string conversationKey, string prompt, bool blockRepeatedPrompt, float minRepeatDelaySeconds, bool requireUserReply, out string reason);
+        public bool TryGetPlayerIdentityByClientId(ulong clientId, out NetworkDialogueService.PlayerIdentitySnapshot snapshot);
+        public bool TryGetPlayerIdentityByNetworkId(ulong playerNetworkId, out NetworkDialogueService.PlayerIdentitySnapshot snapshot);
+        public bool TryGetTerminalResponseByClientRequestId(int clientRequestId, out NetworkDialogueService.DialogueResponse response, ulong requestingClientId = ulong.MaxValue);
+        public struct DialogueRequest
+        {
+            public bool BlockRepeatedPrompt;
+            public bool Broadcast;
+            public float BroadcastDuration;
+            public int ClientRequestId;
+            public string ConversationKey;
+            public bool IsUserInitiated;
+            public ulong ListenerNetworkId;
+            public float MinRepeatDelaySeconds;
+            public bool NotifyClient;
+            public string Prompt;
+            public ulong RequestingClientId;
+            public bool RequireUserReply;
+            public ulong SpeakerNetworkId;
+        }
+        public struct DialogueResponse
+        {
+            public string Error;
+            public NetworkDialogueService.DialogueRequest Request;
+            public int RequestId;
+            public string ResponseText;
+            public NetworkDialogueService.DialogueStatus Status;
+        }
+        public struct DialogueResponseTelemetry
+        {
+            public string Error;
+            public float ModelLatencyMs;
+            public float QueueLatencyMs;
+            public NetworkDialogueService.DialogueRequest Request;
+            public int RequestId;
+            public int RetryCount;
+            public NetworkDialogueService.DialogueStatus Status;
+            public float TotalLatencyMs;
+        }
+        public struct DialogueStats
+        {
+            public int ActiveCount;
+            public bool HasLlmAgent;
+            public int HistoryCount;
+            public bool IsClient;
+            public bool IsServer;
+            public NetworkDialogueService.LatencyHistogram ModelExecutionHistogram;
+            public int PendingCount;
+            public NetworkDialogueService.LatencyHistogram QueueWaitHistogram;
+            public System.Collections.Generic.KeyValuePair<string, int>[] RejectionReasonCounts;
+            public float SuccessRate;
+            public int TimeoutCount;
+            public float TimeoutRate;
+            public int TotalRequestsEnqueued;
+            public int TotalRequestsFinished;
+            public int TotalTerminalCancelled;
+            public int TotalTerminalCompleted;
+            public int TotalTerminalFailed;
+            public int TotalTerminalRejected;
+            public bool WarmupDegraded;
+            public int WarmupFailureCount;
+            public bool WarmupInProgress;
+            public string WarmupLastFailureReason;
+            public float WarmupRetryInSeconds;
+            public string WarmupState;
+        }
+        public enum DialogueStatus
+        {
+            Pending = 0,
+            InProgress = 1,
+            Completed = 2,
+            Failed = 3,
+            Cancelled = 4,
+        }
+        public struct LatencyHistogram
+        {
+            public float MaxMs;
+            public float MinMs;
+            public int Over2000Ms;
+            public float P50Ms;
+            public float P95Ms;
+            public int SampleCount;
+            public float TotalMs;
+            public int Under1000Ms;
+            public int Under100Ms;
+            public int Under2000Ms;
+            public int Under250Ms;
+            public int Under500Ms;
+        }
+        public struct PlayerIdentitySnapshot
+        {
+            public ulong ClientId;
+            public string CustomizationJson;
+            public string LastUpdatedUtc;
+            public string NameId;
+            public ulong PlayerNetworkId;
+        }
+    }
+
+    [UnityEngine.DisallowMultipleComponent] [UnityEngine.RequireComponent(typeof(Unity.Netcode.NetworkObject))] public sealed class NpcDialogueActor : Unity.Netcode.NetworkBehaviour
+    {
+        public bool IsShowingText { get; }
+        public NpcDialogueProfile Profile { get; }
+        public string ProfileId { get; }
+        public NpcDialogueActor() {}
+        protected override string __getTypeName();
+        protected override void __initializeRpcs();
+        protected override void __initializeVariables();
+        public string BuildSystemPrompt(string basePrompt, string userPrompt, UnityEngine.GameObject listenerObject);
+        public void HideSpeechText();
+        public override void OnNetworkDespawn();
+        public void ShowSpeechText(string text, float durationSeconds);
+        public bool TryAutoAssignProfileFromName();
+        public bool TryGetBoredLighting(string responseText, out UnityEngine.Color color, out float intensity, out float transitionSeconds);
+    }
+
+    [UnityEngine.DisallowMultipleComponent] [UnityEngine.RequireComponent(typeof(Unity.Netcode.NetworkObject))] public sealed class NpcDialogueAnimationAutoResponder : UnityEngine.MonoBehaviour
+    {
+        public NpcDialogueAnimationAutoResponder() {}
+    }
+
+    [UnityEngine.DisallowMultipleComponent] [UnityEngine.RequireComponent(typeof(Unity.Netcode.NetworkObject))] public sealed class NpcDialogueAnimationController : Unity.Netcode.NetworkBehaviour
+    {
+        public DialogueAnimationAction CurrentAction { get; }
+        public bool IsReadyForAction { get; }
+        public float SecondsSinceLastAction { get; }
+        public NpcDialogueAnimationController() {}
+        protected override string __getTypeName();
+        protected override void __initializeRpcs();
+        protected override void __initializeVariables();
+        public bool TryPlayAction(DialogueAnimationAction action, out string reason);
+    }
+
+    [UnityEngine.CreateAssetMenu(fileName = @"NpcDialogueProfile", menuName = @"Network Game/Dialogue/NPC Dialogue Profile")] public class NpcDialogueProfile : UnityEngine.ScriptableObject
+    {
+        public string[] BoredKeywords { get; }
+        public UnityEngine.Color BoredLightColor { get; }
+        public float BoredLightIntensity { get; }
+        public string DisplayName { get; }
+        public float DynamicEffectMaxMultiplier { get; }
+        public float DynamicEffectMinMultiplier { get; }
+        public bool EnableBoredLightEffect { get; }
+        public bool EnableDynamicEffectParameters { get; }
+        public float LightTransitionSeconds { get; }
+        public string Lore { get; }
+        public PrefabPowerEntry[] PrefabPowers { get; }
+        public string ProfileId { get; }
+        public string SystemPrompt { get; }
+        public NpcDialogueProfile() {}
+        public string BuildCompressedEffectGuide(string listenerName, int maxPowers = 5);
+        public static NpcDialogueProfile[] GetAllProfiles();
+        public System.Collections.Generic.HashSet<string> GetKeywordIndex();
+        public string[] GetKeywords();
+        public static NpcDialogueProfile GetProfile(string profileId);
+        public bool HasKeyword(string keyword, System.Collections.Generic.HashSet<string> cachedIndex);
+    }
+
+    public class OpenAIChatClient : IDialogueInferenceClient, System.IDisposable
+    {
+        public string ApiKey { get; set; }
+        public string BackendName { get; }
+        public bool CachePrompt { get; set; }
+        public float FrequencyPenalty { get; set; }
+        public string Grammar { get; set; }
+        public string Host { get; set; }
+        public bool IgnoreEos { get; set; }
+        public bool ManagesHistoryInternally { get; }
+        public int MaxTokens { get; set; }
+        public float MinP { get; set; }
+        public int Mirostat { get; set; }
+        public float MirostatEta { get; set; }
+        public float MirostatTau { get; set; }
+        public string Model { get; set; }
+        public int NProbs { get; set; }
+        public int Port { get; set; }
+        public float PresencePenalty { get; set; }
+        public int RepeatLastN { get; set; }
+        public float RepeatPenalty { get; set; }
+        public int Seed { get; set; }
+        public string[] StopSequences { get; set; }
+        public float Temperature { get; set; }
+        public int TopK { get; set; }
+        public float TopP { get; set; }
+        public float TypicalP { get; set; }
+        public OpenAIChatClient() {}
+        public void ApplyConfig(DialogueInferenceRuntimeConfig config);
+        public async System.Threading.Tasks.Task<string> ChatAsync(string systemPrompt, System.Collections.Generic.IReadOnlyList<DialogueInferenceMessage> history, string userPrompt, bool addToHistory = true, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken));
+        public async System.Threading.Tasks.Task<string> ChatWithOptionsAsync(string systemPrompt, System.Collections.Generic.IReadOnlyList<DialogueInferenceMessage> history, string userPrompt, DialogueInferenceRequestOptions requestOptions, bool addToHistory = true, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken));
+        public async System.Threading.Tasks.Task<bool> CheckConnectionAsync(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken));
+        public void Dispose();
+    }
+
+    public static class ParticleParameterExtractor
+    {
+        public static ParticleParameterExtractor.ParticleParameterIntent Extract(string dialogueText);
+        public struct ParticleParameterIntent
+        {
+            public UnityEngine.Color ColorOverride;
+            public float CountMultiplier;
+            public string DetectedElement;
+            public float DurationMultiplier;
+            public float EmotionalMultiplier;
+            public int ExplicitCount;
+            public float ExplicitDurationSeconds;
+            public float ExplicitIntensityMultiplier;
+            public float ExplicitRadius;
+            public float ExplicitScale;
+            public float ForceMultiplier;
+            public bool HasAnyOverride;
+            public bool HasColorOverride;
+            public bool HasExplicitCount;
+            public bool HasExplicitDurationSeconds;
+            public bool HasExplicitIntensityMultiplier;
+            public bool HasExplicitRadius;
+            public bool HasExplicitScale;
+            public float IntensityMultiplier;
+            public float RadiusMultiplier;
+            public float SizeMultiplier;
+            public float SpeedMultiplier;
+            public static ParticleParameterExtractor.ParticleParameterIntent Default { get; }
+        }
+    }
+
+    public class PrefabPowerEntry
+    {
+        [UnityEngine.Tooltip(@"If true, damage is applied only to objects recognized as player actors.")] public bool AffectPlayerOnly = true;
+        public UnityEngine.Color ColorOverride;
+        [UnityEngine.Tooltip(@"Alternative narrative phrases that can trigger this power beyond exact keyword matches.")] public string[] CreativeTriggers;
+        [UnityEngine.Min(0f)] [UnityEngine.Tooltip(@"Damage applied on impact.")] public float DamageAmount = 10f;
+        [UnityEngine.Min(0.1f)] [UnityEngine.Tooltip(@"Impact overlap radius used for damage application.")] public float DamageRadius = 1f;
+        [UnityEngine.Tooltip(@"Damage type label used for logs/telemetry.")] public string DamageType = @"effect";
+        [UnityEngine.Min(0f)] public float DurationSeconds = 4f;
+        public UnityEngine.GameObject EffectPrefab;
+        [UnityEngine.Tooltip(@"Element type for LLM creative matching (fire, ice, storm, water, earth, nature, mystic, void).")] public string Element = @"";
+        public bool Enabled = true;
+        [UnityEngine.Header(@"Gameplay (Optional)")] [UnityEngine.Tooltip(@"When enabled, the spawned effect can apply gameplay damage.")] public bool EnableGameplayDamage;
+        [UnityEngine.Tooltip(@"When enabled, projectile movement steers toward the selected target.")] public bool EnableHoming;
+        [UnityEngine.Min(0f)] public float ForwardDistance = 2f;
+        [UnityEngine.Min(0f)] [UnityEngine.Tooltip(@"Maximum steering rotation speed (degrees/second) for homing projectiles.")] public float HomingTurnRateDegrees = 240f;
+        public string[] Keywords;
+        public string PowerName = @"New Power";
+        [UnityEngine.Min(0.1f)] [UnityEngine.Tooltip(@"Projectile travel speed in meters per second.")] public float ProjectileSpeed = 10f;
+        [UnityEngine.Min(0.1f)] public float Scale = 1f;
+        public bool SpawnInFrontOfNpc = true;
+        public UnityEngine.Vector3 SpawnOffset;
+        public bool UseColorOverride;
+        [UnityEngine.Tooltip(@"Short visual description injected into LLM prompt for creative effect decisions.")] public string VisualDescription = @"";
+        public PrefabPowerEntry() {}
+        public Effects.EffectDefinition ToEffectDefinition();
+    }
+
+    public static class SpatialResolverConstants
+    {
+        public const int MaxLoSBuffer = 16;
+        public const int MaxOverlapBuffer = 64;
+        public const float MinClearanceRadius = 0.01f;
+        public const float MinForwardSqrMagnitude = 0.0001f;
+        public const float MinLoSDistanceSqr = 0.01f;
+        public const float MinProbeDistance = 0.05f;
+        public const float NearbySearchMinStep = 0.35f;
+        public const float NearbySearchStepMultiplier = 0.75f;
+        public const int SamplesPerRing = 12;
+        public const int SearchRings = 4;
+    }
+}
+
+namespace Network_Game.Dialogue.Effects
+{
+    [UnityEngine.CreateAssetMenu(fileName = @"EffectCatalog", menuName = @"Dialogue/Effect Catalog")] public class EffectCatalog : UnityEngine.ScriptableObject
+    {
+        [UnityEngine.Header(@"Effect Definitions")] [UnityEngine.Tooltip(@"All available effects in the system. Populated automatically or manually.")] public System.Collections.Generic.List<EffectDefinition> allEffects = new();
+        [UnityEngine.Tooltip(@"Allow unknown tags to silently pass (if false, unknown tags are dropped)")] public bool allowUnknownTags;
+        [UnityEngine.Header(@"Fallback")] [UnityEngine.Tooltip(@"Prefab to use when an unknown effect tag is received (safety fallback)")] public UnityEngine.GameObject fallbackEffectPrefab;
+        [UnityEngine.Header(@"Settings")] [UnityEngine.Tooltip(@"Log warnings when LLM uses unknown effect tags")] public bool logUnknownTags = true;
+        public static EffectCatalog Instance { get; }
+        public EffectCatalog() {}
+        public System.Collections.Generic.IEnumerable<EffectDefinition> GetAllRegisteredEffects();
+        public string GetPromptCatalog();
+        public void Initialize();
+        public static EffectCatalog Load();
+        public void RebuildLookup();
+        public void RegisterRuntimeEffect(EffectDefinition def);
+        public bool TryGet(string tag, out EffectDefinition effect);
+    }
+
+    [UnityEngine.CreateAssetMenu(fileName = @"EffectDefinition", menuName = @"Dialogue/Effect Definition")] public class EffectDefinition : UnityEngine.ScriptableObject
+    {
+        [UnityEngine.Tooltip(@"If true, damage is applied only to objects recognized as player actors")] public bool affectPlayerOnly = true;
+        [UnityEngine.Tooltip(@"Allow the LLM to override color via 'Color: X' parameter")] public bool allowCustomColor = true;
+        [UnityEngine.Tooltip(@"Allow the LLM to override duration via 'Duration: X' parameter")] public bool allowCustomDuration = true;
+        [UnityEngine.Header(@"Parameter Schema")] [UnityEngine.Tooltip(@"Allow the LLM to override scale via 'Scale: X' parameter")] public bool allowCustomScale = true;
+        [UnityEngine.Header(@"Legacy Compatibility")] [UnityEngine.Tooltip(@"Alternative tags that also trigger this effect (for backwards compatibility)")] public string[] alternativeTags;
+        [UnityEngine.Tooltip(@"Optional bone/transform hint for future attachment logic (e.g. Head, Spine).")] public string attachBone;
+        [UnityEngine.Min(0f)] [UnityEngine.Tooltip(@"Damage applied on impact")] public float damageAmount = 10f;
+        [UnityEngine.Min(0.1f)] [UnityEngine.Tooltip(@"Impact overlap radius used for damage application")] public float damageRadius = 1f;
+        [UnityEngine.Tooltip(@"Damage type label used for logs/telemetry")] public string damageType = @"effect";
+        [UnityEngine.Tooltip(@"Default color when not specified")] public UnityEngine.Color defaultColor;
+        [UnityEngine.Tooltip(@"Default duration in seconds when not specified")] public float defaultDuration = 4f;
+        [UnityEngine.Header(@"Default Parameters")] [UnityEngine.Tooltip(@"Default scale multiplier when not specified in the effect tag")] public float defaultScale = 1f;
+        [UnityEngine.Header(@"Human-readable description for the LLM prompt")] [UnityEngine.TextArea(3, 6)] public string description;
+        [UnityEngine.Header(@"Prefab that will be instantiated")] public UnityEngine.GameObject effectPrefab;
+        [UnityEngine.Header(@"Tag that the LLM must emit")] [UnityEngine.Tooltip(@"Exact name used in [EFFECT: TagName]")] public string effectTag;
+        [UnityEngine.Header(@"Gameplay (Optional)")] [UnityEngine.Tooltip(@"When enabled, the spawned effect can apply gameplay damage")] public bool enableGameplayDamage;
+        [UnityEngine.Tooltip(@"When enabled, projectile movement steers toward the selected target")] public bool enableHoming;
+        [UnityEngine.Min(0f)] [UnityEngine.Tooltip(@"Maximum steering rotation speed (degrees/second) for homing projectiles")] public float homingTurnRateDegrees = 240f;
+        [UnityEngine.Min(0.1f)] public float maxDuration = 20f;
+        [UnityEngine.Min(0.1f)] public float maxRadius = 25f;
+        [UnityEngine.Min(0.1f)] public float maxScale = 20f;
+        [UnityEngine.Min(0.05f)] public float minDuration = 0.2f;
+        [UnityEngine.Min(0.1f)] public float minRadius = 0.25f;
+        [UnityEngine.Min(0.1f)] public float minScale = 0.25f;
+        [UnityEngine.Header(@"Execution Profile")] [UnityEngine.Tooltip(@"Default placement behavior for this effect when parser hints are ambiguous.")] public EffectPlacementMode placementMode;
+        [UnityEngine.Tooltip(@"When true and placement is mesh-attached, try to fit to target render bounds.")] public bool preferFitTargetMesh = true;
+        [UnityEngine.Min(0.1f)] [UnityEngine.Tooltip(@"Projectile travel speed in meters per second")] public float projectileSpeed = 10f;
+        [UnityEngine.Tooltip(@"Expected semantic target for this effect.")] public EffectTargetType targetType;
+        public EffectDefinition() {}
+    }
+
+    public class EffectIntent
+    {
+        public string anchor;
+        public string collisionPolicy;
+        public UnityEngine.Color color;
+        public float damage;
+        public EffectDefinition definition;
+        public float duration;
+        public string emotion;
+        public System.Nullable<bool> groundSnap;
+        public float intensity = 1f;
+        public string placementType;
+        public float radius;
+        public string rawTagName;
+        public System.Nullable<bool> requireLineOfSight;
+        public float scale = 1f;
+        public float speed;
+        public string target;
+        public bool isValid { get; }
+        public EffectIntent() {}
+        public UnityEngine.Color GetEffectiveColor();
+        public float GetEffectiveDuration();
+        public float GetEffectiveRadius();
+        public float GetEffectiveScale();
+        public float GetEffectiveSpeed();
+    }
+
+    public static class EffectParser
+    {
+        public static System.Collections.Generic.List<EffectIntent> ExtractIntents(string responseText, EffectCatalog catalog, bool stripTags = true);
+        public static string StripTags(string text);
+    }
+
+    public enum EffectPlacementMode
+    {
+        Auto = 0,
+        AttachMesh = 1,
+        GroundAoe = 2,
+        SkyVolume = 3,
+        Projectile = 4,
+    }
+
+    public static class EffectSandboxRunner
+    {
+        public static UnityEngine.GameObject PreviewEffect(string effectTagString, EffectDefinition definition = default(EffectDefinition));
+        public static int RunLocalTest(string llmResponse, UnityEngine.Vector3 playerPosition);
+    }
+
+    [UnityEngine.AddComponentMenu(@"Network Game/Effects/Effect Surface")] [UnityEngine.DisallowMultipleComponent] public sealed class EffectSurface : UnityEngine.MonoBehaviour
+    {
+        public bool AllowBurn { get; }
+        public bool AllowDecals { get; }
+        public bool AllowFreeze { get; }
+        public int DefaultMaterialSlot { get; }
+        public string SurfaceId { get; }
+        public EffectSurfaceType SurfaceType { get; }
+        public EffectSurface() {}
+        public UnityEngine.Collider GetPrimaryCollider();
+        public UnityEngine.Renderer GetPrimaryRenderer();
+        public bool MatchesSurfaceTypeHint(string hint);
+        public int ResolveMaterialSlot(UnityEngine.Renderer renderer, int requestedSlot = -1);
+        public bool TryResolveRenderer(UnityEngine.Collider hitCollider, out UnityEngine.Renderer renderer);
+    }
+
+    public enum EffectSurfaceType
+    {
+        Unspecified = 0,
+        Floor = 1,
+        Wall = 2,
+        Ceiling = 3,
+        Water = 4,
+        Prop = 5,
+        Character = 6,
+        Custom = 7,
+    }
+
+    public static class EffectTargetResolverService
+    {
+        public static string GetHierarchyPath(UnityEngine.Transform t);
+        public static void GetOrderedPlayers(System.Collections.Generic.List<EffectTargetResolverService.PlayerTarget> output, bool includeDead = true);
+        public static bool TryResolveFloorUnderPlayer(EffectTargetResolverService.PlayerTarget player, float rayDistance, int layerMask, out EffectTargetResolverService.SurfaceTarget surface, out string reason);
+        public static bool TryResolveNpc(string npcProfileId, string npcName, out NpcDialogueActor actor, out string reason);
+        public static bool TryResolvePlayer(System.Collections.Generic.List<EffectTargetResolverService.PlayerTarget> orderedPlayers, string selector, NpcDialogueActor npc, out EffectTargetResolverService.PlayerTarget player, out string reason);
+        public static bool TryResolveWallBetweenNpcAndPlayer(NpcDialogueActor npc, EffectTargetResolverService.PlayerTarget player, float maxDistance, float sphereRadius, int layerMask, out EffectTargetResolverService.SurfaceTarget surface, out string reason);
+        public sealed class PlayerTarget
+        {
+            public Network_Game.Combat.CombatHealth Health;
+            public Unity.Netcode.NetworkObject NetworkObject;
+            public int OrderedIndex;
+            public UnityEngine.Transform Transform;
+            public PlayerTarget() {}
+        }
+        public sealed class SurfaceTarget
+        {
+            public string Classification;
+            public UnityEngine.Collider Collider;
+            public EffectSurface EffectSurface;
+            public UnityEngine.RaycastHit Hit;
+            public int MaterialSlotIndex;
+            public UnityEngine.Renderer Renderer;
+            public string ResolverReason;
+            public SurfaceTarget() {}
+        }
+    }
+
+    public enum EffectTargetType
+    {
+        Auto = 0,
+        Player = 1,
+        Floor = 2,
+        Npc = 3,
+        WorldPoint = 4,
+    }
+}
+
+namespace Network_Game.Dialogue.MCP
+{
+    public class DialogueMCPBridge
+    {
+        public DialogueMCPBridge() {}
+        public static void AddLMStudioLogEntry(DialogueMCPBridge.LMStudioLogEntry entry);
+        public static string BuildSceneSnapshotText(int maxCount = 10, float maxDistance = 120f);
+        public static System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, object>> GetActiveVfxState();
+        public static string[] GetConversationKeys();
+        public static System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, object>> GetDebugLog(int maxEntries = 30);
+        public static string[] GetEffectTypes();
+        public static System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, string>> GetHistory(string conversationKey);
+        public static System.Collections.Generic.Dictionary<string, object> GetLLMStatus();
+        public static System.Collections.Generic.List<DialogueMCPBridge.LMStudioLogEntry> GetLMStudioLog(int maxEntries = 10);
+        public static System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, object>> GetNearbyNpcActors(int maxNpcs = 6);
+        public static System.Collections.Generic.Dictionary<string, object> GetProfile(string profileId);
+        public static System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, object>> GetProfiles();
+        public static System.Collections.Generic.Dictionary<string, int> GetQueueStatus();
+        public static System.Collections.Generic.Dictionary<string, object> GetStats();
+        public static void LogDialogueDebugEntry(NetworkDialogueService.DialogueRequest request, string responseText, string status);
+        public static System.Collections.Generic.Dictionary<string, object> SendAnimationProbeToNpc(ulong speakerNetworkObjectId, string animationTag = @"EmphasisReact", ulong listenerNetworkObjectId = 0);
+        public static System.Collections.Generic.Dictionary<string, object> SendGameplayProbeToNpc(ulong speakerNetworkObjectId, string directive = default(string), ulong listenerNetworkObjectId = 0);
+        public static System.Collections.Generic.Dictionary<string, object> SendGameplayProbeToNpcs(string directive = default(string), int maxNpcs = 3, ulong listenerNetworkObjectId = 0);
+        public struct DebugLogEntry
+        {
+            public string[] AnimationTagsParsed;
+            public string ConversationKey;
+            public string[] EffectTagsParsed;
+            public string PromptSnippet;
+            public int RequestId;
+            public string ResponseSnippet;
+            public ulong SpeakerNetworkId;
+            public string Status;
+            public long TimestampMs;
+        }
+        public struct LMStudioLogEntry
+        {
+            public string Detail;
+            public string Mode;
+            public string Summary;
+            public long TimestampMs;
+        }
+    }
+
+    public static class DialogueMCPMenu
+    {
+        [UnityEditor.MenuItem(@"Network Game/MCP/Gameplay Copilot/Clear Placement Memory")] public static void ClearAutomationPlacementMemory();
+        [UnityEditor.MenuItem(@"Network Game/MCP/List Effects")] public static void ListEffects();
+        [UnityEditor.MenuItem(@"Network Game/MCP/List Profiles")] public static void ListProfiles();
+        [UnityEditor.MenuItem(@"Network Game/MCP/LLM Status")] public static void PrintLLMStatus();
+        [UnityEditor.MenuItem(@"Network Game/MCP/Dialogue Stats")] public static void PrintStats();
+        [UnityEditor.MenuItem(@"Network Game/MCP/Gameplay Copilot/Probe Nearby NPCs")] public static void ProbeNearbyNpcs();
+        [UnityEditor.MenuItem(@"Network Game/MCP/Queue Status")] public static void QueueStatus();
+        [UnityEditor.MenuItem(@"Network Game/MCP/Gameplay Copilot/Run Automated Probes (Feedback-Gated)")] public static void RunAutomatedProbes();
+        [UnityEditor.MenuItem(@"Network Game/MCP/Gameplay Copilot/Run Automated Probes (Training Mode, Skip Narrative)")] public static void RunAutomatedTrainingProbes();
+        [UnityEditor.MenuItem(@"Network Game/MCP/Gameplay Copilot/Scan Scene")] public static void ScanGameplayScene();
+        [UnityEditor.MenuItem(@"Network Game/MCP/Gameplay Copilot/Stop Automated Probes")] public static void StopAutomatedProbes();
+    }
+
+    public class DialogueSpawnedMarker : UnityEngine.MonoBehaviour
+    {
+        [UnityEngine.HideInInspector] public bool AttachToTarget;
+        [UnityEngine.HideInInspector] public float ConfiguredDurationSeconds;
+        [UnityEngine.HideInInspector] public float ConfiguredScale = 1f;
+        [UnityEngine.HideInInspector] public uint EffectSeed;
+        [UnityEngine.HideInInspector] public string EffectTag;
+        [UnityEngine.HideInInspector] public bool FitToTargetMesh;
+        [UnityEngine.HideInInspector] public ulong SourceNetworkObjectId;
+        [UnityEngine.HideInInspector] public string SourceNpcProfileId;
+        [UnityEngine.HideInInspector] public ulong TargetNetworkObjectId;
+        public DialogueSpawnedMarker() {}
+    }
+}
+
+namespace Network_Game.ThirdPersonController
+{
+    [UnityEngine.RequireComponent(typeof(StarterAssetsInputs))] public class FlyModeController : UnityEngine.MonoBehaviour
+    {
+        public System.Action<bool> OnFlyModeChanged;
+        public bool IsFlying { get; }
+        public bool ShouldAlignYawWithCamera { get; }
+        public float YawSmoothTime { get; }
+        public FlyModeController() {}
+        public UnityEngine.Vector3 GetFlyVelocity();
+        public void SetFlyMode(bool enabled);
+        public void SetGroundedHint(bool grounded);
+        public void ToggleFlyMode();
+    }
+
+    public class PlayerFaceMapper : Unity.Netcode.NetworkBehaviour
+    {
+        public int CurrentFaceIndex { get; }
+        public int FaceCount { get; }
+        public PlayerFaceMapper() {}
+        protected override string __getTypeName();
+        protected override void __initializeRpcs();
+        protected override void __initializeVariables();
+        public void CycleNext();
+        public override void OnNetworkDespawn();
+        public override void OnNetworkSpawn();
+        public void SelectFace(int index);
+    }
+
+    [UnityEngine.CreateAssetMenu(fileName = @"PlayerFaceMaterialLibrary", menuName = @"Network Game/Face Mapper/Face Material Library")] public sealed class PlayerFaceMaterialLibrary : UnityEngine.ScriptableObject
+    {
+        public UnityEngine.Material BaseBodyMaterial { get; }
+        public int DefaultFaceIndex { get; }
+        public int FaceCount { get; }
+        public UnityEngine.Material[] FaceMaterials { get; }
+        public PlayerFaceMaterialLibrary() {}
+        public UnityEngine.Material GetFaceMaterial(int index);
+        public void SetContents(UnityEngine.Material baseBodyMaterial, UnityEngine.Material[] faceMaterials, int defaultFaceIndex);
+    }
+
+    public class StarterAssetsInputs : UnityEngine.MonoBehaviour
+    {
+        [UnityEngine.Header(@"Movement Settings")] public bool analogMovement;
+        public bool crouch;
+        public bool cursorInputForLook = true;
+        [UnityEngine.Header(@"Mouse Cursor Settings")] public bool cursorLocked = true;
+        [UnityEngine.HideInInspector] public bool inputBlocked;
+        public bool interact;
+        public bool jump;
+        public UnityEngine.Vector2 look;
+        [UnityEngine.Header(@"Character Input Values")] public UnityEngine.Vector2 move;
+        public bool pause;
+        public bool sprint;
+        public StarterAssetsInputs() {}
+        public void CrouchInput(bool newCrouchState);
+        public void InteractInput(bool newInteractState);
+        public void JumpInput(bool newJumpState);
+        public void LookInput(UnityEngine.Vector2 newLookDirection);
+        public void MoveInput(UnityEngine.Vector2 newMoveDirection);
+        public void OnCrouch(UnityEngine.InputSystem.InputValue value);
+        public void OnInteract(UnityEngine.InputSystem.InputValue value);
+        public void OnJump(UnityEngine.InputSystem.InputValue value);
+        public void OnLook(UnityEngine.InputSystem.InputValue value);
+        public void OnMove(UnityEngine.InputSystem.InputValue value);
+        public void OnPause(UnityEngine.InputSystem.InputValue value);
+        public void OnSprint(UnityEngine.InputSystem.InputValue value);
+        public void PauseInput(bool newPauseState);
+        public void SetCursorState(bool newState);
+        public void SprintInput(bool newSprintState);
+    }
+
+    [UnityEngine.RequireComponent(typeof(UnityEngine.CharacterController))] [UnityEngine.RequireComponent(typeof(UnityEngine.InputSystem.PlayerInput))] public class ThirdPersonController : Unity.Netcode.NetworkBehaviour
+    {
+        [UnityEngine.Tooltip(@"How far in degrees can you move the camera down")] public float BottomClamp = -30f;
+        [UnityEngine.Tooltip(@"Additional degrees to override the camera")] public float CameraAngleOverride;
+        [UnityEngine.Tooltip(@"Layers checked for ceiling clearance when standing up from crouch. Defaults to GroundLayers if left empty.")] public UnityEngine.LayerMask CeilingLayers;
+        [UnityEngine.Header(@"Cinemachine")] [UnityEngine.Tooltip(@"The follow target set in the Cinemachine Virtual Camera")] public UnityEngine.GameObject CinemachineCameraTarget;
+        [UnityEngine.Tooltip(@"CharacterController center Y offset when crouching")] public float CrouchCenterY = 0.5f;
+        [UnityEngine.Header(@"Crouch")] [UnityEngine.Tooltip(@"CharacterController height when crouching")] public float CrouchHeight = 1f;
+        [UnityEngine.Tooltip(@"Crouch speed of the character in m/s")] public float CrouchSpeed = 1.2f;
+        [UnityEngine.Tooltip(@"Speed to interpolate crouch height changes")] public float CrouchTransitionSpeed = 10f;
+        [UnityEngine.Tooltip(@"Time required to pass before entering the fall state. Useful for walking down stairs")] public float FallTimeout = 0.15f;
+        [UnityEngine.Min(0f)] [UnityEngine.Tooltip(@"Bank amount from lateral flight velocity.")] public float FlyBankFromStrafe = 18f;
+        [UnityEngine.Min(0f)] [UnityEngine.Tooltip(@"Additional bank from yaw turn correction while camera-aligning.")] public float FlyBankFromTurn = 12f;
+        [UnityEngine.Range(0f, 60f)] [UnityEngine.Tooltip(@"Maximum body bank while turning/curving in fly mode (degrees).")] public float FlyBankMax = 24f;
+        [UnityEngine.Min(0.01f)] [UnityEngine.Tooltip(@"How quickly body bank follows turn/strafe changes.")] public float FlyBankSmoothTime = 0.1f;
+        [UnityEngine.Header(@"Fly Orientation")] [UnityEngine.Range(0f, 75f)] [UnityEngine.Tooltip(@"Maximum up/down body pitch while flying (degrees).")] public float FlyPitchMax = 32f;
+        [UnityEngine.Min(0.01f)] [UnityEngine.Tooltip(@"How quickly body pitch follows vertical flight velocity.")] public float FlyPitchSmoothTime = 0.12f;
+        public UnityEngine.AudioClip[] FootstepAudioClips;
+        [UnityEngine.Range(0f, 1f)] public float FootstepAudioVolume = 0.5f;
+        [UnityEngine.Tooltip(@"The character uses its own gravity value. The engine default is -9.81f")] public float Gravity = -15f;
+        [UnityEngine.Header(@"Player Grounded")] [UnityEngine.Tooltip(@"If the character is grounded or not")] public bool Grounded = true;
+        [UnityEngine.Tooltip(@"Useful for rough ground")] public float GroundedOffset = -0.14f;
+        [UnityEngine.Tooltip(@"The radius of the grounded check. Should match the radius of the CharacterController")] public float GroundedRadius = 0.28f;
+        [UnityEngine.Tooltip(@"What layers the character uses as ground")] public UnityEngine.LayerMask GroundLayers;
+        [UnityEngine.Header(@"Landing")] [UnityEngine.Tooltip(@"Fall time (seconds) before a landing counts as hard")] public float HardLandingFallTime = 0.8f;
+        [UnityEngine.Header(@"Idle Variants")] [UnityEngine.Tooltip(@"Seconds of standing still before cycling to a random idle variant")] public float IdleVariantInterval = 8f;
+        [UnityEngine.Tooltip(@"Invert flight banking direction if the rig feels mirrored.")] public bool InvertFlyBank;
+        [UnityEngine.Space(10f)] [UnityEngine.Tooltip(@"The height the player can jump")] public float JumpHeight = 1.2f;
+        [UnityEngine.Space(10f)] [UnityEngine.Tooltip(@"Time required to pass before being able to jump again. Set to 0f to instantly jump again")] public float JumpTimeout = 0.5f;
+        public UnityEngine.AudioClip LandingAudioClip;
+        [UnityEngine.Tooltip(@"For locking the camera position on all axis")] public bool LockCameraPosition;
+        [UnityEngine.Header(@"Player")] [UnityEngine.Tooltip(@"Walk speed of the character in m/s")] public float MoveSpeed = 2f;
+        [UnityEngine.Range(0f, 0.3f)] [UnityEngine.Tooltip(@"How fast the character turns to face movement direction")] public float RotationSmoothTime = 0.12f;
+        [UnityEngine.Tooltip(@"Acceleration and deceleration")] public float SpeedChangeRate = 10f;
+        [UnityEngine.Tooltip(@"Sprint speed of the character in m/s")] public float SprintSpeed = 5.335f;
+        [UnityEngine.Tooltip(@"How far in degrees can you move the camera up")] public float TopClamp = 70f;
+        public ThirdPersonController() {}
+        protected override string __getTypeName();
+        protected override void __initializeRpcs();
+        protected override void __initializeVariables();
+        public override void OnGainedOwnership();
+        public override void OnLostOwnership();
+        public override void OnNetworkDespawn();
+        public override void OnNetworkSpawn();
+    }
+}
+
+namespace Network_Game.ThirdPersonController.Debug
+{
+    public class AnimatorDebugLogger : UnityEngine.MonoBehaviour
+    {
+        public UnityEngine.Animator animator;
+        public float logInterval = 0.5f;
+        public AnimatorDebugLogger() {}
+    }
+}
+
+namespace Network_Game.UI
+{
+    public sealed class ModernHudLayoutManager : UnityEngine.MonoBehaviour
+    {
+        public ModernHudLayoutManager() {}
+        public UnityEngine.GameObject GetPanel(string panelName);
+        public void SetPanelVisible(string panelName, bool visible);
+        public void TogglePanel(string panelName);
+    }
+
+    [UnityEngine.CreateAssetMenu(fileName = @"ModernHudLayoutProfile", menuName = @"Network Game/UI/Modern HUD Layout Profile")] public sealed class ModernHudLayoutProfile : UnityEngine.ScriptableObject
+    {
+        [UnityEngine.Tooltip(@"Primary accent color value")] public UnityEngine.Color AccentColor;
+        [UnityEngine.Header(@"USS Custom Properties")] [UnityEngine.Tooltip(@"USS custom property name for primary accent color")] public string AccentColorProperty = @"--hud-accent-color";
+        [UnityEngine.Range(0f, 1f)] public float BackgroundOpacity = 0.85f;
+        [UnityEngine.Tooltip(@"USS custom property name for background opacity")] public string BackgroundOpacityProperty = @"--hud-background-opacity";
+        [UnityEngine.Range(0f, 20f)] public float BorderRadius = 10f;
+        [UnityEngine.Tooltip(@"USS custom property name for border radius")] public string BorderRadiusProperty = @"--hud-border-radius";
+        [UnityEngine.Header(@"Bottom Bar")] [UnityEngine.Range(0.12f, 0.4f)] public float BottomBarHeightPercent = 0.24f;
+        [UnityEngine.Range(0f, 0.05f)] public float DockGapPercent = 0.008f;
+        [UnityEngine.Range(0.1f, 0.7f)] public float FeedbackActionsRowPercent = 0.31f;
+        [UnityEngine.Range(0.1f, 0.7f)] public float FeedbackNotesRowPercent = 0.35f;
+        [UnityEngine.Header(@"Feedback Bar Internal Rows")] [UnityEngine.Range(0.15f, 0.7f)] public float FeedbackSummaryRowPercent = 0.34f;
+        [UnityEngine.Range(0.5f, 2f)] public float FontScale = 1f;
+        [UnityEngine.Tooltip(@"USS custom property name for font scale")] public string FontScaleProperty = @"--hud-font-scale";
+        [UnityEngine.Header(@"Side Docks")] [UnityEngine.Range(0.15f, 0.45f)] public float LeftDockWidthPercent = 0.28f;
+        [UnityEngine.Min(180f)] public float MinDockWidthPx = 260f;
+        [UnityEngine.Header(@"Outer Frame")] [UnityEngine.Range(0f, 0.05f)] public float OuterMarginPercent = 0.0125f;
+        [UnityEngine.Range(0.18f, 0.5f)] public float RightDockWidthPercent = 0.36f;
+        [UnityEngine.Min(72f)] public float TopBarMinHeightPx = 118f;
+        [UnityEngine.Range(0.08f, 0.35f)] public float TopBarReservedHeightPercent = 0.18f;
+        [UnityEngine.Header(@"Top Bar")] [UnityEngine.Range(0f, 0.05f)] public float TopBarTopPercent = 0.008f;
+        [UnityEngine.Range(0f, 1f)] public float TransitionDuration = 0.2f;
+        [UnityEngine.Tooltip(@"USS custom property name for transition duration")] public string TransitionDurationProperty = @"--hud-transition-duration";
+        public ModernHudLayoutProfile() {}
+        [System.Obsolete(@"USS custom properties should be defined in USS files. This method is deprecated.")] public void ApplyUssCustomProperties(UnityEngine.UIElements.VisualElement element);
+        public void GetNormalizedFeedbackRowWeights(out float summary, out float actions, out float notes);
+    }
+
+    [UnityEngine.DefaultExecutionOrder(-520)] [UnityEngine.DisallowMultipleComponent] [UnityEngine.ExecuteAlways] public sealed class ModernHudManager : UnityEngine.MonoBehaviour
+    {
+        public static ModernHudManager Active { get; }
+        public UnityEngine.UIElements.UIDocument HudDocument { get; }
+        public UnityEngine.UIElements.VisualElement HudRoot { get; }
+        public ModernHudLayoutProfile LayoutProfile { get; }
+        public UnityEngine.Transform RuntimeServicesRoot { get; }
+        public UnityEngine.UIElements.VisualElement ZoneBottomBar { get; }
+        public UnityEngine.UIElements.VisualElement ZoneModalOverlay { get; }
+        public UnityEngine.UIElements.VisualElement ZoneRightDock { get; }
+        public UnityEngine.UIElements.VisualElement ZoneTopBar { get; }
+        public UnityEngine.UIElements.VisualElement ZoneTopLeft { get; }
+        public ModernHudManager() {}
+        [UnityEngine.ContextMenu(@"Refresh HUD Bindings")] public void RefreshBindings();
+        public static bool SetFeedbackVisible(bool visible);
+        public void SetLayoutProfile(ModernHudLayoutProfile profile);
+        public static bool SetPanelVisible(ModernHudManager.HudPanel panel, bool visible);
+        public static bool TryAcquireUiCursor(UnityEngine.Object owner);
+        public static bool TryApplyBottomBarLayout(UnityEngine.UIElements.VisualElement element);
+        public static UnityEngine.UIElements.VisualElement TryGetZone(ModernHudManager.HudZone zone);
+        public static bool TryReleaseUiCursor(UnityEngine.Object owner);
+        public enum HudPanel
+        {
+            Login = 0,
+            Profile = 1,
+            Dialogue = 2,
+        }
+        public enum HudZone
+        {
+            TopBar = 0,
+            TopLeft = 1,
+            RightDock = 2,
+            BottomBar = 3,
+            ModalOverlay = 4,
+        }
+    }
+}
+
+namespace Network_Game.UI.Dialogue
+{
+    [UnityEngine.AddComponentMenu(@"Network Game/UI/Modern Dialogue Controller")] [UnityEngine.DefaultExecutionOrder(-55)] [UnityEngine.DisallowMultipleComponent] [UnityEngine.RequireComponent(typeof(UnityEngine.UIElements.UIDocument))] public sealed class ModernDialogueController : UnityEngine.MonoBehaviour
+    {
+        public ModernDialogueController() {}
+    }
+}
+
+namespace Network_Game.UI.Login
+{
+    [UnityEngine.RequireComponent(typeof(UnityEngine.UIElements.UIDocument))] public class PlayerLoginController : UnityEngine.MonoBehaviour
+    {
+        public PlayerLoginController() {}
+        public void Show();
+    }
+}
+
+namespace Network_Game.UI.Profile
+{
+    [UnityEngine.RequireComponent(typeof(UnityEngine.UIElements.UIDocument))] public class PlayerProfileController : UnityEngine.MonoBehaviour
+    {
+        public PlayerProfileController() {}
+    }
+}

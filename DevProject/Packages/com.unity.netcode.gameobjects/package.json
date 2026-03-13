@@ -1,0 +1,31 @@
+{
+  "name": "com.unity.netcode.gameobjects",
+  "displayName": "Netcode for GameObjects",
+  "description": "Netcode for GameObjects is a high-level netcode SDK that provides networking capabilities to GameObject/MonoBehaviour workflows within Unity and sits on top of underlying transport layer.",
+  "version": "2.9.2",
+  "unity": "6000.0",
+  "dependencies": {
+    "com.unity.nuget.mono-cecil": "1.11.4",
+    "com.unity.transport": "2.6.0"
+  },
+  "samples": [
+    {
+      "displayName": "Bootstrap",
+      "description": "A lightweight sample to get started",
+      "path": "Samples~/Bootstrap"
+    }
+  ],
+  "_upm": {
+    "changelog": "### Fixed\n\n- Fixed issue where `NetworkVariable` was not properly synchronizing to changes made by the spawn and write authority during `OnNetworkSpawn` and `OnNetworkPostSpawn`. (#3878)"
+  },
+  "upmCi": {
+    "footprint": "172d2d64e65353ab0828fb7ec72a033218a904d7"
+  },
+  "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.netcode.gameobjects@2.9/manual/index.html",
+  "repository": {
+    "url": "https://github.com/Unity-Technologies/com.unity.netcode.gameobjects.git",
+    "type": "git",
+    "revision": "f44f7be87c05af3cc78eef5eac501eae7a8648d6"
+  },
+  "_fingerprint": "02e4aaa4170ccd33023547e5995ba14b8b03133d"
+}

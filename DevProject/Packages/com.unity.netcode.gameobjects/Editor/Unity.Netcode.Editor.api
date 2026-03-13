@@ -1,0 +1,105 @@
+// This file is generated. Do not modify by hand.
+// XML documentation file not found. To check if public methods have XML comments,
+// make sure the XML doc file is present and located next to the scraped dll
+namespace Unity.Netcode.Editor
+{
+    public class HiddenScriptEditor : UnityEditor.Editor
+    {
+        public HiddenScriptEditor() {}
+        public override void OnInspectorGUI();
+    }
+
+    [UnityEditor.CanEditMultipleObjects] public class NetcodeEditorBase<TT> : UnityEditor.Editor where TT : UnityEngine.MonoBehaviour
+    {
+        public NetcodeEditorBase() {}
+        protected void DrawFoldOutGroup<T>(System.Type type, System.Action displayProperties, bool expanded, System.Action<bool> setExpandedProperty);
+        public virtual void OnEnable();
+        public override void OnInspectorGUI();
+    }
+
+    [UnityEditor.CustomEditor(typeof(Unity.Netcode.Components.NetworkAnimator), true)] public class NetworkAnimatorEditor : HiddenScriptEditor
+    {
+        public NetworkAnimatorEditor() {}
+    }
+
+    [UnityEditor.CanEditMultipleObjects] [UnityEditor.CustomEditor(typeof(NetworkBehaviour), true)] public class NetworkBehaviourEditor : UnityEditor.Editor
+    {
+        public NetworkBehaviourEditor() {}
+        public static void CheckForNetworkObject(UnityEngine.GameObject gameObject, bool networkObjectRemoved = false);
+        public static UnityEngine.Transform GetRootParentTransform(UnityEngine.Transform transform);
+        public override void OnInspectorGUI();
+    }
+
+    [UnityEditor.CanEditMultipleObjects] [UnityEditor.CustomEditor(typeof(NetworkManager), true)] public class NetworkManagerEditor : Unity.Netcode.Editor.NetcodeEditorBase<NetworkManager>
+    {
+        public NetworkManagerEditor() {}
+        public override void OnInspectorGUI();
+    }
+
+    public class NetworkManagerHelper
+    {
+        public NetworkManagerHelper() {}
+        public void CheckAndNotifyUserNetworkObjectRemoved(NetworkManager networkManager, bool editorTest = false);
+        public string NetworkManagerAndNetworkObjectNotAllowedMessage();
+        public bool NotifyUserOfNestedNetworkManager(NetworkManager networkManager, bool ignoreNetworkManagerCache = false, bool editorTest = false);
+    }
+
+    [UnityEditor.CanEditMultipleObjects] [UnityEditor.CustomEditor(typeof(NetworkObject), true)] public class NetworkObjectEditor : UnityEditor.Editor
+    {
+        public NetworkObjectEditor() {}
+        public override void OnInspectorGUI();
+    }
+
+    [UnityEditor.CanEditMultipleObjects] [UnityEditor.CustomEditor(typeof(NetworkPrefabsList), true)] public class NetworkPrefabsEditor : UnityEditor.Editor
+    {
+        public NetworkPrefabsEditor() {}
+        public override void OnInspectorGUI();
+    }
+
+    [UnityEditor.CustomEditor(typeof(Unity.Netcode.Components.NetworkRigidbody2D), true)] public class NetworkRigidbody2DEditor : HiddenScriptEditor
+    {
+        public NetworkRigidbody2DEditor() {}
+    }
+
+    [UnityEditor.CanEditMultipleObjects] [UnityEditor.CustomEditor(typeof(Unity.Netcode.Components.NetworkRigidbodyBase), true)] public class NetworkRigidbodyBaseEditor : Unity.Netcode.Editor.NetcodeEditorBase<NetworkBehaviour>
+    {
+        public NetworkRigidbodyBaseEditor() {}
+        public override void OnEnable();
+        public override void OnInspectorGUI();
+    }
+
+    [UnityEditor.CustomEditor(typeof(Unity.Netcode.Components.NetworkRigidbody), true)] public class NetworkRigidbodyEditor : HiddenScriptEditor
+    {
+        public NetworkRigidbodyEditor() {}
+    }
+
+    [UnityEditor.CanEditMultipleObjects] [UnityEditor.CustomEditor(typeof(Unity.Netcode.Components.NetworkTransform), true)] public class NetworkTransformEditor : Unity.Netcode.Editor.NetcodeEditorBase<Unity.Netcode.Components.NetworkTransform>
+    {
+        public NetworkTransformEditor() {}
+        public override void OnEnable();
+        public override void OnInspectorGUI();
+    }
+
+    [UnityEditor.CustomEditor(typeof(Unity.Netcode.Transports.UTP.UnityTransport), true)] public class UnityTransportEditor : HiddenScriptEditor
+    {
+        public UnityTransportEditor() {}
+        public override void OnInspectorGUI();
+    }
+}
+
+namespace Unity.Netcode.Editor.Configuration
+{
+    [UnityEditor.FilePath(@"ProjectSettings/NetcodeForGameObjects.asset", UnityEditor.FilePathAttribute.Location.ProjectFolder)] public class NetcodeForGameObjectsProjectSettings : UnityEditor.ScriptableSingleton<NetcodeForGameObjectsProjectSettings>
+    {
+        [UnityEngine.SerializeField] public bool GenerateDefaultNetworkPrefabs = true;
+        [UnityEngine.SerializeField] public string NetworkPrefabsPath;
+        public string TempNetworkPrefabsPath;
+        public NetcodeForGameObjectsProjectSettings() {}
+    }
+
+    public class NetworkPrefabProcessor : UnityEditor.AssetPostprocessor
+    {
+        public static string DefaultNetworkPrefabsPath { get; }
+        public NetworkPrefabProcessor() {}
+    }
+}

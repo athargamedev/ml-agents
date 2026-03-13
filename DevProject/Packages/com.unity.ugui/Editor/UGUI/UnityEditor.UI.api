@@ -1,0 +1,256 @@
+// This file is generated. Do not modify by hand.
+// XML documentation file not found. To check if public methods have XML comments,
+// make sure the XML doc file is present and located next to the scraped dll
+namespace UnityEditor.EventSystems
+{
+    [CustomEditor(typeof(UnityEngine.EventSystems.EventSystem), true)] public class EventSystemEditor : Editor
+    {
+        protected UnityEngine.GUIStyle previewLabelStyle { get; }
+        public EventSystemEditor() {}
+        public override bool HasPreviewGUI();
+        public override void OnInspectorGUI();
+        public override void OnPreviewGUI(UnityEngine.Rect rect, UnityEngine.GUIStyle background);
+        public override bool RequiresConstantRepaint();
+    }
+
+    [CustomEditor(typeof(UnityEngine.EventSystems.EventTrigger), true)] public class EventTriggerEditor : Editor
+    {
+        public EventTriggerEditor() {}
+        protected virtual void OnEnable();
+        public override void OnInspectorGUI();
+    }
+
+    public static class InputModuleComponentFactory
+    {
+        public static UnityEngine.EventSystems.BaseInputModule AddInputModule(UnityEngine.GameObject gameObject);
+        public static void SetInputModuleComponentOverride(InputModuleComponentFactory.AddInputModuleComponentDelegate addInputModuleComponentOverride);
+        public delegate UnityEngine.EventSystems.BaseInputModule AddInputModuleComponentDelegate(UnityEngine.GameObject gameObject);
+    }
+
+    [CustomEditor(typeof(UnityEngine.EventSystems.Physics2DRaycaster), true)] public class Physics2DRaycasterEditor : Editor
+    {
+        public Physics2DRaycasterEditor() {}
+        public override void OnInspectorGUI();
+    }
+
+    [CustomEditor(typeof(UnityEngine.EventSystems.PhysicsRaycaster), true)] public class PhysicsRaycasterEditor : Editor
+    {
+        public PhysicsRaycasterEditor() {}
+        public override void OnInspectorGUI();
+    }
+}
+
+namespace UnityEditor.UI
+{
+    [CustomPropertyDrawer(typeof(UnityEngine.UI.AnimationTriggers), true)] public class AnimationTriggersDrawer : PropertyDrawer
+    {
+        public AnimationTriggersDrawer() {}
+        public override UnityEngine.UIElements.VisualElement CreatePropertyGUI(SerializedProperty property);
+        public override float GetPropertyHeight(SerializedProperty prop, UnityEngine.GUIContent label);
+        public override void OnGUI(UnityEngine.Rect rect, SerializedProperty prop, UnityEngine.GUIContent label);
+    }
+
+    [CanEditMultipleObjects] [CustomEditor(typeof(UnityEngine.UI.AspectRatioFitter), true)] public class AspectRatioFitterEditor : SelfControllerEditor
+    {
+        public AspectRatioFitterEditor() {}
+        protected virtual void OnDisable();
+        protected virtual void OnEnable();
+        public override void OnInspectorGUI();
+    }
+
+    [CanEditMultipleObjects] [CustomEditor(typeof(UnityEngine.UI.Button), true)] public class ButtonEditor : SelectableEditor
+    {
+        public ButtonEditor() {}
+        protected override void OnEnable();
+        public override void OnInspectorGUI();
+    }
+
+    [CanEditMultipleObjects] [CustomEditor(typeof(UnityEngine.UI.CanvasScaler), true)] public class CanvasScalerEditor : Editor
+    {
+        public CanvasScalerEditor() {}
+        protected virtual void OnEnable();
+        public override void OnInspectorGUI();
+    }
+
+    [CustomPropertyDrawer(typeof(UnityEngine.UI.ColorBlock), true)] public class ColorBlockDrawer : PropertyDrawer
+    {
+        public ColorBlockDrawer() {}
+        public override UnityEngine.UIElements.VisualElement CreatePropertyGUI(SerializedProperty property);
+        public override float GetPropertyHeight(SerializedProperty prop, UnityEngine.GUIContent label);
+        public override void OnGUI(UnityEngine.Rect rect, SerializedProperty prop, UnityEngine.GUIContent label);
+    }
+
+    [CanEditMultipleObjects] [CustomEditor(typeof(UnityEngine.UI.ContentSizeFitter), true)] public class ContentSizeFitterEditor : SelfControllerEditor
+    {
+        public ContentSizeFitterEditor() {}
+        protected virtual void OnEnable();
+        public override void OnInspectorGUI();
+    }
+
+    [CanEditMultipleObjects] [CustomEditor(typeof(UnityEngine.UI.Dropdown), true)] public class DropdownEditor : SelectableEditor
+    {
+        public DropdownEditor() {}
+        protected override void OnEnable();
+        public override void OnInspectorGUI();
+    }
+
+    [CustomPropertyDrawer(typeof(UnityEngine.UI.FontData), true)] public class FontDataDrawer : PropertyDrawer
+    {
+        public FontDataDrawer() {}
+        public override float GetPropertyHeight(SerializedProperty property, UnityEngine.GUIContent label);
+        protected void Init(SerializedProperty property);
+        public override void OnGUI(UnityEngine.Rect position, SerializedProperty property, UnityEngine.GUIContent label);
+    }
+
+    [CanEditMultipleObjects] [CustomEditor(typeof(UnityEngine.UI.MaskableGraphic), false)] public class GraphicEditor : Editor
+    {
+        protected SerializedProperty m_Color;
+        protected SerializedProperty m_Maskable;
+        protected SerializedProperty m_Material;
+        protected SerializedProperty m_RaycastPadding;
+        protected SerializedProperty m_RaycastTarget;
+        protected SerializedProperty m_Script;
+        protected UnityEditor.AnimatedValues.AnimBool m_ShowNativeSize;
+        public GraphicEditor() {}
+        protected void AppearanceControlsGUI();
+        protected void MaskableControlsGUI();
+        protected void NativeSizeButtonGUI();
+        protected virtual void OnDisable();
+        protected virtual void OnEnable();
+        public override void OnInspectorGUI();
+        protected void RaycastControlsGUI();
+        protected void SetShowNativeSize(bool show, bool instant);
+    }
+
+    [CanEditMultipleObjects] [CustomEditor(typeof(UnityEngine.UI.GridLayoutGroup), true)] public class GridLayoutGroupEditor : Editor
+    {
+        public GridLayoutGroupEditor() {}
+        protected virtual void OnEnable();
+        public override void OnInspectorGUI();
+    }
+
+    [CanEditMultipleObjects] [CustomEditor(typeof(UnityEngine.UI.HorizontalOrVerticalLayoutGroup), true)] public class HorizontalOrVerticalLayoutGroupEditor : Editor
+    {
+        public HorizontalOrVerticalLayoutGroupEditor() {}
+        protected virtual void OnEnable();
+        public override void OnInspectorGUI();
+    }
+
+    [CanEditMultipleObjects] [CustomEditor(typeof(UnityEngine.UI.Image), true)] public class ImageEditor : GraphicEditor
+    {
+        public ImageEditor() {}
+        public override string GetInfoString();
+        public override bool HasPreviewGUI();
+        protected override void OnDisable();
+        protected override void OnEnable();
+        public override void OnInspectorGUI();
+        public override void OnPreviewGUI(UnityEngine.Rect rect, UnityEngine.GUIStyle background);
+        protected void SpriteGUI();
+        protected void TypeGUI();
+    }
+
+    [CanEditMultipleObjects] [CustomEditor(typeof(UnityEngine.UI.InputField), true)] public class InputFieldEditor : SelectableEditor
+    {
+        public InputFieldEditor() {}
+        protected override void OnDisable();
+        protected override void OnEnable();
+        public override void OnInspectorGUI();
+    }
+
+    [CanEditMultipleObjects] [CustomEditor(typeof(UnityEngine.UI.LayoutElement), true)] public class LayoutElementEditor : Editor
+    {
+        public LayoutElementEditor() {}
+        protected virtual void OnEnable();
+        public override void OnInspectorGUI();
+    }
+
+    [CanEditMultipleObjects] [CustomEditor(typeof(UnityEngine.UI.Mask), true)] public class MaskEditor : Editor
+    {
+        public MaskEditor() {}
+        protected virtual void OnEnable();
+        public override void OnInspectorGUI();
+    }
+
+    [CustomPropertyDrawer(typeof(UnityEngine.UI.Navigation), true)] public class NavigationDrawer : PropertyDrawer
+    {
+        public NavigationDrawer() {}
+        public override UnityEngine.UIElements.VisualElement CreatePropertyGUI(SerializedProperty property);
+        public override float GetPropertyHeight(SerializedProperty prop, UnityEngine.GUIContent label);
+        public override void OnGUI(UnityEngine.Rect pos, SerializedProperty prop, UnityEngine.GUIContent label);
+    }
+
+    [CanEditMultipleObjects] [CustomEditor(typeof(UnityEngine.UI.RawImage), true)] public class RawImageEditor : GraphicEditor
+    {
+        public RawImageEditor() {}
+        public override string GetInfoString();
+        public override bool HasPreviewGUI();
+        protected override void OnEnable();
+        public override void OnInspectorGUI();
+        public override void OnPreviewGUI(UnityEngine.Rect rect, UnityEngine.GUIStyle background);
+    }
+
+    [CanEditMultipleObjects] [CustomEditor(typeof(UnityEngine.UI.RectMask2D), true)] public class RectMask2DEditor : Editor
+    {
+        public RectMask2DEditor() {}
+        protected virtual void OnEnable();
+        public override void OnInspectorGUI();
+    }
+
+    [CanEditMultipleObjects] [CustomEditor(typeof(UnityEngine.UI.Scrollbar), true)] public class ScrollbarEditor : SelectableEditor
+    {
+        public ScrollbarEditor() {}
+        protected override void OnEnable();
+        public override void OnInspectorGUI();
+    }
+
+    [CanEditMultipleObjects] [CustomEditor(typeof(UnityEngine.UI.ScrollRect), true)] public class ScrollRectEditor : Editor
+    {
+        public ScrollRectEditor() {}
+        protected virtual void OnDisable();
+        protected virtual void OnEnable();
+        public override void OnInspectorGUI();
+    }
+
+    [CustomEditor(typeof(UnityEngine.UI.Selectable), true)] public class SelectableEditor : Editor
+    {
+        public SelectableEditor() {}
+        protected virtual void OnDisable();
+        protected virtual void OnEnable();
+        public override void OnInspectorGUI();
+    }
+
+    public class SelfControllerEditor : Editor
+    {
+        public SelfControllerEditor() {}
+        public override void OnInspectorGUI();
+    }
+
+    [CanEditMultipleObjects] [CustomEditor(typeof(UnityEngine.UI.Slider), true)] public class SliderEditor : SelectableEditor
+    {
+        public SliderEditor() {}
+        protected override void OnEnable();
+        public override void OnInspectorGUI();
+    }
+
+    [CustomPropertyDrawer(typeof(UnityEngine.UI.SpriteState), true)] public class SpriteStateDrawer : PropertyDrawer
+    {
+        public SpriteStateDrawer() {}
+        public override UnityEngine.UIElements.VisualElement CreatePropertyGUI(SerializedProperty property);
+        public override float GetPropertyHeight(SerializedProperty prop, UnityEngine.GUIContent label);
+        public override void OnGUI(UnityEngine.Rect rect, SerializedProperty prop, UnityEngine.GUIContent label);
+    }
+
+    [CanEditMultipleObjects] [CustomEditor(typeof(UnityEngine.UI.Text), true)] public class TextEditor : GraphicEditor
+    {
+        public TextEditor() {}
+        protected override void OnEnable();
+        public override void OnInspectorGUI();
+    }
+
+    [CanEditMultipleObjects] [CustomEditor(typeof(UnityEngine.UI.Toggle), true)] public class ToggleEditor : SelectableEditor
+    {
+        public ToggleEditor() {}
+        protected override void OnEnable();
+        public override void OnInspectorGUI();
+    }
+}

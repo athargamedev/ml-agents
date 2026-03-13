@@ -1,0 +1,17 @@
+{
+  "job_id": "08",
+  "title": "Performance_Culling Re-enable Assessment",
+  "generated_utc": "2026-03-01T05:57:41.070881+00:00",
+  "result": {
+    "re_enable_safe": false,
+    "risk_factors": [
+      "ReflectionProbes",
+      "ParticleEffects"
+    ],
+    "likely_disable_reason": "",
+    "wrong_tag_verdict": "",
+    "suggested_conditions": "",
+    "reflection_probe_verdict": "",
+    "priority": "high"
+  }
+}

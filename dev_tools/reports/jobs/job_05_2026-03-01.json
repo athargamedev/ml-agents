@@ -1,0 +1,43 @@
+{
+  "job_id": "05",
+  "title": "Waypoint Semantic Enrichment",
+  "generated_utc": "2026-03-01T05:57:16.110995+00:00",
+  "result": {
+    "waypoints": [
+      {
+        "original_name": "Waypoint1",
+        "suggested_name": "Frozen Tundra",
+        "semantic_id": "NorthEdge",
+        "description": "",
+        "nearest_npc": "",
+        "role": ""
+      },
+      {
+        "original_name": "Waypoint1 (1)",
+        "suggested_name": "Scorched Sands",
+        "semantic_id": "SouthEdge",
+        "description": "",
+        "nearest_npc": "",
+        "role": ""
+      },
+      {
+        "original_name": "Waypoint1 (2)",
+        "suggested_name": "Darkening Depths",
+        "semantic_id": "WestEdge",
+        "description": "",
+        "nearest_npc": "",
+        "role": ""
+      },
+      {
+        "original_name": "Waypoint1 (3)",
+        "suggested_name": "Ember's Edge",
+        "semantic_id": "EastEdge",
+        "description": "",
+        "nearest_npc": "",
+        "role": ""
+      }
+    ],
+    "patrol_suggestion": "Storm Oracle: Eastward gaze, watch for signs of the storm.",
+    "add_semantic_tag": true
+  }
+}

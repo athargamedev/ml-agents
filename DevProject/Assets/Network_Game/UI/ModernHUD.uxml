@@ -1,0 +1,86 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uiie="UnityEngine.UIElements" xmlns:ex="UnityEngine.UIElements" editor-extension-mode="True">
+    <Style src="project://database/Assets/Network_Game/UI/BlocksShared.uss?fileID=7433441132597879392&amp;guid=5b446a577d2cebf4d8d926d521552982&amp;type=3#BlocksShared"/>
+    
+    <!-- ==================== HUD ROOT ==================== -->
+    <ui:VisualElement name="hud-root" class="hud-root" style="width: 100%; height: 100%; position: absolute;">
+        
+        <!-- ==================== TOP BAR ZONE ==================== -->
+        <ui:VisualElement name="zone-top-bar" class="hud-zone hud-zone--top-bar">
+            <!-- EDITABLE IN UI BUILDER: Add your top bar content here -->
+        </ui:VisualElement>
+        
+        <!-- ==================== TOP LEFT ZONE (Combat Overlay) ==================== -->
+        <ui:VisualElement name="zone-top-left" class="hud-zone hud-zone--top-left">
+            <ui:VisualElement name="combat-overlay" class="combat-runtime-overlay" style="display: none;">
+                <ui:Label name="combat-title" text="COMBAT RUNTIME" class="combat-runtime-overlay__title"/>
+                <ui:Label name="combat-net" text="Net: offline | Players: 0" class="combat-runtime-overlay__net"/>
+                <ui:VisualElement name="combat-health-list" class="combat-runtime-overlay__health-list"/>
+                <ui:Label name="combat-effects-header" text="Recent effects:" class="combat-runtime-overlay__section-header"/>
+                <ui:VisualElement name="combat-effects-list" class="combat-runtime-overlay__log-list"/>
+                <ui:Label name="combat-damage-header" text="Recent damage:" class="combat-runtime-overlay__section-header"/>
+                <ui:VisualElement name="combat-damage-list" class="combat-runtime-overlay__log-list"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        
+        <!-- ==================== RIGHT DOCK ZONE (Debug Panel) ==================== -->
+        <ui:VisualElement name="zone-right-dock" class="hud-zone hud-zone--right-dock">
+            <!-- EDITABLE IN UI BUILDER: Add debug panel content here -->
+        </ui:VisualElement>
+        
+        <!-- ==================== BOTTOM BAR ZONE (Dialogue) ==================== -->
+        <ui:VisualElement name="zone-bottom-bar" class="hud-zone hud-zone--bottom-bar">
+            <!-- EDITABLE IN UI BUILDER: Add bottom bar content here -->
+        </ui:VisualElement>
+        
+        <!-- ==================== MODAL OVERLAY ZONE ==================== -->
+        <ui:VisualElement name="zone-modal-overlay" class="hud-zone hud-zone--modal">
+            <!-- EDITABLE IN UI BUILDER: Add modal content here -->
+        </ui:VisualElement>
+        
+        <!-- ==================== LOGIN PANEL ==================== -->
+        <ui:VisualElement name="panel-login" class="hud-panel hud-panel--login" style="display: none;">
+            <ui:VisualElement class="blocks-login-container">
+                <ui:VisualElement class="blocks-modal blocks-login-modal hud-login-modal">
+                    <ui:Label text="PLAYER IDENTITY" class="blocks-header hud-login-title"/>
+                    <ui:VisualElement class="blocks-login-input-group hud-login-name-group">
+                        <ui:Label text="IDENTIFIER (NAME_ID)" class="blocks-login-label"/>
+                        <ui:TextField name="name-input" placeholder-text="Enter your name" class="blocks-textfield hud-login-name-input"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="blocks-login-input-group">
+                        <ui:Label text="BIO / CUSTOMIZATION (JSON)" class="blocks-login-label"/>
+                        <ui:TextField name="bio-input" multiline="true" placeholder-text="{&quot;role&quot;: &quot;Scout&quot;, &quot;level&quot;: 5}" class="blocks-textfield hud-login-bio-input"/>
+                    </ui:VisualElement>
+                    <ui:Button name="login-button" text="SET IDENTITY" class="blocks-button blocks-login-button"/>
+                    <ui:Label name="status-label" text="Ready to bind identity" class="blocks-chat-message__text hud-login-status"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        
+        <!-- ==================== PROFILE PANEL ==================== -->
+        <ui:VisualElement name="panel-profile" class="hud-panel hud-panel--profile" style="display: none;">
+            <!-- EDITABLE IN UI BUILDER: Add profile card content here -->
+        </ui:VisualElement>
+        
+        <!-- ==================== DIALOGUE PANEL ==================== -->
+        <ui:VisualElement name="panel-dialogue" class="hud-panel hud-panel--dialogue" style="display: none;">
+            <ui:VisualElement name="chat-container" class="blocks-modal hud-dialogue-shell">
+                <ui:VisualElement class="blocks-profile-card__header hud-dialogue-header">
+                    <ui:Button name="camera-switch" text="CAM" class="blocks-button hud-dialogue-camera-button"/>
+                    <ui:Label name="dialogue-header" text="LLM DIALOGUE SYSTEM" class="blocks-header hud-dialogue-title"/>
+                    <ui:VisualElement class="hud-dialogue-header-actions">
+                        <ui:Label name="listener-status" text="NO TARGET" class="blocks-login-label hud-dialogue-listener"/>
+                        <ui:Button name="close-chat" text="X" class="blocks-button hud-dialogue-close"/>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:ScrollView name="transcript-scroll" class="blocks-scroll-view hud-dialogue-transcript">
+                    <ui:VisualElement name="transcript-content"/>
+                </ui:ScrollView>
+                <ui:VisualElement name="input-row" class="hud-dialogue-input-row">
+                    <ui:TextField name="chat-input" placeholder-text="Enter message... (Enter to send)" auto-correction="false" class="blocks-textfield hud-dialogue-input"/>
+                    <ui:Button name="send-button" text="SEND" class="blocks-button hud-dialogue-send"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        
+    </ui:VisualElement>
+</ui:UXML>

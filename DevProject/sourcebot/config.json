@@ -1,0 +1,30 @@
+{
+  "$schema": "https://raw.githubusercontent.com/sourcebot-dev/sourcebot/main/schemas/v3/index.json",
+  "connections": {
+    "ml-agents-local": {
+      "type": "git",
+      "url": "file:///repos/ml-agents",
+      "revisions": {
+        "branches": [
+          "main"
+        ]
+      }
+    }
+  },
+  "models": [
+    {
+      "provider": "openai-compatible",
+      "model": "qwen3-8b",
+      "displayName": "LM Studio Code Model",
+      "baseUrl": "http://lmstudio-proxy:8080/v1",
+      "token": {
+        "env": "LM_STUDIO_TOKEN"
+      }
+    }
+  ],
+  "settings": {
+    "maxFileSize": 1048576,
+    "maxTrigramCount": 20000,
+    "reindexIntervalMs": 3600000
+  }
+}
