@@ -160,3 +160,7 @@ DevProject/checkpoints/
 
 # Sourcebot git cache
 DevProject/sourcebot/data/.sourcebot/
+
+# Local native runtime bundles and generated recordings
+DevProject/Assets/StreamingAssets/LlamaLib-v2.0.0/
+DevProject/Assets/Recordings/animation_NPC_Archivist_001.fbx
