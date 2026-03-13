@@ -13,7 +13,10 @@ services:
     restart: unless-stopped
 
   sourcebot:
-    image: ghcr.io/sourcebot-dev/sourcebot:v4.15.2
+    build:
+      context: ../../../sourcebot
+      dockerfile: Dockerfile
+    image: sourcebot-local-unity:latest
     container_name: sourcebot-ml-agents
     depends_on:
       - lmstudio-proxy

@@ -1,0 +1,3 @@
+{"ts":"2026-03-13T03:35:01.731Z","event":"session_start","unity":"6000.4.0b9"}
+{"ts":"2026-03-13T03:35:01.729Z","tool":"read_console","type":"tool","status":"SUCCESS","ms":38,"action":"get","params":{"action":"get","types":["error","warning","log"],"count":20,"format":"plain","includeStacktrace":false}}
+{"ts":"2026-03-13T03:35:59.621Z","tool":"read_console","type":"tool","status":"SUCCESS","ms":3,"action":"get","params":{"action":"get","types":["error","warning","log"],"count":5,"format":"plain","includeStacktrace":false}}

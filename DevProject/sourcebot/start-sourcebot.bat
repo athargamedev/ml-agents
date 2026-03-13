@@ -40,17 +40,18 @@ if "%LM_STUDIO_TOKEN%"=="" if "%LM_STUDIO_TOKEN_FROM_FILE%"=="" (
 
 if not exist "runtime-v4152" mkdir runtime-v4152
 
-echo Sourcebot image: ghcr.io/sourcebot-dev/sourcebot:v4.15.2
+echo Sourcebot source:  D:\GithubRepos\sourcebot
+echo Sourcebot image:   sourcebot-local-unity:latest
 echo Sourcebot URL:   http://localhost:8090
 echo Local repo:      D:\GithubRepos\ml-agents
 echo Config path:     %CD%\config.json
 echo LM Studio API:   http://127.0.0.1:7002
 echo.
 
-echo Pulling Sourcebot image...
-docker compose pull
+echo Building local Sourcebot image from D:\GithubRepos\sourcebot ...
+docker compose build sourcebot
 if %errorlevel% neq 0 (
-    echo ERROR: Failed to pull Sourcebot image
+    echo ERROR: Failed to build the local Sourcebot image
     exit /b 1
 )
 
@@ -65,7 +66,7 @@ if %errorlevel% equ 0 (
     echo.
     echo Web UI:          http://localhost:8090
     echo Repo source:     local ml-agents checkout
-    echo Ask model:       qwen3-8b
+    echo Ask model:       qwen2.5-coder-7b-instruct@q8_0
     echo Verify status:   .\check-sourcebot.ps1 -WaitForIndex
     echo Logs:            docker compose logs -f
     echo Stop:            docker compose down

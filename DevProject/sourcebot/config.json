@@ -6,6 +6,7 @@
       "url": "file:///repos/ml-agents",
       "revisions": {
         "branches": [
+          "develop",
           "main"
         ]
       }
@@ -14,7 +15,7 @@
   "models": [
     {
       "provider": "openai-compatible",
-      "model": "qwen3-8b",
+      "model": "qwen2.5-coder-7b-instruct@q8_0",
       "displayName": "LM Studio Code Model",
       "baseUrl": "http://lmstudio-proxy:8080/v1",
       "token": {

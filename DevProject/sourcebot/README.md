@@ -2,8 +2,7 @@
 
 Local-first Sourcebot setup for the Unity `ml-agents` workspace with LM Studio on port `7002`.
 
-Latest Sourcebot release checked on 2026-03-11: `v4.15.3`
-Pinned image for this setup: `v4.15.2` because the `v4.15.3` image pulled here contains broken zero-byte `zoekt` binaries, which disables search and Ask.
+This setup now builds Sourcebot from your local clone at `D:\GithubRepos\sourcebot`, so Unity-specific Ask and UI customizations are fully under your control.
 
 ## Quick Start
 
@@ -75,13 +74,13 @@ For `openai-compatible` models, Sourcebot should point at the API root such as `
 
 This setup now routes Sourcebot through a small sidecar compatibility proxy before LM Studio. That proxy rewrites `tool_choice` objects into the simpler format LM Studio accepts, because Sourcebot emits OpenAI-style forced-tool requests that LM Studio otherwise rejects with `400 Bad Request`.
 
-The current checked-in Ask model is `qwen3-8b`. The earlier `qwen2.5-coder-7b-instruct@q4_k_m` quant in this workspace produced unreliable Ask behavior here, including empty `step-start` chats, `0 steps`, and one-word answers to codebase questions.
+The current checked-in Ask model is `qwen2.5-coder-7b-instruct@q8_0`. In this workspace, `qwen3-8b` timed out on a basic tool-calling probe, while the older `qwen2.5-coder-7b-instruct@q4_k_m` quant produced unreliable Ask behavior such as empty `step-start` chats, `0 steps`, and one-word answers.
 
 ## Troubleshooting
 
 - If `http://127.0.0.1:8090/~` hangs with no response, Docker Desktop is usually wedged rather than Sourcebot being misconfigured.
 - If `.\check-sourcebot.ps1` warns that `com.docker.service` is stopped, restart Docker Desktop from an elevated shell or start that Windows service as Administrator, then rerun `docker compose up -d`.
-- If Ask still shows `0 steps` or nonsense answers after the restart, confirm the live container has reloaded `config.json` and is using `qwen3-8b` rather than the old `@q4_k_m` model.
+- If Ask still shows `0 steps`, stalls at `Thinking...`, or gives nonsense answers after the restart, confirm the live container has reloaded `config.json` and is using `qwen2.5-coder-7b-instruct@q8_0` rather than the old `@q4_k_m` model or `qwen3-8b`.
 
 ## Unity Search Examples
 
