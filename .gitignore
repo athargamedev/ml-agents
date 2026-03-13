@@ -74,6 +74,10 @@
 
 # VSCode hidden files
 *.vscode/
+!DevProject/.vscode/
+DevProject/.vscode/*
+!DevProject/.vscode/settings.json
+!DevProject/.vscode/extensions.json
 
 .DS_Store
 .ipynb_checkpoints
@@ -119,9 +123,6 @@ DevProject/*.csproj
 DevProject/*.sln
 DevProject/*.userprefs
 
-# Unity package manager cache
-DevProject/Packages/packages-lock.json
-
 # Unity crash and memory files
 DevProject/Crashes/
 DevProject/LogFiles/
@@ -129,9 +130,6 @@ DevProject/il2cpp_build/
 
 # Unity Cloud Build
 DevProject/CloudBuild/
-
-# Unity Analytics and Services
-DevProject/ProjectSettings/ProjectVersion.txt
 
 # Unity Test Runner
 DevProject/Assets/TestRunner/
@@ -164,3 +162,7 @@ DevProject/sourcebot/data/.sourcebot/
 # Local native runtime bundles and generated recordings
 DevProject/Assets/StreamingAssets/LlamaLib-v2.0.0/
 DevProject/Assets/Recordings/animation_NPC_Archivist_001.fbx
+
+# Local AI tool state and logs
+.claude/settings.local.json
+.codex/tmp/
