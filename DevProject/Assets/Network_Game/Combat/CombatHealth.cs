@@ -613,6 +613,7 @@ namespace Network_Game.Combat
                 m_MinDamageTriggerIntervalSeconds = 0f;
             }
         }
+
 #endif
     }
 }
