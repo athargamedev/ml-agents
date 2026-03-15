@@ -148,6 +148,8 @@ namespace Network_Game.Dialogue
 
         private class ConversationState
         {
+            public bool HasOutstandingRequest;
+            public int OutstandingRequestId = -1;
             public bool IsInFlight;
             public int ActiveRequestId = -1;
             public string LastCompletedPrompt;
@@ -1194,6 +1196,11 @@ namespace Network_Game.Dialogue
 
             requestId = m_NextRequestId++;
             m_TotalRequestsEnqueued++;
+            ConversationState conversationState = GetConversationStateForConversation(
+                request.ConversationKey
+            );
+            conversationState.HasOutstandingRequest = true;
+            conversationState.OutstandingRequestId = requestId;
             m_Requests[requestId] = new DialogueRequestState
             {
                 Request = request,
@@ -1992,8 +1999,7 @@ namespace Network_Game.Dialogue
                 string promptForRequest = ApplyRemoteUserPromptBudget(
                     state.Request.Prompt ?? string.Empty
                 );
-                ApplyPersonaForRequest(state.Request);
-                string systemPromptForRequest = GetConfiguredSystemPrompt();
+                string systemPromptForRequest = BuildSystemPromptForRequest(state.Request);
                 CancellationTokenSource openAiTimeoutCts = null;
                 try
                 {
@@ -3713,6 +3719,8 @@ namespace Network_Game.Dialogue
         private void BeginConversationRequest(int requestId, DialogueRequest request)
         {
             ConversationState state = GetConversationStateForConversation(request.ConversationKey);
+            state.HasOutstandingRequest = true;
+            state.OutstandingRequestId = requestId;
             state.IsInFlight = true;
             state.ActiveRequestId = requestId;
             if (request.IsUserInitiated)
@@ -3738,6 +3746,12 @@ namespace Network_Game.Dialogue
             {
                 state.IsInFlight = false;
                 state.ActiveRequestId = -1;
+            }
+
+            if (state.OutstandingRequestId == requestId || state.HasOutstandingRequest)
+            {
+                state.HasOutstandingRequest = false;
+                state.OutstandingRequestId = -1;
             }
 
             if (!completed)
@@ -3770,7 +3784,7 @@ namespace Network_Game.Dialogue
                 return false;
             }
 
-            if (conversationState.IsInFlight)
+            if (conversationState.HasOutstandingRequest || conversationState.IsInFlight)
             {
                 reason = "conversation_in_flight";
                 return false;
@@ -4091,13 +4105,8 @@ namespace Network_Game.Dialogue
             return preview;
         }
 
-        private void ApplyPersonaForRequest(DialogueRequest request)
+        private string BuildSystemPromptForRequest(DialogueRequest request)
         {
-            if (GetDialogueBackendConfig() == null)
-            {
-                return;
-            }
-
             string basePrompt = string.IsNullOrWhiteSpace(m_DefaultSystemPromptOverride)
                 ? m_DefaultSystemPrompt
                 : m_DefaultSystemPromptOverride;
@@ -4108,8 +4117,7 @@ namespace Network_Game.Dialogue
 
             if (!m_EnablePersonaRouting)
             {
-                SetConfiguredSystemPrompt(ApplyRemoteSystemPromptBudget(basePrompt));
-                return;
+                return ApplyRemoteSystemPromptBudget(basePrompt);
             }
 
             string prompt = basePrompt;
@@ -4134,7 +4142,7 @@ namespace Network_Game.Dialogue
             }
 
             prompt = ApplyRemoteSystemPromptBudget(prompt);
-            SetConfiguredSystemPrompt(prompt);
+            return prompt;
         }
 
         private float GetEffectiveRequestTimeoutSeconds(string systemPrompt, string userPrompt)

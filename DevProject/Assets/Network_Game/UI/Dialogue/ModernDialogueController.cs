@@ -51,6 +51,9 @@ namespace Network_Game.UI.Dialogue
         private bool m_RequireLeaveRangeAfterManualClose = true;
 
         [SerializeField]
+        private bool m_DisableSendWhilePending = true;
+
+        [SerializeField]
         private bool m_LogProximityDebug;
 
         [SerializeField]
@@ -520,6 +523,13 @@ namespace Network_Game.UI.Dialogue
             if (string.IsNullOrEmpty(prompt))
             {
                 LogSendBlocked("prompt_empty");
+                return;
+            }
+
+            if (m_DisableSendWhilePending && m_LastPendingRequestId > 0)
+            {
+                LogSendBlocked("pending_request_in_flight");
+                AppendSystemLine("Wait for the current response before sending another message.");
                 return;
             }
 

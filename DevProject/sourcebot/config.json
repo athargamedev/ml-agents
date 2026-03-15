@@ -3,7 +3,7 @@
   "connections": {
     "ml-agents-local": {
       "type": "git",
-      "url": "file:///repos/ml-agents",
+      "url": "file:///GitRepos/ml-agents",
       "revisions": {
         "branches": [
           "develop",

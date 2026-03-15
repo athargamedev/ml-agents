@@ -25,6 +25,8 @@ public class SideChannelDialogueClient : IDialogueInferenceClient
 {
     private const string k_DefaultMessageType = "dialogue";
     private const string k_PingMessageType = "ping";
+    private const string k_StatusOk = "ok";
+    private const string k_StatusBusy = "busy";
     private const string k_PingResponseText = "__pong__";
     private const string k_HeartbeatNpcId = "__bridge__";
     private const string k_HeartbeatResponseText = "__bridge_ready__";
@@ -138,8 +140,7 @@ public class SideChannelDialogueClient : IDialogueInferenceClient
         bool addToHistory = true,
         CancellationToken ct = default)
     {
-        // Short GUID used for routing — echoed back as npcId in the response.
-        string requestId = Guid.NewGuid().ToString("N").Substring(0, 12);
+        string requestId = Guid.NewGuid().ToString("N");
 
         // Optionally enrich the system prompt with real-time game state.
         string enrichedPrompt = systemPrompt;
@@ -154,8 +155,9 @@ public class SideChannelDialogueClient : IDialogueInferenceClient
             requestId,
             new DialogueRequest
             {
+                requestId           = requestId,
                 messageType         = k_DefaultMessageType,
-                npcId               = requestId,
+                npcId               = requestId, // legacy fallback for older bridge builds
                 playerInput         = userPrompt,
                 npcPersonality      = enrichedPrompt,      // full system prompt → Python
                 conversationHistory = SerializeHistory(history),
@@ -222,18 +224,29 @@ public class SideChannelDialogueClient : IDialogueInferenceClient
             return;
         }
 
-        if (string.IsNullOrEmpty(resp.npcId))
+        string responseRequestId = GetResponseRequestId(resp);
+        if (string.IsNullOrEmpty(responseRequestId))
             return;
 
         MarkBridgeSignalReceived();
 
-        if (!m_Pending.TryRemove(resp.npcId, out PendingRequest pending))
+        if (!m_Pending.TryRemove(responseRequestId, out PendingRequest pending))
             return;
 
         pending.CancellationRegistration.Dispose();
 
         if (!string.Equals(pending.MessageType, k_PingMessageType, StringComparison.Ordinal))
+        {
             OnStructuredDialogueResponseReceived?.Invoke(resp);
+        }
+
+        if (HasBridgeFailure(resp))
+        {
+            pending.Completion.TrySetException(
+                new InvalidOperationException(BuildBridgeErrorMessage(resp))
+            );
+            return;
+        }
 
         pending.Completion.TrySetResult(resp.responseText ?? string.Empty);
     }
@@ -243,6 +256,54 @@ public class SideChannelDialogueClient : IDialogueInferenceClient
         return resp != null
             && string.Equals(resp.npcId, k_HeartbeatNpcId, StringComparison.Ordinal)
             && string.Equals(resp.responseText, k_HeartbeatResponseText, StringComparison.Ordinal);
+    }
+
+    private static string GetResponseRequestId(DialogueResponse resp)
+    {
+        if (resp == null)
+            return string.Empty;
+
+        if (!string.IsNullOrWhiteSpace(resp.requestId))
+            return resp.requestId.Trim();
+
+        return string.IsNullOrWhiteSpace(resp.npcId) ? string.Empty : resp.npcId.Trim();
+    }
+
+    private static bool HasBridgeFailure(DialogueResponse resp)
+    {
+        if (resp == null)
+            return true;
+
+        if (!string.IsNullOrWhiteSpace(resp.error))
+            return true;
+
+        if (string.IsNullOrWhiteSpace(resp.status))
+            return false;
+
+        return !string.Equals(resp.status, k_StatusOk, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string BuildBridgeErrorMessage(DialogueResponse resp)
+    {
+        if (resp == null)
+            return "Dialogue bridge returned an empty response.";
+
+        string status = string.IsNullOrWhiteSpace(resp.status) ? "error" : resp.status.Trim();
+        string error = string.IsNullOrWhiteSpace(resp.error)
+            ? resp.responseText ?? string.Empty
+            : resp.error.Trim();
+
+        if (string.Equals(status, k_StatusBusy, StringComparison.OrdinalIgnoreCase))
+        {
+            return string.IsNullOrWhiteSpace(error)
+                ? "Dialogue bridge is temporarily unavailable."
+                : $"Dialogue bridge is temporarily unavailable: {error}";
+        }
+
+        if (string.IsNullOrWhiteSpace(error))
+            return $"Dialogue bridge returned status '{status}'.";
+
+        return $"Dialogue bridge returned status '{status}': {error}";
     }
 
     private void MarkBridgeSignalReceived()

@@ -60,7 +60,7 @@
         "*.asset": "yaml",
         "*.meta": "yaml",
         "*.prefab": "yaml",
-        "*.unity": "yaml",
+        "*.unity": "yaml"
     },
     "explorer.fileNesting.enabled": true,
     "explorer.fileNesting.patterns": {
@@ -69,5 +69,82 @@
     },
     "dotnet.defaultSolution": "DevProject.slnx",
     "dotnet.enableWorkspaceBasedDevelopment": true,
-    "dotnet.automaticallySyncWithActiveItem": true
+    "dotnet.automaticallySyncWithActiveItem": true,
+
+    // ─── llama-vscode (Local LLM via LM Studio) ───────────────────────────────
+    // All 4 roles route through LM Studio port 7002 (OpenAI-compatible API).
+    //
+    // Completion : qwen2.5-coder-0.5b-instruct  — tiny, fast FIM via OAI wrapper
+    // Chat/Tools : qwen3-8b                      — primary project reasoning model
+    // Embeddings : text-embedding-nomic-embed-text-v1.5  — RAG project context
+    //
+    // use_openai_endpoint=true is REQUIRED: LM Studio exposes /v1/completions
+    // (OpenAI format), not llama.cpp's native /completion path.
+    "llama-vscode.endpoint": "http://127.0.0.1:7002",
+    "llama-vscode.endpoint_chat": "http://127.0.0.1:7002",
+    "llama-vscode.endpoint_tools": "http://127.0.0.1:7002",
+    "llama-vscode.endpoint_embeddings": "http://127.0.0.1:7002",
+
+    "llama-vscode.api_key": "sk-lm-",
+    "llama-vscode.api_key_chat": "sk-lm-",
+    "llama-vscode.api_key_tools": "sk-lm-",
+    "llama-vscode.api_key_embeddings": "sk-lm-",
+
+    // FIM wrapped in OAI chat format — Qwen FIM token template
+    "llama-vscode.use_openai_endpoint": true,
+    "llama-vscode.openai_client_model": "qwen2.5-coder-0.5b-instruct",
+    "llama-vscode.openai_prompt_template": "<|fim_prefix|>{inputPrefix}{prompt}<|fim_suffix|>{inputSuffix}<|fim_middle|>",
+
+    // Chat and agent model: qwen3-8b (128K context, tool-calling capable)
+    "llama-vscode.ai_model": "qwen3-8b",
+
+    // Context — Unity C# has deep namespaces and long MonoBehaviour bodies;
+    // more prefix lines prevent the model from losing class/method context.
+    "llama-vscode.n_prefix": 512,
+    "llama-vscode.n_suffix": 128,
+    "llama-vscode.n_predict": 128,
+
+    // Latency ceiling — LM Studio adds ~150–400ms vs direct llama.cpp
+    "llama-vscode.t_max_predict_ms": 3000,
+
+    // Debounce — avoid flooding LM Studio while typing fast method chains
+    "llama-vscode.debounce_ms": 250,
+
+    // Don't auto-trigger mid-line; Unity fluent builders produce long lines
+    "llama-vscode.max_line_suffix": 20,
+
+    // Ring context — wider scope pulls in related NPC/ML-Agents files nearby
+    "llama-vscode.ring_n_chunks": 24,
+    "llama-vscode.ring_chunk_size": 64,
+    "llama-vscode.ring_scope": 2048,
+
+    // RAG — cap file count; Unity projects have thousands of generated files
+    "llama-vscode.rag_enabled": true,
+    "llama-vscode.rag_max_files": 3000,
+    "llama-vscode.rag_max_chunks": 30000,
+    "llama-vscode.rag_max_context_files": 3,
+    "llama-vscode.rag_max_context_file_chars": 8000,
+
+    // Language gating — disable FIM on Unity data formats.
+    // .unity/.prefab are mapped to "yaml" via files.associations,
+    // so yaml:false suppresses completions inside scene and prefab files.
+    "llama-vscode.languageSettings": {
+        "*": true,
+        "yaml": false,
+        "json": false,
+        "xml": false,
+        "plaintext": false
+    },
+
+    // Agent rules — CLAUDE.md contains all Unity assembly, NGO, ML-Agents,
+    // and effect pipeline rules the LLM agent must follow in this project.
+    "llama-vscode.agent_rules": "D:\\GithubRepos\\ml-agents\\DevProject\\CLAUDE.md",
+
+    // Chat session limits — 64K/128K is safe for qwen3-8b
+    "llama-vscode.chats_max_tokens": 64000,
+    "llama-vscode.chats_max_history": 50,
+
+    // No llama.cpp install prompts — we route through LM Studio instead
+    "llama-vscode.ask_install_llamacpp": false,
+    "llama-vscode.env_start_last_used": false
 }

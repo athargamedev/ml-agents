@@ -62,6 +62,9 @@ namespace Unity.MLAgents.NpcDialogue
     [Serializable]
     public class DialogueRequest
     {
+        /// <summary>Unique request identifier used for response correlation.</summary>
+        public string requestId;
+
         /// <summary>
         /// Optional request type. Null/empty means normal dialogue.
         /// Reserved values include "ping" for connection probes.
@@ -84,16 +87,31 @@ namespace Unity.MLAgents.NpcDialogue
     [Serializable]
     public class DialogueResponse
     {
+        /// <summary>Unique request identifier echoed back from the Python bridge.</summary>
+        public string requestId;
+
         /// <summary>Which NPC this response is for.</summary>
         public string npcId;
 
+        /// <summary>Bridge-level status code (for example ok, error, busy).</summary>
+        public string status;
+
         /// <summary>The LLM-generated dialogue line.</summary>
         public string responseText;
+
+        /// <summary>Optional bridge or backend error message.</summary>
+        public string error;
 
         /// <summary>Detected or generated emotion tag (e.g. "neutral", "angry", "happy").</summary>
         public string emotion;
 
         /// <summary>How confident the LLM was that this response is in-character (0-1).</summary>
         public float confidence;
+
+        /// <summary>Unix epoch milliseconds when the request was queued by the bridge.</summary>
+        public long queuedAtUnixMs;
+
+        /// <summary>Unix epoch milliseconds when the response completed in the bridge.</summary>
+        public long completedAtUnixMs;
     }
 }
