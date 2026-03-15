@@ -2497,6 +2497,7 @@ GameObject:
   - component: {fileID: 2394015834324572310}
   - component: {fileID: 7845196643347166023}
   - component: {fileID: 7504971624162094523}
+  - component: {fileID: 1179873831413949670}
   m_Layer: 0
   m_Name: PlayerArmature 1 1
   m_TagString: Player
@@ -2803,10 +2804,62 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   NetworkAnimatorExpanded: 0
   AuthorityMode: 1
-  m_Animator: {fileID: 0}
+  m_Animator: {fileID: 1179873831413949670}
   TransitionStateInfoList: []
   AnimatorParameterEntries:
-    ParameterEntries: []
+    ParameterEntries:
+    - name: Speed
+      NameHash: -823668238
+      Synchronize: 1
+      ParameterType: 1
+    - name: MotionSpeed
+      NameHash: 1939466105
+      Synchronize: 1
+      ParameterType: 1
+    - name: Grounded
+      NameHash: 862969536
+      Synchronize: 1
+      ParameterType: 4
+    - name: Jump
+      NameHash: 125937960
+      Synchronize: 1
+      ParameterType: 4
+    - name: FreeFall
+      NameHash: -2098586373
+      Synchronize: 1
+      ParameterType: 4
+    - name: Crouch
+      NameHash: -2015693266
+      Synchronize: 1
+      ParameterType: 4
+    - name: Flying
+      NameHash: 1301839861
+      Synchronize: 1
+      ParameterType: 4
+    - name: TurnDelta
+      NameHash: -173141304
+      Synchronize: 1
+      ParameterType: 1
+    - name: InputX
+      NameHash: -1468965832
+      Synchronize: 1
+      ParameterType: 1
+    - name: InputY
+      NameHash: -545887058
+      Synchronize: 1
+      ParameterType: 1
+    - name: IdleVariant
+      NameHash: -1623148628
+      Synchronize: 1
+      ParameterType: 3
+    - name: HardLanding
+      NameHash: 238439405
+      Synchronize: 1
+      ParameterType: 4
+    - name: OnHit
+      NameHash: 1520828678
+      Synchronize: 1
+      ParameterType: 4
   AnimatorParametersExpanded: 0
 --- !u!114 &6274062741456387237
 MonoBehaviour:
@@ -2854,7 +2907,7 @@ MonoBehaviour:
   m_AutoRestoreDelaySeconds: 2
   m_LogDebug: 1
   m_EnableAnimationTriggers: 1
-  m_Animator: {fileID: 0}
+  m_Animator: {fileID: 1179873831413949670}
   m_DamageTrigger: OnHit
   m_DeathTrigger: Death
   m_RespawnTrigger: Respawn
@@ -2905,7 +2958,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6391045015849412824}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9e918c46a7ffe794caf70c41eae34e57, type: 3}
   m_Name: 
@@ -2924,7 +2977,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6391045015849412824}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 67b61a79b549fd14195c3bd87511fc75, type: 3}
   m_Name: 
@@ -2936,6 +2989,28 @@ MonoBehaviour:
   m_FaceLibrary: {fileID: 11400000, guid: 865464bd375124e498d390be11ffc248, type: 2}
   m_FaceMaterials: []
   m_DefaultFaceIndex: 0
+--- !u!95 &1179873831413949670
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6391045015849412824}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: ceeeeb2a80d162743a732a58b287823d, type: 3}
+  m_Controller: {fileID: 9100000, guid: 0c3b6bac27207404d85d37a28d748af3, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &6411450034008277097
 GameObject:
   m_ObjectHideFlags: 0

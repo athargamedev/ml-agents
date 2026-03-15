@@ -83,7 +83,6 @@
   <Project Path="Unity.Coding.Format.csproj" />
   <Project Path="Unity.Multiplayer.Tools.NetStats.Tests.Editor.csproj" />
   <Project Path="Unity.Networking.Editor.csproj" />
-  <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Unity.ML-Agents.Runtime.Sensor.Tests.csproj" />
   <Project Path="Unity.Multiplayer.Tools.NetworkSimulator.Runtime.csproj" />
   <Project Path="Unity.Multiplayer.Tools.MetricTestData.csproj" />
@@ -191,6 +190,7 @@
   <Project Path="Unity.ProBuilder.Stl.csproj" />
   <Project Path="Unity.AppUI.InternalAPIBridge.csproj" />
   <Project Path="Unity.Multiplayer.Tools.NetStatsReporting.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Unity.Deformations.csproj" />
   <Project Path="Unity.Multiplayer.Tools.Adapters.Utp2.csproj" />
   <Project Path="Unity.ML-Agents.Runtime.Tests.csproj" />

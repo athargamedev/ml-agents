@@ -1089,7 +1089,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7773632019531928635}
-  - component: {fileID: 7845626641199923677}
   m_Layer: 0
   m_Name: modelAndre
   m_TagString: Untagged
@@ -1115,28 +1114,6 @@ Transform:
   - {fileID: 3860942850417737072}
   m_Father: {fileID: 5107368546835588901}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &7845626641199923677
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4048412392762114034}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 29868e7dd7c4de843b211614f5c1087c, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 1
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &4062744204919022137
 GameObject:
   m_ObjectHideFlags: 0

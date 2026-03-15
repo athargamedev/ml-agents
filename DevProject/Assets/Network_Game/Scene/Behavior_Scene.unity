@@ -1874,6 +1874,28 @@ MonoBehaviour:
   DecisionPeriod: 5
   DecisionStep: 5
   TakeActionsBetweenDecisions: 1
+--- !u!95 &288517251
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 288517235}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 29868e7dd7c4de843b211614f5c1087c, type: 3}
+  m_Controller: {fileID: 9100000, guid: 0c3b6bac27207404d85d37a28d748af3, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &297509881
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13345,6 +13367,7 @@ MonoBehaviour:
   m_AutoOpenWhenNpcInRange: 1
   m_AutoCloseWhenNoNpcInRange: 1
   m_RequireLeaveRangeAfterManualClose: 1
+  m_DisableSendWhilePending: 1
   m_LogProximityDebug: 0
   m_PlayerResolveIntervalSeconds: 0.5
   m_ProximityCheckIntervalSeconds: 0.05
@@ -20444,6 +20467,222 @@ PrefabInstance:
     - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
       propertyPath: m_Animator
       value: 
+      objectReference: {fileID: 1923683305}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.size
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[0].name
+      value: Speed
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[1].name
+      value: MotionSpeed
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[2].name
+      value: Grounded
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[3].name
+      value: Jump
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[4].name
+      value: FreeFall
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[5].name
+      value: Crouch
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[6].name
+      value: Flying
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[7].name
+      value: TurnDelta
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[8].name
+      value: InputX
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[9].name
+      value: InputY
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[10].name
+      value: IdleVariant
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[11].name
+      value: HardLanding
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[12].name
+      value: OnHit
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[0].NameHash
+      value: -823668238
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[1].NameHash
+      value: 1939466105
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[2].NameHash
+      value: 862969536
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[3].NameHash
+      value: 125937960
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[4].NameHash
+      value: -2098586373
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[5].NameHash
+      value: -2015693266
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[6].NameHash
+      value: 1301839861
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[7].NameHash
+      value: -173141304
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[8].NameHash
+      value: -1468965832
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[9].NameHash
+      value: -545887058
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[10].NameHash
+      value: -1623148628
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[11].NameHash
+      value: 238439405
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[12].NameHash
+      value: 1520828678
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[0].Synchronize
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[1].Synchronize
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[2].Synchronize
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[3].Synchronize
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[4].Synchronize
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[5].Synchronize
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[6].Synchronize
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[7].Synchronize
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[8].Synchronize
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[9].Synchronize
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[10].Synchronize
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[11].Synchronize
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[12].Synchronize
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[0].ParameterType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[1].ParameterType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[2].ParameterType
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[3].ParameterType
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[4].ParameterType
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[5].ParameterType
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[6].ParameterType
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[7].ParameterType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[8].ParameterType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[9].ParameterType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[10].ParameterType
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[11].ParameterType
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957426048946107356, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[12].ParameterType
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6049782765353331312, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6100779618480271264, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
       propertyPath: m_Name
@@ -20526,6 +20765,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8822210966502434851, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8822210966502434851, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
       propertyPath: m_Priority
       value: 10
       objectReference: {fileID: 0}
@@ -20572,6 +20815,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6100779618480271264, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1923683304}
+    - targetCorrespondingSourceObject: {fileID: 6100779618480271264, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1923683305}
   m_SourcePrefab: {fileID: 100100000, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
 --- !u!1 &1923683278 stripped
 GameObject:
@@ -20667,12 +20913,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.ML-Agents::Unity.MLAgents.Policies.BehaviorParameters
   m_BrainParameters:
-    VectorObservationSize: 1
+    VectorObservationSize: 7
     NumStackedVectorObservations: 1
     m_ActionSpec:
-      m_NumContinuousActions: 0
+      m_NumContinuousActions: 3
       BranchSizes: 01000000
-    VectorActionSize: 01000000
+    VectorActionSize: 
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
     hasUpgradedBrainParametersWithActionSpec: 1
@@ -20762,6 +21008,28 @@ MonoBehaviour:
   DecisionPeriod: 5
   DecisionStep: 5
   TakeActionsBetweenDecisions: 1
+--- !u!95 &1923683305
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1923683278}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: ceeeeb2a80d162743a732a58b287823d, type: 3}
+  m_Controller: {fileID: 9100000, guid: 0c3b6bac27207404d85d37a28d748af3, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1928461273 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1520818877436856, guid: c5aa08609f3d9f547aca9af1d6c18070, type: 3}
@@ -22087,13 +22355,21 @@ PrefabInstance:
       propertyPath: 'm_BrainParameters.m_ActionSpec.BranchSizes.Array.data[0]'
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 2772434886221639802, guid: 448306e06d77d4a4faca9a0dca0496c4, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3913793771593773451, guid: 448306e06d77d4a4faca9a0dca0496c4, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4255720043179121448, guid: 448306e06d77d4a4faca9a0dca0496c4, type: 3}
       propertyPath: m_Animator
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 288517251}
     - target: {fileID: 4255720043179121448, guid: 448306e06d77d4a4faca9a0dca0496c4, type: 3}
       propertyPath: AnimatorParameterEntries.ParameterEntries.Array.size
-      value: 0
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 4255720043179121448, guid: 448306e06d77d4a4faca9a0dca0496c4, type: 3}
       propertyPath: AnimatorParameterEntries.ParameterEntries.Array.data[0].name
@@ -22374,7 +22650,7 @@ PrefabInstance:
     - target: {fileID: 6726896124416815187, guid: 448306e06d77d4a4faca9a0dca0496c4, type: 3}
       propertyPath: m_Animator
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 288517251}
     - target: {fileID: 7246774727498101154, guid: 448306e06d77d4a4faca9a0dca0496c4, type: 3}
       propertyPath: m_Name
       value: NPC_Andre
@@ -22386,6 +22662,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7246774727498101154, guid: 448306e06d77d4a4faca9a0dca0496c4, type: 3}
       insertIndex: -1
       addedObject: {fileID: 288517250}
+    - targetCorrespondingSourceObject: {fileID: 7246774727498101154, guid: 448306e06d77d4a4faca9a0dca0496c4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 288517251}
   m_SourcePrefab: {fileID: 100100000, guid: 448306e06d77d4a4faca9a0dca0496c4, type: 3}
 --- !u!114 &5911490032476959063
 MonoBehaviour:
