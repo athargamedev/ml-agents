@@ -65,6 +65,9 @@
 *.eggs*
 *.gitignore.swp
 
+#Art
+*.mat
+
 # VSCode hidden files
 *.vscode/
 !/.vscode/
