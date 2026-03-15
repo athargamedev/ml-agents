@@ -470,6 +470,9 @@ namespace Network_Game.Dialogue
         private int m_MaxConcurrentRequests = 1;
 
         [SerializeField]
+        private bool m_AutoRaiseRemoteConcurrency = true;
+
+        [SerializeField]
         private int m_MaxRequestsPerClient = 4;
 
         [SerializeField]
@@ -616,6 +619,11 @@ namespace Network_Game.Dialogue
         [Min(64)]
         [Tooltip("Maximum characters for the current user prompt sent to remote backends.")]
         private int m_RemoteUserPromptCharBudget = 520;
+
+        [SerializeField]
+        [Range(32, 1024)]
+        [Tooltip("Max tokens for standard player-visible remote dialogue turns.")]
+        private int m_RemoteDialogueResponseMaxTokens = 192;
 
         [SerializeField]
         [Min(512)]
@@ -852,6 +860,11 @@ namespace Network_Game.Dialogue
                 2048
             );
             m_RemoteUserPromptCharBudget = Mathf.Clamp(m_RemoteUserPromptCharBudget, 64, 2048);
+            m_RemoteDialogueResponseMaxTokens = Mathf.Clamp(
+                m_RemoteDialogueResponseMaxTokens,
+                32,
+                1024
+            );
             m_RemoteSystemPromptCharBudget = Mathf.Clamp(
                 m_RemoteSystemPromptCharBudget,
                 512,
@@ -1795,7 +1808,7 @@ namespace Network_Game.Dialogue
             while (m_RequestQueue.Count > 0 || m_ActiveRequestIds.Count > 0)
             {
                 bool startedWorker = false;
-                int maxWorkers = Mathf.Max(1, m_MaxConcurrentRequests);
+                int maxWorkers = GetEffectiveMaxConcurrentRequests();
                 while (m_ActiveRequestIds.Count < maxWorkers)
                 {
                     if (
@@ -1877,6 +1890,19 @@ namespace Network_Game.Dialogue
             }
 
             return false;
+        }
+
+        private int GetEffectiveMaxConcurrentRequests()
+        {
+            int configured = Mathf.Clamp(m_MaxConcurrentRequests, 1, 8);
+            if (!m_AutoRaiseRemoteConcurrency || configured > 1)
+            {
+                return configured;
+            }
+
+            // SideChannel override is primarily for training/bridge validation and should
+            // stay conservative. The remote HTTP backend benefits from modest parallelism.
+            return m_OverrideClient == null ? 2 : configured;
         }
 
         private async Task ExecuteRequestWorkerAsync(int requestId, DialogueRequestState state)
@@ -3993,6 +4019,18 @@ namespace Network_Game.Dialogue
                     ModelLatencyMs = modelLatencyMs,
                     TotalLatencyMs = totalLatencyMs,
                 }
+            );
+
+            DialogueMCPBridge.LogDialogueDebugEntry(
+                state.Request,
+                state.ResponseText ?? string.Empty,
+                state.Status.ToString(),
+                state.Error ?? string.Empty,
+                state.RetryCount,
+                queueLatencyMs,
+                modelLatencyMs,
+                totalLatencyMs,
+                requestId
             );
         }
 
@@ -8648,7 +8686,7 @@ namespace Network_Game.Dialogue
                     >= 0;
         }
 
-        private static DialogueInferenceRequestOptions BuildInferenceRequestOptions(
+        private DialogueInferenceRequestOptions BuildInferenceRequestOptions(
             DialogueRequest request,
             string promptText
         )
@@ -8718,6 +8756,14 @@ namespace Network_Game.Dialogue
                         + "The responseText value must contain one short in-character sentence followed by exactly one [EFFECT: ...] tag. "
                         + "Use a concrete target in the tag when possible (for example player, self, floor, stairs, or a named scene object). "
                         + "No analysis. No extra keys.",
+                };
+            }
+
+            if (request.IsUserInitiated)
+            {
+                return new DialogueInferenceRequestOptions
+                {
+                    MaxTokensOverride = m_RemoteDialogueResponseMaxTokens,
                 };
             }
 
@@ -9036,11 +9082,6 @@ namespace Network_Game.Dialogue
             };
 
             OnDialogueResponse?.Invoke(response);
-            DialogueMCPBridge.LogDialogueDebugEntry(
-                response.Request,
-                response.ResponseText,
-                response.Status.ToString()
-            );
         }
 
         /// <summary>

@@ -64,6 +64,43 @@ namespace Network_Game.Diagnostics
         [SerializeField]
         private int m_TimeoutCount;
 
+        [Header("Last Dialogue Telemetry")]
+        [SerializeField]
+        private int m_LastRequestId;
+
+        [SerializeField]
+        private int m_LastClientRequestId;
+
+        [SerializeField]
+        private string m_LastDialogueStatus;
+
+        [SerializeField]
+        private string m_LastDialogueError;
+
+        [SerializeField]
+        private int m_LastRetryCount;
+
+        [SerializeField]
+        private float m_LastQueueLatencyMs;
+
+        [SerializeField]
+        private float m_LastModelLatencyMs;
+
+        [SerializeField]
+        private float m_LastTotalLatencyMs;
+
+        [SerializeField]
+        private bool m_LastUserInitiated;
+
+        [SerializeField]
+        private ulong m_LastSpeakerNetworkId;
+
+        [SerializeField]
+        private ulong m_LastListenerNetworkId;
+
+        [SerializeField, TextArea(1, 2)]
+        private string m_LastConversationKey;
+
         [Header("Log Stats (this session)")]
         [SerializeField]
         private int m_ErrorCount;
@@ -88,6 +125,7 @@ namespace Network_Game.Diagnostics
         {
             InferenceWatchReporter.ActiveWatchdog = this;
             Application.logMessageReceived += OnLog;
+            NetworkDialogueService.OnDialogueResponseTelemetry += HandleDialogueTelemetry;
             m_Assistant = FindAnyObjectByType<LlmDebugAssistant>();
         }
 
@@ -96,6 +134,7 @@ namespace Network_Game.Diagnostics
             if (InferenceWatchReporter.ActiveWatchdog == this)
                 InferenceWatchReporter.ActiveWatchdog = null;
             Application.logMessageReceived -= OnLog;
+            NetworkDialogueService.OnDialogueResponseTelemetry -= HandleDialogueTelemetry;
         }
 
         private void Update()
@@ -165,6 +204,22 @@ namespace Network_Game.Diagnostics
             m_LastPrompt = Truncate(prompt, 120);
             m_LastResponse = Truncate(response, 120);
             m_LastInferenceMs = elapsedMs;
+        }
+
+        private void HandleDialogueTelemetry(NetworkDialogueService.DialogueResponseTelemetry telemetry)
+        {
+            m_LastRequestId = telemetry.RequestId;
+            m_LastClientRequestId = telemetry.Request.ClientRequestId;
+            m_LastDialogueStatus = telemetry.Status.ToString();
+            m_LastDialogueError = Truncate(telemetry.Error, 180);
+            m_LastRetryCount = telemetry.RetryCount;
+            m_LastQueueLatencyMs = telemetry.QueueLatencyMs;
+            m_LastModelLatencyMs = telemetry.ModelLatencyMs;
+            m_LastTotalLatencyMs = telemetry.TotalLatencyMs;
+            m_LastUserInitiated = telemetry.Request.IsUserInitiated;
+            m_LastSpeakerNetworkId = telemetry.Request.SpeakerNetworkId;
+            m_LastListenerNetworkId = telemetry.Request.ListenerNetworkId;
+            m_LastConversationKey = Truncate(telemetry.Request.ConversationKey, 120);
         }
 
         private static string Truncate(string s, int max) =>

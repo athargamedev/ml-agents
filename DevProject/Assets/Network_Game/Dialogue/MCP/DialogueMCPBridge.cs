@@ -1124,13 +1124,21 @@ namespace Network_Game.Dialogue.MCP
         {
             public long TimestampMs;
             public int RequestId;
+            public int ServerRequestId;
             public ulong SpeakerNetworkId;
+            public ulong ListenerNetworkId;
             public string ConversationKey;
             public string PromptSnippet;
             public string ResponseSnippet;
             public string[] EffectTagsParsed;
             public string[] AnimationTagsParsed;
             public string Status;
+            public string Error;
+            public int RetryCount;
+            public float QueueLatencyMs;
+            public float ModelLatencyMs;
+            public float TotalLatencyMs;
+            public bool IsUserInitiated;
         }
 
         /// <summary>LM Studio analysis result pushed back from the Python server.</summary>
@@ -1169,7 +1177,13 @@ namespace Network_Game.Dialogue.MCP
         public static void LogDialogueDebugEntry(
             NetworkDialogueService.DialogueRequest request,
             string responseText,
-            string status
+            string status,
+            string error = "",
+            int retryCount = 0,
+            float queueLatencyMs = 0f,
+            float modelLatencyMs = 0f,
+            float totalLatencyMs = 0f,
+            int serverRequestId = 0
         )
         {
             string[] effectTags = ExtractEffectTags(responseText);
@@ -1178,13 +1192,21 @@ namespace Network_Game.Dialogue.MCP
             {
                 TimestampMs = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
                 RequestId = request.ClientRequestId,
+                ServerRequestId = serverRequestId,
                 SpeakerNetworkId = request.SpeakerNetworkId,
+                ListenerNetworkId = request.ListenerNetworkId,
                 ConversationKey = request.ConversationKey ?? string.Empty,
                 PromptSnippet = Truncate(request.Prompt, 200),
                 ResponseSnippet = Truncate(responseText, 300),
                 EffectTagsParsed = effectTags,
                 AnimationTagsParsed = animationTags,
                 Status = status ?? "unknown",
+                Error = error ?? string.Empty,
+                RetryCount = retryCount,
+                QueueLatencyMs = queueLatencyMs,
+                ModelLatencyMs = modelLatencyMs,
+                TotalLatencyMs = totalLatencyMs,
+                IsUserInitiated = request.IsUserInitiated,
             };
 
             lock (s_LogLock)
@@ -1226,13 +1248,21 @@ namespace Network_Game.Dialogue.MCP
                         {
                             ["timestamp_ms"] = e.TimestampMs,
                             ["request_id"] = e.RequestId,
+                            ["server_request_id"] = e.ServerRequestId,
                             ["speaker_network_id"] = e.SpeakerNetworkId.ToString(),
+                            ["listener_network_id"] = e.ListenerNetworkId.ToString(),
                             ["conversation_key"] = e.ConversationKey,
                             ["prompt_snippet"] = e.PromptSnippet,
                             ["response_snippet"] = e.ResponseSnippet,
                             ["effect_tags_parsed"] = e.EffectTagsParsed,
                             ["animation_tags_parsed"] = e.AnimationTagsParsed,
                             ["status"] = e.Status,
+                            ["error"] = e.Error,
+                            ["retry_count"] = e.RetryCount,
+                            ["queue_latency_ms"] = e.QueueLatencyMs,
+                            ["model_latency_ms"] = e.ModelLatencyMs,
+                            ["total_latency_ms"] = e.TotalLatencyMs,
+                            ["is_user_initiated"] = e.IsUserInitiated,
                         }
                     );
                 }

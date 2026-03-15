@@ -3,7 +3,7 @@
   "connections": {
     "ml-agents-local": {
       "type": "git",
-      "url": "file:///GitRepos/ml-agents",
+      "url": "file:///repos/ml-agents",
       "revisions": {
         "branches": [
           "develop",
@@ -15,8 +15,26 @@
   "models": [
     {
       "provider": "openai-compatible",
+      "model": "qwen3-8b",
+      "displayName": "Qwen3 8B (Best — code + prose)",
+      "baseUrl": "http://lmstudio-proxy:8080/v1",
+      "token": {
+        "env": "LM_STUDIO_TOKEN"
+      }
+    },
+    {
+      "provider": "openai-compatible",
+      "model": "llama-3.2-3b@q8_0",
+      "displayName": "Llama 3.2 3B (Fast lookups)",
+      "baseUrl": "http://lmstudio-proxy:8080/v1",
+      "token": {
+        "env": "LM_STUDIO_TOKEN"
+      }
+    },
+    {
+      "provider": "openai-compatible",
       "model": "qwen2.5-coder-7b-instruct@q8_0",
-      "displayName": "LM Studio Code Model",
+      "displayName": "Qwen2.5 Coder 7B (code-only, avoid prose)",
       "baseUrl": "http://lmstudio-proxy:8080/v1",
       "token": {
         "env": "LM_STUDIO_TOKEN"

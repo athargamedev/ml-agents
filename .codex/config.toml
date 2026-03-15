@@ -1,0 +1,52 @@
+model = "gpt-5.4"
+model_reasoning_effort = "high"
+windows_wsl_setup_acknowledged = true
+personality = "pragmatic"
+
+[mcp_servers.MCP_DOCKER]
+command = 'docker.exe'
+args = [ 'mcp', 'gateway', 'run' ]
+startup_timeout_sec = 30
+
+[mcp_servers.unityMCP]
+command = "C:\\Users\\andre_wjgj23f\\.local\\bin\\uvx.exe"
+args = [ "--no-cache", "--refresh", "--from", "https://github.com/CoplayDev/unity-mcp.git?path=/MCPForUnity#beta", "mcp-for-unity", "--transport", "stdio" ]
+startup_timeout_sec = 60
+env = { SystemRoot = "C:\\WINDOWS" }
+
+[mcp_servers.serena-mcp]
+command = "uvx"
+args = [ "--from", "git+https://github.com/oraios/serena", "serena", "start-mcp-server", "--project", "ml-agents" ]
+startup_timeout_sec = 30
+
+[mcp_servers.blender]
+command = "uvx"
+args = [ "blender-mcp" ]
+startup_timeout_sec = 60
+
+[mcp_servers.sourcebot]
+url = "http://127.0.0.1:8090/api/mcp"
+
+[projects."D:\\VScode_presets\\UnityAITemplate"]
+trust_level = "trusted"
+
+[projects."C:\\Users\\andre_wjgj23f"]
+trust_level = "trusted"
+
+[projects.'\\?\D:\GithubRepos\ml-agents']
+trust_level = "trusted"
+
+
+[windows]
+sandbox = "elevated"
+
+[[skills.config]]
+path = 'C:\Users\andre_wjgj23f\.codex\skills\public\qdrant-search\SKILL.md'
+enabled = false
+
+[[skills.config]]
+path = 'C:\Users\andre_wjgj23f\.codex\skills\public\indexer-manage\SKILL.md'
+enabled = false
+
+[notice.model_migrations]
+"gpt-5.2-codex" = "gpt-5.4"

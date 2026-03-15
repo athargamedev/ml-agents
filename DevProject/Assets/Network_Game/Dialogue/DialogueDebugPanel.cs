@@ -30,6 +30,13 @@ namespace Network_Game.Dialogue
         private string m_LastErrorFriendly = "-";
         private NetworkDialogueService.DialogueStatus m_LastStatus;
         private bool m_HasResponse;
+        private int m_LastTelemetryRequestId;
+        private int m_LastTelemetryClientRequestId;
+        private int m_LastTelemetryRetryCount;
+        private float m_LastTelemetryQueueMs;
+        private float m_LastTelemetryModelMs;
+        private float m_LastTelemetryTotalMs;
+        private string m_LastTelemetryError = "-";
 
         // LM Studio / VFX refresh state
         private float m_NextRefreshTime;
@@ -50,12 +57,14 @@ namespace Network_Game.Dialogue
         private void OnEnable()
         {
             NetworkDialogueService.OnDialogueResponse += HandleDialogueResponse;
+            NetworkDialogueService.OnDialogueResponseTelemetry += HandleDialogueTelemetry;
             m_NextRefreshTime = Time.realtimeSinceStartup;
         }
 
         private void OnDisable()
         {
             NetworkDialogueService.OnDialogueResponse -= HandleDialogueResponse;
+            NetworkDialogueService.OnDialogueResponseTelemetry -= HandleDialogueTelemetry;
             DestroyUiToolkitOverlay();
         }
 
@@ -165,6 +174,14 @@ namespace Network_Game.Dialogue
 
             string rejectionSummary = BuildRejectionSummary(stats.RejectionReasonCounts, 3);
             GUI.Label(new Rect(20, 260, 840, 20), $"Top Rejections (rolling): {rejectionSummary}");
+            GUI.Label(
+                new Rect(20, 280, 840, 20),
+                $"Last Telemetry - Req: {m_LastTelemetryRequestId}/{m_LastTelemetryClientRequestId}, Retry: {m_LastTelemetryRetryCount}, Queue/Model/Total: {m_LastTelemetryQueueMs:F0}/{m_LastTelemetryModelMs:F0}/{m_LastTelemetryTotalMs:F0} ms"
+            );
+            GUI.Label(
+                new Rect(20, 300, 840, 20),
+                $"Last Telemetry Error: {m_LastTelemetryError}"
+            );
 
             if (m_ShowLastResponse)
             {
@@ -291,6 +308,19 @@ namespace Network_Game.Dialogue
                 ? "Dialogue failed."
                 : response.Error.Trim();
             m_LastErrorFriendly = DialogueClientUI.FormatErrorMessage(m_LastErrorRaw);
+        }
+
+        private void HandleDialogueTelemetry(NetworkDialogueService.DialogueResponseTelemetry telemetry)
+        {
+            m_LastTelemetryRequestId = telemetry.RequestId;
+            m_LastTelemetryClientRequestId = telemetry.Request.ClientRequestId;
+            m_LastTelemetryRetryCount = telemetry.RetryCount;
+            m_LastTelemetryQueueMs = telemetry.QueueLatencyMs;
+            m_LastTelemetryModelMs = telemetry.ModelLatencyMs;
+            m_LastTelemetryTotalMs = telemetry.TotalLatencyMs;
+            m_LastTelemetryError = string.IsNullOrWhiteSpace(telemetry.Error)
+                ? "-"
+                : telemetry.Error.Trim();
         }
 
         private void TryEnsureUiToolkitOverlay()
@@ -435,7 +465,8 @@ namespace Network_Game.Dialogue
                 m_UiStatsLabel.text =
                     $"Queue {stats.PendingCount}  Active {stats.ActiveCount}  Histories {stats.HistoryCount}  "
                     + $"Success {stats.SuccessRate:P0}  Timeout {stats.TimeoutRate:P0}  "
-                    + $"Queue p50/p95 {stats.QueueWaitHistogram.P50Ms:F0}/{stats.QueueWaitHistogram.P95Ms:F0} ms";
+                    + $"Queue p50/p95 {stats.QueueWaitHistogram.P50Ms:F0}/{stats.QueueWaitHistogram.P95Ms:F0} ms  "
+                    + $"Last req {m_LastTelemetryRequestId}/{m_LastTelemetryClientRequestId} total {m_LastTelemetryTotalMs:F0} ms retry {m_LastTelemetryRetryCount}";
             }
 
             if (m_UiLastResponseLabel != null)
@@ -446,7 +477,8 @@ namespace Network_Game.Dialogue
 
             if (m_UiLastErrorLabel != null)
             {
-                m_UiLastErrorLabel.text = $"Last error: {m_LastErrorFriendly} | {m_LastErrorRaw}";
+                m_UiLastErrorLabel.text =
+                    $"Last error: {m_LastErrorFriendly} | {m_LastErrorRaw} | telemetry: {m_LastTelemetryError}";
             }
 
             RebuildLmStudioList();
