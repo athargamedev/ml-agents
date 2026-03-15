@@ -1,0 +1,4 @@
+interface:
+  display_name: "Unity Dialogue Persona LoRA"
+  short_description: "NPC persona, profile, and LoRA management"
+  default_prompt: "Use $unity-dialogue-persona-lora to update DevProject NPC personas, profile assets, prompt context, and mirror-LoRA dialogue bindings."

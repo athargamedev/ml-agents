@@ -1,0 +1,4 @@
+interface:
+  display_name: "Unity Dialogue Runtime Triage"
+  short_description: "LLM queue, routing, and NPC dialogue triage"
+  default_prompt: "Use $unity-dialogue-runtime-triage to inspect DevProject's live NPC dialogue pipeline, queue state, and response routing."

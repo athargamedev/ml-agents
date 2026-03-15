@@ -10,8 +10,18 @@ Applies to the Behavior_Scene runtime environment:
 
 ## Read first
 
+- `Assets/Network_Game/AGENTS.md`
 - `Assets/Network_Game/Behavior/Unity Behavior Example/MEMORY.md`
 - `Assets/Network_Game/Dialogue/MEMORY.md`
+
+## Use these skills first
+
+- `unity-project-self-diagnostics` — first-pass scene/bootstrap health check
+- `unity-auth-identity-guard` — auth gate, identity, login sequencing
+- `unity-player-spawn-authority` — connection approval, spawn, local-player ownership
+- `unity-character-control-netcode` — owner-only movement, camera, fly mode
+- `unity-dialogue-runtime-triage` — runtime dialogue routing after player/NPC wiring
+- `unity-network-performance-audit` — transport and runtime perf tuning
 
 ## Key components in scene
 

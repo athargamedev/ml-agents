@@ -1,0 +1,4 @@
+interface:
+  display_name: "Unity Network Performance Audit"
+  short_description: "Throughput, latency, and transport optimization"
+  default_prompt: "Use $unity-network-performance-audit to profile DevProject dialogue throughput, NGO transport choices, and multiplayer performance bottlenecks."

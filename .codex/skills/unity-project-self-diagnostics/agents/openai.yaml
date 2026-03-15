@@ -1,0 +1,4 @@
+interface:
+  display_name: "Unity Project Self Diagnostics"
+  short_description: "First-pass triage for DevProject runtime health"
+  default_prompt: "Use $unity-project-self-diagnostics to audit DevProject and route the issue to the right multiplayer subsystem specialist."

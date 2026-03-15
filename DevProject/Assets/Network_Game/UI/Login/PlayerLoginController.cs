@@ -1,4 +1,5 @@
 using Network_Game.Auth;
+using Network_Game.Behavior;
 using Network_Game.UI;
 using Unity.Netcode;
 using UnityEngine;
@@ -16,6 +17,7 @@ namespace Network_Game.UI.Login
         private Label m_StatusLabel;
         private bool m_UsingHudCursorRouter;
         private DisplayStyle m_LastDisplayStyle = DisplayStyle.None;
+        private bool m_BootstrapEventsSubscribed;
 
         private void OnEnable()
         {
@@ -30,6 +32,7 @@ namespace Network_Game.UI.Login
                 m_LoginButton.clicked += OnLoginClicked;
 
             LocalPlayerAuthService.OnPlayerLoggedIn += HandleLoginSuccess;
+            UpdateBootstrapEventSubscription(true);
 
             // Load last used name
             if (authService != null && m_NameInput != null)
@@ -111,6 +114,11 @@ namespace Network_Game.UI.Login
 
         private void Update()
         {
+            if (!m_BootstrapEventsSubscribed && NetworkBootstrapEvents.Instance != null)
+            {
+                UpdateBootstrapEventSubscription(true);
+            }
+
             if (m_Root == null)
                 return;
 
@@ -131,6 +139,7 @@ namespace Network_Game.UI.Login
             if (m_LoginButton != null)
                 m_LoginButton.clicked -= OnLoginClicked;
             LocalPlayerAuthService.OnPlayerLoggedIn -= HandleLoginSuccess;
+            UpdateBootstrapEventSubscription(false);
             RestoreGameplayCursorAndLookState();
         }
 
@@ -236,19 +245,60 @@ namespace Network_Game.UI.Login
                 localPlayer = manager.LocalClient.PlayerObject.gameObject;
             }
 
-            if (localPlayer == null)
+            authService.AttachLocalPlayer(localPlayer);
+        }
+
+        private void HandleLocalPlayerSpawned(GameObject player)
+        {
+            AttachAuthenticatedLocalPlayer(player);
+        }
+
+        private void HandleLocalPlayerReady(GameObject player)
+        {
+            AttachAuthenticatedLocalPlayer(player);
+        }
+
+        private static void AttachAuthenticatedLocalPlayer(GameObject player)
+        {
+            LocalPlayerAuthService authService = LocalPlayerAuthService.Instance;
+            if (authService == null || !authService.HasCurrentPlayer)
             {
-                try
-                {
-                    localPlayer = GameObject.FindGameObjectWithTag("Player");
-                }
-                catch (UnityException)
-                {
-                    // Tag is optional in some scenes.
-                }
+                return;
             }
 
-            authService.AttachLocalPlayer(localPlayer);
+            authService.AttachLocalPlayer(player);
+        }
+
+        private void UpdateBootstrapEventSubscription(bool subscribe)
+        {
+            NetworkBootstrapEvents events = NetworkBootstrapEvents.Instance;
+            if (events == null)
+            {
+                m_BootstrapEventsSubscribed = false;
+                return;
+            }
+
+            if (subscribe)
+            {
+                if (m_BootstrapEventsSubscribed)
+                {
+                    return;
+                }
+
+                events.OnLocalPlayerSpawned += HandleLocalPlayerSpawned;
+                events.OnLocalPlayerReady += HandleLocalPlayerReady;
+                m_BootstrapEventsSubscribed = true;
+                return;
+            }
+
+            if (!m_BootstrapEventsSubscribed)
+            {
+                return;
+            }
+
+            events.OnLocalPlayerSpawned -= HandleLocalPlayerSpawned;
+            events.OnLocalPlayerReady -= HandleLocalPlayerReady;
+            m_BootstrapEventsSubscribed = false;
         }
     }
 }

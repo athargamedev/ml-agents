@@ -419,6 +419,7 @@ namespace Network_Game.Auth
 
         public bool HasCurrentPlayer => m_HasCurrentPlayer;
         public LocalPlayerRecord CurrentPlayer => m_CurrentPlayer;
+        public ulong LocalPlayerNetworkId => m_LocalPlayerNetworkId;
         public string LastLoginNameId => PlayerPrefs.GetString(LastNameIdKey, m_DefaultNameId);
 
         public static LocalPlayerAuthService EnsureInstance()
@@ -1012,41 +1013,123 @@ namespace Network_Game.Auth
 
         private ulong ResolveLocalPlayerNetworkId()
         {
-            NetworkManager manager = NetworkManager.Singleton;
-            if (manager != null && manager.LocalClient?.PlayerObject != null)
-            {
-                return manager.LocalClient.PlayerObject.NetworkObjectId;
-            }
+            NetworkObject localPlayer = ResolveLocalPlayerNetworkObject();
+            return localPlayer != null ? localPlayer.NetworkObjectId : 0;
+        }
 
-            try
+        private NetworkObject ResolveLocalPlayerNetworkObject()
+        {
+            NetworkManager manager = NetworkManager.Singleton;
+            if (manager != null)
             {
-                GameObject taggedPlayer = GameObject.FindGameObjectWithTag("Player");
-                if (taggedPlayer != null)
+                NetworkObject localClientPlayer = manager.LocalClient?.PlayerObject;
+                if (IsLocalPlayerNetworkObject(manager, localClientPlayer))
                 {
-                    NetworkObject taggedNetObj = taggedPlayer.GetComponent<NetworkObject>();
-                    if (taggedNetObj != null)
-                    {
-                        return taggedNetObj.NetworkObjectId;
-                    }
+                    return localClientPlayer;
                 }
             }
-            catch (UnityException)
+
+            NetworkObject taggedPlayer = ResolveTaggedLocalPlayerNetworkObject(manager);
+            if (taggedPlayer != null)
             {
-                // Tag lookup is best effort only.
+                return taggedPlayer;
             }
 
             if (manager != null && manager.SpawnManager != null)
             {
+                NetworkObject singlePlayerCandidate = null;
+                int playerCandidateCount = 0;
                 foreach (NetworkObject spawned in manager.SpawnManager.SpawnedObjectsList)
                 {
-                    if (spawned != null && spawned.IsPlayerObject)
+                    if (spawned == null || !spawned.IsPlayerObject)
                     {
-                        return spawned.NetworkObjectId;
+                        continue;
                     }
+
+                    if (IsLocalPlayerNetworkObject(manager, spawned))
+                    {
+                        return spawned;
+                    }
+
+                    playerCandidateCount++;
+                    if (singlePlayerCandidate == null)
+                    {
+                        singlePlayerCandidate = spawned;
+                    }
+                }
+
+                if (playerCandidateCount == 1)
+                {
+                    return singlePlayerCandidate;
                 }
             }
 
-            return 0;
+            return null;
+        }
+
+        private NetworkObject ResolveTaggedLocalPlayerNetworkObject(NetworkManager manager)
+        {
+            GameObject[] taggedPlayers;
+            try
+            {
+                taggedPlayers = GameObject.FindGameObjectsWithTag("Player");
+            }
+            catch (UnityException)
+            {
+                return null;
+            }
+
+            if (taggedPlayers == null || taggedPlayers.Length == 0)
+            {
+                return null;
+            }
+
+            NetworkObject singleTaggedCandidate = null;
+            int taggedCandidateCount = 0;
+            foreach (GameObject taggedPlayer in taggedPlayers)
+            {
+                if (taggedPlayer == null)
+                {
+                    continue;
+                }
+
+                NetworkObject taggedNetObj = taggedPlayer.GetComponent<NetworkObject>();
+                if (taggedNetObj == null)
+                {
+                    continue;
+                }
+
+                if (IsLocalPlayerNetworkObject(manager, taggedNetObj))
+                {
+                    return taggedNetObj;
+                }
+
+                taggedCandidateCount++;
+                if (singleTaggedCandidate == null)
+                {
+                    singleTaggedCandidate = taggedNetObj;
+                }
+            }
+
+            return taggedCandidateCount == 1 ? singleTaggedCandidate : null;
+        }
+
+        private static bool IsLocalPlayerNetworkObject(
+            NetworkManager manager,
+            NetworkObject networkObject
+        )
+        {
+            if (manager == null || networkObject == null || !networkObject.IsSpawned)
+            {
+                return false;
+            }
+
+            if (networkObject.IsOwner)
+            {
+                return true;
+            }
+
+            return manager.IsListening && networkObject.OwnerClientId == manager.LocalClientId;
         }
 
         private static string NormalizeNameId(string nameId)

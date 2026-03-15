@@ -1828,7 +1828,7 @@ namespace Network_Game.Dialogue
 
                 if (!startedWorker)
                 {
-                    await Task.Delay(10);
+                    await Task.Delay(GetQueueIdleDelayMs());
                 }
             }
 
@@ -1903,6 +1903,60 @@ namespace Network_Game.Dialogue
             // SideChannel override is primarily for training/bridge validation and should
             // stay conservative. The remote HTTP backend benefits from modest parallelism.
             return m_OverrideClient == null ? 2 : configured;
+        }
+
+        private int GetQueueIdleDelayMs()
+        {
+            if (m_RequestQueue.Count <= 0)
+            {
+                return 10;
+            }
+
+            float now = Time.realtimeSinceStartup;
+            float nextReadyInSeconds = float.MaxValue;
+            foreach (int queuedRequestId in m_RequestQueue)
+            {
+                if (
+                    !m_Requests.TryGetValue(
+                        queuedRequestId,
+                        out DialogueRequestState queuedRequestState
+                    )
+                    || queuedRequestState == null
+                )
+                {
+                    continue;
+                }
+
+                if (
+                    queuedRequestState.Status == DialogueStatus.Completed
+                    || queuedRequestState.Status == DialogueStatus.Failed
+                    || queuedRequestState.Status == DialogueStatus.Cancelled
+                )
+                {
+                    continue;
+                }
+
+                if (
+                    queuedRequestState.NextAttemptAt <= 0f
+                    || queuedRequestState.NextAttemptAt <= now
+                )
+                {
+                    return 10;
+                }
+
+                float delay = queuedRequestState.NextAttemptAt - now;
+                if (delay < nextReadyInSeconds)
+                {
+                    nextReadyInSeconds = delay;
+                }
+            }
+
+            if (nextReadyInSeconds == float.MaxValue)
+            {
+                return 10;
+            }
+
+            return Mathf.Clamp(Mathf.CeilToInt(nextReadyInSeconds * 1000f), 10, 250);
         }
 
         private async Task ExecuteRequestWorkerAsync(int requestId, DialogueRequestState state)

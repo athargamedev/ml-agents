@@ -1,0 +1,4 @@
+interface:
+  display_name: "Unity Character Control Netcode"
+  short_description: "Owner-authoritative movement and camera checks"
+  default_prompt: "Use $unity-character-control-netcode to debug DevProject movement, ownership-based input, camera follow, and fly-mode sync."

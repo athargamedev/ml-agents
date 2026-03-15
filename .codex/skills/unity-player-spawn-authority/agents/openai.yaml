@@ -1,0 +1,4 @@
+interface:
+  display_name: "Unity Player Spawn Authority"
+  short_description: "Spawn, approval, and ownership diagnostics"
+  default_prompt: "Use $unity-player-spawn-authority to debug DevProject player spawning, local-player resolution, and NGO ownership flow."

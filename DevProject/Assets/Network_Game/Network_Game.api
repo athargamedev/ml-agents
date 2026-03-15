@@ -52,6 +52,7 @@ namespace Network_Game.Auth
         public bool HasCurrentPlayer { get; }
         public static LocalPlayerAuthService Instance { get; }
         public string LastLoginNameId { get; }
+        public ulong LocalPlayerNetworkId { get; }
         public LocalPlayerAuthService() {}
         public bool AddInventoryTag(string tag);
         public void AttachLocalPlayer(UnityEngine.GameObject playerObject);
@@ -1209,7 +1210,7 @@ namespace Network_Game.Dialogue.MCP
         public static System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, object>> GetProfiles();
         public static System.Collections.Generic.Dictionary<string, int> GetQueueStatus();
         public static System.Collections.Generic.Dictionary<string, object> GetStats();
-        public static void LogDialogueDebugEntry(NetworkDialogueService.DialogueRequest request, string responseText, string status);
+        public static void LogDialogueDebugEntry(NetworkDialogueService.DialogueRequest request, string responseText, string status, string error = @"", int retryCount = 0, float queueLatencyMs = 0f, float modelLatencyMs = 0f, float totalLatencyMs = 0f, int serverRequestId = 0);
         public static System.Collections.Generic.Dictionary<string, object> SendAnimationProbeToNpc(ulong speakerNetworkObjectId, string animationTag = @"EmphasisReact", ulong listenerNetworkObjectId = 0);
         public static System.Collections.Generic.Dictionary<string, object> SendGameplayProbeToNpc(ulong speakerNetworkObjectId, string directive = default(string), ulong listenerNetworkObjectId = 0);
         public static System.Collections.Generic.Dictionary<string, object> SendGameplayProbeToNpcs(string directive = default(string), int maxNpcs = 3, ulong listenerNetworkObjectId = 0);
@@ -1218,12 +1219,20 @@ namespace Network_Game.Dialogue.MCP
             public string[] AnimationTagsParsed;
             public string ConversationKey;
             public string[] EffectTagsParsed;
+            public string Error;
+            public bool IsUserInitiated;
+            public ulong ListenerNetworkId;
+            public float ModelLatencyMs;
             public string PromptSnippet;
+            public float QueueLatencyMs;
             public int RequestId;
             public string ResponseSnippet;
+            public int RetryCount;
+            public int ServerRequestId;
             public ulong SpeakerNetworkId;
             public string Status;
             public long TimestampMs;
+            public float TotalLatencyMs;
         }
         public struct LMStudioLogEntry
         {

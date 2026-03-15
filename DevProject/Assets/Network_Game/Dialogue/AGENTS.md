@@ -6,15 +6,17 @@
 
 ## Read first
 
+- `Assets/Network_Game/AGENTS.md`
 - `Assets/Network_Game/Dialogue/MEMORY.md`
 - `Assets/Network_Game/Behavior/Unity Behavior Example/MEMORY.md` (when scene wiring is involved)
 
 ## Use these skills first
 
 - `unity-dialogue-runtime-triage` — diagnose live failures
-- `unity-dialogue-netcode-authority` — validate RPC flow
 - `unity-dialogue-persona-lora` — persona/LoRA/effect changes
-- `unity-dialogue-improvement-audit` — hardening and roadmap
+- `unity-network-performance-audit` — throughput, latency, transport, broadcast tuning
+- `unity-auth-identity-guard` — auth-gated dialogue and missing identity snapshots
+- `unity-player-spawn-authority` — local-player and participant resolution failures
 
 ## Key files
 

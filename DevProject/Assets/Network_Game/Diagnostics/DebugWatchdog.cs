@@ -1,4 +1,6 @@
+using Network_Game.Auth;
 using Network_Game.Dialogue;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Network_Game.Diagnostics
@@ -38,6 +40,28 @@ namespace Network_Game.Diagnostics
 
         [SerializeField]
         private int m_TotalInferenceCalls;
+
+        [Header("Auth + Spawn")]
+        [SerializeField]
+        private bool m_AuthServicePresent;
+
+        [SerializeField]
+        private bool m_HasAuthenticatedLocalPlayer;
+
+        [SerializeField, TextArea(1, 2)]
+        private string m_LocalNameId;
+
+        [SerializeField]
+        private ulong m_AttachedLocalPlayerNetworkId;
+
+        [SerializeField]
+        private bool m_LocalPlayerObjectPresent;
+
+        [SerializeField, TextArea(1, 2)]
+        private string m_LocalPlayerObjectName;
+
+        [SerializeField]
+        private bool m_LocalPlayerAttachmentMismatch;
 
         [Header("Dialogue Service")]
         [SerializeField]
@@ -143,6 +167,7 @@ namespace Network_Game.Diagnostics
                 return;
             m_NextPoll = Time.realtimeSinceStartup + m_PollInterval;
             PollAssistant();
+            PollAuthAndSpawn();
             PollDialogueService();
         }
 
@@ -177,6 +202,38 @@ namespace Network_Game.Diagnostics
             m_P50QueueWaitMs = s.QueueWaitHistogram.P50Ms;
             m_P95ModelMs = s.ModelExecutionHistogram.P95Ms;
             m_TimeoutCount = s.TimeoutCount;
+        }
+
+        private void PollAuthAndSpawn()
+        {
+            LocalPlayerAuthService auth = LocalPlayerAuthService.Instance;
+            m_AuthServicePresent = auth != null;
+            if (auth == null)
+            {
+                m_HasAuthenticatedLocalPlayer = false;
+                m_LocalNameId = string.Empty;
+                m_AttachedLocalPlayerNetworkId = 0;
+                m_LocalPlayerObjectPresent = false;
+                m_LocalPlayerObjectName = string.Empty;
+                m_LocalPlayerAttachmentMismatch = false;
+                return;
+            }
+
+            m_HasAuthenticatedLocalPlayer = auth.HasCurrentPlayer;
+            m_LocalNameId = auth.HasCurrentPlayer ? Truncate(auth.CurrentPlayer.NameId, 80) : string.Empty;
+            m_AttachedLocalPlayerNetworkId = auth.LocalPlayerNetworkId;
+
+            NetworkObject localPlayerObject = NetworkManager.Singleton?.LocalClient?.PlayerObject;
+            m_LocalPlayerObjectPresent = localPlayerObject != null;
+            m_LocalPlayerObjectName =
+                localPlayerObject != null ? Truncate(localPlayerObject.gameObject.name, 80) : string.Empty;
+
+            ulong actualLocalPlayerNetworkId =
+                localPlayerObject != null ? localPlayerObject.NetworkObjectId : 0;
+            m_LocalPlayerAttachmentMismatch =
+                m_HasAuthenticatedLocalPlayer
+                && actualLocalPlayerNetworkId != 0
+                && m_AttachedLocalPlayerNetworkId != actualLocalPlayerNetworkId;
         }
 
         private void OnLog(string condition, string stackTrace, LogType type)

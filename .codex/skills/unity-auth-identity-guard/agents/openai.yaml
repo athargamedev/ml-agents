@@ -1,0 +1,4 @@
+interface:
+  display_name: "Unity Auth Identity Guard"
+  short_description: "Login, identity, and prompt-context triage"
+  default_prompt: "Use $unity-auth-identity-guard to diagnose DevProject login, identity propagation, and auth-gated dialogue failures."
