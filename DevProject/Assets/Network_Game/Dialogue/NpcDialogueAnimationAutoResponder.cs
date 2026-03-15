@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Network_Game.Dialogue
 {
     /// <summary>
-    /// Production runtime bridge that plays lightweight self-animations from dialogue context
+    /// Production runtime bridge plays lightweight self-animations from dialogue context
     /// while leaving the existing [EFFECT:] pipeline untouched. Explicit effect tags take priority.
     /// </summary>
     [DisallowMultipleComponent]
