@@ -77,15 +77,21 @@ namespace Unity.MLAgents.NpcDialogue
         public string npcId;
         public string npcPersonality;
         public string playerInput;
+        public string requestId;
         public DialogueRequest() {}
     }
 
     public class DialogueResponse
     {
+        public long completedAtUnixMs;
         public float confidence;
         public string emotion;
+        public string error;
         public string npcId;
+        public long queuedAtUnixMs;
+        public string requestId;
         public string responseText;
+        public string status;
         public DialogueResponse() {}
     }
 
