@@ -169,8 +169,8 @@ namespace Network_Game.Dialogue.MCP
             return history
                 .Select(m => new Dictionary<string, string>
                 {
-                    ["role"] = m.role ?? "",
-                    ["content"] = m.content ?? "",
+                    ["role"] = m.Role ?? string.Empty,
+                    ["content"] = m.Content ?? string.Empty,
                 })
                 .ToList();
         }

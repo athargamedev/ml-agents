@@ -15,8 +15,8 @@
   "models": [
     {
       "provider": "openai-compatible",
-      "model": "qwen3-8b",
-      "displayName": "Qwen3 8B (Best — code + prose)",
+      "model": "llama-3.2-3b-instruct@q8_0",
+      "displayName": "Llama 3.2 3B (Default — fast agent loops)",
       "baseUrl": "http://lmstudio-proxy:8080/v1",
       "token": {
         "env": "LM_STUDIO_TOKEN"
@@ -24,8 +24,8 @@
     },
     {
       "provider": "openai-compatible",
-      "model": "llama-3.2-3b@q8_0",
-      "displayName": "Llama 3.2 3B (Fast lookups)",
+      "model": "qwen3-8b",
+      "displayName": "Qwen3 8B (Deep analysis — slow, use via web UI)",
       "baseUrl": "http://lmstudio-proxy:8080/v1",
       "token": {
         "env": "LM_STUDIO_TOKEN"

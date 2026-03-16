@@ -1380,6 +1380,11 @@ namespace Network_Game.ThirdPersonController
         [UnityEngine.Tooltip(@"Acceleration and deceleration")] public float SpeedChangeRate = 10f;
         [UnityEngine.Tooltip(@"Sprint speed of the character in m/s")] public float SprintSpeed = 5.335f;
         [UnityEngine.Tooltip(@"How far in degrees can you move the camera up")] public float TopClamp = 70f;
+        public string ActiveInputActionMap { get; }
+        public bool FlyModeComponentEnabled { get; }
+        public bool HasAssignedCameraFollow { get; }
+        public bool InputComponentEnabled { get; }
+        public bool PlayerInputComponentEnabled { get; }
         public ThirdPersonController() {}
         protected override string __getTypeName();
         protected override void __initializeRpcs();
@@ -1483,6 +1488,7 @@ namespace Network_Game.UI.Dialogue
     [UnityEngine.AddComponentMenu(@"Network Game/UI/Modern Dialogue Controller")] [UnityEngine.DefaultExecutionOrder(-55)] [UnityEngine.DisallowMultipleComponent] [UnityEngine.RequireComponent(typeof(UnityEngine.UIElements.UIDocument))] public sealed class ModernDialogueController : UnityEngine.MonoBehaviour
     {
         public ModernDialogueController() {}
+        public void ForceRefreshBindings();
     }
 }
 

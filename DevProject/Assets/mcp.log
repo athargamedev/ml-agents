@@ -4,3 +4,107 @@
 {"ts":"2026-03-13T03:58:05.264Z","tool":"get_editor_state","type":"resource","status":"SUCCESS","ms":21,"params":{}}
 {"ts":"2026-03-13T03:58:05.367Z","tool":"get_project_info","type":"resource","status":"SUCCESS","ms":71,"params":{}}
 {"ts":"2026-03-13T03:58:06.042Z","tool":"manage_scene","type":"tool","status":"SUCCESS","ms":92,"action":"get_hierarchy","params":{"action":"get_hierarchy"}}
+{"ts":"2026-03-15T19:12:29.631Z","event":"session_start","unity":"6000.4.0b9"}
+{"ts":"2026-03-15T19:12:29.627Z","tool":"manage_scene","type":"tool","status":"SUCCESS","ms":9,"action":"get_active","params":{"action":"get_active"}}
+{"ts":"2026-03-15T19:12:30.945Z","tool":"manage_scene","type":"tool","status":"SUCCESS","ms":11,"action":"get_hierarchy","params":{"action":"get_hierarchy","pageSize":25,"cursor":0}}
+{"ts":"2026-03-15T19:12:30.970Z","tool":"manage_scene","type":"tool","status":"SUCCESS","ms":1,"action":"get_active","params":{"action":"get_active"}}
+{"ts":"2026-03-15T19:12:30.972Z","tool":"manage_scene","type":"tool","status":"SUCCESS","ms":1,"action":"get_active","params":{"action":"get_active"}}
+{"ts":"2026-03-15T19:12:31.100Z","tool":"manage_scene","type":"tool","status":"SUCCESS","ms":4,"action":"get_hierarchy","params":{"action":"get_hierarchy","pageSize":25,"cursor":0}}
+{"ts":"2026-03-15T19:12:45.199Z","tool":"get_editor_state","type":"resource","status":"SUCCESS","ms":12,"params":{}}
+{"ts":"2026-03-15T19:12:45.316Z","tool":"manage_gameobject","type":"tool","status":"ERROR","ms":0,"action":"get_components","params":{"action":"get_components","target":"MainCamera","includeProperties":true,"pageSize":10,"cursor":0},"error":"Unknown action: 'get_components'."}
+{"ts":"2026-03-15T19:12:46.123Z","tool":"manage_gameobject","type":"tool","status":"ERROR","ms":0,"action":"get_components","params":{"action":"get_components","target":"NetworkManager","includeProperties":true,"pageSize":10,"cursor":0},"error":"Unknown action: 'get_components'."}
+{"ts":"2026-03-15T19:12:46.743Z","tool":"get_editor_state","type":"resource","status":"SUCCESS","ms":0,"params":{}}
+{"ts":"2026-03-15T19:13:09.712Z","tool":"manage_editor","type":"tool","status":"SUCCESS","ms":23,"action":"play","params":{"action":"play"}}
+{"ts":"2026-03-15T19:13:28.971Z","event":"session_start","unity":"6000.4.0b9"}
+{"ts":"2026-03-15T19:13:28.968Z","tool":"get_editor_state","type":"resource","status":"SUCCESS","ms":4,"params":{}}
+{"ts":"2026-03-15T19:13:29.660Z","tool":"find_gameobjects","type":"tool","status":"SUCCESS","ms":11,"params":{"searchMethod":"by_name","searchTerm":"Player","includeInactive":true,"pageSize":20,"cursor":0}}
+{"ts":"2026-03-15T19:13:29.711Z","tool":"find_gameobjects","type":"tool","status":"SUCCESS","ms":2,"params":{"searchMethod":"by_tag","searchTerm":"CinemachineCamera","includeInactive":true,"pageSize":20,"cursor":0}}
+{"ts":"2026-03-15T19:13:29.747Z","tool":"manage_scene","type":"tool","status":"SUCCESS","ms":12,"action":"get_hierarchy","params":{"action":"get_hierarchy","pageSize":30,"cursor":0}}
+{"ts":"2026-03-15T19:13:29.790Z","tool":"read_console","type":"tool","status":"SUCCESS","ms":14,"action":"get","params":{"action":"get","types":["error","warning","log"],"count":30,"include_stacktrace":false}}
+{"ts":"2026-03-15T19:13:51.576Z","tool":"get_gameobject","type":"resource","status":"SUCCESS","ms":8,"params":{"instance_id":"77466"}}
+{"ts":"2026-03-15T19:13:51.629Z","tool":"get_gameobject","type":"resource","status":"SUCCESS","ms":0,"params":{"instance_id":"77586"}}
+{"ts":"2026-03-15T19:13:51.657Z","tool":"get_gameobject","type":"resource","status":"SUCCESS","ms":0,"params":{"instance_id":"76898"}}
+{"ts":"2026-03-15T19:13:51.689Z","tool":"get_gameobject","type":"resource","status":"SUCCESS","ms":0,"params":{"instance_id":"77716"}}
+{"ts":"2026-03-15T19:13:51.705Z","tool":"get_gameobject","type":"resource","status":"SUCCESS","ms":0,"params":{"instance_id":"77848"}}
+{"ts":"2026-03-15T19:13:52.622Z","tool":"get_gameobject_components","type":"resource","status":"SUCCESS","ms":364,"params":{"instance_id":"-731166","page_size":20,"cursor":0,"include_properties":true}}
+{"ts":"2026-03-15T19:13:52.691Z","tool":"get_gameobject","type":"resource","status":"SUCCESS","ms":0,"params":{"instance_id":"-731166"}}
+{"ts":"2026-03-15T19:13:52.770Z","tool":"get_gameobject_components","type":"resource","status":"SUCCESS","ms":50,"params":{"instance_id":"-731166","page_size":20,"cursor":0,"include_properties":true}}
+{"ts":"2026-03-15T19:14:04.340Z","tool":"get_gameobject_component","type":"resource","status":"SUCCESS","ms":27,"params":{"instance_id":"77466","component_name":"CinemachineThirdPersonFollow"}}
+{"ts":"2026-03-15T19:14:04.365Z","tool":"get_gameobject_component","type":"resource","status":"SUCCESS","ms":0,"params":{"instance_id":"77586","component_name":"CinemachineThirdPersonFollow"}}
+{"ts":"2026-03-15T19:14:05.251Z","tool":"get_gameobject_component","type":"resource","status":"SUCCESS","ms":0,"params":{"instance_id":"77586","component_name":"CinemachineThirdPersonFollow"}}
+{"ts":"2026-03-15T19:14:05.291Z","tool":"get_gameobject_component","type":"resource","status":"SUCCESS","ms":9,"params":{"instance_id":"77466","component_name":"CinemachineCamera"}}
+{"ts":"2026-03-15T19:14:05.295Z","tool":"get_gameobject_component","type":"resource","status":"SUCCESS","ms":0,"params":{"instance_id":"76898","component_name":"CinemachineThirdPersonFollow"}}
+{"ts":"2026-03-15T19:14:05.461Z","tool":"get_gameobject_component","type":"resource","status":"SUCCESS","ms":0,"params":{"instance_id":"76898","component_name":"CinemachineThirdPersonFollow"}}
+{"ts":"2026-03-15T19:14:05.482Z","tool":"get_gameobject_component","type":"resource","status":"SUCCESS","ms":0,"params":{"instance_id":"77716","component_name":"CinemachineThirdPersonFollow"}}
+{"ts":"2026-03-15T19:14:05.882Z","tool":"get_gameobject_component","type":"resource","status":"SUCCESS","ms":1,"params":{"instance_id":"77466","component_name":"CinemachineCamera"}}
+{"ts":"2026-03-15T19:14:05.914Z","tool":"get_gameobject_component","type":"resource","status":"SUCCESS","ms":1,"params":{"instance_id":"77586","component_name":"CinemachineCamera"}}
+{"ts":"2026-03-15T19:14:05.940Z","tool":"get_gameobject_component","type":"resource","status":"SUCCESS","ms":0,"params":{"instance_id":"76898","component_name":"CinemachineCamera"}}
+{"ts":"2026-03-15T19:14:05.958Z","tool":"get_gameobject_component","type":"resource","status":"SUCCESS","ms":0,"params":{"instance_id":"77716","component_name":"CinemachineCamera"}}
+{"ts":"2026-03-15T19:14:05.993Z","tool":"get_gameobject_component","type":"resource","status":"SUCCESS","ms":15,"params":{"instance_id":"77848","component_name":"CinemachineBrain"}}
+{"ts":"2026-03-15T19:14:23.148Z","tool":"find_gameobjects","type":"tool","status":"SUCCESS","ms":424,"params":{"searchMethod":"by_component","searchTerm":"DebugWatchdog","includeInactive":true,"pageSize":20,"cursor":0}}
+{"ts":"2026-03-15T19:14:23.697Z","tool":"find_gameobjects","type":"tool","status":"SUCCESS","ms":3,"params":{"searchMethod":"by_component","searchTerm":"DebugWatchdog","includeInactive":true,"pageSize":20,"cursor":0}}
+{"ts":"2026-03-15T19:14:23.736Z","tool":"find_gameobjects","type":"tool","status":"SUCCESS","ms":2,"params":{"searchMethod":"by_name","searchTerm":"HUD_Root","includeInactive":true,"pageSize":10,"cursor":0}}
+{"ts":"2026-03-15T19:14:24.090Z","tool":"find_gameobjects","type":"tool","status":"SUCCESS","ms":351,"params":{"searchMethod":"by_component","searchTerm":"LocalPlayerAuthService","includeInactive":true,"pageSize":20,"cursor":0}}
+{"ts":"2026-03-15T19:14:24.158Z","tool":"find_gameobjects","type":"tool","status":"SUCCESS","ms":10,"params":{"searchMethod":"by_component","searchTerm":"LocalPlayerAuthService","includeInactive":true,"pageSize":20,"cursor":0}}
+{"ts":"2026-03-15T19:14:24.510Z","tool":"find_gameobjects","type":"tool","status":"SUCCESS","ms":320,"params":{"searchMethod":"by_component","searchTerm":"PlayerLoginController","includeInactive":true,"pageSize":20,"cursor":0}}
+{"ts":"2026-03-15T19:14:24.571Z","tool":"find_gameobjects","type":"tool","status":"SUCCESS","ms":3,"params":{"searchMethod":"by_name","searchTerm":"HUD_Root","includeInactive":true,"pageSize":10,"cursor":0}}
+{"ts":"2026-03-15T19:14:24.627Z","tool":"find_gameobjects","type":"tool","status":"SUCCESS","ms":3,"params":{"searchMethod":"by_component","searchTerm":"PlayerLoginController","includeInactive":true,"pageSize":20,"cursor":0}}
+{"ts":"2026-03-15T19:14:24.848Z","tool":"find_gameobjects","type":"tool","status":"SUCCESS","ms":198,"params":{"searchMethod":"by_component","searchTerm":"ModernHudLayoutManager","includeInactive":true,"pageSize":20,"cursor":0}}
+{"ts":"2026-03-15T19:14:24.888Z","tool":"find_gameobjects","type":"tool","status":"SUCCESS","ms":1,"params":{"searchMethod":"by_name","searchTerm":"HUD_Root","includeInactive":true,"pageSize":10,"cursor":0}}
+{"ts":"2026-03-15T19:14:25.111Z","tool":"find_gameobjects","type":"tool","status":"SUCCESS","ms":221,"params":{"searchMethod":"by_component","searchTerm":"NetworkBootstrap","includeInactive":true,"pageSize":20,"cursor":0}}
+{"ts":"2026-03-15T19:14:25.157Z","tool":"find_gameobjects","type":"tool","status":"SUCCESS","ms":2,"params":{"searchMethod":"by_component","searchTerm":"NetworkBootstrap","includeInactive":true,"pageSize":20,"cursor":0}}
+{"ts":"2026-03-15T19:14:25.471Z","tool":"find_gameobjects","type":"tool","status":"SUCCESS","ms":291,"params":{"searchMethod":"by_component","searchTerm":"PlayerBootstrap","includeInactive":true,"pageSize":20,"cursor":0}}
+{"ts":"2026-03-15T19:14:25.728Z","tool":"find_gameobjects","type":"tool","status":"SUCCESS","ms":211,"params":{"searchMethod":"by_component","searchTerm":"RuntimeBinder","includeInactive":true,"pageSize":20,"cursor":0}}
+{"ts":"2026-03-15T19:14:25.990Z","tool":"find_gameobjects","type":"tool","status":"SUCCESS","ms":232,"params":{"searchMethod":"by_component","searchTerm":"SceneCameraManager","includeInactive":true,"pageSize":20,"cursor":0}}
+{"ts":"2026-03-15T19:14:26.559Z","tool":"find_gameobjects","type":"tool","status":"SUCCESS","ms":1,"params":{"searchMethod":"by_name","searchTerm":"HUD_Root","includeInactive":true,"pageSize":10,"cursor":0}}
+{"ts":"2026-03-15T19:14:26.592Z","tool":"find_gameobjects","type":"tool","status":"SUCCESS","ms":2,"params":{"searchMethod":"by_name","searchTerm":"EventSystem","includeInactive":true,"pageSize":10,"cursor":0}}
+{"ts":"2026-03-15T19:14:26.626Z","tool":"find_gameobjects","type":"tool","status":"SUCCESS","ms":1,"params":{"searchMethod":"by_name","searchTerm":"BehaviorSceneBootstrap","includeInactive":true,"pageSize":10,"cursor":0}}
+{"ts":"2026-03-15T19:14:26.664Z","tool":"find_gameobjects","type":"tool","status":"SUCCESS","ms":2,"params":{"searchMethod":"by_name","searchTerm":"NetworkDialogueService","includeInactive":true,"pageSize":10,"cursor":0}}
+{"ts":"2026-03-15T19:14:36.273Z","tool":"manage_scene","type":"tool","status":"SUCCESS","ms":3,"action":"get_hierarchy","params":{"action":"get_hierarchy","parent":"77528","pageSize":50,"cursor":0,"includeTransform":false}}
+{"ts":"2026-03-15T19:14:36.298Z","tool":"manage_scene","type":"tool","status":"SUCCESS","ms":3,"action":"get_hierarchy","params":{"action":"get_hierarchy","parent":"77622","pageSize":50,"cursor":0,"includeTransform":false}}
+{"ts":"2026-03-15T19:14:37.080Z","tool":"manage_scene","type":"tool","status":"SUCCESS","ms":2,"action":"get_hierarchy","params":{"action":"get_hierarchy","parent":"77622","pageSize":50,"cursor":0,"includeTransform":false}}
+{"ts":"2026-03-15T19:14:50.253Z","tool":"get_gameobject_component","type":"resource","status":"SUCCESS","ms":0,"params":{"instance_id":"77196","component_name":"PlayerBootstrap"}}
+{"ts":"2026-03-15T19:14:50.270Z","tool":"get_gameobject_component","type":"resource","status":"SUCCESS","ms":0,"params":{"instance_id":"77196","component_name":"SceneCameraManager"}}
+{"ts":"2026-03-15T19:14:51.042Z","tool":"get_gameobject_component","type":"resource","status":"SUCCESS","ms":0,"params":{"instance_id":"77100","component_name":"PlayerLoginController"}}
+{"ts":"2026-03-15T19:14:51.066Z","tool":"get_gameobject_component","type":"resource","status":"ERROR","ms":0,"params":{"instance_id":"77442","component_name":"PlayerLoginController"},"error":"Component 'PlayerLoginController' not found on GameObject 'Dialogue_Panel (1)'."}
+{"ts":"2026-03-15T19:14:51.094Z","tool":"get_gameobject_component","type":"resource","status":"ERROR","ms":0,"params":{"instance_id":"77232","component_name":"PlayerLoginController"},"error":"Component 'PlayerLoginController' not found on GameObject 'Profile_Panel (1)'."}
+{"ts":"2026-03-15T19:14:51.114Z","tool":"get_gameobject_component","type":"resource","status":"ERROR","ms":0,"params":{"instance_id":"77100","component_name":"ModernDialogueController"},"error":"Component 'ModernDialogueController' not found on GameObject 'Login_Panel'."}
+{"ts":"2026-03-15T19:14:51.134Z","tool":"get_gameobject_component","type":"resource","status":"SUCCESS","ms":2,"params":{"instance_id":"77442","component_name":"ModernDialogueController"}}
+{"ts":"2026-03-15T19:14:51.153Z","tool":"get_gameobject_component","type":"resource","status":"ERROR","ms":0,"params":{"instance_id":"77232","component_name":"ModernDialogueController"},"error":"Component 'ModernDialogueController' not found on GameObject 'Profile_Panel (1)'."}
+{"ts":"2026-03-15T19:14:51.173Z","tool":"get_gameobject_component","type":"resource","status":"SUCCESS","ms":0,"params":{"instance_id":"77196","component_name":"SceneCameraManager"}}
+{"ts":"2026-03-15T19:14:51.174Z","tool":"get_gameobject_component","type":"resource","status":"ERROR","ms":0,"params":{"instance_id":"77100","component_name":"PlayerProfileController"},"error":"Component 'PlayerProfileController' not found on GameObject 'Login_Panel'."}
+{"ts":"2026-03-15T19:14:51.195Z","tool":"get_gameobject_component","type":"resource","status":"SUCCESS","ms":0,"params":{"instance_id":"77196","component_name":"RuntimeBinder"}}
+{"ts":"2026-03-15T19:14:51.214Z","tool":"get_gameobject_component","type":"resource","status":"SUCCESS","ms":0,"params":{"instance_id":"77196","component_name":"NetworkBootstrap"}}
+{"ts":"2026-03-15T19:14:51.234Z","tool":"get_gameobject_component","type":"resource","status":"SUCCESS","ms":0,"params":{"instance_id":"77196","component_name":"AuthBootstrap"}}
+{"ts":"2026-03-15T19:14:51.254Z","tool":"get_gameobject_component","type":"resource","status":"SUCCESS","ms":0,"params":{"instance_id":"77196","component_name":"NPCAgentBootstrap"}}
+{"ts":"2026-03-15T19:14:51.281Z","tool":"get_gameobject_component","type":"resource","status":"SUCCESS","ms":0,"params":{"instance_id":"77196","component_name":"NetworkBootstrapEvents"}}
+{"ts":"2026-03-15T19:14:51.335Z","tool":"get_gameobject_component","type":"resource","status":"ERROR","ms":0,"params":{"instance_id":"77100","component_name":"PlayerProfileController"},"error":"Component 'PlayerProfileController' not found on GameObject 'Login_Panel'."}
+{"ts":"2026-03-15T19:14:51.353Z","tool":"get_gameobject_component","type":"resource","status":"ERROR","ms":0,"params":{"instance_id":"77442","component_name":"PlayerProfileController"},"error":"Component 'PlayerProfileController' not found on GameObject 'Dialogue_Panel (1)'."}
+{"ts":"2026-03-15T19:14:51.376Z","tool":"get_gameobject_component","type":"resource","status":"SUCCESS","ms":0,"params":{"instance_id":"77232","component_name":"PlayerProfileController"}}
+{"ts":"2026-03-15T19:18:06.444Z","tool":"get_editor_state","type":"resource","status":"SUCCESS","ms":0,"params":{}}
+{"ts":"2026-03-15T19:18:06.548Z","tool":"read_console","type":"tool","status":"SUCCESS","ms":3,"action":"get","params":{"action":"get","types":["error","warning"],"count":40,"include_stacktrace":true}}
+{"ts":"2026-03-16T01:37:05.182Z","event":"session_start","unity":"6000.4.0b9"}
+{"ts":"2026-03-16T01:37:05.175Z","tool":"get_editor_state","type":"resource","status":"SUCCESS","ms":18,"params":{}}
+{"ts":"2026-03-16T01:37:38.467Z","tool":"manage_editor","type":"tool","status":"SUCCESS","ms":281,"action":"play","params":{"action":"play"}}
+{"ts":"2026-03-16T01:37:38.568Z","tool":"read_console","type":"tool","status":"SUCCESS","ms":83,"action":"get","params":{"action":"get","types":["error","warning"],"count":40,"format":"detailed","include_stacktrace":true}}
+{"ts":"2026-03-16T01:37:38.597Z","tool":"manage_editor","type":"tool","status":"SUCCESS","ms":0,"action":"play","params":{"action":"play"}}
+{"ts":"2026-03-16T01:37:38.690Z","tool":"read_console","type":"tool","status":"SUCCESS","ms":89,"action":"get","params":{"action":"get","types":["error","warning"],"count":40,"format":"detailed","include_stacktrace":true}}
+{"ts":"2026-03-16T01:37:38.694Z","tool":"manage_editor","type":"tool","status":"SUCCESS","ms":0,"action":"play","params":{"action":"play"}}
+{"ts":"2026-03-16T01:37:38.784Z","tool":"read_console","type":"tool","status":"SUCCESS","ms":88,"action":"get","params":{"action":"get","types":["error","warning"],"count":40,"format":"detailed","include_stacktrace":true}}
+{"ts":"2026-03-16T01:37:38.788Z","tool":"manage_editor","type":"tool","status":"SUCCESS","ms":0,"action":"play","params":{"action":"play"}}
+{"ts":"2026-03-16T01:37:38.904Z","tool":"read_console","type":"tool","status":"SUCCESS","ms":100,"action":"get","params":{"action":"get","types":["error","warning"],"count":40,"format":"detailed","include_stacktrace":true}}
+{"ts":"2026-03-16T01:37:38.909Z","tool":"manage_editor","type":"tool","status":"SUCCESS","ms":0,"action":"play","params":{"action":"play"}}
+{"ts":"2026-03-16T01:37:38.985Z","tool":"read_console","type":"tool","status":"SUCCESS","ms":73,"action":"get","params":{"action":"get","types":["error","warning"],"count":40,"format":"detailed","include_stacktrace":true}}
+{"ts":"2026-03-16T01:37:38.993Z","tool":"manage_editor","type":"tool","status":"SUCCESS","ms":0,"action":"play","params":{"action":"play"}}
+{"ts":"2026-03-16T01:37:55.142Z","tool":"get_editor_state","type":"resource","status":"SUCCESS","ms":0,"params":{}}
+{"ts":"2026-03-16T01:38:06.331Z","tool":"read_console","type":"tool","status":"SUCCESS","ms":48,"action":"get","params":{"action":"get","types":["error","warning"],"count":50,"format":"detailed","include_stacktrace":true}}
+{"ts":"2026-03-16T01:38:06.655Z","tool":"manage_editor","type":"tool","status":"SUCCESS","ms":30,"action":"play","params":{"action":"play"}}
+{"ts":"2026-03-16T01:38:25.626Z","tool":"get_editor_state","type":"resource","status":"SUCCESS","ms":0,"params":{}}
+{"ts":"2026-03-16T01:38:25.659Z","tool":"find_gameobjects","type":"tool","status":"SUCCESS","ms":30,"params":{"search_term":"PlayerArmature","search_method":"by_name","include_inactive":true,"page_size":20}}
+{"ts":"2026-03-16T01:38:25.818Z","tool":"manage_scene","type":"tool","status":"SUCCESS","ms":41,"action":"get_hierarchy","params":{"action":"get_hierarchy"}}
+{"ts":"2026-03-16T01:38:26.416Z","tool":"find_gameobjects","type":"tool","status":"SUCCESS","ms":1,"params":{"search_term":"PlayerArmature","search_method":"by_name","include_inactive":true,"page_size":20}}
+{"ts":"2026-03-16T01:38:26.778Z","tool":"get_editor_state","type":"resource","status":"SUCCESS","ms":0,"params":{}}
+{"ts":"2026-03-16T01:38:44.948Z","tool":"get_gameobject_components","type":"resource","status":"ERROR","ms":4,"params":{"target":104192},"error":"'instanceID' parameter is required."}
+{"ts":"2026-03-16T01:38:45.073Z","tool":"get_gameobject_components","type":"resource","status":"ERROR","ms":0,"params":{"target":104524},"error":"'instanceID' parameter is required."}
+{"ts":"2026-03-16T01:38:45.173Z","tool":"get_gameobject_components","type":"resource","status":"ERROR","ms":0,"params":{"target":104514},"error":"'instanceID' parameter is required."}
+{"ts":"2026-03-16T01:38:45.287Z","tool":"get_gameobject_components","type":"resource","status":"ERROR","ms":0,"params":{"target":104128},"error":"'instanceID' parameter is required."}

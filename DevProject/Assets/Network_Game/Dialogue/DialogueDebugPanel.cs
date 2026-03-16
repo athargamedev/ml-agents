@@ -11,12 +11,14 @@ namespace Network_Game.Dialogue
     /// </summary>
     public class DialogueDebugPanel : MonoBehaviour
     {
+        [Header("Panel Settings")]
         [SerializeField]
         private bool m_ShowPanel = true;
 
         [SerializeField]
         private Key m_ToggleKey = Key.F10;
 
+        [Header("Display Options")]
         [SerializeField]
         private bool m_ShowLastResponse = true;
 
@@ -26,10 +28,13 @@ namespace Network_Game.Dialogue
         [SerializeField]
         private bool m_ShowActiveVfx = true;
 
+        // Response tracking
         private string m_LastErrorRaw = "-";
         private string m_LastErrorFriendly = "-";
         private NetworkDialogueService.DialogueStatus m_LastStatus;
         private bool m_HasResponse;
+        
+        // Telemetry tracking
         private int m_LastTelemetryRequestId;
         private int m_LastTelemetryClientRequestId;
         private int m_LastTelemetryRetryCount;
@@ -46,6 +51,8 @@ namespace Network_Game.Dialogue
             string,
             object
                                                 >> m_CachedVfxState;
+        
+        // UI Toolkit elements
         private VisualElement m_UiHostRoot;
         private VisualElement m_UiOverlayRoot;
         private Label m_UiStatsLabel;
@@ -53,6 +60,18 @@ namespace Network_Game.Dialogue
         private Label m_UiLastErrorLabel;
         private VisualElement m_UiLmList;
         private VisualElement m_UiVfxList;
+        
+        // Constants for UI dimensions
+        private const float k_BaseHeightWithResponse = 330f;
+        private const float k_BaseHeightWithoutResponse = 290f;
+        private const float k_SectionSpacing = 10f;
+        private const float k_PanelWidth = 900f;
+        private const float k_PanelXPosition = 10f;
+        private const float k_PanelYPosition = 10f;
+        private const int k_MaxLMEntriesToShow = 5;
+        private const int k_MaxLMEntriesForToolkit = 3;
+        private const int k_MaxVfxEntriesToShow = 8;
+        private const int k_MaxVfxEntriesForToolkit = 5;
 
         private void OnEnable()
         {
@@ -119,22 +138,70 @@ namespace Network_Game.Dialogue
             var stats = service.GetStats();
 
             // Calculate total panel height dynamically
-            float baseHeight = m_ShowLastResponse ? 330f : 290f;
-            float lmHeight = 0f;
-            if (m_ShowLMStudio)
-            {
-                int lmCount = m_CachedLMLog != null ? Mathf.Min(m_CachedLMLog.Count, 5) : 0;
-                lmHeight = 30f + lmCount * 45f + 10f;
-            }
-            float vfxHeight = 0f;
-            if (m_ShowActiveVfx)
-            {
-                int vfxCount = m_CachedVfxState != null ? Mathf.Min(m_CachedVfxState.Count, 8) : 0;
-                vfxHeight = 30f + vfxCount * 22f + 10f;
-            }
+            float baseHeight = m_ShowLastResponse ? k_BaseHeightWithResponse : k_BaseHeightWithoutResponse;
+            float lmHeight = CalculateLMStudioHeight();
+            float vfxHeight = CalculateVfxHeight();
 
             float panelHeight = baseHeight + lmHeight + vfxHeight;
-            GUI.Box(new Rect(10, 10, 900, panelHeight), "Dialogue Debug");
+            
+            DrawPanelBackground(panelHeight);
+            DrawBasicStats(stats);
+            DrawWarmupStatus(stats);
+            DrawSuccessAndTimeoutRates(stats);
+            DrawLatencyInformation(stats);
+            DrawTerminalTotals(stats);
+            DrawRejectionSummary(stats);
+            DrawTelemetryInformation();
+            DrawLastResponseInformation();
+            DrawLMStudioAnalysis(baseHeight, lmHeight);
+            DrawActiveVFXSection(baseHeight, lmHeight, vfxHeight);
+        }
+        
+        /// <summary>
+        /// Calculates the height needed for the LM Studio section.
+        /// </summary>
+        /// <returns>The calculated height in pixels.</returns>
+        private float CalculateLMStudioHeight()
+        {
+            if (!m_ShowLMStudio)
+            {
+                return 0f;
+            }
+
+            int lmCount = m_CachedLMLog != null ? Mathf.Min(m_CachedLMLog.Count, k_MaxLMEntriesToShow) : 0;
+            return 30f + lmCount * 45f + k_SectionSpacing;
+        }
+        
+        /// <summary>
+        /// Calculates the height needed for the VFX section.
+        /// </summary>
+        /// <returns>The calculated height in pixels.</returns>
+        private float CalculateVfxHeight()
+        {
+            if (!m_ShowActiveVfx)
+            {
+                return 0f;
+            }
+
+            int vfxCount = m_CachedVfxState != null ? Mathf.Min(m_CachedVfxState.Count, k_MaxVfxEntriesToShow) : 0;
+            return 30f + vfxCount * 22f + k_SectionSpacing;
+        }
+        
+        /// <summary>
+        /// Draws the background box for the debug panel.
+        /// </summary>
+        /// <param name="panelHeight">The height of the panel.</param>
+        private void DrawPanelBackground(float panelHeight)
+        {
+            GUI.Box(new Rect(k_PanelXPosition, k_PanelYPosition, k_PanelWidth, panelHeight), "Dialogue Debug");
+        }
+        
+        /// <summary>
+        /// Draws the basic statistics section of the panel.
+        /// </summary>
+        /// <param name="stats">The dialogue service statistics.</param>
+        private void DrawBasicStats(NetworkDialogueService.DialogueStats stats)
+        {
             GUI.Label(new Rect(20, 40, 300, 20), $"Pending Queue: {stats.PendingCount}");
             GUI.Label(new Rect(20, 60, 300, 20), $"Active Requests: {stats.ActiveCount}");
             GUI.Label(new Rect(20, 80, 300, 20), $"Histories: {stats.HistoryCount}");
@@ -142,6 +209,14 @@ namespace Network_Game.Dialogue
                 new Rect(20, 100, 300, 20),
                 $"Backend: Remote LM Studio, Server: {stats.IsServer}, Client: {stats.IsClient}"
             );
+        }
+        
+        /// <summary>
+        /// Draws the warmup status information.
+        /// </summary>
+        /// <param name="stats">The dialogue service statistics.</param>
+        private void DrawWarmupStatus(NetworkDialogueService.DialogueStats stats)
+        {
             GUI.Label(
                 new Rect(20, 120, 860, 20),
                 $"Warmup: {stats.WarmupState}, InProgress: {stats.WarmupInProgress}, Degraded: {stats.WarmupDegraded}, Failures: {stats.WarmupFailureCount}, RetryIn: {stats.WarmupRetryInSeconds:0.0}s"
@@ -150,7 +225,14 @@ namespace Network_Game.Dialogue
                 new Rect(20, 140, 860, 20),
                 $"Warmup Last Failure: {stats.WarmupLastFailureReason}"
             );
-
+        }
+        
+        /// <summary>
+        /// Draws the success and timeout rate information.
+        /// </summary>
+        /// <param name="stats">The dialogue service statistics.</param>
+        private void DrawSuccessAndTimeoutRates(NetworkDialogueService.DialogueStats stats)
+        {
             GUI.Label(
                 new Rect(20, 160, 420, 20),
                 $"Success Rate: {stats.SuccessRate:P1} ({stats.TotalTerminalCompleted}/{stats.TotalRequestsFinished})"
@@ -159,6 +241,14 @@ namespace Network_Game.Dialogue
                 new Rect(20, 180, 420, 20),
                 $"Timeout Rate: {stats.TimeoutRate:P1} ({stats.TimeoutCount}/{Mathf.Max(1, stats.TotalTerminalCompleted + stats.TotalTerminalFailed)})"
             );
+        }
+        
+        /// <summary>
+        /// Draws the latency information.
+        /// </summary>
+        /// <param name="stats">The dialogue service statistics.</param>
+        private void DrawLatencyInformation(NetworkDialogueService.DialogueStats stats)
+        {
             GUI.Label(
                 new Rect(20, 200, 420, 20),
                 $"Queue Latency p50/p95: {stats.QueueWaitHistogram.P50Ms:F0}/{stats.QueueWaitHistogram.P95Ms:F0} ms"
@@ -167,13 +257,35 @@ namespace Network_Game.Dialogue
                 new Rect(20, 220, 420, 20),
                 $"Model Latency p50/p95: {stats.ModelExecutionHistogram.P50Ms:F0}/{stats.ModelExecutionHistogram.P95Ms:F0} ms"
             );
+        }
+        
+        /// <summary>
+        /// Draws the terminal totals information.
+        /// </summary>
+        /// <param name="stats">The dialogue service statistics.</param>
+        private void DrawTerminalTotals(NetworkDialogueService.DialogueStats stats)
+        {
             GUI.Label(
                 new Rect(20, 240, 840, 20),
                 $"Terminal Totals - Completed: {stats.TotalTerminalCompleted}, Failed: {stats.TotalTerminalFailed}, Cancelled: {stats.TotalTerminalCancelled}, Rejected: {stats.TotalTerminalRejected}"
             );
-
+        }
+        
+        /// <summary>
+        /// Draws the rejection summary information.
+        /// </summary>
+        /// <param name="stats">The dialogue service statistics.</param>
+        private void DrawRejectionSummary(NetworkDialogueService.DialogueStats stats)
+        {
             string rejectionSummary = BuildRejectionSummary(stats.RejectionReasonCounts, 3);
             GUI.Label(new Rect(20, 260, 840, 20), $"Top Rejections (rolling): {rejectionSummary}");
+        }
+        
+        /// <summary>
+        /// Draws the telemetry information.
+        /// </summary>
+        private void DrawTelemetryInformation()
+        {
             GUI.Label(
                 new Rect(20, 280, 840, 20),
                 $"Last Telemetry - Req: {m_LastTelemetryRequestId}/{m_LastTelemetryClientRequestId}, Retry: {m_LastTelemetryRetryCount}, Queue/Model/Total: {m_LastTelemetryQueueMs:F0}/{m_LastTelemetryModelMs:F0}/{m_LastTelemetryTotalMs:F0} ms"
@@ -182,7 +294,13 @@ namespace Network_Game.Dialogue
                 new Rect(20, 300, 840, 20),
                 $"Last Telemetry Error: {m_LastTelemetryError}"
             );
-
+        }
+        
+        /// <summary>
+        /// Draws the last response information if enabled.
+        /// </summary>
+        private void DrawLastResponseInformation()
+        {
             if (m_ShowLastResponse)
             {
                 string statusText = m_HasResponse ? m_LastStatus.ToString() : "None";
@@ -192,78 +310,98 @@ namespace Network_Game.Dialogue
                     $"Last Error (friendly | code): {m_LastErrorFriendly} | {m_LastErrorRaw}"
                 );
             }
-
-            // LM Studio Analysis Section
-            float y = baseHeight + 10f;
-            if (m_ShowLMStudio)
+        }
+        
+        /// <summary>
+        /// Draws the LM Studio analysis section.
+        /// </summary>
+        /// <param name="baseHeight">The base height of the panel.</param>
+        /// <param name="lmHeight">The height of the LM Studio section.</param>
+        private void DrawLMStudioAnalysis(float baseHeight, float lmHeight)
+        {
+            if (!m_ShowLMStudio)
             {
-                GUI.Label(new Rect(20, y, 860, 22), "─── LM Studio Analysis (last 5) ───");
-                y += 24f;
+                return;
+            }
 
-                if (m_CachedLMLog == null || m_CachedLMLog.Count == 0)
+            float y = baseHeight + k_SectionSpacing;
+            GUI.Label(new Rect(20, y, 860, 22), "─── LM Studio Analysis (last 5) ───");
+            y += 24f;
+
+            if (m_CachedLMLog == null || m_CachedLMLog.Count == 0)
+            {
+                GUI.Label(
+                    new Rect(30, y, 840, 20),
+                    "(no LM Studio results yet — trigger dialogue to populate)"
+                );
+                y += 22f;
+            }
+            else
+            {
+                int showCount = Mathf.Min(m_CachedLMLog.Count, k_MaxLMEntriesToShow);
+                for (int i = 0; i < showCount; i++)
                 {
+                    var entry = m_CachedLMLog[m_CachedLMLog.Count - 1 - i];
+                    string ts = System
+                        .DateTimeOffset.FromUnixTimeMilliseconds(entry.TimestampMs)
+                        .ToString("HH:mm:ss");
                     GUI.Label(
                         new Rect(30, y, 840, 20),
-                        "(no LM Studio results yet — trigger dialogue to populate)"
+                        $"[{ts}] {entry.Mode.ToUpper()} — {entry.Summary}"
+                    );
+                    y += 20f;
+                    GUI.Label(new Rect(40, y, 830, 20), entry.Detail);
+                    y += 25f;
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Draws the active VFX section.
+        /// </summary>
+        /// <param name="baseHeight">The base height of the panel.</param>
+        /// <param name="lmHeight">The height of the LM Studio section.</param>
+        /// <param name="vfxHeight">The height of the VFX section.</param>
+        private void DrawActiveVFXSection(float baseHeight, float lmHeight, float vfxHeight)
+        {
+            if (!m_ShowActiveVfx)
+            {
+                return;
+            }
+
+            float y = baseHeight + lmHeight + k_SectionSpacing;
+            GUI.Label(new Rect(20, y, 860, 22), "─── Active Dialogue VFX ───");
+            y += 24f;
+
+            if (m_CachedVfxState == null || m_CachedVfxState.Count == 0)
+            {
+                GUI.Label(new Rect(30, y, 840, 20), "(no active dialogue particle systems)");
+            }
+            else
+            {
+                int showCount = Mathf.Min(m_CachedVfxState.Count, k_MaxVfxEntriesToShow);
+                for (int i = 0; i < showCount; i++)
+                {
+                    var fx = m_CachedVfxState[i];
+                    string name = fx.TryGetValue("name", out object n) ? n?.ToString() : "?";
+                    string remaining = fx.TryGetValue("duration_remaining", out object d)
+                        ? $"{d:F1}s"
+                        : "?";
+                    string tag = fx.TryGetValue("effect_tag", out object t)
+                        ? t?.ToString()
+                        : "";
+                    GUI.Label(
+                        new Rect(30, y, 840, 20),
+                        $"• {name}  [{tag}]  remaining: {remaining}"
                     );
                     y += 22f;
                 }
-                else
+                if (m_CachedVfxState.Count > k_MaxVfxEntriesToShow)
                 {
-                    int showCount = Mathf.Min(m_CachedLMLog.Count, 5);
-                    for (int i = 0; i < showCount; i++)
-                    {
-                        var entry = m_CachedLMLog[m_CachedLMLog.Count - 1 - i];
-                        string ts = System
-                            .DateTimeOffset.FromUnixTimeMilliseconds(entry.TimestampMs)
-                            .ToString("HH:mm:ss");
-                        GUI.Label(
-                            new Rect(30, y, 840, 20),
-                            $"[{ts}] {entry.Mode.ToUpper()} — {entry.Summary}"
-                        );
-                        y += 20f;
-                        GUI.Label(new Rect(40, y, 830, 20), entry.Detail);
-                        y += 25f;
-                    }
-                }
-            }
-
-            // Active VFX Section
-            if (m_ShowActiveVfx)
-            {
-                GUI.Label(new Rect(20, y, 860, 22), "─── Active Dialogue VFX ───");
-                y += 24f;
-
-                if (m_CachedVfxState == null || m_CachedVfxState.Count == 0)
-                {
-                    GUI.Label(new Rect(30, y, 840, 20), "(no active dialogue particle systems)");
-                }
-                else
-                {
-                    int showCount = Mathf.Min(m_CachedVfxState.Count, 8);
-                    for (int i = 0; i < showCount; i++)
-                    {
-                        var fx = m_CachedVfxState[i];
-                        string name = fx.TryGetValue("name", out object n) ? n?.ToString() : "?";
-                        string remaining = fx.TryGetValue("duration_remaining", out object d)
-                            ? $"{d:F1}s"
-                            : "?";
-                        string tag = fx.TryGetValue("effect_tag", out object t)
-                            ? t?.ToString()
-                            : "";
-                        GUI.Label(
-                            new Rect(30, y, 840, 20),
-                            $"• {name}  [{tag}]  remaining: {remaining}"
-                        );
-                        y += 22f;
-                    }
-                    if (m_CachedVfxState.Count > 8)
-                    {
-                        GUI.Label(
-                            new Rect(30, y, 840, 20),
-                            $"  ...and {m_CachedVfxState.Count - 8} more"
-                        );
-                    }
+                    GUI.Label(
+                        new Rect(30, y, 840, 20),
+                        $"  ...and {m_CachedVfxState.Count - k_MaxVfxEntriesToShow} more"
+                    );
                 }
             }
         }
@@ -279,18 +417,18 @@ namespace Network_Game.Dialogue
             }
 
             int count = Mathf.Min(maxEntries, reasons.Length);
-            string summary = string.Empty;
+            var sb = new System.Text.StringBuilder();
             for (int i = 0; i < count; i++)
             {
                 if (i > 0)
                 {
-                    summary += ", ";
+                    sb.Append(", ");
                 }
 
-                summary += $"{reasons[i].Key}={reasons[i].Value}";
+                sb.Append($"{reasons[i].Key}={reasons[i].Value}");
             }
 
-            return summary;
+            return sb.ToString();
         }
 
         private void HandleDialogueResponse(NetworkDialogueService.DialogueResponse response)

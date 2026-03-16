@@ -34,6 +34,7 @@ namespace Network_Game.Behavior
 
         private NetworkManager m_Manager;
         private bool m_IsClientMode;
+        private bool m_NetworkCallbacksRegistered;
 
         public bool IsClientMode => m_IsClientMode;
         public NetworkManager NetworkManager => m_Manager;
@@ -51,10 +52,7 @@ namespace Network_Game.Behavior
 
         private void OnDisable()
         {
-            if (m_Manager != null)
-            {
-                m_Manager.ConnectionApprovalCallback = null;
-            }
+            UnregisterNetworkCallbacks();
             ClearEditorHostEndpoint();
         }
 
@@ -64,6 +62,56 @@ namespace Network_Game.Behavior
             {
                 gameObject.AddComponent<NetworkBootstrapEvents>();
             }
+        }
+
+        private void RegisterNetworkCallbacks()
+        {
+            if (m_Manager == null || m_NetworkCallbacksRegistered)
+            {
+                return;
+            }
+
+            m_Manager.OnClientConnectedCallback += HandleClientConnected;
+            m_Manager.OnClientDisconnectCallback += HandleClientDisconnected;
+            m_NetworkCallbacksRegistered = true;
+        }
+
+        private void UnregisterNetworkCallbacks()
+        {
+            if (m_Manager == null)
+            {
+                return;
+            }
+
+            m_Manager.ConnectionApprovalCallback = null;
+            if (!m_NetworkCallbacksRegistered)
+            {
+                return;
+            }
+
+            m_Manager.OnClientConnectedCallback -= HandleClientConnected;
+            m_Manager.OnClientDisconnectCallback -= HandleClientDisconnected;
+            m_NetworkCallbacksRegistered = false;
+        }
+
+        private void HandleClientConnected(ulong clientId)
+        {
+            NGLog.Info("NetworkBootstrap", $"Client connected: {clientId}");
+        }
+
+        private void HandleClientDisconnected(ulong clientId)
+        {
+            NGLog.Warn("NetworkBootstrap", $"Client disconnected: {clientId}");
+
+            if (m_Manager == null || clientId != m_Manager.LocalClientId)
+            {
+                return;
+            }
+
+            string message = m_IsClientMode
+                ? "Disconnected from host"
+                : "Host networking stopped";
+            NetworkBootstrapEvents.Instance.PublishNetworkError(message);
         }
 
         private IEnumerator Initialize()
@@ -84,6 +132,8 @@ namespace Network_Game.Behavior
                 NGLog.Error("NetworkBootstrap", "NetworkManager not found after timeout.");
                 yield break;
             }
+
+            RegisterNetworkCallbacks();
 
             // Setup connection approval
             ResolveSpawnPointReference();

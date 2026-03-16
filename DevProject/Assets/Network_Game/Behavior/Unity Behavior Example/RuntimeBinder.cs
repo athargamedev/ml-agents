@@ -30,6 +30,7 @@ namespace Network_Game.Behavior
         private NPCAgentBootstrap m_NpcBootstrap;
         private AuthBootstrap m_AuthBootstrap;
         private GameObject m_LocalPlayer;
+        private Coroutine m_BindRoutine;
 
         private void Awake()
         {
@@ -56,6 +57,12 @@ namespace Network_Game.Behavior
 
         private void OnDisable()
         {
+            if (m_BindRoutine != null)
+            {
+                StopCoroutine(m_BindRoutine);
+                m_BindRoutine = null;
+            }
+
             if (m_CameraManager != null)
                 m_CameraManager.StopMonitoring();
 
@@ -84,19 +91,25 @@ namespace Network_Game.Behavior
             }
 
             m_LocalPlayer = player;
-            StartCoroutine(BindAll());
+            if (m_BindRoutine != null)
+            {
+                StopCoroutine(m_BindRoutine);
+            }
+
+            m_BindRoutine = StartCoroutine(BindAll());
         }
 
         private IEnumerator BindAll()
         {
-            // Wait for auth to be ready
-            while (m_AuthBootstrap == null || !m_AuthBootstrap.IsAuthenticated)
+            if (m_LocalPlayer == null)
             {
-                yield return null;
+                yield break;
             }
 
-            // Attach auth to player
-            m_AuthBootstrap.AttachAuthToPlayer(m_LocalPlayer);
+            if (m_AuthBootstrap != null)
+            {
+                m_AuthBootstrap.AttachAuthToPlayer(m_LocalPlayer);
+            }
 
             // Ensure combat health
             EnsureCombatHealth(m_LocalPlayer);
@@ -115,7 +128,33 @@ namespace Network_Game.Behavior
             // Rebind dialogue participants
             RebindDialogue();
 
-            NGLog.Info("RuntimeBinder", "Runtime bindings complete");
+            NGLog.Info("RuntimeBinder", "Core runtime bindings complete");
+
+            yield return WaitForAuthAndFinalize();
+            m_BindRoutine = null;
+        }
+
+        private IEnumerator WaitForAuthAndFinalize()
+        {
+            if (m_AuthBootstrap == null)
+            {
+                yield break;
+            }
+
+            while (m_AuthBootstrap != null && !m_AuthBootstrap.IsAuthenticated)
+            {
+                yield return null;
+            }
+
+            if (m_AuthBootstrap == null || m_LocalPlayer == null)
+            {
+                yield break;
+            }
+
+            m_AuthBootstrap.AttachAuthToPlayer(m_LocalPlayer);
+            RebindDialogue();
+
+            NGLog.Info("RuntimeBinder", "Auth-dependent runtime bindings complete");
         }
 
         private void EnsureCombatHealth(GameObject player)
@@ -151,19 +190,41 @@ namespace Network_Game.Behavior
         {
             if (m_LocalPlayer == null) return;
 
-            var dialogueUI = FindObjectOfType<DialogueClientUI>();
-            if (dialogueUI == null) return;
+            bool reboundAny = false;
 
-            // Find primary NPC
-            GameObject primaryNpc = FindPrimaryNpc();
-
-            dialogueUI.SetPlayer(m_LocalPlayer);
-            if (primaryNpc != null)
+            Network_Game.UI.Dialogue.ModernDialogueController[] modernControllers =
+                FindObjectsOfType<Network_Game.UI.Dialogue.ModernDialogueController>(true);
+            for (int i = 0; i < modernControllers.Length; i++)
             {
-                dialogueUI.SetNpc(primaryNpc);
+                Network_Game.UI.Dialogue.ModernDialogueController controller = modernControllers[i];
+                if (controller == null || !controller.gameObject.scene.IsValid())
+                {
+                    continue;
+                }
+
+                controller.ForceRefreshBindings();
+                reboundAny = true;
             }
 
-            NGLog.Info("RuntimeBinder", "Dialogue participants rebound");
+            var dialogueUI = FindObjectOfType<DialogueClientUI>();
+            if (dialogueUI != null)
+            {
+                // Find primary NPC
+                GameObject primaryNpc = FindPrimaryNpc();
+
+                dialogueUI.SetPlayer(m_LocalPlayer);
+                if (primaryNpc != null)
+                {
+                    dialogueUI.SetNpc(primaryNpc);
+                }
+
+                reboundAny = true;
+            }
+
+            if (reboundAny)
+            {
+                NGLog.Info("RuntimeBinder", "Dialogue participants rebound");
+            }
         }
 
         private GameObject FindPrimaryNpc()

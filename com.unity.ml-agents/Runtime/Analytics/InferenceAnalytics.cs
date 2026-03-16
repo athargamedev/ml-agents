@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
-using Unity.InferenceEngine;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Inference;
 using Unity.MLAgents.Policies;
 using Unity.MLAgents.Sensors;
+using Unity.InferenceEngine;
 using UnityEngine;
 
 #if MLA_UNITY_ANALYTICS_MODULE && ENABLE_CLOUD_SERVICES_ANALYTICS

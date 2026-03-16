@@ -1,5 +1,6 @@
 using Network_Game.Auth;
 using Network_Game.Dialogue;
+using PlayerController = Network_Game.ThirdPersonController.ThirdPersonController;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -62,6 +63,46 @@ namespace Network_Game.Diagnostics
 
         [SerializeField]
         private bool m_LocalPlayerAttachmentMismatch;
+
+        [SerializeField]
+        private bool m_LocalControllerPresent;
+
+        [SerializeField]
+        private bool m_LocalControllerHasOwnerAuthority;
+
+        [SerializeField]
+        private bool m_LocalInputComponentEnabled;
+
+        [SerializeField]
+        private bool m_LocalPlayerInputEnabled;
+
+        [SerializeField, TextArea(1, 2)]
+        private string m_LocalActionMap;
+
+        [SerializeField]
+        private bool m_LocalFlyModeComponentEnabled;
+
+        [SerializeField]
+        private bool m_LocalCameraFollowAssigned;
+
+        [Header("Network State")]
+        [SerializeField]
+        private bool m_NetworkManagerPresent;
+
+        [SerializeField]
+        private bool m_IsListening;
+
+        [SerializeField]
+        private bool m_IsServer;
+
+        [SerializeField]
+        private bool m_IsClient;
+
+        [SerializeField]
+        private bool m_IsConnectedClient;
+
+        [SerializeField]
+        private ulong m_LocalClientId;
 
         [Header("Dialogue Service")]
         [SerializeField]
@@ -167,6 +208,7 @@ namespace Network_Game.Diagnostics
                 return;
             m_NextPoll = Time.realtimeSinceStartup + m_PollInterval;
             PollAssistant();
+            PollNetworkState();
             PollAuthAndSpawn();
             PollDialogueService();
         }
@@ -216,6 +258,13 @@ namespace Network_Game.Diagnostics
                 m_LocalPlayerObjectPresent = false;
                 m_LocalPlayerObjectName = string.Empty;
                 m_LocalPlayerAttachmentMismatch = false;
+                m_LocalControllerPresent = false;
+                m_LocalControllerHasOwnerAuthority = false;
+                m_LocalInputComponentEnabled = false;
+                m_LocalPlayerInputEnabled = false;
+                m_LocalActionMap = string.Empty;
+                m_LocalFlyModeComponentEnabled = false;
+                m_LocalCameraFollowAssigned = false;
                 return;
             }
 
@@ -234,6 +283,37 @@ namespace Network_Game.Diagnostics
                 m_HasAuthenticatedLocalPlayer
                 && actualLocalPlayerNetworkId != 0
                 && m_AttachedLocalPlayerNetworkId != actualLocalPlayerNetworkId;
+
+            PlayerController controller =
+                localPlayerObject != null ? localPlayerObject.GetComponent<PlayerController>() : null;
+            m_LocalControllerPresent = controller != null;
+            m_LocalControllerHasOwnerAuthority = controller != null && controller.IsOwner;
+            m_LocalInputComponentEnabled = controller != null && controller.InputComponentEnabled;
+            m_LocalPlayerInputEnabled = controller != null && controller.PlayerInputComponentEnabled;
+            m_LocalActionMap = controller != null ? Truncate(controller.ActiveInputActionMap, 60) : string.Empty;
+            m_LocalFlyModeComponentEnabled = controller != null && controller.FlyModeComponentEnabled;
+            m_LocalCameraFollowAssigned = controller != null && controller.HasAssignedCameraFollow;
+        }
+
+        private void PollNetworkState()
+        {
+            NetworkManager manager = NetworkManager.Singleton;
+            m_NetworkManagerPresent = manager != null;
+            if (manager == null)
+            {
+                m_IsListening = false;
+                m_IsServer = false;
+                m_IsClient = false;
+                m_IsConnectedClient = false;
+                m_LocalClientId = 0;
+                return;
+            }
+
+            m_IsListening = manager.IsListening;
+            m_IsServer = manager.IsServer;
+            m_IsClient = manager.IsClient;
+            m_IsConnectedClient = manager.IsConnectedClient;
+            m_LocalClientId = manager.LocalClientId;
         }
 
         private void OnLog(string condition, string stackTrace, LogType type)

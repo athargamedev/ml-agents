@@ -65,12 +65,12 @@ namespace Network_Game.ThirdPersonController
         [Space(10)]
         [Tooltip(
             "Time required to pass before being able to jump again. Set to 0f to instantly jump again"
-        )]
+         )]
         public float JumpTimeout = 0.50f;
 
         [Tooltip(
             "Time required to pass before entering the fall state. Useful for walking down stairs"
-        )]
+         )]
         public float FallTimeout = 0.15f;
 
         [Header("Player Grounded")]
@@ -82,7 +82,7 @@ namespace Network_Game.ThirdPersonController
 
         [Tooltip(
             "The radius of the grounded check. Should match the radius of the CharacterController"
-        )]
+         )]
         public float GroundedRadius = 0.28f;
 
         [Tooltip("What layers the character uses as ground")]
@@ -229,10 +229,14 @@ namespace Network_Game.ThirdPersonController
         private float _nextFlyVisualSyncAt;
         private float _lastSyncedFlyPitch;
         private float _lastSyncedFlyBank;
+        private float _nextRuntimeStateValidationAt;
 
         // Cached Cinemachine camera — resolved once per spawn to avoid FindAnyObjectByType every 0.75s.
         private CinemachineVirtualCameraBase _cachedVcam;
         private bool _vcamAssigned;
+        private bool? _appliedOwnershipRuntimeState;
+
+        private const float RuntimeStateValidationInterval = 0.5f;
 
         // ───────────────────────── Animator Param Presence Cache ─────────────────────────
         private bool _hasAnimator;
@@ -303,6 +307,34 @@ namespace Network_Game.ThirdPersonController
                 return Mouse.current != null;
 #else
                 return false;
+#endif
+            }
+        }
+
+        public bool HasAssignedCameraFollow => _vcamAssigned && _cachedVcam != null;
+        public bool InputComponentEnabled => _input != null && _input.enabled;
+        public bool FlyModeComponentEnabled =>
+            _flyModeController != null && _flyModeController.enabled;
+        public bool PlayerInputComponentEnabled
+        {
+            get
+            {
+#if ENABLE_INPUT_SYSTEM
+                return _playerInput != null && _playerInput.enabled;
+#else
+                return false;
+#endif
+            }
+        }
+
+        public string ActiveInputActionMap
+        {
+            get
+            {
+#if ENABLE_INPUT_SYSTEM
+                return _playerInput?.currentActionMap?.name ?? string.Empty;
+#else
+                return string.Empty;
 #endif
             }
         }
@@ -454,10 +486,37 @@ namespace Network_Game.ThirdPersonController
 
         private void ApplyOwnershipRuntimeState(bool isOwner)
         {
+            bool ownershipChanged =
+                !_appliedOwnershipRuntimeState.HasValue
+                || _appliedOwnershipRuntimeState.Value != isOwner;
+            _appliedOwnershipRuntimeState = isOwner;
+
 #if ENABLE_INPUT_SYSTEM
             if (_playerInput != null)
             {
-                _playerInput.enabled = isOwner;
+                if (isOwner)
+                {
+                    _playerInput.enabled = true;
+                    _playerInput.ActivateInput();
+                    if (
+                        _playerInput.currentActionMap == null
+                        || !string.Equals(
+                            _playerInput.currentActionMap.name,
+                            "Player",
+                            System.StringComparison.Ordinal
+                        )
+                    )
+                    {
+                        _playerInput.SwitchCurrentActionMap("Player");
+                    }
+                    _playerInput.currentActionMap?.Enable();
+                }
+                else
+                {
+                    _playerInput.currentActionMap?.Disable();
+                    _playerInput.DeactivateInput();
+                    _playerInput.enabled = false;
+                }
             }
 #endif
             if (_input != null)
@@ -468,12 +527,16 @@ namespace Network_Game.ThirdPersonController
             EnsureFlyControllerReady();
             if (_flyModeController != null)
             {
-                _flyModeController.SetFlyMode(false);
+                if (ownershipChanged)
+                {
+                    _flyModeController.SetFlyMode(false);
+                }
                 _flyModeController.enabled = isOwner;
             }
 
             if (!isOwner)
             {
+                ClearCachedInputState();
                 SyncFlyModeState(false);
                 _flyPitch = 0f;
                 _flyBank = 0f;
@@ -487,10 +550,72 @@ namespace Network_Game.ThirdPersonController
             if (_input != null)
             {
                 _input.cursorLocked = true;
+                _input.cursorInputForLook = true;
                 _input.SetCursorState(true);
             }
 
             AssignCinemachineFollow();
+        }
+
+        private void ClearCachedInputState()
+        {
+            if (_input == null)
+            {
+                return;
+            }
+
+            _input.move = Vector2.zero;
+            _input.look = Vector2.zero;
+            _input.jump = false;
+            _input.sprint = false;
+            _input.crouch = false;
+            _input.interact = false;
+            _input.pause = false;
+            _input.cursorLocked = false;
+            _input.cursorInputForLook = false;
+        }
+
+        private void ValidateRuntimeOwnershipState()
+        {
+            if (Time.unscaledTime < _nextRuntimeStateValidationAt)
+            {
+                return;
+            }
+
+            _nextRuntimeStateValidationAt =
+                Time.unscaledTime + RuntimeStateValidationInterval;
+
+            bool shouldHaveLocalControl = ShouldProcessLocalControl();
+            bool needsRepair = false;
+
+#if ENABLE_INPUT_SYSTEM
+            if (_playerInput != null && _playerInput.enabled != shouldHaveLocalControl)
+            {
+                needsRepair = true;
+            }
+#endif
+            if (_input != null)
+            {
+                if (_input.enabled != shouldHaveLocalControl)
+                {
+                    needsRepair = true;
+                }
+                else if (shouldHaveLocalControl && !_input.cursorInputForLook)
+                {
+                    needsRepair = true;
+                }
+            }
+
+            EnsureFlyControllerReady();
+            if (_flyModeController != null && _flyModeController.enabled != shouldHaveLocalControl)
+            {
+                needsRepair = true;
+            }
+
+            if (needsRepair)
+            {
+                ApplyOwnershipRuntimeState(shouldHaveLocalControl);
+            }
         }
 
         private void EnsureFlightVisualTransform()
@@ -666,6 +791,8 @@ namespace Network_Game.ThirdPersonController
 
         private void Update()
         {
+            ValidateRuntimeOwnershipState();
+
             // Only the owning client drives movement, input and animation params
             if (!ShouldProcessLocalControl())
             {
@@ -982,7 +1109,7 @@ namespace Network_Game.ThirdPersonController
                     _controller.center.y,
                     targetCenterY,
                     Time.deltaTime * CrouchTransitionSpeed
-                ),
+                    ),
                 _controller.center.z
             );
 
@@ -1044,7 +1171,7 @@ namespace Network_Game.ThirdPersonController
                 _controller.velocity.x,
                 0.0f,
                 _controller.velocity.z
-            ).magnitude;
+                ).magnitude;
 
             float speedOffset = 0.1f;
             float inputMagnitude = _input.analogMovement ? _input.move.magnitude : 1f;
@@ -1083,8 +1210,8 @@ namespace Network_Game.ThirdPersonController
             {
                 float cameraYaw =
                     _mainCamera != null
-                        ? _mainCamera.transform.eulerAngles.y
-                        : transform.eulerAngles.y;
+                    ? _mainCamera.transform.eulerAngles.y
+                    : transform.eulerAngles.y;
                 _targetRotation =
                     Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg + cameraYaw;
                 float rotation = Mathf.SmoothDampAngle(
@@ -1102,7 +1229,7 @@ namespace Network_Game.ThirdPersonController
             // Move the player
             _controller.Move(
                 targetDirection.normalized * (_speed * Time.deltaTime)
-                    + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime
+                + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime
             );
 
             // Update animator

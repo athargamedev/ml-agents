@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Network_Game.Diagnostics;
@@ -83,7 +84,11 @@ namespace Network_Game.Behavior
                 return false;
             }
 
-            List<CinemachineVirtualCameraBase> virtualCameras = ResolveCandidateVirtualCameras(brain);
+            List<CinemachineVirtualCameraBase> virtualCameras = ResolveCandidateVirtualCameras(
+                brain,
+                player.transform,
+                cameraRoot
+            );
             if (virtualCameras.Count == 0)
             {
                 NGLog.Warn("CameraManager", "No active Cinemachine virtual camera found.");
@@ -193,7 +198,9 @@ namespace Network_Game.Behavior
         }
 
         private List<CinemachineVirtualCameraBase> ResolveCandidateVirtualCameras(
-            CinemachineBrain brain
+            CinemachineBrain brain,
+            Transform playerRoot,
+            Transform cameraRoot
         )
         {
             var result = new List<CinemachineVirtualCameraBase>();
@@ -219,6 +226,7 @@ namespace Network_Game.Behavior
                     || !vcam.isActiveAndEnabled
                     || !vcam.gameObject.activeInHierarchy
                     || result.Contains(vcam)
+                    || !IsPlayerCameraCandidate(vcam, playerRoot, cameraRoot)
                 )
                 {
                     continue;
@@ -228,6 +236,67 @@ namespace Network_Game.Behavior
             }
 
             return result;
+        }
+
+        private static bool IsPlayerCameraCandidate(
+            CinemachineVirtualCameraBase camera,
+            Transform playerRoot,
+            Transform cameraRoot
+        )
+        {
+            if (camera == null || playerRoot == null)
+            {
+                return false;
+            }
+
+            if (TargetsPlayer(camera, playerRoot, cameraRoot))
+            {
+                return true;
+            }
+
+            Transform explicitTarget = camera.Follow != null ? camera.Follow : camera.LookAt;
+            if (explicitTarget != null)
+            {
+                return false;
+            }
+
+            return LooksLikePlayerCamera(camera.name);
+        }
+
+        private static bool TargetsPlayer(
+            CinemachineVirtualCameraBase camera,
+            Transform playerRoot,
+            Transform cameraRoot
+        )
+        {
+            return IsPlayerTarget(camera != null ? camera.Follow : null, playerRoot, cameraRoot)
+                || IsPlayerTarget(camera != null ? camera.LookAt : null, playerRoot, cameraRoot);
+        }
+
+        private static bool IsPlayerTarget(Transform target, Transform playerRoot, Transform cameraRoot)
+        {
+            if (target == null || playerRoot == null)
+            {
+                return false;
+            }
+
+            if (target == playerRoot || target.IsChildOf(playerRoot) || playerRoot.IsChildOf(target))
+            {
+                return true;
+            }
+
+            if (cameraRoot == null)
+            {
+                return false;
+            }
+
+            return target == cameraRoot || target.IsChildOf(cameraRoot) || cameraRoot.IsChildOf(target);
+        }
+
+        private static bool LooksLikePlayerCamera(string cameraName)
+        {
+            return !string.IsNullOrWhiteSpace(cameraName)
+                && cameraName.IndexOf("player", StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
         private CinemachineVirtualCameraBase ResolveActiveVirtualCamera(CinemachineBrain brain)

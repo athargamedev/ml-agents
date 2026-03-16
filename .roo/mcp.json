@@ -1,0 +1,68 @@
+{
+	"mcpServers": {
+		"filesystem": {
+			"command": "cmd",
+			"args": [
+				"/c",
+				"npx",
+				"-y",
+				"@modelcontextprotocol/server-filesystem",
+				"D:\\GithubRepos\\ml-agents"
+			],
+			"alwaysAllow": [
+				"read_file",
+				"read_text_file",
+				"read_multiple_files",
+				"write_file",
+				"edit_file",
+				"list_directory",
+				"create_directory",
+				"list_directory_with_sizes",
+				"move_file",
+				"search_files",
+				"get_file_info",
+				"list_allowed_directories",
+				"directory_tree",
+				"read_media_file"
+			],
+			"disabled": true
+		},
+		"serena-mcp": {
+			"command": "cmd",
+			"args": [
+				"/c",
+				"uvx",
+				"--from",
+				"git+https://github.com/oraios/serena",
+				"serena",
+				"start-mcp-server",
+				"--project",
+				"D:\\GithubRepos\\ml-agents"
+			]
+		},
+		"sequentialthinking": {
+			"command": "cmd",
+			"args": [
+				"/c",
+				"npx",
+				"-y",
+				"@modelcontextprotocol/server-sequential-thinking"
+			]
+		},
+		"unityMCP": {
+			"command": "cmd",
+			"args": [
+				"/c",
+				"cd /d D:\\GithubRepos\\unity-mcp-beta\\Server && uv run src/main.py --transport stdio --default-instance DevProject"
+			]
+		},
+		"blender": {
+			"command": "uvx",
+			"args": [
+				"blender-mcp"
+			],
+			"disabled": true,
+			"alwaysAllow": []
+		}
+	}
+}

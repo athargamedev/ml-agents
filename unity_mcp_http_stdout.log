@@ -1,0 +1,4 @@
+INFO:     127.0.0.1:52507 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52519 - "GET /api/instances HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52520 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52521 - "POST /api/command HTTP/1.1" 503 Service Unavailable

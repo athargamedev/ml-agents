@@ -3643,14 +3643,14 @@ namespace Network_Game.Dialogue
                     continue;
                 }
 
-                string content = TrimPromptSegment(message.content, messageCharBudget);
+                string content = TrimPromptSegment(message.Content, messageCharBudget);
                 if (string.IsNullOrWhiteSpace(content))
                 {
                     continue;
                 }
 
                 slice.Add(
-                    new DialogueInferenceMessage(NormalizeHistoryRole(message.role), content)
+                    new DialogueInferenceMessage(NormalizeHistoryRole(message.Role), content)
                 );
             }
 

@@ -9,20 +9,33 @@ function rewriteChatCompletionsPayload(payload) {
     return payload;
   }
 
+  // Fix 1: LM Studio doesn't support structured tool_choice objects — rewrite to "required".
   const toolChoice = payload.tool_choice;
-  if (!toolChoice || typeof toolChoice !== "object" || Array.isArray(toolChoice)) {
-    return payload;
+  if (toolChoice && typeof toolChoice === "object" && !Array.isArray(toolChoice)) {
+    const forcedToolName = toolChoice.function?.name;
+    if (forcedToolName && Array.isArray(payload.tools)) {
+      const matchingTools = payload.tools.filter((tool) => tool?.type === "function" && tool.function?.name === forcedToolName);
+      if (matchingTools.length > 0) {
+        payload.tools = matchingTools;
+      }
+    }
+    payload.tool_choice = "required";
   }
 
-  const forcedToolName = toolChoice.function?.name;
-  if (forcedToolName && Array.isArray(payload.tools)) {
-    const matchingTools = payload.tools.filter((tool) => tool?.type === "function" && tool.function?.name === forcedToolName);
-    if (matchingTools.length > 0) {
-      payload.tools = matchingTools;
+  // Fix 2: Qwen3 thinking mode returns content="" with all output in reasoning_content.
+  // The Vercel AI SDK (openai-compatible provider) only reads content, so the agent sees
+  // empty responses and terminates with no tool calls. Inject /no_think to disable CoT.
+  const model = typeof payload.model === "string" ? payload.model : "";
+  if (model.toLowerCase().includes("qwen3") && Array.isArray(payload.messages)) {
+    const firstUserIdx = payload.messages.findIndex((m) => m.role === "user");
+    if (firstUserIdx >= 0) {
+      const msg = payload.messages[firstUserIdx];
+      if (typeof msg.content === "string" && !msg.content.startsWith("/no_think")) {
+        msg.content = "/no_think\n" + msg.content;
+      }
     }
   }
 
-  payload.tool_choice = "required";
   return payload;
 }
 

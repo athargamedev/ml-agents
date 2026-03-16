@@ -4,7 +4,7 @@
      "type": "http",
      "url": "http://127.0.0.1:8090/api/mcp",
      "headers": {
-     "Authorization": "Bearer sbk_2ca3e9e22460ed61171f0797afd4ccb46dcd437addf2af5c982bb7c04d22f663"
+     "Authorization": "sbk_2ca3e9e22460ed61171f0797afd4ccb46dcd437addf2af5c982bb7c04d22f663"
     }
    },
     "filesystem": {

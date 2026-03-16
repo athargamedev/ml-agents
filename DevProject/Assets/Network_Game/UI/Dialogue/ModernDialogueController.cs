@@ -178,6 +178,21 @@ namespace Network_Game.UI.Dialogue
             ApplyGameplayInputSuppression(false);
         }
 
+        public void ForceRefreshBindings()
+        {
+            m_NextPlayerResolveAt = 0f;
+            m_NextNpcCacheRefreshAt = 0f;
+            m_NextInputResolveAt = 0f;
+            m_NextProximityCheckAt = 0f;
+            m_NextInputLegibilityCheckAt = 0f;
+            m_NextCameraRefreshAt = 0f;
+
+            EnsureUiBinding(force: false);
+            RefreshCameraList(force: true);
+            EvaluateProximityAndVisibility();
+            UpdateListenerStatus();
+        }
+
         private void Update()
         {
             EnsureUiBinding(force: false);

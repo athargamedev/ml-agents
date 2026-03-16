@@ -1,0 +1,33 @@
+
+
++-----------------------------------------------------------------------------+
+|                                                                             |
+|                        \u2584\u2580\u2580 \u2584\u2580\u2588 \u2588\u2580\u2580 \u2580\u2588\u2580 \u2588\u2580\u2584\u2580\u2588 \u2588\u2580\u2580 \u2588\u2580\u2588                        |
+|                        \u2588\u2580  \u2588\u2580\u2588 \u2584\u2584\u2588  \u2588  \u2588 \u2580 \u2588 \u2588\u2584\u2584 \u2588\u2580\u2580                        |
+|                                                                             |
+|                               FastMCP 2.14.1                                |
+|                                                                             |
+|                                                                             |
+|                  \U0001f5a5  Server name: unity-mcp                                  |
+|                                                                             |
+|                  \U0001f4e6 Transport:   HTTP                                       |
+|                  \U0001f517 Server URL:  http://127.0.0.1:8087/mcp                  |
+|                                                                             |
+|                  \U0001f4da Docs:        https://gofastmcp.com                      |
+|                  \U0001f680 Hosting:     https://fastmcp.cloud                      |
+|                                                                             |
++-----------------------------------------------------------------------------+
+
+
+[03/15/26 16:11:26] INFO     Starting MCP server 'unity-mcp'     server.py:2618
+                             with transport 'http' on                          
+                             http://127.0.0.1:8087/mcp                         
+INFO:     Started server process [14656]
+INFO:     Waiting for application startup.
+2026-03-15 16:11:27,364 - docket.worker - INFO - Starting worker 'AtharPredator#14656' with the following tasks:
+2026-03-15 16:11:27,365 - docket.worker - INFO - * trace(message: str, ...)
+2026-03-15 16:11:27,365 - docket.worker - INFO - * fail(message: str, ...)
+2026-03-15 16:11:27,365 - docket.worker - INFO - * sleep(seconds: float, ...)
+2026-03-15 16:11:27,366 - mcp.server.streamable_http_manager - INFO - StreamableHTTP session manager started
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8087 (Press CTRL+C to quit)
