@@ -1793,7 +1793,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Network_Game::Network_Game.Dialogue.DialogueEffectFeedbackRuntimeTuner
   m_EnableAdaptiveTuning: 1
-  m_LearningRate: 0.18
+  m_LearningRate: 0.05
   m_MinScaleMultiplier: 0.35
   m_MaxScaleMultiplier: 3
   m_MinDurationMultiplier: 0.5
@@ -2989,7 +2989,7 @@ MeshRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 100
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &443786067
@@ -3907,7 +3907,7 @@ MonoBehaviour:
   m_PanelSettings: {fileID: 11400000, guid: c094555912aa3574bb7ab1a695635386, type: 2}
   m_ParentUI: {fileID: 0}
   sourceAsset: {fileID: 9197481963319205126, guid: 55c00b464baf6ac4dac97b7ae646d75c, type: 3}
-  m_SortingOrder: 0
+  m_SortingOrder: 100
   m_Position: 0
   m_WorldSpaceSizeMode: 1
   m_WorldSpaceWidth: 1920
@@ -3984,6 +3984,19 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4354360145742748, guid: 8e1da52275f7dd14982d99253940530e, type: 3}
   m_PrefabInstance: {fileID: 569141484}
   m_PrefabAsset: {fileID: 0}
+--- !u!134 &569227425
+PhysicsMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)'
+  serializedVersion: 2
+  m_DynamicFriction: 0.6
+  m_StaticFriction: 0.6
+  m_Bounciness: 0
+  m_FrictionCombine: 0
+  m_BounceCombine: 0
 --- !u!1 &572755081 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1520818877436856, guid: c5aa08609f3d9f547aca9af1d6c18070, type: 3}
@@ -4994,6 +5007,19 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4196278371253528, guid: a53fe34087284794dbe0aad895670634, type: 3}
   m_PrefabInstance: {fileID: 752523324}
   m_PrefabAsset: {fileID: 0}
+--- !u!134 &761447949
+PhysicsMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance)'
+  serializedVersion: 2
+  m_DynamicFriction: 0.6
+  m_StaticFriction: 0.6
+  m_Bounciness: 0
+  m_FrictionCombine: 0
+  m_BounceCombine: 0
 --- !u!1001 &786410624
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5627,7 +5653,7 @@ MonoBehaviour:
   m_PanelSettings: {fileID: 11400000, guid: fa2330aad496edf4ab9818aa1e64dc83, type: 2}
   m_ParentUI: {fileID: 0}
   sourceAsset: {fileID: 9197481963319205126, guid: 9c8fc3d7ab9cd2d44b6ccf544b033e28, type: 3}
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_Position: 0
   m_WorldSpaceSizeMode: 1
   m_WorldSpaceWidth: 1920
@@ -8886,19 +8912,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1180103012}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!134 &1158008487
-PhysicsMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance) (Instance) (Instance) (Instance)'
-  serializedVersion: 2
-  m_DynamicFriction: 0.6
-  m_StaticFriction: 0.6
-  m_Bounciness: 0
-  m_FrictionCombine: 0
-  m_BounceCombine: 0
 --- !u!1 &1180103011
 GameObject:
   m_ObjectHideFlags: 0
@@ -13358,7 +13371,7 @@ MonoBehaviour:
   m_PanelSettings: {fileID: 11400000, guid: a8ed97e73afcd2f419f11348efa592cc, type: 2}
   m_ParentUI: {fileID: 0}
   sourceAsset: {fileID: 9197481963319205126, guid: e8e6fd509b82d9a4d806becbfb1fedb4, type: 3}
-  m_SortingOrder: 0
+  m_SortingOrder: 20
   m_Position: 0
   m_WorldSpaceSizeMode: 1
   m_WorldSpaceWidth: 1920
@@ -15801,10 +15814,10 @@ MonoBehaviour:
   - {fileID: 49462518}
   - {fileID: 1373578159}
   m_LoginVisible: 1
-  m_ProfileVisible: 1
-  m_DialogueVisible: 1
-  m_CombatVisible: 1
-  m_FeedbackVisible: 1
+  m_ProfileVisible: 0
+  m_DialogueVisible: 0
+  m_CombatVisible: 0
+  m_FeedbackVisible: 0
 --- !u!1 &1523646175 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1222634607300276, guid: c5aa08609f3d9f547aca9af1d6c18070, type: 3}
@@ -17869,19 +17882,6 @@ Transform:
   - {fileID: 163252278}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!134 &1750525410
-PhysicsMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance) (Instance) (Instance)'
-  serializedVersion: 2
-  m_DynamicFriction: 0.6
-  m_StaticFriction: 0.6
-  m_Bounciness: 0
-  m_FrictionCombine: 0
-  m_BounceCombine: 0
 --- !u!1 &1769577027 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1222634607300276, guid: c5aa08609f3d9f547aca9af1d6c18070, type: 3}
@@ -20717,7 +20717,7 @@ PrefabInstance:
     - target: {fileID: 6634309892908796911, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 1158008487}
+      objectReference: {fileID: 569227425}
     - target: {fileID: 8045639034301080501, guid: 686d717823455fc4eaaaf92fccdbb154, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -20864,7 +20864,7 @@ MonoBehaviour:
   m_TextOffsetPadding: 0.05
   m_DefaultTextHeight: 1.5
   m_FaceMainCamera: 1
-  m_AutoCreateSpeechText: 0
+  m_AutoCreateSpeechText: 1
   m_SpeechFontSize: 2
   m_SpeechTextColor: {r: 1, g: 1, b: 1, a: 1}
   m_SpeechLocalScale: {x: 0.08, y: 0.08, z: 0.08}
@@ -20982,7 +20982,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Network_Game::Network_Game.Dialogue.NpcDialogueAnimationController
   ShowTopMostFoldoutHeaderGroup: 1
-  m_Animator: {fileID: 0}
+  m_Animator: {fileID: 1923683305}
   m_DisableRootMotion: 1
   m_MinActionIntervalSeconds: 0.35
   m_TurnPulseSeconds: 0.2
@@ -22375,7 +22375,7 @@ PrefabInstance:
     - target: {fileID: 2526032792497204069, guid: 448306e06d77d4a4faca9a0dca0496c4, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 1750525410}
+      objectReference: {fileID: 761447949}
     - target: {fileID: 2749593497539295817, guid: 448306e06d77d4a4faca9a0dca0496c4, type: 3}
       propertyPath: m_ObservableAttributeHandling
       value: 2
@@ -22683,6 +22683,10 @@ PrefabInstance:
     - target: {fileID: 5359912537728881793, guid: 448306e06d77d4a4faca9a0dca0496c4, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 3024539609
+      objectReference: {fileID: 0}
+    - target: {fileID: 5767289750354302836, guid: 448306e06d77d4a4faca9a0dca0496c4, type: 3}
+      propertyPath: m_AutoCreateSpeechText
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6726896124416815187, guid: 448306e06d77d4a4faca9a0dca0496c4, type: 3}
       propertyPath: m_Animator

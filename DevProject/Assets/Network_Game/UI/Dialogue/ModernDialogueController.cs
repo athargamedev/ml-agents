@@ -116,7 +116,7 @@ namespace Network_Game.UI.Dialogue
         private VisualElement m_ChatInputInner;
 
         private readonly List<TranscriptEntry> m_Transcript = new();
-        private bool m_ChatVisible = true;
+        private bool m_ChatVisible;
         private bool m_CurrentInRange;
         private bool m_WaitForRangeExitToAutoOpen;
         private string m_LastLoggedTargetName = string.Empty;
@@ -534,6 +534,13 @@ namespace Network_Game.UI.Dialogue
                 return;
             }
 
+            if (!HasAuthenticatedLocalIdentity())
+            {
+                LogSendBlocked("auth_required");
+                AppendSystemLine("Authenticate before talking to NPCs.");
+                return;
+            }
+
             string prompt = (m_ChatInput.value ?? string.Empty).Trim();
             if (string.IsNullOrEmpty(prompt))
             {
@@ -746,11 +753,38 @@ namespace Network_Game.UI.Dialogue
 
         private void EvaluateProximityAndVisibility()
         {
+            if (!HasAuthenticatedLocalIdentity())
+            {
+                m_CurrentInRange = false;
+                if (m_AutoSelectListener)
+                {
+                    m_SelectedNpc = null;
+                }
+
+                if (m_ChatVisible)
+                {
+                    SetDialogueVisible(false, false, false);
+                }
+
+                UpdateListenerStatus();
+                return;
+            }
+
             if (
                 !TryResolveLocalPlayer(out Transform playerTransform, out NetworkObject localPlayer)
             )
             {
                 m_CurrentInRange = false;
+                if (m_AutoSelectListener)
+                {
+                    m_SelectedNpc = null;
+                }
+
+                if (m_ChatVisible)
+                {
+                    SetDialogueVisible(false, false, false);
+                }
+
                 UpdateListenerStatus();
                 return;
             }
@@ -1066,6 +1100,12 @@ namespace Network_Game.UI.Dialogue
                 return;
             }
 
+            if (!HasAuthenticatedLocalIdentity())
+            {
+                m_ListenerStatus.text = "LOGIN REQUIRED";
+                return;
+            }
+
             if (m_SelectedNpc == null)
             {
                 m_ListenerStatus.text = "NO TARGET";
@@ -1074,6 +1114,12 @@ namespace Network_Game.UI.Dialogue
 
             string status = m_CurrentInRange ? "IN RANGE" : "OUT OF RANGE";
             m_ListenerStatus.text = $"{status} / {m_SelectedNpc.name}".ToUpperInvariant();
+        }
+
+        private static bool HasAuthenticatedLocalIdentity()
+        {
+            LocalPlayerAuthService authService = LocalPlayerAuthService.Instance;
+            return authService != null && authService.HasCurrentPlayer;
         }
 
         private void SetDialogueVisible(bool visible, bool userInitiated, bool force)

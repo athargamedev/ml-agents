@@ -39,8 +39,9 @@ namespace Network_Game.Behavior
             var events = NetworkBootstrapEvents.Instance;
             if (events != null)
             {
-                events.OnNetworkReady += OnNetworkReady;
                 events.OnClientModeDetermined += OnClientModeDetermined;
+                events.OnHostStarted += OnNetworkingStarted;
+                events.OnClientStarted += OnNetworkingStarted;
             }
         }
 
@@ -49,12 +50,13 @@ namespace Network_Game.Behavior
             var events = NetworkBootstrapEvents.Instance;
             if (events != null)
             {
-                events.OnNetworkReady -= OnNetworkReady;
                 events.OnClientModeDetermined -= OnClientModeDetermined;
+                events.OnHostStarted -= OnNetworkingStarted;
+                events.OnClientStarted -= OnNetworkingStarted;
             }
         }
 
-        private void OnNetworkReady(NetworkManager manager)
+        private void OnNetworkingStarted()
         {
             StartCoroutine(WaitForPlayer());
         }
@@ -267,6 +269,18 @@ namespace Network_Game.Behavior
             var netAnimator = player.GetComponent<Unity.Netcode.Components.NetworkAnimator>();
             if (netAnimator != null)
             {
+                if (netAnimator.Animator == null)
+                {
+                    netAnimator.Animator = player.GetComponentInChildren<Animator>(true);
+                    if (netAnimator.Animator != null)
+                    {
+                        NGLog.Warn(
+                            "PlayerBootstrap",
+                            "Repaired missing NetworkAnimator.Animator binding from child Animator"
+                        );
+                    }
+                }
+
                 netAnimator.AuthorityMode = Unity.Netcode.Components.NetworkAnimator.AuthorityModes.Owner;
                 if (netAnimator.Animator != null && netAnimator.Animator.applyRootMotion)
                     netAnimator.Animator.applyRootMotion = false;
@@ -287,6 +301,14 @@ namespace Network_Game.Behavior
             var input = player.GetComponent<PlayerInput>();
             if (input != null)
             {
+                if (
+                    input.notificationBehavior != PlayerNotifications.SendMessages
+                    && input.notificationBehavior != PlayerNotifications.BroadcastMessages
+                )
+                {
+                    input.notificationBehavior = PlayerNotifications.SendMessages;
+                }
+
                 input.enabled = true;
                 input.ActivateInput();
                 if (input.currentActionMap == null || input.currentActionMap.name != "Player")
@@ -298,8 +320,10 @@ namespace Network_Game.Behavior
             if (starterInputs != null)
             {
                 starterInputs.enabled = true;
+                starterInputs.inputBlocked = false;
                 starterInputs.cursorLocked = true;
                 starterInputs.cursorInputForLook = true;
+                starterInputs.SetCursorState(true);
             }
 
             var controller = player.GetComponent<Network_Game.ThirdPersonController.ThirdPersonController>();

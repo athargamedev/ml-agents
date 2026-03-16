@@ -339,6 +339,51 @@ namespace Network_Game.ThirdPersonController
             }
         }
 
+#if ENABLE_INPUT_SYSTEM
+        // Some prefab variants still carry PlayerInput UnityEvent bindings that target the
+        // controller directly instead of StarterAssetsInputs. Keep these passthroughs so
+        // movement remains functional regardless of notification mode.
+        public void InputMove(InputAction.CallbackContext context)
+        {
+            if (_input == null)
+            {
+                _input = GetComponent<StarterAssetsInputs>();
+            }
+
+            _input?.MoveInput(context.ReadValue<Vector2>());
+        }
+
+        public void InputLook(InputAction.CallbackContext context)
+        {
+            if (_input == null)
+            {
+                _input = GetComponent<StarterAssetsInputs>();
+            }
+
+            _input?.LookInput(context.ReadValue<Vector2>());
+        }
+
+        public void InputJump(InputAction.CallbackContext context)
+        {
+            if (_input == null)
+            {
+                _input = GetComponent<StarterAssetsInputs>();
+            }
+
+            _input?.JumpInput(context.ReadValueAsButton());
+        }
+
+        public void InputSprint(InputAction.CallbackContext context)
+        {
+            if (_input == null)
+            {
+                _input = GetComponent<StarterAssetsInputs>();
+            }
+
+            _input?.SprintInput(context.ReadValueAsButton());
+        }
+#endif
+
         // ───────────────────────── Unity Lifecycle ─────────────────────────
 
         private void Awake()

@@ -1,6 +1,9 @@
 {
-    "timestamp": "2026-03-15T22:57:23.9354719-03:00",
+    "timestamp": "2026-03-15T23:06:02.6952032-03:00",
     "scene_name": "Behavior_Scene",
-    "selected_object": "None",
-    "components": []
+    "selected_object": "HUD_Root",
+    "components": [
+        "Transform",
+        "ModernHudLayoutManager"
+    ]
 }

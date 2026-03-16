@@ -1,4 +1,5 @@
 using System;
+using Network_Game.Auth;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -36,18 +37,31 @@ namespace Network_Game.UI
         private void ApplyDefaultVisibility()
         {
             if (m_Panels == null) return;
-            
+
             foreach (var panel in m_Panels)
             {
                 if (panel == null) continue;
                 panel.SetActive(false);
             }
 
-            SetPanelVisible("Login", m_LoginVisible);
-            SetPanelVisible("Profile", m_ProfileVisible);
-            SetPanelVisible("Dialogue", m_DialogueVisible);
-            SetPanelVisible("Combat", m_CombatVisible);
-            SetPanelVisible("Feedback", m_FeedbackVisible);
+            bool requireLoginOnly = RequiresLoginOnlyStartup();
+
+            SetPanelVisible("Login", requireLoginOnly || m_LoginVisible);
+            SetPanelVisible("Profile", !requireLoginOnly && m_ProfileVisible);
+            SetPanelVisible("Dialogue", !requireLoginOnly && m_DialogueVisible);
+            SetPanelVisible("Combat", !requireLoginOnly && m_CombatVisible);
+            SetPanelVisible("Feedback", !requireLoginOnly && m_FeedbackVisible);
+        }
+
+        private static bool RequiresLoginOnlyStartup()
+        {
+            if (!Application.isPlaying)
+            {
+                return false;
+            }
+
+            LocalPlayerAuthService authService = LocalPlayerAuthService.Instance;
+            return authService == null || !authService.HasCurrentPlayer;
         }
 
         /// <summary>

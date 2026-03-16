@@ -2663,7 +2663,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   NetworkAnimatorExpanded: 0
   AuthorityMode: 0
-  m_Animator: {fileID: 0}
+  m_Animator: {fileID: 3924776216050622713}
   TransitionStateInfoList: []
   AnimatorParameterEntries:
     ParameterEntries: []
@@ -2934,7 +2934,7 @@ Animator:
   m_GameObject: {fileID: 6885234819261915562}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: ceeeeb2a80d162743a732a58b287823d, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 0c3b6bac27207404d85d37a28d748af3, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

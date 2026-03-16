@@ -5,7 +5,9 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
+using Network_Game.Auth;
 using Network_Game.Diagnostics;
+using Network_Game.UI.Login;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
@@ -140,14 +142,13 @@ namespace Network_Game.Behavior
             m_Manager.NetworkConfig.ConnectionApproval = true;
             m_Manager.ConnectionApprovalCallback = OnConnectionApproval;
 
-            NetworkBootstrapEvents.Instance.PublishNetworkReady(m_Manager);
-
 #if UNITY_SERVER
             if (!Application.isEditor)
             {
                 ConfigureWebSocketTransport();
                 NGLog.Info("NetworkBootstrap", "Starting as Dedicated Server");
                 m_Manager.StartServer();
+                NetworkBootstrapEvents.Instance.PublishNetworkReady(m_Manager);
                 yield break;
             }
 #endif
@@ -155,6 +156,8 @@ namespace Network_Game.Behavior
             // Determine mode
             m_IsClientMode = DetermineClientMode();
             NetworkBootstrapEvents.Instance.PublishClientModeDetermined(m_IsClientMode);
+
+            yield return StartCoroutine(WaitForAuthenticationIfRequired());
 
             // Configure transport
             ConfigureTransport();
@@ -173,6 +176,7 @@ namespace Network_Game.Behavior
                     NetworkBootstrapEvents.Instance.PublishNetworkError("Client startup failed");
                     yield break;
                 }
+                NetworkBootstrapEvents.Instance.PublishNetworkReady(m_Manager);
                 NGLog.Info("NetworkBootstrap", "Client started");
                 NetworkBootstrapEvents.Instance.PublishClientStarted();
             }
@@ -185,8 +189,66 @@ namespace Network_Game.Behavior
                     NetworkBootstrapEvents.Instance.PublishNetworkError("Host start failed");
                     yield break;
                 }
+                NetworkBootstrapEvents.Instance.PublishNetworkReady(m_Manager);
                 NGLog.Info("NetworkBootstrap", "Host started");
                 NetworkBootstrapEvents.Instance.PublishHostStarted();
+            }
+        }
+
+        private IEnumerator WaitForAuthenticationIfRequired()
+        {
+            AuthBootstrap authBootstrap = GetComponent<AuthBootstrap>();
+            if (authBootstrap == null || !authBootstrap.m_BlockNetworkStartUntilAuthenticated)
+            {
+                yield break;
+            }
+
+            LocalPlayerAuthService authService = LocalPlayerAuthService.EnsureInstance();
+            if (authService == null)
+            {
+                yield break;
+            }
+
+            EnsureLoginUiAvailable();
+
+            if (!authBootstrap.m_RequireExplicitLoginEachSession)
+            {
+                authService.EnsureLoggedIn();
+            }
+
+            while (!authService.HasCurrentPlayer)
+            {
+                EnsureLoginUiAvailable();
+                yield return null;
+            }
+
+            authService.EnsurePromptContextInitialized();
+        }
+
+        private static void EnsureLoginUiAvailable()
+        {
+            PlayerLoginController[] loginControllers =
+                Resources.FindObjectsOfTypeAll<PlayerLoginController>();
+            for (int i = 0; i < loginControllers.Length; i++)
+            {
+                PlayerLoginController loginController = loginControllers[i];
+                if (loginController == null || !loginController.gameObject.scene.IsValid())
+                {
+                    continue;
+                }
+
+                if (!loginController.gameObject.activeSelf)
+                {
+                    loginController.gameObject.SetActive(true);
+                }
+
+                if (!loginController.enabled)
+                {
+                    loginController.enabled = true;
+                }
+
+                loginController.Show();
+                return;
             }
         }
 

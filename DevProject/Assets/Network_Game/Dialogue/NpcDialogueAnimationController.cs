@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Network_Game.Diagnostics;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 
 namespace Network_Game.Dialogue
@@ -168,6 +169,12 @@ namespace Network_Game.Dialogue
             if (m_DisableRootMotion && m_Animator.applyRootMotion)
             {
                 m_Animator.applyRootMotion = false;
+            }
+
+            NetworkAnimator networkAnimator = GetComponent<NetworkAnimator>();
+            if (networkAnimator != null && networkAnimator.Animator == null)
+            {
+                networkAnimator.Animator = m_Animator;
             }
 
             if (m_ParamTypes.Count == 0)

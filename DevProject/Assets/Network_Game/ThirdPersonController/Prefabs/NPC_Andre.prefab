@@ -1767,7 +1767,7 @@ Animator:
   m_GameObject: {fileID: 5381506525432835441}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 29868e7dd7c4de843b211614f5c1087c, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 0c3b6bac27207404d85d37a28d748af3, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -2230,7 +2230,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   NetworkAnimatorExpanded: 0
   AuthorityMode: 0
-  m_Animator: {fileID: 0}
+  m_Animator: {fileID: 6340207177421699645}
   TransitionStateInfoList: []
   AnimatorParameterEntries:
     ParameterEntries: []
@@ -2335,7 +2335,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Network_Game::Network_Game.Dialogue.NpcDialogueAnimationController
   ShowTopMostFoldoutHeaderGroup: 1
-  m_Animator: {fileID: 0}
+  m_Animator: {fileID: 6340207177421699645}
   m_DisableRootMotion: 1
   m_MinActionIntervalSeconds: 0.35
   m_TurnPulseSeconds: 0.2

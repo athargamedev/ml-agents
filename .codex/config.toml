@@ -3,6 +3,7 @@ model_reasoning_effort = "high"
 windows_wsl_setup_acknowledged = true
 personality = "pragmatic"
 
+sandbox_mode = "danger-full-access"
 [mcp_servers.MCP_DOCKER]
 command = 'docker.exe'
 args = [ 'mcp', 'gateway', 'run' ]

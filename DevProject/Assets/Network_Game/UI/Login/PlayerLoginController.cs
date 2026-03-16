@@ -229,6 +229,31 @@ namespace Network_Game.UI.Login
                     m_Root.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
                 }
             }
+
+            if (visible)
+            {
+                ApplyUiCursorAndLookState();
+                FocusNameInput();
+            }
+        }
+
+        private void FocusNameInput()
+        {
+            if (m_NameInput == null)
+            {
+                return;
+            }
+
+            m_NameInput.schedule.Execute(() =>
+            {
+                if (m_NameInput == null)
+                {
+                    return;
+                }
+
+                m_NameInput.Focus();
+                m_NameInput.SelectAll();
+            });
         }
 
         private static void AttachCurrentLocalPlayer(LocalPlayerAuthService authService)
